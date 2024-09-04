@@ -16,7 +16,7 @@ An abstract class for Mobile app configuration for enrolled devices.
 terraform {
   required_providers {
     microsoft365wp = {
-      source = "tfp-c4a8-workplace.c4a8.io/c4a8/microsoft365wp"
+      source = "terraprovider/microsoft365wp"
     }
   }
 }

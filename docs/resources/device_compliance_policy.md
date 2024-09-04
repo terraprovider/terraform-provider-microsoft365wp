@@ -16,7 +16,7 @@ This is the base class for Compliance policy. Compliance policies are platform s
 terraform {
   required_providers {
     microsoft365wp = {
-      source = "tfp-c4a8-workplace.c4a8.io/c4a8/microsoft365wp"
+      source = "terraprovider/microsoft365wp"
     }
   }
 }
