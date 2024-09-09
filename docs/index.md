@@ -8,7 +8,7 @@ The Terraform Provider for Microsoft 365 can be used to configure policies and c
 
 ## Authenticating to Microsoft EntraID
 
-[Authenticating using a Service Principal with a Client Secret](guides/authentication/service\_principal\_client\_secret.md)
+[Authenticating using a Service Principal with a Client Secret](guides/service\_principal\_client\_secret.md)
 
 ## Features and Bug Requests
 
