@@ -1,6 +1,6 @@
 ---
 page_title: "Authenticating using a Service Principal and OpenID Connect"
-subcategory: "authentication"
+subcategory: "Authentication"
 ---
 
 # Authenticating using a Service Principal and OpenID Connect
