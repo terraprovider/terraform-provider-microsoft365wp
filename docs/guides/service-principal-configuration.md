@@ -10,8 +10,8 @@ Terraform supports a number of different methods for authenticating to Azure
 
 A Service Principal represents an application within Microsoft EntraID whose properties and authentication tokens can be used as the `tenant_id`, `client_id` and `client_secret` fields needed by Terraform.
 
-* [Authenticating to Azure using a Service Principal and a Client Secret](authentication/service\_principal\_client\_secret.md)
-* [Authenticating to Azure using a Service Principal and OpenID Connect](authentication/service\_principal\_oicd.md)
+* [Authenticating to Azure using a Service Principal and a Client Secret](service\_principal\_client\_secret.md)
+* [Authenticating to Azure using a Service Principal and OpenID Connect](service\_principal\_oicd.md)
 
 ***
 
