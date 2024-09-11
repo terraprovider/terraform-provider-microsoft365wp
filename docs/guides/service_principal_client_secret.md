@@ -75,13 +75,6 @@ export ARM_TENANT_ID="10000000-0000-0000-0000-000000000000"
 export ARM_SUBSCRIPTION_ID="20000000-0000-0000-0000-000000000000"
 ```
 
-```PowerShell
-$env:ARM_CLIENT_ID = "00000000-0000-0000-0000-000000000000"
-$env:ARM_CLIENT_SECRET = "12345678-0000-0000-0000-000000000000"
-$env:ARM_TENANT_ID = "10000000-0000-0000-0000-000000000000"
-$env:ARM_SUBSCRIPTION_ID = "20000000-0000-0000-0000-000000000000"
-```
-
 At this point running either `terraform plan` or `terraform apply` should allow Terraform to authenticate using the Client Secret.
 
 Next you should follow the [Configuring a Service Principal for managing Microsoft EntraID](../service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects such as users and groups.
@@ -97,15 +90,15 @@ It's also possible to configure these variables either directly, or from variabl
 # Workplace Provider source and version being used
 terraform {
   required_providers {
-    workplace = {
-      source  = "terraprovider/workplace"
+    microsoft365wp = {
+      source  = "terraprovider/microsoft365wp"
       version = "1.0.0"
     }
   }
 }
 
 # Configure the Workplace Provider
-provider "workplace" {
+provider "microsoft365wp" {
   client_id     = "00000000-0000-0000-0000-000000000000"
   client_secret = var.client_secret
   tenant_id     = "10000000-2000-3000-4000-500000000000"

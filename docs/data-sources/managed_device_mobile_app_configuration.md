@@ -65,14 +65,14 @@ Read-Only:
 - `package_id` (String) Android Enterprise app configuration package id.
 - `payload_json_base64` (String) Android Enterprise app configuration JSON payload.
 - `permission_actions` (Attributes Set) List of Android app permissions and corresponding permission actions. / Mapping between an Android app permission and the action Android should take when that permission is requested. (see [below for nested schema](#nestedatt--android_managed_store--permission_actions))
-- `profile_applicability` (String) Android Enterprise profile applicability (AndroidWorkProfile, DeviceOwner, or default (applies to both)).
+- `profile_applicability` (String) Android Enterprise profile applicability (AndroidWorkProfile, DeviceOwner, or default (applies to both)). / Android profile applicability; possible values are: `default`, `androidWorkProfile`, `androidDeviceOwner`
 
 <a id="nestedatt--android_managed_store--permission_actions"></a>
 ### Nested Schema for `android_managed_store.permission_actions`
 
 Read-Only:
 
-- `action` (String) Type of Android permission action.
+- `action` (String) Type of Android permission action. / Android action taken when an app requests a dangerous permission; possible values are: `prompt`, `autoGrant`, `autoDeny`
 - `permission` (String) Android permission string, defined in the official Android documentation.  Example 'android.permission.READ_CONTACTS'.
 
 
@@ -136,7 +136,7 @@ Read-Only:
 Read-Only:
 
 - `app_config_key` (String) app configuration key.
-- `app_config_key_type` (String) app configuration key type.
+- `app_config_key_type` (String) app configuration key type. / App configuration key types; possible values are: `stringType`, `integerType`, `realType`, `booleanType`, `tokenType`
 - `app_config_key_value` (String) app configuration key value.
 
 

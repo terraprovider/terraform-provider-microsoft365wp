@@ -68,6 +68,7 @@ var authenticationStrengthPolicyResourceSchema = schema.Schema{
 					wpvalidator.FlagEnumValues("password", "voice", "hardwareOath", "softwareOath", "sms", "fido2", "windowsHelloForBusiness", "microsoftAuthenticatorPush", "deviceBasedPush", "temporaryAccessPassOneTime", "temporaryAccessPassMultiUse", "email", "x509CertificateSingleFactor", "x509CertificateMultiFactor", "federatedSingleFactor", "federatedMultiFactor", "unknownFutureValue"),
 				),
 			},
+			MarkdownDescription: "; possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:      true,
@@ -90,15 +91,17 @@ var authenticationStrengthPolicyResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				stringvalidator.OneOf("builtIn", "custom", "unknownFutureValue"),
 			},
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "; possible values are: `builtIn`, `custom`, `unknownFutureValue`",
 		},
 		"requirements_satisfied": schema.StringAttribute{
 			Computed: true,
 			Validators: []validator.String{
 				wpvalidator.FlagEnumValues("none", "mfa", "unknownFutureValue"),
 			},
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "; possible values are: `none`, `mfa`, `unknownFutureValue`",
 		},
 	},
-	MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/authenticationStrengthPolicy?view=graph-rest-beta`,
+	MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/authenticationStrengthPolicy?view=graph-rest-beta",
 }

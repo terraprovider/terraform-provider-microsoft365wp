@@ -138,7 +138,7 @@ Required:
 
 Optional:
 
-- `action_type` (String) What action to take
+- `action_type` (String) What action to take / Scheduled Action Type Enum; possible values are: `noAction` (No Action), `notification` (Send Notification), `block` (Block the device in AAD), `retire` (Retire the device), `wipe` (Wipe the device), `removeResourceAccessProfiles` (Remove Resource Access Profiles from the device), `pushNotification` (Send push notification to device), `remoteLock` (Remotely lock the device)
 - `grace_period_hours` (Number) Number of hours to wait till the action will be enforced. Valid values 0 to 8760
 - `notification_message_cc_list` (Set of String) A list of group IDs to speicify who to CC this notification message to.
 - `notification_template_id` (String) What notification Message template to use
@@ -150,10 +150,10 @@ Optional:
 
 Optional:
 
-- `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance.
+- `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `condition_statement_id` (String) Condition statement id.
 - `device_threat_protection_enabled` (Boolean) Require that devices have enabled device threat protection.
-- `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance.
+- `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `min_android_security_patch_level` (String) Minimum Android security patch level.
 - `os_maximum_version` (String) Maximum Android version.
 - `os_minimum_version` (String) Minimum Android version.
@@ -162,9 +162,9 @@ Optional:
 - `password_minutes_of_inactivity_before_lock` (Number) Minutes of inactivity before a password is required.
 - `password_previous_password_block_count` (Number) Number of previous passwords to block. Valid values 1 to 24
 - `password_required` (Boolean) Require a password to unlock device.
-- `password_required_type` (String) Type of characters in password
+- `password_required_type` (String) Type of characters in password / Android required password type; possible values are: `deviceDefault` (Device default value, no intent.), `alphabetic` (Alphabetic password required.), `alphanumeric` (Alphanumeric password required.), `alphanumericWithSymbols` (Alphanumeric with symbols password required.), `lowSecurityBiometric` (Low security biometrics based password required.), `numeric` (Numeric password required.), `numericComplex` (Numeric complex password required.), `any` (A password or pattern is required, and any is acceptable.)
 - `password_sign_in_failure_count_before_factory_reset` (Number) Number of sign-in failures allowed before factory reset. Valid values 1 to 16
-- `required_password_complexity` (String) Indicates the required password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android 11+.
+- `required_password_complexity` (String) Indicates the required password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android 11+. / The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+; possible values are: `none` (Device default value, no password.), `low` (The required password complexity on the device is of type low as defined by the Android documentation.), `medium` (The required password complexity on the device is of type medium as defined by the Android documentation.), `high` (The required password complexity on the device is of type high as defined by the Android documentation.)
 - `restricted_apps` (Attributes Set) Require the device to not have the specified apps installed. This collection can contain a maximum of 100 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta (see [below for nested schema](#nestedatt--android--restricted_apps))
 - `security_block_device_administrator_managed_devices` (Boolean) Block device administrator managed devices.
 - `security_block_jailbroken_devices` (Boolean) Devices must not be jailbroken or rooted.
@@ -198,9 +198,9 @@ Optional:
 
 Optional:
 
-- `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance.
+- `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `device_threat_protection_enabled` (Boolean) Require that devices have enabled device threat protection.
-- `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance.
+- `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `min_android_security_patch_level` (String) Minimum Android security patch level.
 - `os_maximum_version` (String) Maximum Android version.
 - `os_minimum_version` (String) Minimum Android version.
@@ -215,12 +215,12 @@ Optional:
 - `password_minutes_of_inactivity_before_lock` (Number) Minutes of inactivity before a password is required.
 - `password_previous_password_count_to_block` (Number) Number of previous passwords to block. Valid values 1 to 24
 - `password_required` (Boolean) Require a password to unlock device.
-- `password_required_type` (String) Type of characters in password
+- `password_required_type` (String) Type of characters in password / Android Device Owner policy required password type; possible values are: `deviceDefault` (Device default value, no intent.), `required` (There must be a password set, but there are no restrictions on type.), `numeric` (At least numeric.), `numericComplex` (At least numeric with no repeating or ordered sequences.), `alphabetic` (At least alphabetic password.), `alphanumeric` (At least alphanumeric password), `alphanumericWithSymbols` (At least alphanumeric with symbols.), `lowSecurityBiometric` (Low security biometrics based password required.), `customPassword` (Custom password set by the admin.)
 - `require_no_pending_system_updates` (Boolean) Require device to have no pending Android system updates.
 - `security_require_intune_app_integrity` (Boolean) If setting is set to true, checks that the Intune app installed on fully managed, dedicated, or corporate-owned work profile Android Enterprise enrolled devices, is the one provided by Microsoft from the Managed Google Playstore. If the check fails, the device will be reported as non-compliant.
 - `security_require_safety_net_attestation_basic_integrity` (Boolean) Require the device to pass the Play Integrity basic integrity check.
 - `security_require_safety_net_attestation_certified_device` (Boolean) Require the device to pass the Play Integrity device integrity check.
-- `security_required_android_safety_net_evaluation_type` (String) Require a specific Play Integrity evaluation type for compliance.
+- `security_required_android_safety_net_evaluation_type` (String) Require a specific Play Integrity evaluation type for compliance. / An enum representing the Android Play Integrity API evaluation types; possible values are: `basic` (Default value. Typical measurements and reference data were used.), `hardwareBacked` (Strong Integrity checks (such as a hardware-backed proof of boot integrity) were used.)
 - `storage_require_encryption` (Boolean) Require encryption on Android devices.
 
 
@@ -229,9 +229,9 @@ Optional:
 
 Optional:
 
-- `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance.
+- `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `device_threat_protection_enabled` (Boolean) Require that devices have enabled device threat protection.
-- `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance.
+- `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `min_android_security_patch_level` (String) Minimum Android security patch level.
 - `os_maximum_version` (String) Maximum Android version.
 - `os_minimum_version` (String) Minimum Android version.
@@ -240,9 +240,9 @@ Optional:
 - `password_minutes_of_inactivity_before_lock` (Number) Minutes of inactivity before a password is required.
 - `password_previous_password_block_count` (Number) Number of previous passwords to block. Valid values 1 to 24
 - `password_required` (Boolean) Require a password to unlock device.
-- `password_required_type` (String) Type of characters in password
+- `password_required_type` (String) Type of characters in password / Android required password type; possible values are: `deviceDefault` (Device default value, no intent.), `alphabetic` (Alphabetic password required.), `alphanumeric` (Alphanumeric password required.), `alphanumericWithSymbols` (Alphanumeric with symbols password required.), `lowSecurityBiometric` (Low security biometrics based password required.), `numeric` (Numeric password required.), `numericComplex` (Numeric complex password required.), `any` (A password or pattern is required, and any is acceptable.)
 - `password_sign_in_failure_count_before_factory_reset` (Number) Number of sign-in failures allowed before factory reset. Valid values 1 to 16
-- `required_password_complexity` (String) Indicates the required device password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android API 12+.
+- `required_password_complexity` (String) Indicates the required device password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android API 12+. / The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+; possible values are: `none` (Device default value, no password.), `low` (The required password complexity on the device is of type low as defined by the Android documentation.), `medium` (The required password complexity on the device is of type medium as defined by the Android documentation.), `high` (The required password complexity on the device is of type high as defined by the Android documentation.)
 - `security_block_jailbroken_devices` (Boolean) Devices must not be jailbroken or rooted.
 - `security_disable_usb_debugging` (Boolean) Disable USB debugging on Android devices.
 - `security_prevent_install_apps_from_unknown_sources` (Boolean) Require that devices disallow installation of apps from unknown sources.
@@ -252,15 +252,15 @@ Optional:
 - `security_require_safety_net_attestation_certified_device` (Boolean) Require the device to pass the Play Integrity device integrity check.
 - `security_require_up_to_date_security_providers` (Boolean) Require the device to have up to date security providers. The device will require Google Play Services to be enabled and up to date.
 - `security_require_verify_apps` (Boolean) Require the Android Verify apps feature is turned on.
-- `security_required_android_safety_net_evaluation_type` (String) Require a specific SafetyNet evaluation type for compliance.
+- `security_required_android_safety_net_evaluation_type` (String) Require a specific SafetyNet evaluation type for compliance. / An enum representing the Android Play Integrity API evaluation types; possible values are: `basic` (Default value. Typical measurements and reference data were used.), `hardwareBacked` (Strong Integrity checks (such as a hardware-backed proof of boot integrity) were used.)
 - `storage_require_encryption` (Boolean) Require encryption on Android devices.
 - `work_profile_inactive_before_screen_lock_in_minutes` (Number) Minutes of inactivity before the screen times out.
 - `work_profile_password_expiration_in_days` (Number) Number of days before the work profile password expires. Valid values 1 to 365
 - `work_profile_password_minimum_length` (Number) Minimum length of work profile password. Valid values 4 to 16
-- `work_profile_password_required_type` (String) Type of work profile password that is required.
+- `work_profile_password_required_type` (String) Type of work profile password that is required. / Android Work Profile required password type; possible values are: `deviceDefault` (Device default value, no intent.), `lowSecurityBiometric` (Low security biometrics based password required.), `required` (Required.), `atLeastNumeric` (At least numeric password required.), `numericComplex` (Numeric complex password required.), `atLeastAlphabetic` (At least alphabetic password required.), `atLeastAlphanumeric` (At least alphanumeric password required.), `alphanumericWithSymbols` (At least alphanumeric with symbols password required.)
 - `work_profile_previous_password_block_count` (Number) Number of previous work profile passwords to block. Valid values 0 to 24
 - `work_profile_require_password` (Boolean) Password is required or not for work profile
-- `work_profile_required_password_complexity` (String) Indicates the required work profile password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android 12+.
+- `work_profile_required_password_complexity` (String) Indicates the required work profile password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android 12+. / The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+; possible values are: `none` (Device default value, no password.), `low` (The required password complexity on the device is of type low as defined by the Android documentation.), `medium` (The required password complexity on the device is of type medium as defined by the Android documentation.), `high` (The required password complexity on the device is of type high as defined by the Android documentation.)
 
 
 <a id="nestedatt--aosp_device_owner"></a>
@@ -274,7 +274,7 @@ Optional:
 - `password_minimum_length` (Number) Minimum password length. Valid values 4 to 16
 - `password_minutes_of_inactivity_before_lock` (Number) Minutes of inactivity before a password is required. Valid values 1 to 8640
 - `password_required` (Boolean) Require a password to unlock device.
-- `password_required_type` (String) Type of characters in password
+- `password_required_type` (String) Type of characters in password / Android Device Owner policy required password type; possible values are: `deviceDefault` (Device default value, no intent.), `required` (There must be a password set, but there are no restrictions on type.), `numeric` (At least numeric.), `numericComplex` (At least numeric with no repeating or ordered sequences.), `alphabetic` (At least alphabetic password.), `alphanumeric` (At least alphanumeric password), `alphanumericWithSymbols` (At least alphanumeric with symbols.), `lowSecurityBiometric` (Low security biometrics based password required.), `customPassword` (Custom password set by the admin.)
 - `security_block_jailbroken_devices` (Boolean) Devices must not be jailbroken or rooted.
 - `storage_require_encryption` (Boolean) Require encryption on Android devices.
 
@@ -329,9 +329,9 @@ Required:
 
 Optional:
 
-- `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance.
+- `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `device_threat_protection_enabled` (Boolean) Require that devices have enabled device threat protection .
-- `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance.
+- `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `managed_email_profile_required` (Boolean) Indicates whether or not to require a managed email profile.
 - `os_maximum_build_version` (String) Maximum IOS build version.
 - `os_maximum_version` (String) Maximum IOS version.
@@ -345,7 +345,7 @@ Optional:
 - `passcode_minutes_of_inactivity_before_screen_timeout` (Number) Minutes of inactivity before the screen times out.
 - `passcode_previous_passcode_block_count` (Number) Number of previous passcodes to block. Valid values 1 to 24
 - `passcode_required` (Boolean) Indicates whether or not to require a passcode.
-- `passcode_required_type` (String) The required passcode type.
+- `passcode_required_type` (String) The required passcode type. / Possible values of required passwords; possible values are: `deviceDefault` (Device default value, no intent.), `alphanumeric` (Alphanumeric password required.), `numeric` (Numeric password required.)
 - `restricted_apps` (Attributes Set) Require the device to not have the specified apps installed. This collection can contain a maximum of 100 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios--restricted_apps))
 - `security_block_jailbroken_devices` (Boolean) Devices must not be jailbroken or rooted.
 
@@ -369,13 +369,13 @@ Optional:
 
 Optional:
 
-- `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance.
+- `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `device_threat_protection_enabled` (Boolean) Require that devices have enabled device threat protection.
-- `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance.
+- `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `firewall_block_all_incoming` (Boolean) Corresponds to the “Block all incoming connections” option.
 - `firewall_enable_stealth_mode` (Boolean) Corresponds to “Enable stealth mode.”
 - `firewall_enabled` (Boolean) Whether the firewall should be enabled or not.
-- `gatekeeper_allowed_app_source` (String) System and Privacy setting that determines which download locations apps can be run from on a macOS device.
+- `gatekeeper_allowed_app_source` (String) System and Privacy setting that determines which download locations apps can be run from on a macOS device. / App source options for macOS Gatekeeper; possible values are: `notConfigured` (Device default value, no intent.), `macAppStore` (Only apps from the Mac AppStore can be run.), `macAppStoreAndIdentifiedDevelopers` (Only apps from the Mac AppStore and identified developers can be run.), `anywhere` (Apps from anywhere can be run.)
 - `os_maximum_build_version` (String) Maximum MacOS build version.
 - `os_maximum_version` (String) Maximum MacOS version.
 - `os_minimum_build_version` (String) Minimum MacOS build version.
@@ -387,7 +387,7 @@ Optional:
 - `password_minutes_of_inactivity_before_lock` (Number) Minutes of inactivity before a password is required.
 - `password_previous_password_block_count` (Number) Number of previous passwords to block. Valid values 1 to 24
 - `password_required` (Boolean) Whether or not to require a password.
-- `password_required_type` (String) The required password type.
+- `password_required_type` (String) The required password type. / Possible values of required passwords; possible values are: `deviceDefault` (Device default value, no intent.), `alphanumeric` (Alphanumeric password required.), `numeric` (Numeric password required.)
 - `storage_require_encryption` (Boolean) Require encryption on Mac OS devices.
 - `system_integrity_protection_enabled` (Boolean) Require that devices have enabled system integrity protection.
 
@@ -407,7 +407,7 @@ Optional:
 - `defender_version` (String) Require Windows Defender Antimalware minimum version on Windows devices.
 - `device_compliance_policy_script` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceCompliancePolicyScript?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10--device_compliance_policy_script))
 - `device_threat_protection_enabled` (Boolean) Require that devices have enabled device threat protection.
-- `device_threat_protection_required_security_level` (String) Require Device Threat Protection minimum risk level to report noncompliance.
+- `device_threat_protection_required_security_level` (String) Require Device Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.)
 - `early_launch_anti_malware_driver_enabled` (Boolean) Require devices to be reported as healthy by Windows Device Health Attestation - early launch antimalware driver is enabled.
 - `firmware_protection_enabled` (Boolean) When TRUE, indicates that Firmware protection is required to be reported as healthy by Microsoft Azure Attestion. When FALSE, indicates that Firmware protection is not required to be reported as healthy. Devices that support either Dynamic Root of Trust for Measurement (DRTM) or Firmware Attack Surface Reduction (FASR) will report compliant for this setting. Default value is FALSE.
 - `kernel_dma_protection_enabled` (Boolean) When TRUE, indicates that Kernel Direct Memory Access (DMA) protection is required to be reported as healthy by Microsoft Azure Attestion. When FALSE, indicates that Kernel DMA Protection is not required to be reported as healthy. Default value is FALSE.
@@ -424,7 +424,7 @@ Optional:
 - `password_previous_password_block_count` (Number) The number of previous passwords to prevent re-use of.
 - `password_required` (Boolean) Require a password to unlock Windows device.
 - `password_required_to_unlock_from_idle` (Boolean) Require a password to unlock an idle device.
-- `password_required_type` (String) The required password type.
+- `password_required_type` (String) The required password type. / Possible values of required passwords; possible values are: `deviceDefault` (Device default value, no intent.), `alphanumeric` (Alphanumeric password required.), `numeric` (Numeric password required.)
 - `require_healthy_device_report` (Boolean) Require devices to be reported as healthy by Windows Device Health Attestation.
 - `rtp_enabled` (Boolean) Require Windows Defender Antimalware Real-Time Protection on Windows devices.
 - `secure_boot_enabled` (Boolean) Require devices to be reported as healthy by Windows Device Health Attestation - secure boot is enabled.

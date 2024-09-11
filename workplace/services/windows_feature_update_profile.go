@@ -61,30 +61,30 @@ var windowsFeatureUpdateProfileResourceSchema = schema.Schema{
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: `The date time that the profile was created.`,
+			MarkdownDescription: "The date time that the profile was created.",
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			MarkdownDescription: `The description of the profile which is specified by the user.`,
+			MarkdownDescription: "The description of the profile which is specified by the user.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
-			MarkdownDescription: `The display name of the profile.`,
+			MarkdownDescription: "The display name of the profile.",
 		},
 		"end_of_support_date": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: `The last supported date for a feature update`,
+			MarkdownDescription: "The last supported date for a feature update",
 		},
 		"feature_update_version": schema.StringAttribute{
 			Required:            true,
-			MarkdownDescription: `The feature update version that will be deployed to the devices targeted by this profile. The version could be any supported version for example 1709, 1803 or 1809 and so on.`,
+			MarkdownDescription: "The feature update version that will be deployed to the devices targeted by this profile. The version could be any supported version for example 1709, 1803 or 1809 and so on.",
 		},
 		"install_feature_updates_optional": schema.BoolAttribute{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 			Computed:            true,
-			MarkdownDescription: `If true, the Windows 11 update will become optional`,
+			MarkdownDescription: "If true, the Windows 11 update will become optional",
 		},
 		"install_latest_windows10_on_windows11_ineligible_device": schema.BoolAttribute{
 			Optional: true,
@@ -94,19 +94,19 @@ var windowsFeatureUpdateProfileResourceSchema = schema.Schema{
 			},
 			Computed:            true,
 			Description:         `installLatestWindows10OnWindows11IneligibleDevice`, // custom MS Graph attribute name
-			MarkdownDescription: `If true, the latest Microsoft Windows 10 update will be installed on devices ineligible for Microsoft Windows 11`,
+			MarkdownDescription: "If true, the latest Microsoft Windows 10 update will be installed on devices ineligible for Microsoft Windows 11",
 		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: `The date time that the profile was last modified.`,
+			MarkdownDescription: "The date time that the profile was last modified.",
 		},
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: `List of Scope Tags for this Feature Update entity.`,
+			MarkdownDescription: "List of Scope Tags for this Feature Update entity.",
 		},
 		"rollout_settings": schema.SingleNestedAttribute{
 			Required: true,
@@ -114,21 +114,21 @@ var windowsFeatureUpdateProfileResourceSchema = schema.Schema{
 				"offer_end_date_time_in_utc": schema.StringAttribute{
 					Optional:            true,
 					Description:         `offerEndDateTimeInUTC`, // custom MS Graph attribute name
-					MarkdownDescription: `The feature update's ending  of release date and time to be set, update, and displayed for a feature Update profile for example: 2020-06-09T10:00:00Z.`,
+					MarkdownDescription: "The feature update's ending  of release date and time to be set, update, and displayed for a feature Update profile for example: 2020-06-09T10:00:00Z.",
 				},
 				"offer_interval_in_days": schema.Int64Attribute{
 					Optional:            true,
-					MarkdownDescription: `The number of day(s) between each set of offers to be set, updated, and displayed for a feature update profile, for example: if OfferStartDateTimeInUTC is 2020-06-09T10:00:00Z, and OfferIntervalInDays is 1, then the next two sets of offers will be made consecutively on 2020-06-10T10:00:00Z (next day at the same specified time) and 2020-06-11T10:00:00Z (next next day at the same specified time) with 1 day in between each set of offers.`,
+					MarkdownDescription: "The number of day(s) between each set of offers to be set, updated, and displayed for a feature update profile, for example: if OfferStartDateTimeInUTC is 2020-06-09T10:00:00Z, and OfferIntervalInDays is 1, then the next two sets of offers will be made consecutively on 2020-06-10T10:00:00Z (next day at the same specified time) and 2020-06-11T10:00:00Z (next next day at the same specified time) with 1 day in between each set of offers.",
 				},
 				"offer_start_date_time_in_utc": schema.StringAttribute{
 					Optional:            true,
 					Description:         `offerStartDateTimeInUTC`, // custom MS Graph attribute name
-					MarkdownDescription: `The feature update's starting date and time to be set, update, and displayed for a feature Update profile for example: 2020-06-09T10:00:00Z.`,
+					MarkdownDescription: "The feature update's starting date and time to be set, update, and displayed for a feature Update profile for example: 2020-06-09T10:00:00Z.",
 				},
 			},
-			MarkdownDescription: `The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. / A complex type to store the windows update rollout settings including offer start date time, offer end date time, and days between each set of offers.`,
+			MarkdownDescription: "The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. / A complex type to store the windows update rollout settings including offer start date time, offer end date time, and days between each set of offers.",
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: `Windows Feature Update Profile`,
+	MarkdownDescription: "Windows Feature Update Profile",
 }

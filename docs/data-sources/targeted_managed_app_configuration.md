@@ -43,7 +43,7 @@ output "microsoft365wp_targeted_managed_app_configuration" {
 
 ### Read-Only
 
-- `app_group_type` (String) Public Apps selection: group or individual
+- `app_group_type` (String) Public Apps selection: group or individual / Indicates a collection of apps to target which can be one of several pre-defined lists of apps or a manually selected list of apps; possible values are: `selectedPublicApps` (Target the collection of apps manually selected by the admin.), `allCoreMicrosoftApps` (Target the core set of Microsoft apps (Office, Edge, etc).), `allMicrosoftApps` (Target all apps with Microsoft as publisher.), `allApps` (Target all apps with an available assignment.)
 - `apps` (Attributes Set) List of apps to which the policy is deployed. / The identifier for the deployment an app. (see [below for nested schema](#nestedatt--apps))
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `created_date_time` (String)
@@ -55,7 +55,7 @@ output "microsoft365wp_targeted_managed_app_configuration" {
 - `is_assigned` (Boolean) Indicates if the policy is deployed to any inclusion groups or not.
 - `last_modified_date_time` (String)
 - `role_scope_tag_ids` (Set of String)
-- `targeted_app_management_levels` (String) The intended app management levels for this policy
+- `targeted_app_management_levels` (String) The intended app management levels for this policy / Management levels for apps; possible values are: `unspecified` (Unspecified), `unmanaged` (Unmanaged), `mdm` (MDM), `androidEnterprise` (Android Enterprise), `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode` (Android Enterprise dedicated devices with Azure AD Shared mode), `androidOpenSourceProjectUserAssociated` (Android Open Source Project (AOSP) devices), `androidOpenSourceProjectUserless` (Android Open Source Project (AOSP) userless devices), `unknownFutureValue` (Place holder for evolvable enum)
 - `version` (String)
 
 <a id="nestedatt--apps"></a>

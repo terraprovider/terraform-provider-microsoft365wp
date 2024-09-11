@@ -61,6 +61,7 @@ Required:
 Read-Only:
 
 - `android_device_owner_general_device` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration` (using e.g. `if x.android_device_owner_general_device != null`). (see [below for nested schema](#nestedatt--device_configurations--android_device_owner_general_device))
+- `android_work_profile_general_device` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration` (using e.g. `if x.android_work_profile_general_device != null`). (see [below for nested schema](#nestedatt--device_configurations--android_work_profile_general_device))
 - `created_date_time` (String) DateTime the object was created.
 - `display_name` (String) Admin provided name of the device configuration.
 - `ios_custom` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.iosCustomConfiguration` (using e.g. `if x.ios_custom != null`). (see [below for nested schema](#nestedatt--device_configurations--ios_custom))
@@ -82,6 +83,10 @@ Read-Only:
 
 <a id="nestedatt--device_configurations--android_device_owner_general_device"></a>
 ### Nested Schema for `device_configurations.android_device_owner_general_device`
+
+
+<a id="nestedatt--device_configurations--android_work_profile_general_device"></a>
+### Nested Schema for `device_configurations.android_work_profile_general_device`
 
 
 <a id="nestedatt--device_configurations--ios_custom"></a>

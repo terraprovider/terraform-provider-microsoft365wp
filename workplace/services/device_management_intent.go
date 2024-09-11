@@ -81,37 +81,37 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			MarkdownDescription: `The user given description`,
+			MarkdownDescription: "The user given description",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
-			MarkdownDescription: `The user given display name`,
+			MarkdownDescription: "The user given display name",
 		},
 		"is_assigned": schema.BoolAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
-			MarkdownDescription: `Signifies whether or not the intent is assigned to users`,
+			MarkdownDescription: "Signifies whether or not the intent is assigned to users",
 		},
 		"is_migrating_to_configuration_policy": schema.BoolAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
-			MarkdownDescription: `Signifies whether or not the intent is being migrated to the configurationPolicies endpoint`,
+			MarkdownDescription: "Signifies whether or not the intent is being migrated to the configurationPolicies endpoint",
 		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: `When the intent was last modified`,
+			MarkdownDescription: "When the intent was last modified",
 		},
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: `List of Scope Tags for this Entity instance.`,
+			MarkdownDescription: "List of Scope Tags for this Entity instance.",
 		},
 		"template_id": schema.StringAttribute{
 			Required:            true,
-			MarkdownDescription: `The ID of the template this intent was created from (if any)`,
+			MarkdownDescription: "The ID of the template this intent was created from (if any)",
 		},
 		"assignments": deviceAndAppManagementAssignment,
 		"settings": schema.SetNestedAttribute{
@@ -120,7 +120,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 				Attributes: map[string]schema.Attribute{ // deviceManagementSettingInstance
 					"definition_id": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: `The ID of the setting definition for this instance`,
+						MarkdownDescription: "The ID of the setting definition for this instance",
 					},
 					"abstract_complex": generic.OdataDerivedTypeNestedAttributeRs{
 						DerivedType: "#microsoft.graph.deviceManagementAbstractComplexSettingInstance",
@@ -129,7 +129,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Attributes: map[string]schema.Attribute{ // deviceManagementAbstractComplexSettingInstance
 								"implementation_id": schema.StringAttribute{
 									Optional:            true,
-									MarkdownDescription: `The definition ID for the chosen implementation of this complex setting`,
+									MarkdownDescription: "The definition ID for the chosen implementation of this complex setting",
 								},
 								"value": schema.SetNestedAttribute{
 									Required: true,
@@ -137,7 +137,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // deviceManagementSettingInstance
 											"definition_id": schema.StringAttribute{
 												Required:            true,
-												MarkdownDescription: `The ID of the setting definition for this instance`,
+												MarkdownDescription: "The ID of the setting definition for this instance",
 											},
 											"abstract_complex": generic.OdataDerivedTypeNestedAttributeRs{
 												DerivedType: "#microsoft.graph.deviceManagementAbstractComplexSettingInstance",
@@ -146,7 +146,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Attributes: map[string]schema.Attribute{ // deviceManagementAbstractComplexSettingInstance
 														"implementation_id": schema.StringAttribute{
 															Optional:            true,
-															MarkdownDescription: `The definition ID for the chosen implementation of this complex setting`,
+															MarkdownDescription: "The definition ID for the chosen implementation of this complex setting",
 														},
 														"value": schema.SetNestedAttribute{
 															Required: true,
@@ -154,7 +154,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																Attributes: map[string]schema.Attribute{ // deviceManagementSettingInstance
 																	"definition_id": schema.StringAttribute{
 																		Required:            true,
-																		MarkdownDescription: `The ID of the setting definition for this instance`,
+																		MarkdownDescription: "The ID of the setting definition for this instance",
 																	},
 																	"boolean": generic.OdataDerivedTypeNestedAttributeRs{
 																		DerivedType: "#microsoft.graph.deviceManagementBooleanSettingInstance",
@@ -163,13 +163,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementBooleanSettingInstance
 																				"value": schema.BoolAttribute{
 																					Required:            true,
-																					MarkdownDescription: `The boolean value`,
+																					MarkdownDescription: "The boolean value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing a boolean value`,
+																			MarkdownDescription: "A setting instance representing a boolean value",
 																		},
 																	},
 																	"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -179,13 +179,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementIntegerSettingInstance
 																				"value": schema.Int64Attribute{
 																					Required:            true,
-																					MarkdownDescription: `The integer value`,
+																					MarkdownDescription: "The integer value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing an integer value`,
+																			MarkdownDescription: "A setting instance representing an integer value",
 																		},
 																	},
 																	"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -195,24 +195,24 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementStringSettingInstance
 																				"value": schema.StringAttribute{
 																					Required:            true,
-																					MarkdownDescription: `The string value`,
+																					MarkdownDescription: "The string value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing a string value`,
+																			MarkdownDescription: "A setting instance representing a string value",
 																		},
 																	},
 																},
 															},
-															MarkdownDescription: `The values that make up the complex setting`,
+															MarkdownDescription: "The values that make up the complex setting",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing a complex value for an abstract setting`,
+													MarkdownDescription: "A setting instance representing a complex value for an abstract setting",
 												},
 											},
 											"boolean": generic.OdataDerivedTypeNestedAttributeRs{
@@ -222,13 +222,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Attributes: map[string]schema.Attribute{ // deviceManagementBooleanSettingInstance
 														"value": schema.BoolAttribute{
 															Required:            true,
-															MarkdownDescription: `The boolean value`,
+															MarkdownDescription: "The boolean value",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing a boolean value`,
+													MarkdownDescription: "A setting instance representing a boolean value",
 												},
 											},
 											"collection": generic.OdataDerivedTypeNestedAttributeRs{
@@ -238,13 +238,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Attributes: map[string]schema.Attribute{ // deviceManagementCollectionSettingInstance
 														"value_json": schema.StringAttribute{
 															Required:            true,
-															MarkdownDescription: `JSON representation of the value`,
+															MarkdownDescription: "JSON representation of the value",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing a collection of values`,
+													MarkdownDescription: "A setting instance representing a collection of values",
 												},
 											},
 											"complex": generic.OdataDerivedTypeNestedAttributeRs{
@@ -258,7 +258,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																Attributes: map[string]schema.Attribute{ // deviceManagementSettingInstance
 																	"definition_id": schema.StringAttribute{
 																		Required:            true,
-																		MarkdownDescription: `The ID of the setting definition for this instance`,
+																		MarkdownDescription: "The ID of the setting definition for this instance",
 																	},
 																	"boolean": generic.OdataDerivedTypeNestedAttributeRs{
 																		DerivedType: "#microsoft.graph.deviceManagementBooleanSettingInstance",
@@ -267,13 +267,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementBooleanSettingInstance
 																				"value": schema.BoolAttribute{
 																					Required:            true,
-																					MarkdownDescription: `The boolean value`,
+																					MarkdownDescription: "The boolean value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing a boolean value`,
+																			MarkdownDescription: "A setting instance representing a boolean value",
 																		},
 																	},
 																	"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -283,13 +283,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementIntegerSettingInstance
 																				"value": schema.Int64Attribute{
 																					Required:            true,
-																					MarkdownDescription: `The integer value`,
+																					MarkdownDescription: "The integer value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing an integer value`,
+																			MarkdownDescription: "A setting instance representing an integer value",
 																		},
 																	},
 																	"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -299,24 +299,24 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementStringSettingInstance
 																				"value": schema.StringAttribute{
 																					Required:            true,
-																					MarkdownDescription: `The string value`,
+																					MarkdownDescription: "The string value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing a string value`,
+																			MarkdownDescription: "A setting instance representing a string value",
 																		},
 																	},
 																},
 															},
-															MarkdownDescription: `The values that make up the complex setting`,
+															MarkdownDescription: "The values that make up the complex setting",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing a complex value`,
+													MarkdownDescription: "A setting instance representing a complex value",
 												},
 											},
 											"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -326,13 +326,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Attributes: map[string]schema.Attribute{ // deviceManagementIntegerSettingInstance
 														"value": schema.Int64Attribute{
 															Required:            true,
-															MarkdownDescription: `The integer value`,
+															MarkdownDescription: "The integer value",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing an integer value`,
+													MarkdownDescription: "A setting instance representing an integer value",
 												},
 											},
 											"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -342,24 +342,24 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Attributes: map[string]schema.Attribute{ // deviceManagementStringSettingInstance
 														"value": schema.StringAttribute{
 															Required:            true,
-															MarkdownDescription: `The string value`,
+															MarkdownDescription: "The string value",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing a string value`,
+													MarkdownDescription: "A setting instance representing a string value",
 												},
 											},
 										},
 									},
-									MarkdownDescription: `The values that make up the complex setting`,
+									MarkdownDescription: "The values that make up the complex setting",
 								},
 							},
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: `A setting instance representing a complex value for an abstract setting`,
+							MarkdownDescription: "A setting instance representing a complex value for an abstract setting",
 						},
 					},
 					"boolean": generic.OdataDerivedTypeNestedAttributeRs{
@@ -369,13 +369,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Attributes: map[string]schema.Attribute{ // deviceManagementBooleanSettingInstance
 								"value": schema.BoolAttribute{
 									Required:            true,
-									MarkdownDescription: `The boolean value`,
+									MarkdownDescription: "The boolean value",
 								},
 							},
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: `A setting instance representing a boolean value`,
+							MarkdownDescription: "A setting instance representing a boolean value",
 						},
 					},
 					"collection": generic.OdataDerivedTypeNestedAttributeRs{
@@ -385,13 +385,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Attributes: map[string]schema.Attribute{ // deviceManagementCollectionSettingInstance
 								"value_json": schema.StringAttribute{
 									Required:            true,
-									MarkdownDescription: `JSON representation of the value`,
+									MarkdownDescription: "JSON representation of the value",
 								},
 							},
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: `A setting instance representing a collection of values`,
+							MarkdownDescription: "A setting instance representing a collection of values",
 						},
 					},
 					"complex": generic.OdataDerivedTypeNestedAttributeRs{
@@ -405,7 +405,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // deviceManagementSettingInstance
 											"definition_id": schema.StringAttribute{
 												Required:            true,
-												MarkdownDescription: `The ID of the setting definition for this instance`,
+												MarkdownDescription: "The ID of the setting definition for this instance",
 											},
 											"abstract_complex": generic.OdataDerivedTypeNestedAttributeRs{
 												DerivedType: "#microsoft.graph.deviceManagementAbstractComplexSettingInstance",
@@ -414,7 +414,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Attributes: map[string]schema.Attribute{ // deviceManagementAbstractComplexSettingInstance
 														"implementation_id": schema.StringAttribute{
 															Optional:            true,
-															MarkdownDescription: `The definition ID for the chosen implementation of this complex setting`,
+															MarkdownDescription: "The definition ID for the chosen implementation of this complex setting",
 														},
 														"value": schema.SetNestedAttribute{
 															Required: true,
@@ -422,7 +422,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																Attributes: map[string]schema.Attribute{ // deviceManagementSettingInstance
 																	"definition_id": schema.StringAttribute{
 																		Required:            true,
-																		MarkdownDescription: `The ID of the setting definition for this instance`,
+																		MarkdownDescription: "The ID of the setting definition for this instance",
 																	},
 																	"boolean": generic.OdataDerivedTypeNestedAttributeRs{
 																		DerivedType: "#microsoft.graph.deviceManagementBooleanSettingInstance",
@@ -431,13 +431,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementBooleanSettingInstance
 																				"value": schema.BoolAttribute{
 																					Required:            true,
-																					MarkdownDescription: `The boolean value`,
+																					MarkdownDescription: "The boolean value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing a boolean value`,
+																			MarkdownDescription: "A setting instance representing a boolean value",
 																		},
 																	},
 																	"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -447,13 +447,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementIntegerSettingInstance
 																				"value": schema.Int64Attribute{
 																					Required:            true,
-																					MarkdownDescription: `The integer value`,
+																					MarkdownDescription: "The integer value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing an integer value`,
+																			MarkdownDescription: "A setting instance representing an integer value",
 																		},
 																	},
 																	"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -463,24 +463,24 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementStringSettingInstance
 																				"value": schema.StringAttribute{
 																					Required:            true,
-																					MarkdownDescription: `The string value`,
+																					MarkdownDescription: "The string value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing a string value`,
+																			MarkdownDescription: "A setting instance representing a string value",
 																		},
 																	},
 																},
 															},
-															MarkdownDescription: `The values that make up the complex setting`,
+															MarkdownDescription: "The values that make up the complex setting",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing a complex value for an abstract setting`,
+													MarkdownDescription: "A setting instance representing a complex value for an abstract setting",
 												},
 											},
 											"boolean": generic.OdataDerivedTypeNestedAttributeRs{
@@ -490,13 +490,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Attributes: map[string]schema.Attribute{ // deviceManagementBooleanSettingInstance
 														"value": schema.BoolAttribute{
 															Required:            true,
-															MarkdownDescription: `The boolean value`,
+															MarkdownDescription: "The boolean value",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing a boolean value`,
+													MarkdownDescription: "A setting instance representing a boolean value",
 												},
 											},
 											"collection": generic.OdataDerivedTypeNestedAttributeRs{
@@ -506,13 +506,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Attributes: map[string]schema.Attribute{ // deviceManagementCollectionSettingInstance
 														"value_json": schema.StringAttribute{
 															Required:            true,
-															MarkdownDescription: `JSON representation of the value`,
+															MarkdownDescription: "JSON representation of the value",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing a collection of values`,
+													MarkdownDescription: "A setting instance representing a collection of values",
 												},
 											},
 											"complex": generic.OdataDerivedTypeNestedAttributeRs{
@@ -526,7 +526,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																Attributes: map[string]schema.Attribute{ // deviceManagementSettingInstance
 																	"definition_id": schema.StringAttribute{
 																		Required:            true,
-																		MarkdownDescription: `The ID of the setting definition for this instance`,
+																		MarkdownDescription: "The ID of the setting definition for this instance",
 																	},
 																	"boolean": generic.OdataDerivedTypeNestedAttributeRs{
 																		DerivedType: "#microsoft.graph.deviceManagementBooleanSettingInstance",
@@ -535,13 +535,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementBooleanSettingInstance
 																				"value": schema.BoolAttribute{
 																					Required:            true,
-																					MarkdownDescription: `The boolean value`,
+																					MarkdownDescription: "The boolean value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing a boolean value`,
+																			MarkdownDescription: "A setting instance representing a boolean value",
 																		},
 																	},
 																	"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -551,13 +551,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementIntegerSettingInstance
 																				"value": schema.Int64Attribute{
 																					Required:            true,
-																					MarkdownDescription: `The integer value`,
+																					MarkdownDescription: "The integer value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing an integer value`,
+																			MarkdownDescription: "A setting instance representing an integer value",
 																		},
 																	},
 																	"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -567,24 +567,24 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Attributes: map[string]schema.Attribute{ // deviceManagementStringSettingInstance
 																				"value": schema.StringAttribute{
 																					Required:            true,
-																					MarkdownDescription: `The string value`,
+																					MarkdownDescription: "The string value",
 																				},
 																			},
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: `A setting instance representing a string value`,
+																			MarkdownDescription: "A setting instance representing a string value",
 																		},
 																	},
 																},
 															},
-															MarkdownDescription: `The values that make up the complex setting`,
+															MarkdownDescription: "The values that make up the complex setting",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing a complex value`,
+													MarkdownDescription: "A setting instance representing a complex value",
 												},
 											},
 											"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -594,13 +594,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Attributes: map[string]schema.Attribute{ // deviceManagementIntegerSettingInstance
 														"value": schema.Int64Attribute{
 															Required:            true,
-															MarkdownDescription: `The integer value`,
+															MarkdownDescription: "The integer value",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing an integer value`,
+													MarkdownDescription: "A setting instance representing an integer value",
 												},
 											},
 											"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -610,24 +610,24 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Attributes: map[string]schema.Attribute{ // deviceManagementStringSettingInstance
 														"value": schema.StringAttribute{
 															Required:            true,
-															MarkdownDescription: `The string value`,
+															MarkdownDescription: "The string value",
 														},
 													},
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: `A setting instance representing a string value`,
+													MarkdownDescription: "A setting instance representing a string value",
 												},
 											},
 										},
 									},
-									MarkdownDescription: `The values that make up the complex setting`,
+									MarkdownDescription: "The values that make up the complex setting",
 								},
 							},
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: `A setting instance representing a complex value`,
+							MarkdownDescription: "A setting instance representing a complex value",
 						},
 					},
 					"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -637,13 +637,13 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Attributes: map[string]schema.Attribute{ // deviceManagementIntegerSettingInstance
 								"value": schema.Int64Attribute{
 									Required:            true,
-									MarkdownDescription: `The integer value`,
+									MarkdownDescription: "The integer value",
 								},
 							},
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: `A setting instance representing an integer value`,
+							MarkdownDescription: "A setting instance representing an integer value",
 						},
 					},
 					"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -653,21 +653,21 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Attributes: map[string]schema.Attribute{ // deviceManagementStringSettingInstance
 								"value": schema.StringAttribute{
 									Required:            true,
-									MarkdownDescription: `The string value`,
+									MarkdownDescription: "The string value",
 								},
 							},
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: `A setting instance representing a string value`,
+							MarkdownDescription: "A setting instance representing a string value",
 						},
 					},
 				},
 			},
-			MarkdownDescription: `Collection of all settings to be applied / Base type for a setting instance`,
+			MarkdownDescription: "Collection of all settings to be applied / Base type for a setting instance",
 		},
 	},
-	MarkdownDescription: `Entity that represents an intent to apply settings to a device`,
+	MarkdownDescription: "Entity that represents an intent to apply settings to a device",
 }
 
 var deviceManagementIntentDeviceManagementSettingInstanceValidator = objectvalidator.ExactlyOneOf(

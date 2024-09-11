@@ -45,26 +45,26 @@ output "microsoft365wp_android_managed_app_protection" {
 
 - `allowed_android_device_manufacturers` (String) Semicolon seperated list of device manufacturers allowed, as a string, for the managed app to work.
 - `allowed_android_device_models` (Set of String) List of device models allowed, as a string, for the managed app to work.
-- `allowed_data_ingestion_locations` (Set of String)
-- `allowed_data_storage_locations` (Set of String)
-- `allowed_inbound_data_transfer_sources` (String)
+- `allowed_data_ingestion_locations` (Set of String) Locations which can be used to bring data into organization documents; possible values are: `oneDriveForBusiness` (OneDrive for business), `sharePoint` (SharePoint Online), `camera` (The device's camera), `photoLibrary` (The device's photo library)
+- `allowed_data_storage_locations` (Set of String) Storage locations where managed apps can potentially store their data; possible values are: `oneDriveForBusiness` (OneDrive for business), `sharePoint` (SharePoint), `box` (Box), `localStorage` (Local storage on the device), `photoLibrary` (The device's photo library)
+- `allowed_inbound_data_transfer_sources` (String) Data can be transferred from/to these classes of apps; possible values are: `allApps` (All apps.), `managedApps` (Managed apps.), `none` (No apps.)
 - `allowed_outbound_clipboard_sharing_exception_length` (Number)
-- `allowed_outbound_clipboard_sharing_level` (String)
-- `allowed_outbound_data_transfer_destinations` (String)
-- `app_action_if_account_is_clocked_out` (String) Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time).
-- `app_action_if_android_device_manufacturer_not_allowed` (String) Defines a managed app behavior, either block or wipe, if the specified device manufacturer is not allowed.
-- `app_action_if_android_device_model_not_allowed` (String) Defines a managed app behavior, either block or wipe, if the specified device model is not allowed.
-- `app_action_if_android_safety_net_apps_verification_failed` (String) Defines a managed app behavior, either warn or block, if the specified Android App Verification requirement fails.
-- `app_action_if_android_safety_net_device_attestation_failed` (String) Defines a managed app behavior, either warn or block, if the specified Android SafetyNet Attestation requirement fails.
-- `app_action_if_device_compliance_required` (String)
-- `app_action_if_device_lock_not_set` (String) Defines a managed app behavior, either warn, block or wipe, if the screen lock is required on android device but is not set.
-- `app_action_if_device_passcode_complexity_less_than_high` (String) If the device does not have a passcode of high complexity or higher, trigger the stored action.
-- `app_action_if_device_passcode_complexity_less_than_low` (String) If the device does not have a passcode of low complexity or higher, trigger the stored action.
-- `app_action_if_device_passcode_complexity_less_than_medium` (String) If the device does not have a passcode of medium complexity or higher, trigger the stored action.
-- `app_action_if_maximum_pin_retries_exceeded` (String)
-- `app_action_if_samsung_knox_attestation_required` (String) Defines the behavior of a managed app when Samsung Knox Attestation is required. Possible values are null, warn, block & wipe. If the admin does not set this action, the default is null, which indicates this setting is not configured.
-- `app_action_if_unable_to_authenticate_user` (String)
-- `app_group_type` (String) Public Apps selection: group or individual
+- `allowed_outbound_clipboard_sharing_level` (String) Represents the level to which the device's clipboard may be shared between apps; possible values are: `allApps` (Sharing is allowed between all apps, managed or not), `managedAppsWithPasteIn` (Sharing is allowed between all managed apps with paste in enabled), `managedApps` (Sharing is allowed between all managed apps), `blocked` (Sharing between apps is disabled)
+- `allowed_outbound_data_transfer_destinations` (String) Data can be transferred from/to these classes of apps; possible values are: `allApps` (All apps.), `managedApps` (Managed apps.), `none` (No apps.)
+- `app_action_if_account_is_clocked_out` (String) Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time). / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_android_device_manufacturer_not_allowed` (String) Defines a managed app behavior, either block or wipe, if the specified device manufacturer is not allowed. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_android_device_model_not_allowed` (String) Defines a managed app behavior, either block or wipe, if the specified device model is not allowed. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_android_safety_net_apps_verification_failed` (String) Defines a managed app behavior, either warn or block, if the specified Android App Verification requirement fails. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_android_safety_net_device_attestation_failed` (String) Defines a managed app behavior, either warn or block, if the specified Android SafetyNet Attestation requirement fails. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_device_compliance_required` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_device_lock_not_set` (String) Defines a managed app behavior, either warn, block or wipe, if the screen lock is required on android device but is not set. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_device_passcode_complexity_less_than_high` (String) If the device does not have a passcode of high complexity or higher, trigger the stored action. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_device_passcode_complexity_less_than_low` (String) If the device does not have a passcode of low complexity or higher, trigger the stored action. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_device_passcode_complexity_less_than_medium` (String) If the device does not have a passcode of medium complexity or higher, trigger the stored action. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_maximum_pin_retries_exceeded` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_samsung_knox_attestation_required` (String) Defines the behavior of a managed app when Samsung Knox Attestation is required. Possible values are null, warn, block & wipe. If the admin does not set this action, the default is null, which indicates this setting is not configured. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_unable_to_authenticate_user` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_group_type` (String) Public Apps selection: group or individual / Indicates a collection of apps to target which can be one of several pre-defined lists of apps or a manually selected list of apps; possible values are: `selectedPublicApps` (Target the collection of apps manually selected by the admin.), `allCoreMicrosoftApps` (Target the core set of Microsoft apps (Office, Edge, etc).), `allMicrosoftApps` (Target all apps with Microsoft as publisher.), `allApps` (Target all apps with an available assignment.)
 - `approved_keyboards` (Attributes Set) If Keyboard Restriction is enabled, only keyboards in this approved list will be allowed. A key should be Android package id for a keyboard and value should be a friendly name / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--approved_keyboards))
 - `apps` (Attributes Set) List of apps to which the policy is deployed. / The identifier for the deployment an app. (see [below for nested schema](#nestedatt--apps))
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
@@ -83,7 +83,7 @@ output "microsoft365wp_android_managed_app_protection" {
 - `description` (String)
 - `device_compliance_required` (Boolean)
 - `device_lock_required` (Boolean) Defines if any kind of lock must be required on android device
-- `dialer_restriction_level` (String)
+- `dialer_restriction_level` (String) The classes of apps that are allowed to click-to-open a phone number, for making phone calls or sending text messages; possible values are: `allApps` (Sharing is allowed to all apps.), `managedApps` (Sharing is allowed to all managed apps.), `customApp` (Sharing is allowed to a custom app.), `blocked` (Sharing between apps is blocked.)
 - `disable_app_encryption_if_device_encryption_is_enabled` (Boolean) When this setting is enabled, app level encryption is disabled if device level encryption is enabled
 - `disable_app_pin_if_device_pin_is_set` (Boolean)
 - `display_name` (String)
@@ -96,9 +96,9 @@ output "microsoft365wp_android_managed_app_protection" {
 - `is_assigned` (Boolean) Indicates if the policy is deployed to any inclusion groups or not.
 - `keyboards_restricted` (Boolean) Indicates if keyboard restriction is enabled. If enabled list of approved keyboards must be provided as well.
 - `last_modified_date_time` (String)
-- `managed_browser` (String)
+- `managed_browser` (String) Type of managed browser; possible values are: `notConfigured` (Not configured), `microsoftEdge` (Microsoft Edge)
 - `managed_browser_to_open_links_required` (Boolean)
-- `maximum_allowed_device_threat_level` (String)
+- `maximum_allowed_device_threat_level` (String) The maxium threat level allowed for an app to be compliant; possible values are: `notConfigured` (Value not configured), `secured` (Device needs to have no threat), `low` (Device needs to have a low threat.), `medium` (Device needs to have not more than medium threat.), `high` (Device needs to have not more than high threat)
 - `maximum_pin_retries` (Number)
 - `maximum_required_os_version` (String)
 - `maximum_warning_os_version` (String)
@@ -118,30 +118,30 @@ output "microsoft365wp_android_managed_app_protection" {
 - `minimum_wipe_company_portal_version` (String) Minimum version of the Company portal that must be installed on the device or the company data on the app will be wiped
 - `minimum_wipe_os_version` (String)
 - `minimum_wipe_patch_version` (String) Android security patch level  less than or equal to the specified value will wipe the managed app and the associated company data.
-- `mobile_threat_defense_partner_priority` (String)
-- `mobile_threat_defense_remediation_action` (String)
-- `notification_restriction` (String)
+- `mobile_threat_defense_partner_priority` (String) Determines the conflict resolution strategy, when more than one Mobile Threat Defense provider is enabled; possible values are: `defenderOverThirdPartyPartner` (Indicates use of Microsoft Defender Endpoint over 3rd party MTD connectors), `thirdPartyPartnerOverDefender` (Indicates use of a 3rd party MTD connector over Microsoft Defender Endpoint), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
+- `mobile_threat_defense_remediation_action` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `notification_restriction` (String) Restrict managed app notification; possible values are: `allow` (Share all notifications.), `blockOrganizationalData` (Do not share Orgnizational data in notifications.), `block` (Do not share notifications.)
 - `organizational_credentials_required` (Boolean)
 - `period_before_pin_reset` (String)
 - `period_offline_before_access_check` (String)
 - `period_offline_before_wipe_is_enforced` (String)
 - `period_online_before_access_check` (String)
-- `pin_character_set` (String)
+- `pin_character_set` (String) Character set which is to be used for a user's app PIN; possible values are: `numeric` (Numeric characters), `alphanumericAndSymbol` (Alphanumeric and symbolic characters)
 - `pin_required` (Boolean)
 - `pin_required_instead_of_biometric_timeout` (String)
 - `previous_pin_block_count` (Number)
 - `print_blocked` (Boolean)
-- `protected_messaging_redirect_app_type` (String)
+- `protected_messaging_redirect_app_type` (String) Defines how app messaging redirection is protected by an App Protection Policy. Default is anyApp; possible values are: `anyApp` (App protection policy will allow messaging redirection to any app.), `anyManagedApp` (App protection policy will allow messaging redirection to any managed application.), `specificApps` (App protection policy will allow messaging redirection only to specified applications in related App protection policy settings. See related settings 'messagingRedirectAppDisplayName', 'messagingRedirectAppPackageId' and 'messagingRedirectAppUrlScheme'.), `blocked` (App protection policy will block messaging redirection to any app.)
 - `require_class3_biometrics` (Boolean) Require user to apply Class 3 Biometrics on their Android device.
 - `require_pin_after_biometric_change` (Boolean) A PIN prompt will override biometric prompts if class 3 biometrics are updated on the device.
-- `required_android_safety_net_apps_verification_type` (String) Defines the Android SafetyNet Apps Verification requirement for a managed app to work.
-- `required_android_safety_net_device_attestation_type` (String) Defines the Android SafetyNet Device Attestation requirement for a managed app to work.
-- `required_android_safety_net_evaluation_type` (String) Defines the Android SafetyNet evaluation type requirement for a managed app to work.
+- `required_android_safety_net_apps_verification_type` (String) Defines the Android SafetyNet Apps Verification requirement for a managed app to work. / An admin enforced Android SafetyNet Device Attestation requirement on a managed app; possible values are: `none` (no requirement set), `enabled` (require that Android device has SafetyNet Apps Verification enabled)
+- `required_android_safety_net_device_attestation_type` (String) Defines the Android SafetyNet Device Attestation requirement for a managed app to work. / An admin enforced Android SafetyNet Device Attestation requirement on a managed app; possible values are: `none` (no requirement set), `basicIntegrity` (require that Android device passes SafetyNet Basic Integrity validation), `basicIntegrityAndDeviceCertification` (require that Android device passes SafetyNet Basic Integrity and Device Certification validations)
+- `required_android_safety_net_evaluation_type` (String) Defines the Android SafetyNet evaluation type requirement for a managed app to work. / An admin enforced Android SafetyNet evaluation type requirement on a managed app; possible values are: `basic` (Require basic evaluation), `hardwareBacked` (Require hardware backed evaluation)
 - `role_scope_tag_ids` (Set of String)
 - `save_as_blocked` (Boolean)
 - `screen_capture_blocked` (Boolean) Indicates whether a managed user can take screen captures of managed apps
 - `simple_pin_blocked` (Boolean)
-- `targeted_app_management_levels` (String) The intended app management levels for this policy
+- `targeted_app_management_levels` (String) The intended app management levels for this policy / Management levels for apps; possible values are: `unspecified` (Unspecified), `unmanaged` (Unmanaged), `mdm` (MDM), `androidEnterprise` (Android Enterprise), `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode` (Android Enterprise dedicated devices with Azure AD Shared mode), `androidOpenSourceProjectUserAssociated` (Android Open Source Project (AOSP) devices), `androidOpenSourceProjectUserless` (Android Open Source Project (AOSP) userless devices), `unknownFutureValue` (Place holder for evolvable enum)
 - `version` (String)
 - `warn_after_company_portal_update_deferral_in_days` (Number) Maximum number of days Company Portal update can be deferred on the device or the user will receive the warning
 - `wipe_after_company_portal_update_deferral_in_days` (Number) Maximum number of days Company Portal update can be deferred on the device or the company data on the app will be wiped

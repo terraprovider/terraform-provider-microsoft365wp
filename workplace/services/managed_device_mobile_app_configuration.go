@@ -55,39 +55,39 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: `DateTime the object was created.`,
+			MarkdownDescription: "DateTime the object was created.",
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: `Admin provided description of the Device Configuration.`,
+			MarkdownDescription: "Admin provided description of the Device Configuration.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
-			MarkdownDescription: `Admin provided name of the device configuration.`,
+			MarkdownDescription: "Admin provided name of the device configuration.",
 		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: `DateTime the object was last modified.`,
+			MarkdownDescription: "DateTime the object was last modified.",
 		},
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: `List of Scope Tags for this App configuration entity.`,
+			MarkdownDescription: "List of Scope Tags for this App configuration entity.",
 		},
 		"targeted_mobile_apps": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Required:            true,
-			MarkdownDescription: `the associated app.`,
+			MarkdownDescription: "the associated app.",
 		},
 		"version": schema.Int64Attribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
-			MarkdownDescription: `Version of the device configuration.`,
+			MarkdownDescription: "Version of the device configuration.",
 		},
 		"assignments": deviceAndAppManagementAssignment,
 		"android_managed_store": generic.OdataDerivedTypeNestedAttributeRs{
@@ -104,16 +104,16 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: `Setting to specify whether to allow ConnectedApps experience for this app.`,
+						MarkdownDescription: "Setting to specify whether to allow ConnectedApps experience for this app.",
 					},
 					"package_id": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: `Android Enterprise app configuration package id.`,
+						MarkdownDescription: "Android Enterprise app configuration package id.",
 					},
 					"payload_json_base64": schema.StringAttribute{
 						Optional:            true,
 						Description:         `payloadJson`, // custom MS Graph attribute name
-						MarkdownDescription: `Android Enterprise app configuration JSON payload.`,
+						MarkdownDescription: "Android Enterprise app configuration JSON payload.",
 					},
 					"permission_actions": schema.SetNestedAttribute{
 						Optional: true,
@@ -124,28 +124,28 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("prompt", "autoGrant", "autoDeny"),
 									},
-									MarkdownDescription: `Type of Android permission action.`,
+									MarkdownDescription: "Type of Android permission action. / Android action taken when an app requests a dangerous permission; possible values are: `prompt`, `autoGrant`, `autoDeny`",
 								},
 								"permission": schema.StringAttribute{
 									Optional:            true,
-									MarkdownDescription: `Android permission string, defined in the official Android documentation.  Example 'android.permission.READ_CONTACTS'.`,
+									MarkdownDescription: "Android permission string, defined in the official Android documentation.  Example 'android.permission.READ_CONTACTS'.",
 								},
 							},
 						},
-						MarkdownDescription: `List of Android app permissions and corresponding permission actions. / Mapping between an Android app permission and the action Android should take when that permission is requested.`,
+						MarkdownDescription: "List of Android app permissions and corresponding permission actions. / Mapping between an Android app permission and the action Android should take when that permission is requested.",
 					},
 					"profile_applicability": schema.StringAttribute{
 						Required: true,
 						Validators: []validator.String{
 							stringvalidator.OneOf("default", "androidWorkProfile", "androidDeviceOwner"),
 						},
-						MarkdownDescription: `Android Enterprise profile applicability (AndroidWorkProfile, DeviceOwner, or default (applies to both)).`,
+						MarkdownDescription: "Android Enterprise profile applicability (AndroidWorkProfile, DeviceOwner, or default (applies to both)). / Android profile applicability; possible values are: `default`, `androidWorkProfile`, `androidDeviceOwner`",
 					},
 				},
 				Validators: []validator.Object{
 					managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator,
 				},
-				MarkdownDescription: `Contains properties, inherited properties and actions for Android Enterprise mobile app configurations.`,
+				MarkdownDescription: "Contains properties, inherited properties and actions for Android Enterprise mobile app configurations.",
 			},
 		},
 		"ios": generic.OdataDerivedTypeNestedAttributeRs{
@@ -156,7 +156,7 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 					"encoded_setting_xml_base64": schema.StringAttribute{
 						Optional:            true,
 						Description:         `encodedSettingXml`, // custom MS Graph attribute name
-						MarkdownDescription: `mdm app configuration Base64 binary.`,
+						MarkdownDescription: "mdm app configuration Base64 binary.",
 					},
 					"settings": schema.SetNestedAttribute{
 						Optional: true,
@@ -164,32 +164,32 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 							Attributes: map[string]schema.Attribute{ // appConfigurationSettingItem
 								"app_config_key": schema.StringAttribute{
 									Required:            true,
-									MarkdownDescription: `app configuration key.`,
+									MarkdownDescription: "app configuration key.",
 								},
 								"app_config_key_type": schema.StringAttribute{
 									Required: true,
 									Validators: []validator.String{
 										stringvalidator.OneOf("stringType", "integerType", "realType", "booleanType", "tokenType"),
 									},
-									MarkdownDescription: `app configuration key type.`,
+									MarkdownDescription: "app configuration key type. / App configuration key types; possible values are: `stringType`, `integerType`, `realType`, `booleanType`, `tokenType`",
 								},
 								"app_config_key_value": schema.StringAttribute{
 									Required:            true,
-									MarkdownDescription: `app configuration key value.`,
+									MarkdownDescription: "app configuration key value.",
 								},
 							},
 						},
-						MarkdownDescription: `app configuration setting items. / Contains properties for App configuration setting item.`,
+						MarkdownDescription: "app configuration setting items. / Contains properties for App configuration setting item.",
 					},
 				},
 				Validators: []validator.Object{
 					managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator,
 				},
-				MarkdownDescription: `Contains properties, inherited properties and actions for iOS mobile app configurations.`,
+				MarkdownDescription: "Contains properties, inherited properties and actions for iOS mobile app configurations.",
 			},
 		},
 	},
-	MarkdownDescription: `An abstract class for Mobile app configuration for enrolled devices.`,
+	MarkdownDescription: "An abstract class for Mobile app configuration for enrolled devices.",
 }
 
 var managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator = objectvalidator.ExactlyOneOf(

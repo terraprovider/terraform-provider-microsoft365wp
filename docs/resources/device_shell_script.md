@@ -126,7 +126,7 @@ EOT
 - `execution_frequency` (String) The interval for script to run. If not defined the script will run once
 - `retry_count` (Number) Number of times for the script to be retried if it fails
 - `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for this PowerShellScript instance.
-- `run_as_account` (String) Indicates the type of execution context.
+- `run_as_account` (String) Indicates the type of execution context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context)
 
 ### Read-Only
 

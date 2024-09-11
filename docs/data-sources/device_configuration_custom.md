@@ -107,9 +107,9 @@ Read-Only:
 
 Read-Only:
 
-- `device_mode` (String) Applicability rule for device mode.
+- `device_mode` (String) Applicability rule for device mode. / Windows 10 Device Mode type; possible values are: `standardConfiguration` (Standard Configuration), `sModeConfiguration` (S Mode Configuration)
 - `name` (String) Name for object.
-- `rule_type` (String) Applicability Rule type.
+- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)
 
 
 <a id="nestedatt--device_management_applicability_rule_os_edition"></a>
@@ -118,8 +118,8 @@ Read-Only:
 Read-Only:
 
 - `name` (String) Name for object.
-- `os_edition_types` (Set of String) Applicability rule OS edition type.
-- `rule_type` (String) Applicability Rule type.
+- `os_edition_types` (Set of String) Applicability rule OS edition type. / Windows 10 Edition type; possible values are: `windows10Enterprise` (Windows 10 Enterprise), `windows10EnterpriseN` (Windows 10 EnterpriseN), `windows10Education` (Windows 10 Education), `windows10EducationN` (Windows 10 EducationN), `windows10MobileEnterprise` (Windows 10 Mobile Enterprise), `windows10HolographicEnterprise` (Windows 10 Holographic Enterprise), `windows10Professional` (Windows 10 Professional), `windows10ProfessionalN` (Windows 10 ProfessionalN), `windows10ProfessionalEducation` (Windows 10 Professional Education), `windows10ProfessionalEducationN` (Windows 10 Professional EducationN), `windows10ProfessionalWorkstation` (Windows 10 Professional for Workstations), `windows10ProfessionalWorkstationN` (Windows 10 Professional for Workstations N), `notConfigured` (NotConfigured), `windows10Home` (Windows 10 Home), `windows10HomeChina` (Windows 10 Home China), `windows10HomeN` (Windows 10 Home N), `windows10HomeSingleLanguage` (Windows 10 Home Single Language), `windows10Mobile` (Windows 10 Mobile), `windows10IoTCore` (Windows 10 IoT Core), `windows10IoTCoreCommercial` (Windows 10 IoT Core Commercial)
+- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)
 
 
 <a id="nestedatt--device_management_applicability_rule_os_version"></a>
@@ -130,7 +130,7 @@ Read-Only:
 - `max_os_version` (String) Max OS version for Applicability Rule.
 - `min_os_version` (String) Min OS version for Applicability Rule.
 - `name` (String) Name for object.
-- `rule_type` (String) Applicability Rule type.
+- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)
 
 
 <a id="nestedatt--windows10"></a>

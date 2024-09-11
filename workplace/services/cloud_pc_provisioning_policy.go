@@ -64,6 +64,21 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					Optional: true,
 				},
 			},
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcProvisioningPolicyAutopatch?view=graph-rest-beta",
+		},
+		"autopilot_configuration": schema.SingleNestedAttribute{
+			Optional: true,
+			Attributes: map[string]schema.Attribute{ // cloudPcAutopilotConfiguration
+				"application_timeout_in_minutes": schema.Int64Attribute{
+					Required: true,
+				},
+				"device_preparation_profile_id": schema.StringAttribute{
+					Required: true,
+				},
+				"on_failure_device_access_denied": schema.BoolAttribute{
+					Required: true,
+				},
+			},
 		},
 		"cloud_pc_group_display_name": schema.StringAttribute{
 			Optional: true,
@@ -88,8 +103,9 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 						Validators: []validator.String{
 							stringvalidator.OneOf("azureADJoin", "hybridAzureADJoin", "unknownFutureValue"),
 						},
-						PlanModifiers: []planmodifier.String{wpdefaultvalue.StringDefaultValue("azureADJoin")},
-						Computed:      true,
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("azureADJoin")},
+						Computed:            true,
+						MarkdownDescription: "; possible values are: `azureADJoin`, `hybridAzureADJoin`, `unknownFutureValue`",
 					},
 					"on_premises_connection_id": schema.StringAttribute{
 						Optional: true,
@@ -97,8 +113,9 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					"region_group": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
-							stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea"),
+							stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico"),
 						},
+						MarkdownDescription: "; possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`",
 					},
 					"region_name": schema.StringAttribute{
 						Optional:      true,
@@ -110,12 +127,13 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 						Validators: []validator.String{
 							stringvalidator.OneOf("azureADJoin", "hybridAzureADJoin", "unknownFutureValue"),
 						},
-						PlanModifiers: []planmodifier.String{wpdefaultvalue.StringDefaultValue("azureADJoin")},
-						Computed:      true,
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("azureADJoin")},
+						Computed:            true,
+						MarkdownDescription: "; possible values are: `azureADJoin`, `hybridAzureADJoin`, `unknownFutureValue`",
 					},
 				},
 			},
-			MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDomainJoinConfiguration?view=graph-rest-beta`,
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDomainJoinConfiguration?view=graph-rest-beta",
 		},
 		"enable_single_sign_on": schema.BoolAttribute{
 			Optional:      true,
@@ -133,8 +151,9 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				stringvalidator.OneOf("gallery", "custom", "unknownFutureValue"),
 			},
-			PlanModifiers: []planmodifier.String{wpdefaultvalue.StringDefaultValue("gallery")},
-			Computed:      true,
+			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("gallery")},
+			Computed:            true,
+			MarkdownDescription: "; possible values are: `gallery`, `custom`, `unknownFutureValue`",
 		},
 		"local_admin_enabled": schema.BoolAttribute{
 			Optional: true,
@@ -144,8 +163,9 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				wpvalidator.FlagEnumValues("windows365", "devBox", "unknownFutureValue", "rpaBox"),
 			},
-			PlanModifiers: []planmodifier.String{wpdefaultvalue.StringDefaultValue("windows365")},
-			Computed:      true,
+			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("windows365")},
+			Computed:            true,
+			MarkdownDescription: "; possible values are: `windows365`, `devBox`, `unknownFutureValue`, `rpaBox`",
 		},
 		"microsoft_managed_desktop": schema.SingleNestedAttribute{
 			Optional: true,
@@ -155,8 +175,9 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					Validators: []validator.String{
 						stringvalidator.OneOf("notManaged", "premiumManaged", "standardManaged", "starterManaged", "unknownFutureValue"),
 					},
-					PlanModifiers: []planmodifier.String{wpdefaultvalue.StringDefaultValue("notManaged")},
-					Computed:      true,
+					PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notManaged")},
+					Computed:            true,
+					MarkdownDescription: "; possible values are: `notManaged`, `premiumManaged`, `standardManaged`, `starterManaged`, `unknownFutureValue`",
 				},
 				"profile": schema.StringAttribute{
 					Optional:      true,
@@ -168,19 +189,21 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					Validators: []validator.String{
 						stringvalidator.OneOf("notManaged", "premiumManaged", "standardManaged", "starterManaged", "unknownFutureValue"),
 					},
-					PlanModifiers: []planmodifier.String{wpdefaultvalue.StringDefaultValue("notManaged")},
-					Computed:      true,
+					PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notManaged")},
+					Computed:            true,
+					MarkdownDescription: "; possible values are: `notManaged`, `premiumManaged`, `standardManaged`, `starterManaged`, `unknownFutureValue`",
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/microsoftManagedDesktop?view=graph-rest-beta`,
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/microsoftManagedDesktop?view=graph-rest-beta",
 		},
 		"provisioning_type": schema.StringAttribute{
 			Optional: true,
 			Validators: []validator.String{
 				stringvalidator.OneOf("dedicated", "shared", "unknownFutureValue", "sharedByUser", "sharedByEntraGroup"),
 			},
+			MarkdownDescription: "; possible values are: `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`",
 		},
 		"scope_ids": schema.SetAttribute{
 			ElementType:   types.StringType,
@@ -195,7 +218,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					Optional: true,
 				},
 			},
-			MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcWindowsSetting?view=graph-rest-beta`,
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcWindowsSetting?view=graph-rest-beta",
 		},
 		"assignments": schema.SetNestedAttribute{
 			Optional: true,
@@ -225,18 +248,18 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										cloudPcProvisioningPolicyCloudPcManagementAssignmentTargetValidator,
 									},
-									MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcManagementGroupAssignmentTarget?view=graph-rest-beta`,
+									MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcManagementGroupAssignmentTarget?view=graph-rest-beta",
 								},
 							},
 						},
-						MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcManagementAssignmentTarget?view=graph-rest-beta`,
+						MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcManagementAssignmentTarget?view=graph-rest-beta",
 					},
 				},
 			},
-			MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcProvisioningPolicyAssignment?view=graph-rest-beta`,
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcProvisioningPolicyAssignment?view=graph-rest-beta",
 		},
 	},
-	MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcProvisioningPolicy?view=graph-rest-beta`,
+	MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcProvisioningPolicy?view=graph-rest-beta",
 }
 
 var cloudPcProvisioningPolicyCloudPcManagementAssignmentTargetValidator = objectvalidator.ExactlyOneOf(

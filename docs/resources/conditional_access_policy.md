@@ -123,7 +123,7 @@ resource "microsoft365wp_conditional_access_policy" "test_combined" {
 
 - `grant_controls` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessGrantControls?view=graph-rest-beta (see [below for nested schema](#nestedatt--grant_controls))
 - `session_controls` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessSessionControls?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls))
-- `state` (String)
+- `state` (String) ; possible values are: `enabled`, `disabled`, `enabledForReportingButNotEnforced`
 
 ### Read-Only
 
@@ -137,16 +137,16 @@ Optional:
 
 - `applications` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessApplications?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--applications))
 - `authentication_flows` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAuthenticationFlows?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--authentication_flows))
-- `client_app_types` (Set of String)
+- `client_app_types` (Set of String) ; possible values are: `all`, `browser`, `mobileAppsAndDesktopClients`, `exchangeActiveSync`, `easSupported`, `other`, `unknownFutureValue`
 - `client_applications` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessClientApplications?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--client_applications))
 - `device_states` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessDeviceStates?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--device_states))
 - `devices` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessDevices?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--devices))
-- `insider_risk_levels` (String)
+- `insider_risk_levels` (String) ; possible values are: `minor`, `moderate`, `elevated`, `unknownFutureValue`
 - `locations` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessLocations?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--locations))
 - `platforms` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessPlatforms?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--platforms))
-- `service_principal_risk_levels` (Set of String)
-- `sign_in_risk_levels` (Set of String)
-- `user_risk_levels` (Set of String)
+- `service_principal_risk_levels` (Set of String) ; possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`
+- `sign_in_risk_levels` (Set of String) ; possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`
+- `user_risk_levels` (Set of String) ; possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`
 - `users` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessUsers?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users))
 
 <a id="nestedatt--conditions--applications"></a>
@@ -165,7 +165,7 @@ Optional:
 
 Required:
 
-- `mode` (String)
+- `mode` (String) ; possible values are: `include`, `exclude`
 - `rule` (String)
 
 
@@ -175,7 +175,7 @@ Required:
 
 Required:
 
-- `transfer_methods` (String)
+- `transfer_methods` (String) ; possible values are: `none`, `deviceCodeFlow`, `authenticationTransfer`, `unknownFutureValue`
 
 
 <a id="nestedatt--conditions--client_applications"></a>
@@ -192,7 +192,7 @@ Optional:
 
 Required:
 
-- `mode` (String)
+- `mode` (String) ; possible values are: `include`, `exclude`
 - `rule` (String)
 
 
@@ -222,7 +222,7 @@ Optional:
 
 Required:
 
-- `mode` (String)
+- `mode` (String) ; possible values are: `include`, `exclude`
 - `rule` (String)
 
 
@@ -241,11 +241,11 @@ Optional:
 
 Required:
 
-- `include_platforms` (Set of String)
+- `include_platforms` (Set of String) ; possible values are: `android`, `iOS`, `windows`, `windowsPhone`, `macOS`, `all`, `unknownFutureValue`, `linux`
 
 Optional:
 
-- `exclude_platforms` (Set of String)
+- `exclude_platforms` (Set of String) ; possible values are: `android`, `iOS`, `windows`, `windowsPhone`, `macOS`, `all`, `unknownFutureValue`, `linux`
 
 
 <a id="nestedatt--conditions--users"></a>
@@ -267,7 +267,7 @@ Optional:
 
 Required:
 
-- `guest_or_external_user_types` (String)
+- `guest_or_external_user_types` (String) ; possible values are: `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue`
 
 Optional:
 
@@ -280,7 +280,7 @@ Optional:
 
 - `all` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAllExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--all))
 - `enumerated` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessEnumeratedExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--enumerated))
-- `membership_kind` (String)
+- `membership_kind` (String) ; possible values are: `all`, `enumerated`, `unknownFutureValue`
 
 <a id="nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--all"></a>
 ### Nested Schema for `conditions.users.exclude_guests_or_external_users.external_tenants.all`
@@ -301,7 +301,7 @@ Required:
 
 Required:
 
-- `guest_or_external_user_types` (String)
+- `guest_or_external_user_types` (String) ; possible values are: `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue`
 
 Optional:
 
@@ -314,7 +314,7 @@ Optional:
 
 - `all` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAllExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--external_tenants--all))
 - `enumerated` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessEnumeratedExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--external_tenants--enumerated))
-- `membership_kind` (String)
+- `membership_kind` (String) ; possible values are: `all`, `enumerated`, `unknownFutureValue`
 
 <a id="nestedatt--conditions--users--include_guests_or_external_users--external_tenants--all"></a>
 ### Nested Schema for `conditions.users.include_guests_or_external_users.external_tenants.all`
@@ -342,7 +342,7 @@ Required:
 Optional:
 
 - `authentication_strength` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/authenticationStrengthPolicy?view=graph-rest-beta (see [below for nested schema](#nestedatt--grant_controls--authentication_strength))
-- `built_in_controls` (Set of String)
+- `built_in_controls` (Set of String) ; possible values are: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`
 - `custom_authentication_factors` (Set of String)
 - `terms_of_use` (Set of String)
 
@@ -355,13 +355,13 @@ Required:
 
 Read-Only:
 
-- `allowed_combinations` (Set of String)
+- `allowed_combinations` (Set of String) ; possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`
 - `created_date_time` (String)
 - `description` (String)
 - `display_name` (String)
 - `modified_date_time` (String)
-- `policy_type` (String)
-- `requirements_satisfied` (String)
+- `policy_type` (String) ; possible values are: `builtIn`, `custom`, `unknownFutureValue`
+- `requirements_satisfied` (String) ; possible values are: `none`, `mfa`, `unknownFutureValue`
 
 
 
@@ -391,7 +391,7 @@ Optional:
 
 Optional:
 
-- `cloud_app_security_type` (String)
+- `cloud_app_security_type` (String) ; possible values are: `mcasConfigured`, `monitorOnly`, `blockDownloads`, `unknownFutureValue`
 - `is_enabled` (Boolean)
 
 
@@ -400,7 +400,7 @@ Optional:
 
 Optional:
 
-- `mode` (String)
+- `mode` (String) ; possible values are: `strictEnforcement`, `disabled`, `unknownFutureValue`, `strictLocation`
 
 
 <a id="nestedatt--session_controls--persistent_browser"></a>
@@ -409,7 +409,7 @@ Optional:
 Optional:
 
 - `is_enabled` (Boolean)
-- `mode` (String)
+- `mode` (String) ; possible values are: `always`, `never`
 
 
 <a id="nestedatt--session_controls--secure_sign_in_session"></a>
@@ -425,10 +425,10 @@ Optional:
 
 Optional:
 
-- `authentication_type` (String)
-- `frequency_interval` (String)
+- `authentication_type` (String) ; possible values are: `primaryAndSecondaryAuthentication`, `secondaryAuthentication`, `unknownFutureValue`
+- `frequency_interval` (String) ; possible values are: `timeBased`, `everyTime`, `unknownFutureValue`
 - `is_enabled` (Boolean)
-- `type` (String)
+- `type` (String) ; possible values are: `days`, `hours`
 - `value` (Number)
 
 

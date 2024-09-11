@@ -142,11 +142,11 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: `DateTime the object was created.`,
+			MarkdownDescription: "DateTime the object was created.",
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			MarkdownDescription: `Admin provided description of the Device Configuration.`,
+			MarkdownDescription: "Admin provided description of the Device Configuration.",
 		},
 		"device_management_applicability_rule_device_mode": schema.SingleNestedAttribute{
 			Optional: true,
@@ -156,26 +156,26 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 					Validators: []validator.String{
 						stringvalidator.OneOf("standardConfiguration", "sModeConfiguration"),
 					},
-					MarkdownDescription: `Applicability rule for device mode.`,
+					MarkdownDescription: "Applicability rule for device mode. / Windows 10 Device Mode type; possible values are: `standardConfiguration` (Standard Configuration), `sModeConfiguration` (S Mode Configuration)",
 				},
 				"name": schema.StringAttribute{
 					Optional:            true,
-					MarkdownDescription: `Name for object.`,
+					MarkdownDescription: "Name for object.",
 				},
 				"rule_type": schema.StringAttribute{
 					Required:            true,
 					Validators:          []validator.String{stringvalidator.OneOf("include", "exclude")},
-					MarkdownDescription: `Applicability Rule type.`,
+					MarkdownDescription: "Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)",
 				},
 			},
-			MarkdownDescription: `The device mode applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleDeviceMode?view=graph-rest-beta`,
+			MarkdownDescription: "The device mode applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleDeviceMode?view=graph-rest-beta",
 		},
 		"device_management_applicability_rule_os_edition": schema.SingleNestedAttribute{
 			Optional: true,
 			Attributes: map[string]schema.Attribute{ // deviceManagementApplicabilityRuleOsEdition
 				"name": schema.StringAttribute{
 					Optional:            true,
-					MarkdownDescription: `Name for object.`,
+					MarkdownDescription: "Name for object.",
 				},
 				"os_edition_types": schema.SetAttribute{
 					ElementType: types.StringType,
@@ -185,15 +185,15 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 							stringvalidator.OneOf("windows10Enterprise", "windows10EnterpriseN", "windows10Education", "windows10EducationN", "windows10MobileEnterprise", "windows10HolographicEnterprise", "windows10Professional", "windows10ProfessionalN", "windows10ProfessionalEducation", "windows10ProfessionalEducationN", "windows10ProfessionalWorkstation", "windows10ProfessionalWorkstationN", "notConfigured", "windows10Home", "windows10HomeChina", "windows10HomeN", "windows10HomeSingleLanguage", "windows10Mobile", "windows10IoTCore", "windows10IoTCoreCommercial"),
 						),
 					},
-					MarkdownDescription: `Applicability rule OS edition type.`,
+					MarkdownDescription: "Applicability rule OS edition type. / Windows 10 Edition type; possible values are: `windows10Enterprise` (Windows 10 Enterprise), `windows10EnterpriseN` (Windows 10 EnterpriseN), `windows10Education` (Windows 10 Education), `windows10EducationN` (Windows 10 EducationN), `windows10MobileEnterprise` (Windows 10 Mobile Enterprise), `windows10HolographicEnterprise` (Windows 10 Holographic Enterprise), `windows10Professional` (Windows 10 Professional), `windows10ProfessionalN` (Windows 10 ProfessionalN), `windows10ProfessionalEducation` (Windows 10 Professional Education), `windows10ProfessionalEducationN` (Windows 10 Professional EducationN), `windows10ProfessionalWorkstation` (Windows 10 Professional for Workstations), `windows10ProfessionalWorkstationN` (Windows 10 Professional for Workstations N), `notConfigured` (NotConfigured), `windows10Home` (Windows 10 Home), `windows10HomeChina` (Windows 10 Home China), `windows10HomeN` (Windows 10 Home N), `windows10HomeSingleLanguage` (Windows 10 Home Single Language), `windows10Mobile` (Windows 10 Mobile), `windows10IoTCore` (Windows 10 IoT Core), `windows10IoTCoreCommercial` (Windows 10 IoT Core Commercial)",
 				},
 				"rule_type": schema.StringAttribute{
 					Required:            true,
 					Validators:          []validator.String{stringvalidator.OneOf("include", "exclude")},
-					MarkdownDescription: `Applicability Rule type.`,
+					MarkdownDescription: "Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)",
 				},
 			},
-			MarkdownDescription: `The OS edition applicability for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleOsEdition?view=graph-rest-beta`,
+			MarkdownDescription: "The OS edition applicability for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleOsEdition?view=graph-rest-beta",
 		},
 		"device_management_applicability_rule_os_version": schema.SingleNestedAttribute{
 			Optional: true,
@@ -201,40 +201,40 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 				"max_os_version": schema.StringAttribute{
 					Optional:            true,
 					Description:         `maxOSVersion`, // custom MS Graph attribute name
-					MarkdownDescription: `Max OS version for Applicability Rule.`,
+					MarkdownDescription: "Max OS version for Applicability Rule.",
 				},
 				"min_os_version": schema.StringAttribute{
 					Optional:            true,
 					Description:         `minOSVersion`, // custom MS Graph attribute name
-					MarkdownDescription: `Min OS version for Applicability Rule.`,
+					MarkdownDescription: "Min OS version for Applicability Rule.",
 				},
 				"name": schema.StringAttribute{
 					Optional:            true,
-					MarkdownDescription: `Name for object.`,
+					MarkdownDescription: "Name for object.",
 				},
 				"rule_type": schema.StringAttribute{
 					Required:            true,
 					Validators:          []validator.String{stringvalidator.OneOf("include", "exclude")},
-					MarkdownDescription: `Applicability Rule type.`,
+					MarkdownDescription: "Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)",
 				},
 			},
-			MarkdownDescription: `The OS version applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleOsVersion?view=graph-rest-beta`,
+			MarkdownDescription: "The OS version applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleOsVersion?view=graph-rest-beta",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
-			MarkdownDescription: `Admin provided name of the device configuration.`,
+			MarkdownDescription: "Admin provided name of the device configuration.",
 		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: `DateTime the object was last modified.`,
+			MarkdownDescription: "DateTime the object was last modified.",
 		},
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: `List of Scope Tags for this Entity instance.`,
+			MarkdownDescription: "List of Scope Tags for this Entity instance.",
 		},
 		"supports_scope_tags": schema.BoolAttribute{
 			Computed:      true,
@@ -243,7 +243,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 		"version": schema.Int64Attribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
-			MarkdownDescription: `Version of the device configuration.`,
+			MarkdownDescription: "Version of the device configuration.",
 		},
 		"assignments": deviceAndAppManagementAssignment,
 		"windows10": generic.OdataDerivedTypeNestedAttributeRs{
@@ -257,15 +257,15 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 							Attributes: map[string]schema.Attribute{ // omaSetting
 								"description": schema.StringAttribute{
 									Optional:            true,
-									MarkdownDescription: `Description.`,
+									MarkdownDescription: "Description.",
 								},
 								"display_name": schema.StringAttribute{
 									Required:            true,
-									MarkdownDescription: `Display Name.`,
+									MarkdownDescription: "Display Name.",
 								},
 								"oma_uri": schema.StringAttribute{
 									Required:            true,
-									MarkdownDescription: `OMA.`,
+									MarkdownDescription: "OMA.",
 								},
 								"base64": generic.OdataDerivedTypeNestedAttributeRs{
 									DerivedType: "#microsoft.graph.omaSettingBase64",
@@ -274,16 +274,16 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // omaSettingBase64
 											"file_name": schema.StringAttribute{
 												Optional:            true,
-												MarkdownDescription: `File name associated with the Value property (*.cer | *.crt | *.p7b | *.bin).`,
+												MarkdownDescription: "File name associated with the Value property (*.cer | *.crt | *.p7b | *.bin).",
 											},
 											"value_base64": schema.StringAttribute{
 												Required:            true,
 												Description:         `value`, // custom MS Graph attribute name
-												MarkdownDescription: `Value. (Base64 encoded string)`,
+												MarkdownDescription: "Value. (Base64 encoded string)",
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: `OMA Settings Base64 definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingBase64?view=graph-rest-beta`,
+										MarkdownDescription: "OMA Settings Base64 definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingBase64?view=graph-rest-beta",
 									},
 								},
 								"boolean": generic.OdataDerivedTypeNestedAttributeRs{
@@ -293,11 +293,11 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // omaSettingBoolean
 											"value": schema.BoolAttribute{
 												Required:            true,
-												MarkdownDescription: `Value.`,
+												MarkdownDescription: "Value.",
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: `OMA Settings Boolean definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingBoolean?view=graph-rest-beta`,
+										MarkdownDescription: "OMA Settings Boolean definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingBoolean?view=graph-rest-beta",
 									},
 								},
 								"date_time": generic.OdataDerivedTypeNestedAttributeRs{
@@ -307,11 +307,11 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // omaSettingDateTime
 											"value": schema.StringAttribute{
 												Required:            true,
-												MarkdownDescription: `Value.`,
+												MarkdownDescription: "Value.",
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: `OMA Settings DateTime definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingDateTime?view=graph-rest-beta`,
+										MarkdownDescription: "OMA Settings DateTime definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingDateTime?view=graph-rest-beta",
 									},
 								},
 								"floating_point": generic.OdataDerivedTypeNestedAttributeRs{
@@ -321,11 +321,11 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // omaSettingFloatingPoint
 											"value": schema.NumberAttribute{
 												Required:            true,
-												MarkdownDescription: `Value.`,
+												MarkdownDescription: "Value.",
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: `OMA Settings Floating Point definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingFloatingPoint?view=graph-rest-beta`,
+										MarkdownDescription: "OMA Settings Floating Point definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingFloatingPoint?view=graph-rest-beta",
 									},
 								},
 								"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -335,11 +335,11 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // omaSettingInteger
 											"value": schema.Int64Attribute{
 												Required:            true,
-												MarkdownDescription: `Value.`,
+												MarkdownDescription: "Value.",
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: `OMA Settings Integer definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingInteger?view=graph-rest-beta`,
+										MarkdownDescription: "OMA Settings Integer definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingInteger?view=graph-rest-beta",
 									},
 								},
 								"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -349,11 +349,11 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // omaSettingString
 											"value": schema.StringAttribute{
 												Required:            true,
-												MarkdownDescription: `Value.`,
+												MarkdownDescription: "Value.",
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: `OMA Settings String definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingString?view=graph-rest-beta`,
+										MarkdownDescription: "OMA Settings String definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingString?view=graph-rest-beta",
 									},
 								},
 								"string_xml": generic.OdataDerivedTypeNestedAttributeRs{
@@ -363,32 +363,32 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // omaSettingStringXml
 											"file_name": schema.StringAttribute{
 												Optional:            true,
-												MarkdownDescription: `File name associated with the Value property (*.xml).`,
+												MarkdownDescription: "File name associated with the Value property (*.xml).",
 											},
 											"value": schema.StringAttribute{
 												Required:            true,
-												MarkdownDescription: `Value. (UTF8 encoded byte array)`,
+												MarkdownDescription: "Value. (UTF8 encoded byte array)",
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: `OMA Settings StringXML definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingStringXml?view=graph-rest-beta`,
+										MarkdownDescription: "OMA Settings StringXML definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingStringXml?view=graph-rest-beta",
 									},
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: `OMA settings. This collection can contain a maximum of 1000 elements. / OMA Settings definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSetting?view=graph-rest-beta`,
+						MarkdownDescription: "OMA settings. This collection can contain a maximum of 1000 elements. / OMA Settings definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSetting?view=graph-rest-beta",
 					},
 				},
 				Validators: []validator.Object{
 					deviceConfigurationCustomDeviceConfigurationValidator,
 				},
-				MarkdownDescription: `This topic provides descriptions of the declared methods, properties and relationships exposed by the windows10CustomConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windows10CustomConfiguration?view=graph-rest-beta`,
+				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the windows10CustomConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windows10CustomConfiguration?view=graph-rest-beta",
 			},
 		},
 	},
-	MarkdownDescription: `Device Configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceConfiguration?view=graph-rest-beta`,
+	MarkdownDescription: "Device Configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceConfiguration?view=graph-rest-beta",
 }
 
 var deviceConfigurationCustomDeviceConfigurationValidator = objectvalidator.ExactlyOneOf(

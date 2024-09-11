@@ -30,9 +30,16 @@ export ARM_CLIENT_SECRET='...'
 
 
 resource "microsoft365wp_device_configuration" "android_device_owner_general_device" {
-  display_name = "TF Test Android Enterprise Device Restrictions"
+  display_name = "TF Test Android Enterprise Corp Owned Device Restrictions"
   android_device_owner_general_device = {
     camera_blocked = true
+  }
+}
+
+resource "microsoft365wp_device_configuration" "android_work_profile_general_device" {
+  display_name = "TF Test Android Enterprise Personally Owned Device Restrictions"
+  android_work_profile_general_device = {
+    work_profile_block_screen_capture = true
   }
 }
 
@@ -120,6 +127,28 @@ resource "microsoft365wp_device_configuration" "ios_device_features" {
   display_name = "TF Test iOS Device Features"
   ios_device_features = {
     lock_screen_footnote = "This device belongs to somebody."
+    ios_single_sign_on_extension = {
+      azure_ad = {
+        configurations = [
+          {
+            key     = "browser_sso_interaction_enabled"
+            integer = { value = 1 }
+          },
+          {
+            key     = "disable_explicit_app_prompt_and_autologin"
+            integer = { value = 1 }
+          },
+          {
+            key     = "browser_sso_disable_mfa"
+            integer = { value = 0 }
+          },
+          {
+            key    = "device_registration"
+            string = { value = "{{DEVICEREGISTRATION}}" }
+          },
+        ]
+      }
+    }
   }
 }
 
@@ -296,6 +325,7 @@ resource "microsoft365wp_device_configuration" "windows_update_for_business" {
 ### Optional
 
 - `android_device_owner_general_device` (Attributes) This topic provides descriptions of the declared methods, properties and relationships exposed by the androidDeviceOwnerGeneralDeviceConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerGeneralDeviceConfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device))
+- `android_work_profile_general_device` (Attributes) Android Work Profile general device configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidWorkProfileGeneralDeviceConfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_work_profile_general_device))
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `description` (String) Admin provided description of the Device Configuration.
 - `device_management_applicability_rule_device_mode` (Attributes) The device mode applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleDeviceMode?view=graph-rest-beta (see [below for nested schema](#nestedatt--device_management_applicability_rule_device_mode))
@@ -332,8 +362,8 @@ Optional:
 - `accounts_block_modification` (Boolean) Indicates whether or not adding or removing accounts is disabled.
 - `android_device_owner_delegated_scope_app_settings` (Attributes Set) Specifies the list of managed apps with app details and its associated delegated scope(s). This collection can contain a maximum of 500 elements. / Represents one item in the list of managed apps with app details and its associated delegated scope(s). / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerDelegatedScopeAppSetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--android_device_owner_delegated_scope_app_settings))
 - `apps_allow_install_from_unknown_sources` (Boolean) Indicates whether or not the user is allowed to enable to unknown sources setting.
-- `apps_auto_update_policy` (String) Indicates the value of the app auto update policy.
-- `apps_default_permission_policy` (String) Indicates the permission policy for requests for runtime permissions if one is not defined for the app specifically.
+- `apps_auto_update_policy` (String) Indicates the value of the app auto update policy. / Android Device Owner possible values for states of the device's app auto update policy; possible values are: `notConfigured` (Not configured; this value is ignored.), `userChoice` (The user can control auto-updates.), `never` (Apps are never auto-updated.), `wiFiOnly` (Apps are auto-updated over Wi-Fi only.), `always` (Apps are auto-updated at any time. Data charges may apply.)
+- `apps_default_permission_policy` (String) Indicates the permission policy for requests for runtime permissions if one is not defined for the app specifically. / Android Device Owner default app permission policy type; possible values are: `deviceDefault` (Device default value, no intent.), `prompt` (Prompt.), `autoGrant` (Auto grant.), `autoDeny` (Auto deny.)
 - `apps_recommend_skipping_first_use_hints` (Boolean) Whether or not to recommend all apps skip any first-time-use hints they may have added.
 - `azure_ad_shared_device_data_clear_apps` (Attributes Set) A list of managed apps that will have their data cleared during a global sign-out in AAD shared device mode. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--azure_ad_shared_device_data_clear_apps))
 - `bluetooth_block_configuration` (Boolean) Indicates whether or not to block a user from configuring bluetooth.
@@ -342,23 +372,23 @@ Optional:
 - `cellular_block_wifi_tethering` (Boolean) Indicates whether or not to block Wi-Fi tethering.
 - `certificate_credential_configuration_disabled` (Boolean) Indicates whether or not to block users from any certificate credential configuration.
 - `cross_profile_policies_allow_copy_paste` (Boolean) Indicates whether or not text copied from one profile (personal or work) can be pasted in the other.
-- `cross_profile_policies_allow_data_sharing` (String) Indicates whether data from one profile (personal or work) can be shared with apps in the other profile.
+- `cross_profile_policies_allow_data_sharing` (String) Indicates whether data from one profile (personal or work) can be shared with apps in the other profile. / An enum representing possible values for cross profile data sharing; possible values are: `notConfigured` (Not configured; this value defaults to CROSS_PROFILE_DATA_SHARING_UNSPECIFIED.), `crossProfileDataSharingBlocked` (Data cannot be shared from both the personal profile to work profile and the work profile to the personal profile.), `dataSharingFromWorkToPersonalBlocked` (Prevents users from sharing data from the work profile to apps in the personal profile. Personal data can be shared with work apps.), `crossProfileDataSharingAllowed` (Data from either profile can be shared with the other profile.), `unkownFutureValue` (Unknown future value (reserved, not used right now))
 - `cross_profile_policies_show_work_contacts_in_personal_profile` (Boolean) Indicates whether or not contacts stored in work profile are shown in personal profile contact searches/incoming calls.
 - `data_roaming_blocked` (Boolean) Indicates whether or not to block a user from data roaming.
 - `date_time_configuration_blocked` (Boolean) Indicates whether or not to block the user from manually changing the date or time on the device
 - `detailed_help_text` (Attributes) Represents the customized detailed help text provided to users when they attempt to modify managed settings on their device. / Represents a user-facing message with locale information as well as a default message to be used if the user's locale doesn't match with any of the localized messages / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerUserFacingMessage?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--detailed_help_text))
-- `device_location_mode` (String) Indicates the location setting configuration for fully managed devices (COBO) and corporate owned devices with a work profile (COPE)
+- `device_location_mode` (String) Indicates the location setting configuration for fully managed devices (COBO) and corporate owned devices with a work profile (COPE) / Android Device Owner Location Mode Type; possible values are: `notConfigured` (No restrictions on the location setting and no specific behavior is set or enforced. This is the default), `disabled` (Location setting is disabled on the device), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use)
 - `device_owner_lock_screen_message` (Attributes) Represents the customized lock screen message provided to users when they attempt to modify managed settings on their device. / Represents a user-facing message with locale information as well as a default message to be used if the user's locale doesn't match with any of the localized messages / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerUserFacingMessage?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--device_owner_lock_screen_message))
-- `enrollment_profile` (String) Indicates which enrollment profile you want to configure.
+- `enrollment_profile` (String) Indicates which enrollment profile you want to configure. / Android Device Owner Enrollment Profile types; possible values are: `notConfigured` (Not configured; this value is ignored.), `dedicatedDevice` (Dedicated device.), `fullyManaged` (Fully managed.)
 - `factory_reset_blocked` (Boolean) Indicates whether or not the factory reset option in settings is disabled.
 - `factory_reset_device_administrator_emails` (Set of String) List of Google account emails that will be required to authenticate after a device is factory reset before it can be set up.
 - `global_proxy` (Attributes) Proxy is set up directly with host, port and excluded hosts. / Android Device Owner Global Proxy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerGlobalProxy?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--global_proxy))
 - `google_accounts_blocked` (Boolean) Indicates whether or not google accounts will be blocked.
 - `kiosk_customization_device_settings_blocked` (Boolean) Indicates whether a user can access the device's Settings app while in Kiosk Mode.
 - `kiosk_customization_power_button_actions_blocked` (Boolean) Whether the power menu is shown when a user long presses the Power button of a device in Kiosk Mode.
-- `kiosk_customization_status_bar` (String) Indicates whether system info and notifications are disabled in Kiosk Mode.
+- `kiosk_customization_status_bar` (String) Indicates whether system info and notifications are disabled in Kiosk Mode. / An enum representing possible values for kiosk customization system navigation; possible values are: `notConfigured` (Not configured; this value defaults to STATUS_BAR_UNSPECIFIED.), `notificationsAndSystemInfoEnabled` (System info and notifications are shown on the status bar in kiosk mode.), `systemInfoOnly` (Only system info is shown on the status bar in kiosk mode.)
 - `kiosk_customization_system_error_warnings` (Boolean) Indicates whether system error dialogs for crashed or unresponsive apps are shown in Kiosk Mode.
-- `kiosk_customization_system_navigation` (String) Indicates which navigation features are enabled in Kiosk Mode.
+- `kiosk_customization_system_navigation` (String) Indicates which navigation features are enabled in Kiosk Mode. / An enum representing possible values for kiosk customization system navigation; possible values are: `notConfigured` (Not configured; this value defaults to NAVIGATION_DISABLED.), `navigationEnabled` (Home and overview buttons are enabled.), `homeButtonOnly` ( Only the home button is enabled.)
 - `kiosk_mode_app_order_enabled` (Boolean) Whether or not to enable app ordering in Kiosk Mode.
 - `kiosk_mode_app_positions` (Attributes Set) The ordering of items on Kiosk Mode Managed Home Screen. This collection can contain a maximum of 500 elements. / An item in the list of app positions that sets the order of items on the Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerKioskModeAppPositionItem?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_app_positions))
 - `kiosk_mode_apps` (Attributes Set) A list of managed apps that will be shown when the device is in Kiosk Mode. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_apps))
@@ -367,16 +397,16 @@ Optional:
 - `kiosk_mode_debug_menu_easy_access_enabled` (Boolean) Whether or not to allow a user to easy access to the debug menu in Kiosk Mode.
 - `kiosk_mode_exit_code` (String) Exit code to allow a user to escape from Kiosk Mode when the device is in Kiosk Mode.
 - `kiosk_mode_flashlight_configuration_enabled` (Boolean) Whether or not to allow a user to use the flashlight in Kiosk Mode.
-- `kiosk_mode_folder_icon` (String) Folder icon configuration for managed home screen in Kiosk Mode.
+- `kiosk_mode_folder_icon` (String) Folder icon configuration for managed home screen in Kiosk Mode. / Android Device Owner Kiosk Mode folder icon type; possible values are: `notConfigured` (Not configured; this value is ignored.), `darkSquare` (Folder icon appears as dark square.), `darkCircle` (Folder icon appears as dark circle.), `lightSquare` (Folder icon appears as light square.), `lightCircle` (Folder icon appears as light circle  .)
 - `kiosk_mode_grid_height` (Number) Number of rows for Managed Home Screen grid with app ordering enabled in Kiosk Mode. Valid values 1 to 9999999
 - `kiosk_mode_grid_width` (Number) Number of columns for Managed Home Screen grid with app ordering enabled in Kiosk Mode. Valid values 1 to 9999999
-- `kiosk_mode_icon_size` (String) Icon size configuration for managed home screen in Kiosk Mode.
+- `kiosk_mode_icon_size` (String) Icon size configuration for managed home screen in Kiosk Mode. / Android Device Owner Kiosk Mode managed home screen icon size; possible values are: `notConfigured` (Not configured; this value is ignored.), `smallest` (Smallest icon size.), `small` (Small icon size.), `regular` (Regular icon size.), `large` (Large icon size.), `largest` (Largest icon size.)
 - `kiosk_mode_lock_home_screen` (Boolean) Whether or not to lock home screen to the end user in Kiosk Mode.
 - `kiosk_mode_managed_folders` (Attributes Set) A list of managed folders for a device in Kiosk Mode. This collection can contain a maximum of 500 elements. / A folder containing pages of apps and weblinks on the Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerKioskModeManagedFolder?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_managed_folders))
 - `kiosk_mode_managed_home_screen_auto_signout` (Boolean) Whether or not to automatically sign-out of MHS and Shared device mode applications after inactive for Managed Home Screen.
 - `kiosk_mode_managed_home_screen_inactive_sign_out_delay_in_seconds` (Number) Number of seconds to give user notice before automatically signing them out for Managed Home Screen. Valid values 0 to 9999999
 - `kiosk_mode_managed_home_screen_inactive_sign_out_notice_in_seconds` (Number) Number of seconds device is inactive before automatically signing user out for Managed Home Screen. Valid values 0 to 9999999
-- `kiosk_mode_managed_home_screen_pin_complexity` (String) Complexity of PIN for sign-in session for Managed Home Screen.
+- `kiosk_mode_managed_home_screen_pin_complexity` (String) Complexity of PIN for sign-in session for Managed Home Screen. / Complexity of PIN for Managed Home Screen sign-in session; possible values are: `notConfigured` (Not configured.), `simple` (Numeric values only.), `complex` (Alphanumerical value.)
 - `kiosk_mode_managed_home_screen_pin_required` (Boolean) Whether or not require user to set a PIN for sign-in session for Managed Home Screen.
 - `kiosk_mode_managed_home_screen_pin_required_to_resume` (Boolean) Whether or not required user to enter session PIN if screensaver has appeared for Managed Home Screen.
 - `kiosk_mode_managed_home_screen_sign_in_background` (String) Custom URL background for sign-in screen for Managed Home Screen.
@@ -384,7 +414,7 @@ Optional:
 - `kiosk_mode_managed_home_screen_sign_in_enabled` (Boolean) Whether or not show sign-in screen for Managed Home Screen.
 - `kiosk_mode_managed_settings_entry_disabled` (Boolean) Whether or not to display the Managed Settings entry point on the managed home screen in Kiosk Mode.
 - `kiosk_mode_media_volume_configuration_enabled` (Boolean) Whether or not to allow a user to change the media volume in Kiosk Mode.
-- `kiosk_mode_screen_orientation` (String) Screen orientation configuration for managed home screen in Kiosk Mode.
+- `kiosk_mode_screen_orientation` (String) Screen orientation configuration for managed home screen in Kiosk Mode. / Android Device Owner Kiosk Mode managed home screen orientation; possible values are: `notConfigured` (Not configured; this value is ignored.), `portrait` (Portrait orientation.), `landscape` (Landscape orientation.), `autoRotate` (Auto rotate between portrait and landscape orientations.)
 - `kiosk_mode_screen_saver_configuration_enabled` (Boolean) Whether or not to enable screen saver mode or not in Kiosk Mode.
 - `kiosk_mode_screen_saver_detect_media_disabled` (Boolean) Whether or not the device screen should show the screen saver if audio/video is playing in Kiosk Mode.
 - `kiosk_mode_screen_saver_display_time_in_seconds` (Number) The number of seconds that the device will display the screen saver for in Kiosk Mode. Valid values 0 to 9999999
@@ -392,9 +422,9 @@ Optional:
 - `kiosk_mode_screen_saver_start_delay_in_seconds` (Number) The number of seconds the device needs to be inactive for before the screen saver is shown in Kiosk Mode. Valid values 1 to 9999999
 - `kiosk_mode_show_app_notification_badge` (Boolean) Whether or not to display application notification badges in Kiosk Mode.
 - `kiosk_mode_show_device_info` (Boolean) Whether or not to allow a user to access basic device information.
-- `kiosk_mode_use_managed_home_screen_app` (String) Whether or not to use single app kiosk mode or multi-app kiosk mode.
+- `kiosk_mode_use_managed_home_screen_app` (String) Whether or not to use single app kiosk mode or multi-app kiosk mode. / Possible values of Android Kiosk Mode; possible values are: `notConfigured` (Not configured), `singleAppMode` (Run in single-app mode), `multiAppMode` (Run in multi-app mode)
 - `kiosk_mode_virtual_home_button_enabled` (Boolean) Whether or not to display a virtual home button when the device is in Kiosk Mode.
-- `kiosk_mode_virtual_home_button_type` (String) Indicates whether the virtual home button is a swipe up home button or a floating home button.
+- `kiosk_mode_virtual_home_button_type` (String) Indicates whether the virtual home button is a swipe up home button or a floating home button. / Android Device Owner Kiosk Mode managed home screen virtual home button type; possible values are: `notConfigured` (Not configured; this value is ignored.), `swipeUp` (Swipe-up for home button.), `floating` (Floating home button.)
 - `kiosk_mode_wallpaper_url` (String) URL to a publicly accessible image to use for the wallpaper when the device is in Kiosk Mode.
 - `kiosk_mode_wifi_allowed_ssids` (Set of String) The restricted set of WIFI SSIDs available for the user to configure in Kiosk Mode. This collection can contain a maximum of 500 elements.
 - `kiosk_mode_wifi_configuration_enabled` (Boolean) Whether or not to allow a user to configure Wi-Fi settings in Kiosk Mode.
@@ -406,14 +436,14 @@ Optional:
 - `microsoft_launcher_custom_wallpaper_enabled` (Boolean) Indicates whether or not to configure the wallpaper on the targeted devices.
 - `microsoft_launcher_custom_wallpaper_image_url` (String) Indicates the URL for the image file to use as the wallpaper on the targeted devices.
 - `microsoft_launcher_dock_presence_allow_user_modification` (Boolean) Indicates whether or not the user can modify the device dock configuration on the device.
-- `microsoft_launcher_dock_presence_configuration` (String) Indicates whether or not you want to configure the device dock.
+- `microsoft_launcher_dock_presence_configuration` (String) Indicates whether or not you want to configure the device dock. / Microsoft Launcher Dock Presence selection; possible values are: `notConfigured` (Not configured; this value is ignored.), `show` (Indicates the device's dock will be displayed on the device.), `hide` (Indicates the device's dock will be hidden on the device, but the user can access the dock by dragging the handler on the bottom of the screen.), `disabled` (Indicates the device's dock will be disabled on the device.)
 - `microsoft_launcher_feed_allow_user_modification` (Boolean) Indicates whether or not the user can modify the launcher feed on the device.
 - `microsoft_launcher_feed_enabled` (Boolean) Indicates whether or not you want to enable the launcher feed on the device.
-- `microsoft_launcher_search_bar_placement_configuration` (String) Indicates the search bar placement configuration on the device.
+- `microsoft_launcher_search_bar_placement_configuration` (String) Indicates the search bar placement configuration on the device. / Microsoft Launcher Search Bar Placement selection; possible values are: `notConfigured` (Not configured; this value is ignored.), `top` (Indicates that the search bar will be displayed on the top of the device.), `bottom` (Indicates that the search bar will be displayed on the bottom of the device.), `hide` (Indicates that the search bar will be hidden on the device.)
 - `network_escape_hatch_allowed` (Boolean) Indicates whether or not the device will allow connecting to a temporary network connection at boot time.
 - `nfc_block_outgoing_beam` (Boolean) Indicates whether or not to block NFC outgoing beam.
 - `password_block_keyguard` (Boolean) Indicates whether or not the keyguard is disabled.
-- `password_block_keyguard_features` (Set of String) List of device keyguard features to block. This collection can contain a maximum of 11 elements.
+- `password_block_keyguard_features` (Set of String) List of device keyguard features to block. This collection can contain a maximum of 11 elements. / Android keyguard feature; possible values are: `notConfigured` (Not configured; this value is ignored.), `camera` (Camera usage when on secure keyguard screens.), `notifications` (Showing notifications when on secure keyguard screens.), `unredactedNotifications` (Showing unredacted notifications when on secure keyguard screens.), `trustAgents` (Trust agent state when on secure keyguard screens.), `fingerprint` (Fingerprint sensor usage when on secure keyguard screens.), `remoteInput` (Notification text entry when on secure keyguard screens.), `allFeatures` (All keyguard features when on secure keyguard screens.), `face` (Face authentication on secure keyguard screens.), `iris` (Iris authentication on secure keyguard screens.), `biometrics` (All biometric authentication on secure keyguard screens.)
 - `password_expiration_days` (Number) Indicates the amount of time that a password can be set for before it expires and a new password will be required. Valid values 1 to 365
 - `password_minimum_length` (Number) Indicates the minimum length of the password required on the device. Valid values 4 to 16
 - `password_minimum_letter_characters` (Number) Indicates the minimum number of letter characters required for device password. Valid values 1 to 16
@@ -424,15 +454,15 @@ Optional:
 - `password_minimum_upper_case_characters` (Number) Indicates the minimum number of upper case letter characters required for device password. Valid values 1 to 16
 - `password_minutes_of_inactivity_before_screen_timeout` (Number) Minutes of inactivity before the screen times out.
 - `password_previous_password_count_to_block` (Number) Indicates the length of password history, where the user will not be able to enter a new password that is the same as any password in the history. Valid values 0 to 24
-- `password_require_unlock` (String) Indicates the timeout period after which a device must be unlocked using a form of strong authentication.
-- `password_required_type` (String) Indicates the minimum password quality required on the device.
+- `password_require_unlock` (String) Indicates the timeout period after which a device must be unlocked using a form of strong authentication. / An enum representing possible values for required password unlock; possible values are: `deviceDefault` (Timeout period before strong authentication is required is set to the device's default.), `daily` (Timeout period before strong authentication is required is set to 24 hours.), `unkownFutureValue` (Unknown future value (reserved, not used right now))
+- `password_required_type` (String) Indicates the minimum password quality required on the device. / Android Device Owner policy required password type; possible values are: `deviceDefault` (Device default value, no intent.), `required` (There must be a password set, but there are no restrictions on type.), `numeric` (At least numeric.), `numericComplex` (At least numeric with no repeating or ordered sequences.), `alphabetic` (At least alphabetic password.), `alphanumeric` (At least alphanumeric password), `alphanumericWithSymbols` (At least alphanumeric with symbols.), `lowSecurityBiometric` (Low security biometrics based password required.), `customPassword` (Custom password set by the admin.)
 - `password_sign_in_failure_count_before_factory_reset` (Number) Indicates the number of times a user can enter an incorrect password before the device is wiped. Valid values 4 to 11
 - `personal_profile_apps_allow_install_from_unknown_sources` (Boolean) Indicates whether the user can install apps from unknown sources on the personal profile.
 - `personal_profile_camera_blocked` (Boolean) Indicates whether to disable the use of the camera on the personal profile.
 - `personal_profile_personal_applications` (Attributes Set) Policy applied to applications in the personal profile. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--personal_profile_personal_applications))
-- `personal_profile_play_store_mode` (String) Used together with PersonalProfilePersonalApplications to control how apps in the personal profile are allowed or blocked.
+- `personal_profile_play_store_mode` (String) Used together with PersonalProfilePersonalApplications to control how apps in the personal profile are allowed or blocked. / Used together with personalApplications to control how apps in the personal profile are allowed or blocked; possible values are: `notConfigured` (Not configured.), `blockedApps` (Blocked Apps.), `allowedApps` (Allowed Apps.)
 - `personal_profile_screen_capture_blocked` (Boolean) Indicates whether to disable the capability to take screenshots on the personal profile.
-- `play_store_mode` (String) Indicates the Play Store mode of the device.
+- `play_store_mode` (String) Indicates the Play Store mode of the device. / Android Device Owner Play Store mode type; possible values are: `notConfigured` (Not Configured), `allowList` (Only apps that are in the policy are available and any app not in the policy will be automatically uninstalled from the device.), `blockList` (All apps are available and any app that should not be on the device should be explicitly marked as 'BLOCKED' in the applications policy.)
 - `screen_capture_blocked` (Boolean) Indicates whether or not to disable the capability to take screenshots.
 - `security_common_criteria_mode_enabled` (Boolean) Represents the security common criteria mode enabled provided to users when they attempt to modify managed settings on their device.
 - `security_developer_settings_enabled` (Boolean) Indicates whether or not the user is allowed to access developer settings like developer options and safe boot on the device.
@@ -440,12 +470,12 @@ Optional:
 - `share_device_location_disabled` (Boolean) Indicates whether or not location sharing is disabled for fully managed devices (COBO), and corporate owned devices with a work profile (COPE)
 - `short_help_text` (Attributes) Represents the customized short help text provided to users when they attempt to modify managed settings on their device. / Represents a user-facing message with locale information as well as a default message to be used if the user's locale doesn't match with any of the localized messages / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerUserFacingMessage?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--short_help_text))
 - `status_bar_blocked` (Boolean) Indicates whether or the status bar is disabled, including notifications, quick settings and other screen overlays.
-- `stay_on_modes` (Set of String) List of modes in which the device's display will stay powered-on. This collection can contain a maximum of 4 elements.
+- `stay_on_modes` (Set of String) List of modes in which the device's display will stay powered-on. This collection can contain a maximum of 4 elements. / Android Device Owner possible values for states of the device's plugged-in power modes; possible values are: `notConfigured` (Not configured; this value is ignored.), `ac` (Power source is an AC charger.), `usb` (Power source is a USB port.), `wireless` (Power source is wireless.)
 - `storage_allow_usb` (Boolean) Indicates whether or not to allow USB mass storage.
 - `storage_block_external_media` (Boolean) Indicates whether or not to block external media.
 - `storage_block_usb_file_transfer` (Boolean) Indicates whether or not to block USB file transfer.
 - `system_update_freeze_periods` (Attributes Set) Indicates the annually repeating time periods during which system updates are postponed. This collection can contain a maximum of 500 elements. / Represents one item in the list of freeze periods for Android Device Owner system updates / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerSystemUpdateFreezePeriod?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--system_update_freeze_periods))
-- `system_update_install_type` (String) The type of system update configuration.
+- `system_update_install_type` (String) The type of system update configuration. / System Update Types for Android Device Owner; possible values are: `deviceDefault` (Device default behavior, which typically prompts the user to accept system updates.), `postpone` (Postpone automatic install of updates up to 30 days.), `windowed` (Install automatically inside a daily maintenance window.), `automatic` (Automatically install updates as soon as possible.)
 - `system_update_window_end_minutes_after_midnight` (Number) Indicates the number of minutes after midnight that the system update window ends. Valid values 0 to 1440
 - `system_update_window_start_minutes_after_midnight` (Number) Indicates the number of minutes after midnight that the system update window starts. Valid values 0 to 1440
 - `system_windows_blocked` (Boolean) Whether or not to block Android system prompt windows, like toasts, phone activities, and system alerts.
@@ -465,8 +495,8 @@ Optional:
 - `work_profile_password_minimum_symbol_characters` (Number) Indicates the minimum number of symbol characters required for the work profile password. Valid values 1 to 16
 - `work_profile_password_minimum_upper_case_characters` (Number) Indicates the minimum number of upper-case letter characters required for the work profile password. Valid values 1 to 16
 - `work_profile_password_previous_password_count_to_block` (Number) Indicates the length of the work profile password history, where the user will not be able to enter a new password that is the same as any password in the history. Valid values 0 to 24
-- `work_profile_password_require_unlock` (String) Indicates the timeout period after which a work profile must be unlocked using a form of strong authentication.
-- `work_profile_password_required_type` (String) Indicates the minimum password quality required on the work profile password.
+- `work_profile_password_require_unlock` (String) Indicates the timeout period after which a work profile must be unlocked using a form of strong authentication. / An enum representing possible values for required password unlock; possible values are: `deviceDefault` (Timeout period before strong authentication is required is set to the device's default.), `daily` (Timeout period before strong authentication is required is set to 24 hours.), `unkownFutureValue` (Unknown future value (reserved, not used right now))
+- `work_profile_password_required_type` (String) Indicates the minimum password quality required on the work profile password. / Android Device Owner policy required password type; possible values are: `deviceDefault` (Device default value, no intent.), `required` (There must be a password set, but there are no restrictions on type.), `numeric` (At least numeric.), `numericComplex` (At least numeric with no repeating or ordered sequences.), `alphabetic` (At least alphabetic password.), `alphanumeric` (At least alphanumeric password), `alphanumericWithSymbols` (At least alphanumeric with symbols.), `lowSecurityBiometric` (Low security biometrics based password required.), `customPassword` (Custom password set by the admin.)
 - `work_profile_password_sign_in_failure_count_before_factory_reset` (Number) Indicates the number of times a user can enter an incorrect work profile password before the device is wiped. Valid values 4 to 11
 
 <a id="nestedatt--android_device_owner_general_device--android_device_owner_delegated_scope_app_settings"></a>
@@ -475,7 +505,7 @@ Optional:
 Optional:
 
 - `app_detail` (Attributes) Information about the app like Name, AppStoreUrl, Publisher and AppId / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--android_device_owner_delegated_scope_app_settings--app_detail))
-- `app_scopes` (Set of String) List of scopes an app has been assigned.
+- `app_scopes` (Set of String) List of scopes an app has been assigned. / An enum representing possible values for delegated app scope; possible values are: `unspecified` (Unspecified; this value defaults to DELEGATED_SCOPE_UNSPECIFIED.), `certificateInstall` (Specifies that the admin has given app permission to install and manage certificates on device.), `captureNetworkActivityLog` (Specifies that the admin has given app permission to capture network activity logs on device. More info on Network activity logs: https://developer.android.com/work/dpc/logging ), `captureSecurityLog` (Specified that the admin has given permission to capture security logs on device. More info on Security logs: https://developer.android.com/work/dpc/security#log_enterprise_device_activity), `unknownFutureValue` (Unknown future value (reserved, not used right now))
 
 <a id="nestedatt--android_device_owner_general_device--android_device_owner_delegated_scope_app_settings--app_detail"></a>
 ### Nested Schema for `android_device_owner_general_device.android_device_owner_delegated_scope_app_settings.app_detail`
@@ -652,6 +682,61 @@ Optional:
 
 
 
+<a id="nestedatt--android_work_profile_general_device"></a>
+### Nested Schema for `android_work_profile_general_device`
+
+Optional:
+
+- `allowed_google_account_domains` (Set of String) Determine domains allow-list for accounts that can be added to work profile.
+- `block_unified_password_for_work_profile` (Boolean) Prevent using unified password for unlocking device and work profile.
+- `password_block_face_unlock` (Boolean) Indicates whether or not to block face unlock.
+- `password_block_fingerprint_unlock` (Boolean) Indicates whether or not to block fingerprint unlock.
+- `password_block_iris_unlock` (Boolean) Indicates whether or not to block iris unlock.
+- `password_block_trust_agents` (Boolean) Indicates whether or not to block Smart Lock and other trust agents.
+- `password_expiration_days` (Number) Number of days before the password expires. Valid values 1 to 365
+- `password_minimum_length` (Number) Minimum length of passwords. Valid values 4 to 16
+- `password_minutes_of_inactivity_before_screen_timeout` (Number) Minutes of inactivity before the screen times out.
+- `password_previous_password_block_count` (Number) Number of previous passwords to block. Valid values 0 to 24
+- `password_required_type` (String) Type of password that is required. / Android Work Profile required password type; possible values are: `deviceDefault` (Device default value, no intent.), `lowSecurityBiometric` (Low security biometrics based password required.), `required` (Required.), `atLeastNumeric` (At least numeric password required.), `numericComplex` (Numeric complex password required.), `atLeastAlphabetic` (At least alphabetic password required.), `atLeastAlphanumeric` (At least alphanumeric password required.), `alphanumericWithSymbols` (At least alphanumeric with symbols password required.)
+- `password_sign_in_failure_count_before_factory_reset` (Number) Number of sign in failures allowed before factory reset. Valid values 1 to 16
+- `required_password_complexity` (String) Indicates the required device password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android 12+. / The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+; possible values are: `none` (Device default value, no password.), `low` (The required password complexity on the device is of type low as defined by the Android documentation.), `medium` (The required password complexity on the device is of type medium as defined by the Android documentation.), `high` (The required password complexity on the device is of type high as defined by the Android documentation.)
+- `security_require_verify_apps` (Boolean) Require the Android Verify apps feature is turned on.
+- `vpn_always_on_package_identifier` (String) Enable lockdown mode for always-on VPN.
+- `vpn_enable_always_on_lockdown_mode` (Boolean) Enable lockdown mode for always-on VPN.
+- `work_profile_account_use` (String) Control user's ability to add accounts in work profile including Google accounts. / An enum representing possible values for account use in work profile; possible values are: `allowAllExceptGoogleAccounts` (Allow additon of all accounts except Google accounts in Android Work Profile.), `blockAll` (Block any account from being added in Android Work Profile. ), `allowAll` (Allow addition of all accounts (including Google accounts) in Android Work Profile.), `unknownFutureValue` (Unknown future value for evolvable enum patterns.)
+- `work_profile_allow_app_installs_from_unknown_sources` (Boolean) Indicates whether to allow installation of apps from unknown sources.
+- `work_profile_allow_widgets` (Boolean) Allow widgets from work profile apps.
+- `work_profile_block_adding_accounts` (Boolean) Block users from adding/removing accounts in work profile.
+- `work_profile_block_camera` (Boolean) Block work profile camera.
+- `work_profile_block_cross_profile_caller_id` (Boolean) Block display work profile caller ID in personal profile.
+- `work_profile_block_cross_profile_contacts_search` (Boolean) Block work profile contacts availability in personal profile.
+- `work_profile_block_cross_profile_copy_paste` (Boolean) Boolean that indicates if the setting disallow cross profile copy/paste is enabled.
+- `work_profile_block_notifications_while_device_locked` (Boolean) Indicates whether or not to block notifications while device locked.
+- `work_profile_block_personal_app_installs_from_unknown_sources` (Boolean) Prevent app installations from unknown sources in the personal profile.
+- `work_profile_block_screen_capture` (Boolean) Block screen capture in work profile.
+- `work_profile_bluetooth_enable_contact_sharing` (Boolean) Allow bluetooth devices to access enterprise contacts.
+- `work_profile_data_sharing_type` (String) Type of data sharing that is allowed. / Android Work Profile cross profile data sharing type; possible values are: `deviceDefault` (Device default value, no intent.), `preventAny` (Prevent any sharing.), `allowPersonalToWork` (Allow data sharing request from personal profile to work profile.), `noRestrictions` (No restrictions on sharing.)
+- `work_profile_default_app_permission_policy` (String) Type of password that is required. / Android Work Profile default app permission policy type; possible values are: `deviceDefault` (Device default value, no intent.), `prompt` (Prompt.), `autoGrant` (Auto grant.), `autoDeny` (Auto deny.)
+- `work_profile_password_block_face_unlock` (Boolean) Indicates whether or not to block face unlock for work profile.
+- `work_profile_password_block_fingerprint_unlock` (Boolean) Indicates whether or not to block fingerprint unlock for work profile.
+- `work_profile_password_block_iris_unlock` (Boolean) Indicates whether or not to block iris unlock for work profile.
+- `work_profile_password_block_trust_agents` (Boolean) Indicates whether or not to block Smart Lock and other trust agents for work profile.
+- `work_profile_password_expiration_days` (Number) Number of days before the work profile password expires. Valid values 1 to 365
+- `work_profile_password_min_letter_characters` (Number) Minimum # of letter characters required in work profile password. Valid values 1 to 10
+- `work_profile_password_min_lower_case_characters` (Number) Minimum # of lower-case characters required in work profile password. Valid values 1 to 10
+- `work_profile_password_min_non_letter_characters` (Number) Minimum # of non-letter characters required in work profile password. Valid values 1 to 10
+- `work_profile_password_min_numeric_characters` (Number) Minimum # of numeric characters required in work profile password. Valid values 1 to 10
+- `work_profile_password_min_symbol_characters` (Number) Minimum # of symbols required in work profile password. Valid values 1 to 10
+- `work_profile_password_min_upper_case_characters` (Number) Minimum # of upper-case characters required in work profile password. Valid values 1 to 10
+- `work_profile_password_minimum_length` (Number) Minimum length of work profile password. Valid values 4 to 16
+- `work_profile_password_minutes_of_inactivity_before_screen_timeout` (Number) Minutes of inactivity before the screen times out.
+- `work_profile_password_previous_password_block_count` (Number) Number of previous work profile passwords to block. Valid values 0 to 24
+- `work_profile_password_required_type` (String) Type of work profile password that is required. / Android Work Profile required password type; possible values are: `deviceDefault` (Device default value, no intent.), `lowSecurityBiometric` (Low security biometrics based password required.), `required` (Required.), `atLeastNumeric` (At least numeric password required.), `numericComplex` (Numeric complex password required.), `atLeastAlphabetic` (At least alphabetic password required.), `atLeastAlphanumeric` (At least alphanumeric password required.), `alphanumericWithSymbols` (At least alphanumeric with symbols password required.)
+- `work_profile_password_sign_in_failure_count_before_factory_reset` (Number) Number of sign in failures allowed before work profile is removed and all corporate data deleted. Valid values 1 to 16
+- `work_profile_require_password` (Boolean) Password is required or not for work profile
+- `work_profile_required_password_complexity` (String) Indicates the required work profile password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android 12+. / The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+; possible values are: `none` (Device default value, no password.), `low` (The required password complexity on the device is of type low as defined by the Android documentation.), `medium` (The required password complexity on the device is of type medium as defined by the Android documentation.), `high` (The required password complexity on the device is of type high as defined by the Android documentation.)
+
+
 <a id="nestedatt--assignments"></a>
 ### Nested Schema for `assignments`
 
@@ -702,8 +787,8 @@ Required:
 
 Required:
 
-- `device_mode` (String) Applicability rule for device mode.
-- `rule_type` (String) Applicability Rule type.
+- `device_mode` (String) Applicability rule for device mode. / Windows 10 Device Mode type; possible values are: `standardConfiguration` (Standard Configuration), `sModeConfiguration` (S Mode Configuration)
+- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)
 
 Optional:
 
@@ -715,8 +800,8 @@ Optional:
 
 Required:
 
-- `os_edition_types` (Set of String) Applicability rule OS edition type.
-- `rule_type` (String) Applicability Rule type.
+- `os_edition_types` (Set of String) Applicability rule OS edition type. / Windows 10 Edition type; possible values are: `windows10Enterprise` (Windows 10 Enterprise), `windows10EnterpriseN` (Windows 10 EnterpriseN), `windows10Education` (Windows 10 Education), `windows10EducationN` (Windows 10 EducationN), `windows10MobileEnterprise` (Windows 10 Mobile Enterprise), `windows10HolographicEnterprise` (Windows 10 Holographic Enterprise), `windows10Professional` (Windows 10 Professional), `windows10ProfessionalN` (Windows 10 ProfessionalN), `windows10ProfessionalEducation` (Windows 10 Professional Education), `windows10ProfessionalEducationN` (Windows 10 Professional EducationN), `windows10ProfessionalWorkstation` (Windows 10 Professional for Workstations), `windows10ProfessionalWorkstationN` (Windows 10 Professional for Workstations N), `notConfigured` (NotConfigured), `windows10Home` (Windows 10 Home), `windows10HomeChina` (Windows 10 Home China), `windows10HomeN` (Windows 10 Home N), `windows10HomeSingleLanguage` (Windows 10 Home Single Language), `windows10Mobile` (Windows 10 Mobile), `windows10IoTCore` (Windows 10 IoT Core), `windows10IoTCoreCommercial` (Windows 10 IoT Core Commercial)
+- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)
 
 Optional:
 
@@ -728,7 +813,7 @@ Optional:
 
 Required:
 
-- `rule_type` (String) Applicability Rule type.
+- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)
 
 Optional:
 
@@ -763,7 +848,7 @@ Optional:
 - `lock_screen_footnote` (String) A footnote displayed on the login window and lock screen. Available in iOS 9.3.1 and later.
 - `notification_settings` (Attributes Set) Notification settings for each bundle id. Applicable to devices in supervised mode only (iOS 9.3 and later). This collection can contain a maximum of 500 elements. / An item describing notification setting. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosNotificationSettings?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--notification_settings))
 - `single_sign_on_settings` (Attributes) The Kerberos login settings that enable apps on receiving devices to authenticate smoothly. / iOS Kerberos authentication settings for single sign-on / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosSingleSignOnSettings?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--single_sign_on_settings))
-- `wallpaper_display_location` (String) A wallpaper display location specifier.
+- `wallpaper_display_location` (String) A wallpaper display location specifier. / An enum type for wallpaper display location specifier; possible values are: `notConfigured` (No location specified for wallpaper display.), `lockScreen` (A configured wallpaper image is displayed on Lock screen.), `homeScreen` (A configured wallpaper image is displayed on Home (icon list) screen.), `lockAndHomeScreens` (A configured wallpaper image is displayed on Lock screen and Home screen.)
 - `wallpaper_image` (Attributes) A wallpaper image must be in either PNG or JPEG format. It requires a supervised device with iOS 8 or later version. / Contains properties for a generic mime content. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimeContent?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--wallpaper_image))
 
 <a id="nestedatt--ios_device_features--airprint_destinations"></a>
@@ -855,18 +940,238 @@ Optional:
 <a id="nestedatt--ios_device_features--ios_single_sign_on_extension"></a>
 ### Nested Schema for `ios_device_features.ios_single_sign_on_extension`
 
+Optional:
+
+- `azure_ad` (Attributes) Represents an Azure AD-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosAzureAdSingleSignOnExtension?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad))
+- `credential` (Attributes) Represents a Credential-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosCredentialSingleSignOnExtension?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential))
+- `kerberos` (Attributes) Represents a Kerberos-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosKerberosSingleSignOnExtension?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--kerberos))
+- `redirect` (Attributes) Represents a Redirect-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosRedirectSingleSignOnExtension?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--redirect))
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad`
+
+Optional:
+
+- `bundle_id_access_control_list` (Set of String) An optional list of additional bundle IDs allowed to use the AAD extension for single sign-on.
+- `configurations` (Attributes Set) Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyTypedValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations))
+- `enable_shared_device_mode` (Boolean) Enables or disables shared device mode.
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.enable_shared_device_mode`
+
+Required:
+
+- `key` (String) The string key of the key-value pair.
+
+Optional:
+
+- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--boolean))
+- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--integer))
+- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--real))
+- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--string))
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--boolean"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.enable_shared_device_mode.boolean`
+
+Required:
+
+- `value` (Boolean) The Boolean value of the key-value pair.
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--integer"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.enable_shared_device_mode.integer`
+
+Required:
+
+- `value` (Number) The integer value of the key-value pair.
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--real"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.enable_shared_device_mode.real`
+
+Required:
+
+- `value` (Number) The real (floating-point) value of the key-value pair.
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--string"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.enable_shared_device_mode.string`
+
+Required:
+
+- `value` (String) The string value of the key-value pair.
+
+
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential`
+
+Required:
+
+- `extension_identifier` (String) Gets or sets the bundle ID of the app extension that performs SSO for the specified URLs.
+- `realm` (String) Gets or sets the case-sensitive realm name for this profile.
+- `team_identifier` (String) Gets or sets the team ID of the app extension that performs SSO for the specified URLs.
+
+Optional:
+
+- `configurations` (Attributes Set) Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyTypedValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations))
+- `domains` (Set of String) Gets or sets a list of hosts or domain names for which the app extension performs SSO.
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.domains`
+
+Required:
+
+- `key` (String) The string key of the key-value pair.
+
+Optional:
+
+- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--boolean))
+- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--integer))
+- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--real))
+- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--string))
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--boolean"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.domains.boolean`
+
+Required:
+
+- `value` (Boolean) The Boolean value of the key-value pair.
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--integer"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.domains.integer`
+
+Required:
+
+- `value` (Number) The integer value of the key-value pair.
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--real"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.domains.real`
+
+Required:
+
+- `value` (Number) The real (floating-point) value of the key-value pair.
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--string"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.domains.string`
+
+Required:
+
+- `value` (String) The string value of the key-value pair.
+
+
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--kerberos"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.kerberos`
+
+Required:
+
+- `block_active_directory_site_auto_discovery` (Boolean) Enables or disables whether the Kerberos extension can automatically determine its site name.
+- `block_automatic_login` (Boolean) Enables or disables Keychain usage.
+- `is_default_realm` (Boolean) When true, this profile's realm will be selected as the default. Necessary if multiple Kerberos-type profiles are configured.
+- `managed_apps_in_bundle_id_acl_included` (Boolean) When set to True, the Kerberos extension allows managed apps, and any apps entered with the app bundle ID to access the credential. When set to False, the Kerberos extension allows all apps to access the credential. Available for devices running iOS and iPadOS versions 14 and later.
+- `password_block_modification` (Boolean) Enables or disables password changes.
+- `password_enable_local_sync` (Boolean) Enables or disables password syncing. This won't affect users logged in with a mobile account on macOS.
+- `password_require_active_directory_complexity` (Boolean) Enables or disables whether passwords must meet Active Directory's complexity requirements.
+- `realm` (String) Gets or sets the case-sensitive realm name for this profile.
+- `require_user_presence` (Boolean) Gets or sets whether to require authentication via Touch ID, Face ID, or a passcode to access the keychain entry.
+
+Optional:
+
+- `active_directory_site_code` (String) Gets or sets the Active Directory site.
+- `cache_name` (String) Gets or sets the Generic Security Services name of the Kerberos cache to use for this profile.
+- `credential_bundle_id_access_control_list` (Set of String) Gets or sets a list of app Bundle IDs allowed to access the Kerberos Ticket Granting Ticket.
+- `domain_realms` (Set of String) Gets or sets a list of realms for custom domain-realm mapping. Realms are case sensitive.
+- `domains` (Set of String) Gets or sets a list of hosts or domain names for which the app extension performs SSO.
+- `password_change_url` (String) Gets or sets the URL that the user will be sent to when they initiate a password change.
+- `password_expiration_days` (Number) Overrides the default password expiration in days. For most domains, this value is calculated automatically.
+- `password_expiration_notification_days` (Number) Gets or sets the number of days until the user is notified that their password will expire (default is 15).
+- `password_minimum_age_days` (Number) Gets or sets the minimum number of days until a user can change their password again.
+- `password_minimum_length` (Number) Gets or sets the minimum length of a password.
+- `password_previous_password_block_count` (Number) Gets or sets the number of previous passwords to block.
+- `password_requirements_description` (String) Gets or sets a description of the password complexity requirements.
+- `sign_in_help_text` (String) Text displayed to the user at the Kerberos sign in window. Available for devices running iOS and iPadOS versions 14 and later.
+- `user_principal_name` (String) Gets or sets the principle user name to use for this profile. The realm name does not need to be included.
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--redirect"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.redirect`
+
+Required:
+
+- `extension_identifier` (String) Gets or sets the bundle ID of the app extension that performs SSO for the specified URLs.
+- `team_identifier` (String) Gets or sets the team ID of the app extension that performs SSO for the specified URLs.
+- `url_prefixes` (Set of String) One or more URL prefixes of identity providers on whose behalf the app extension performs single sign-on. URLs must begin with http:// or https://. All URL prefixes must be unique for all profiles.
+
+Optional:
+
+- `configurations` (Attributes Set) Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyTypedValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--redirect--configurations))
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--redirect--configurations"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.redirect.configurations`
+
+Required:
+
+- `key` (String) The string key of the key-value pair.
+
+Optional:
+
+- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--redirect--configurations--boolean))
+- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--redirect--configurations--integer))
+- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--redirect--configurations--real))
+- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--redirect--configurations--string))
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--redirect--configurations--boolean"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.redirect.configurations.boolean`
+
+Required:
+
+- `value` (Boolean) The Boolean value of the key-value pair.
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--redirect--configurations--integer"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.redirect.configurations.integer`
+
+Required:
+
+- `value` (Number) The integer value of the key-value pair.
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--redirect--configurations--real"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.redirect.configurations.real`
+
+Required:
+
+- `value` (Number) The real (floating-point) value of the key-value pair.
+
+
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--redirect--configurations--string"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.redirect.configurations.string`
+
+Required:
+
+- `value` (String) The string value of the key-value pair.
+
+
+
+
 
 <a id="nestedatt--ios_device_features--notification_settings"></a>
 ### Nested Schema for `ios_device_features.notification_settings`
 
 Optional:
 
-- `alert_type` (String) Indicates the type of alert for notifications for this app.
+- `alert_type` (String) Indicates the type of alert for notifications for this app. / Notification Settings Alert Type; possible values are: `deviceDefault` (Device default value, no intent.), `banner` (Banner.), `modal` (Modal.), `none` (None.)
 - `app_name` (String) Application name to be associated with the bundleID.
 - `badges_enabled` (Boolean) Indicates whether badges are allowed for this app.
 - `bundle_id` (String) Bundle id of app to which to apply these notification settings.
 - `enabled` (Boolean) Indicates whether notifications are allowed for this app.
-- `preview_visibility` (String) Overrides the notification preview policy set by the user on an iOS device.
+- `preview_visibility` (String) Overrides the notification preview policy set by the user on an iOS device. / Determines when notification previews are visible on an iOS device. Previews can include things like text (from Messages and Mail) and invitation details (from Calendar). When configured, it will override the user's defined preview settings; possible values are: `notConfigured` (Notification preview settings will not be overwritten.), `alwaysShow` (Always show notification previews.), `hideWhenLocked` (Only show notification previews when the device is unlocked.), `neverShow` (Never show notification previews.)
 - `publisher` (String) Publisher to be associated with the bundleID.
 - `show_in_notification_center` (Boolean) Indicates whether notifications can be shown in notification center.
 - `show_on_lock_screen` (Boolean) Indicates whether notifications can be shown on the lock screen.
@@ -915,27 +1220,27 @@ Optional:
 Required:
 
 - `account_name` (String) Account name.
-- `email_address_source` (String) Email attribute that is picked from AAD and injected into this profile before installing on the device.
+- `email_address_source` (String) Email attribute that is picked from AAD and injected into this profile before installing on the device. / Possible values for username source or email source; possible values are: `userPrincipalName` (User principal name.), `primarySmtpAddress` (Primary SMTP address.)
 - `host_name` (String) Exchange location that (URL) that the native mail app connects to.
 
 Optional:
 
-- `authentication_method` (String) Authentication method for this Email profile.
+- `authentication_method` (String) Authentication method for this Email profile. / Exchange Active Sync authentication method; possible values are: `usernameAndPassword` (Authenticate with a username and password.), `certificate` (Authenticate with a certificate.), `derivedCredential` (Authenticate with derived credential.)
 - `block_moving_messages_to_other_email_accounts` (Boolean) Indicates whether or not to block moving messages to other email accounts.
 - `block_sending_email_from_third_party_apps` (Boolean) Indicates whether or not to block sending email from third party apps.
 - `block_syncing_recently_used_email_addresses` (Boolean) Indicates whether or not to block syncing recently used email addresses, for instance - when composing new email.
 - `custom_domain_name` (String) Custom domain name value used while generating an email profile before installing on the device.
-- `duration_of_email_to_sync` (String) Duration of time email should be synced back to.
-- `eas_services` (String) Exchange data to sync.
+- `duration_of_email_to_sync` (String) Duration of time email should be synced back to.  / Possible values for email sync duration; possible values are: `userDefined` (User Defined, default value, no intent.), `oneDay` (Sync one day of email.), `threeDays` (Sync three days of email.), `oneWeek` (Sync one week of email.), `twoWeeks` (Sync two weeks of email.), `oneMonth` (Sync one month of email.), `unlimited` (Sync an unlimited duration of email.)
+- `eas_services` (String) Exchange data to sync. / Exchange Active Sync services; possible values are: `none`, `calendars` (Enables synchronization of calendars.), `contacts` (Enables synchronization of contacts.), `email` (Enables synchronization of email.), `notes` (Enables synchronization of notes.), `reminders` (Enables synchronization of reminders.)
 - `eas_services_user_override_enabled` (Boolean) Allow users to change sync settings.
-- `encryption_certificate_type` (String) Encryption Certificate type for this Email profile.
+- `encryption_certificate_type` (String) Encryption Certificate type for this Email profile. / Supported certificate sources for email signing and encryption; possible values are: `none` (Do not use a certificate as a source.), `certificate` (Use an certificate for certificate source.), `derivedCredential` (Use a derived credential for certificate source.)
 - `per_app_vpn_profile_id` (String) Profile ID of the Per-App VPN policy to be used to access emails from the native Mail client
 - `require_ssl` (Boolean) Indicates whether or not to use SSL.
-- `signing_certificate_type` (String) Signing Certificate type for this Email profile.
+- `signing_certificate_type` (String) Signing Certificate type for this Email profile. / Supported certificate sources for email signing and encryption; possible values are: `none` (Do not use a certificate as a source.), `certificate` (Use an certificate for certificate source.), `derivedCredential` (Use a derived credential for certificate source.)
 - `use_oauth` (Boolean) Specifies whether the connection should use OAuth for authentication.
-- `user_domain_name_source` (String) UserDomainname attribute that is picked from AAD and injected into this profile before installing on the device.
-- `username_aad_source` (String) Name of the AAD field, that will be used to retrieve UserName for email profile.
-- `username_source` (String) Username attribute that is picked from AAD and injected into this profile before installing on the device.
+- `user_domain_name_source` (String) UserDomainname attribute that is picked from AAD and injected into this profile before installing on the device. / Domainname source; possible values are: `fullDomainName` (Full domain name.), `netBiosDomainName` (net bios domain name.)
+- `username_aad_source` (String) Name of the AAD field, that will be used to retrieve UserName for email profile. / Username source; possible values are: `userPrincipalName` (User principal name.), `primarySmtpAddress` (Primary SMTP address.), `samAccountName` (The user sam account name.)
+- `username_source` (String) Username attribute that is picked from AAD and injected into this profile before installing on the device. / Possible values for username source or email source; possible values are: `userPrincipalName` (User principal name.), `primarySmtpAddress` (Primary SMTP address.)
 
 
 <a id="nestedatt--ios_general_device"></a>
@@ -965,7 +1270,7 @@ Optional:
 - `apple_watch_force_wrist_detection` (Boolean) Indicates whether or not to force a paired Apple Watch to use Wrist Detection (iOS 8.2 and later).
 - `apps_single_app_mode_list` (Attributes Set) Gets or sets the list of iOS apps allowed to autonomously enter Single App Mode. Supervised only. iOS 7.0 and later. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_general_device--apps_single_app_mode_list))
 - `apps_visibility_list` (Attributes Set) List of apps in the visibility list (either visible/launchable apps list or hidden/unlaunchable apps list, controlled by AppsVisibilityListType) (iOS 9.3 and later). This collection can contain a maximum of 10000 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_general_device--apps_visibility_list))
-- `apps_visibility_list_type` (String) Type of list that is in the AppsVisibilityList.
+- `apps_visibility_list_type` (String) Type of list that is in the AppsVisibilityList. / Possible values of the compliance app list; possible values are: `none` (Default value, no intent.), `appsInListCompliant` (The list represents the apps that will be considered compliant (only apps on the list are compliant).), `appsNotInListCompliant` (The list represents the apps that will be considered non compliant (all apps are compliant except apps on the list).)
 - `auto_fill_force_authentication` (Boolean) Indicates whether or not to force user authentication before autofilling passwords and credit card information in Safari and other apps on supervised devices.
 - `auto_unlock_blocked` (Boolean) Blocks users from unlocking their device with Apple Watch. Available for devices running iOS and iPadOS versions 14.5 and later.
 - `block_system_app_removal` (Boolean) Indicates whether or not the removal of system apps from the device is blocked on a supervised device (iOS 11.0 and later).
@@ -984,7 +1289,7 @@ Optional:
 - `classroom_force_automatically_join_classes` (Boolean) Indicates whether or not to automatically give permission to the teacher's requests, without prompting the student, when the device is in supervised mode.
 - `classroom_force_request_permission_to_leave_classes` (Boolean) Indicates whether a student enrolled in an unmanaged course via Classroom will request permission from the teacher when attempting to leave the course (iOS 11.3 and later).
 - `classroom_force_unprompted_app_and_device_lock` (Boolean) Indicates whether or not to allow the teacher to lock apps or the device without prompting the student. Supervised only.
-- `compliant_app_list_type` (String) List that is in the AppComplianceList.
+- `compliant_app_list_type` (String) List that is in the AppComplianceList. / Possible values of the compliance app list; possible values are: `none` (Default value, no intent.), `appsInListCompliant` (The list represents the apps that will be considered compliant (only apps on the list are compliant).), `appsNotInListCompliant` (The list represents the apps that will be considered non compliant (all apps are compliant except apps on the list).)
 - `compliant_apps_list` (Attributes Set) List of apps in the compliance (either allow list or block list, controlled by CompliantAppListType). This collection can contain a maximum of 10000 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_general_device--compliant_apps_list))
 - `configuration_profile_block_changes` (Boolean) Indicates whether or not to block the user from installing configuration profiles and certificates interactively when the device is in supervised mode.
 - `contacts_allow_managed_to_unmanaged_write` (Boolean) Indicates whether or not managed apps can write contacts to unmanaged contacts accounts (iOS 12.0 and later).
@@ -1042,7 +1347,7 @@ Optional:
 - `kiosk_mode_allow_voice_over_settings` (Boolean) Indicates whether or not to allow access to the voice over settings while in kiosk mode.
 - `kiosk_mode_allow_zoom_settings` (Boolean) Indicates whether or not to allow access to the zoom settings while in kiosk mode.
 - `kiosk_mode_app_store_url` (String) URL in the app store to the app to use for kiosk mode. Use if KioskModeManagedAppId is not known.
-- `kiosk_mode_app_type` (String) Type of app to run in kiosk mode.
+- `kiosk_mode_app_type` (String) Type of app to run in kiosk mode. / App source options for iOS kiosk mode; possible values are: `notConfigured` (Device default value, no intent.), `appStoreApp` (The app to be run comes from the app store.), `managedApp` (The app to be run is built into the device.), `builtInApp` (The app to be run is a managed app.)
 - `kiosk_mode_block_auto_lock` (Boolean) Indicates whether or not to block device auto lock while in kiosk mode.
 - `kiosk_mode_block_ringer_switch` (Boolean) Indicates whether or not to block use of the ringer switch while in kiosk mode.
 - `kiosk_mode_block_screen_rotation` (Boolean) Indicates whether or not to block screen rotation while in kiosk mode.
@@ -1062,7 +1367,7 @@ Optional:
 - `lock_screen_block_passbook` (Boolean) Indicates whether or not to block the user from using passbook when the device is locked.
 - `lock_screen_block_today_view` (Boolean) Indicates whether or not to block the user from using the Today View on the lock screen.
 - `managed_pasteboard_required` (Boolean) Open-in management controls how people share data between unmanaged and managed apps. Setting this to true enforces copy/paste restrictions based on how you configured <b>Block viewing corporate documents in unmanaged apps </b> and <b> Block viewing non-corporate documents in corporate apps.</b>
-- `media_content_rating_apps` (String) Media content rating settings for Apps
+- `media_content_rating_apps` (String) Media content rating settings for Apps / Apps rating as in media content; possible values are: `allAllowed` (Default value, allow all apps content), `allBlocked` (Do not allow any apps content), `agesAbove4` (4+, age 4 and above), `agesAbove9` (9+, age 9 and above), `agesAbove12` (12+, age 12 and above ), `agesAbove17` (17+, age 17 and above)
 - `media_content_rating_australia` (Attributes) Media content rating settings for Australia / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingAustralia?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_general_device--media_content_rating_australia))
 - `media_content_rating_canada` (Attributes) Media content rating settings for Canada / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingCanada?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_general_device--media_content_rating_canada))
 - `media_content_rating_france` (Attributes) Media content rating settings for France / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingFrance?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_general_device--media_content_rating_france))
@@ -1089,7 +1394,7 @@ Optional:
 - `passcode_minutes_of_inactivity_before_screen_timeout` (Number) Minutes of inactivity before the screen times out.
 - `passcode_previous_passcode_block_count` (Number) Number of previous passcodes to block. Valid values 1 to 24
 - `passcode_required` (Boolean) Indicates whether or not to require a passcode.
-- `passcode_required_type` (String) Type of passcode that is required.
+- `passcode_required_type` (String) Type of passcode that is required. / Possible values of required passwords; possible values are: `deviceDefault` (Device default value, no intent.), `alphanumeric` (Alphanumeric password required.), `numeric` (Numeric password required.)
 - `passcode_sign_in_failure_count_before_wipe` (Number) Number of sign in failures allowed before wiping the device. Valid values 2 to 11
 - `password_block_airdrop_sharing` (Boolean) Indicates whether or not to block sharing passwords with the AirDrop passwords feature iOS 12.0 and later).
 - `password_block_auto_fill` (Boolean) Indicates if the AutoFill passwords feature is allowed (iOS 12.0 and later).
@@ -1102,7 +1407,7 @@ Optional:
 - `safari_block_javascript` (Boolean) Indicates whether or not to block JavaScript in Safari.
 - `safari_block_popups` (Boolean) Indicates whether or not to block popups in Safari.
 - `safari_blocked` (Boolean) Indicates whether or not to block the user from using Safari. Requires a supervised device for iOS 13 and later.
-- `safari_cookie_settings` (String) Cookie settings for Safari.
+- `safari_cookie_settings` (String) Cookie settings for Safari. / Web Browser Cookie Settings; possible values are: `browserDefault` (Browser default value, no intent.), `blockAlways` (Always block cookies.), `allowCurrentWebSite` (Allow cookies from current Web site.), `allowFromWebsitesVisited` (Allow Cookies from websites visited.), `allowAlways` (Always allow cookies.)
 - `safari_managed_domains` (Set of String) URLs matching the patterns listed here will be considered managed.
 - `safari_password_auto_fill_domains` (Set of String) Users can save passwords in Safari only from URLs matching the patterns listed here. Applies to devices in supervised mode (iOS 9.3 and later).
 - `safari_require_fraud_warning` (Boolean) Indicates whether or not to require fraud warning in Safari.
@@ -1171,8 +1476,8 @@ Optional:
 
 Required:
 
-- `movie_rating` (String) Movies rating selected for Australia
-- `tv_rating` (String) TV rating selected for Australia
+- `movie_rating` (String) Movies rating selected for Australia / Movies rating labels in Australia; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (The G classification is suitable for everyone), `parentalGuidance` (The PG recommends viewers under 15 with guidance from parents or guardians), `mature` (The M classification is not recommended for viewers under 15), `agesAbove15` (The MA15+ classification is not suitable for viewers under 15), `agesAbove18` (The R18+ classification is not suitable for viewers under 18)
+- `tv_rating` (String) TV rating selected for Australia / TV content rating labels in Australia; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `preschoolers` (The P classification is intended for preschoolers), `children` (The C classification is intended for children under 14), `general` (The G classification is suitable for all ages), `parentalGuidance` (The PG classification is recommended for young viewers), `mature` (The M classification is recommended for viewers over 15), `agesAbove15` (The MA15+ classification is not suitable for viewers under 15), `agesAbove15AdultViolence` (The AV15+ classification is not suitable for viewers under 15, adult violence-specific)
 
 
 <a id="nestedatt--ios_general_device--media_content_rating_canada"></a>
@@ -1180,8 +1485,8 @@ Required:
 
 Required:
 
-- `movie_rating` (String) Movies rating selected for Canada
-- `tv_rating` (String) TV rating selected for Canada
+- `movie_rating` (String) Movies rating selected for Canada / Movies rating labels in Canada; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (The G classification is suitable for all ages), `parentalGuidance` (The PG classification advises parental guidance), `agesAbove14` (The 14A classification is suitable for viewers above 14 or older), `agesAbove18` (The 18A classification is suitable for viewers above 18 or older), `restricted` (The R classification is restricted to 18 years and older)
+- `tv_rating` (String) TV rating selected for Canada / TV content rating labels in Canada; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `children` (The C classification is suitable for children ages of 2 to 7 years), `childrenAbove8` (The C8 classification is suitable for children ages 8+), `general` (The G classification is suitable for general audience), `parentalGuidance` (PG, Parental Guidance), `agesAbove14` (The 14+ classification is intended for viewers ages 14 and older), `agesAbove18` (The 18+ classification is intended for viewers ages 18 and older)
 
 
 <a id="nestedatt--ios_general_device--media_content_rating_france"></a>
@@ -1189,8 +1494,8 @@ Required:
 
 Required:
 
-- `movie_rating` (String) Movies rating selected for France
-- `tv_rating` (String) TV rating selected for France
+- `movie_rating` (String) Movies rating selected for France / Movies rating labels in France; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `agesAbove10` (The 10 classification prohibits the screening of the film to minors under 10), `agesAbove12` (The 12 classification prohibits the screening of the film to minors under 12), `agesAbove16` (The 16 classification prohibits the screening of the film to minors under 16), `agesAbove18` (The 18 classification prohibits the screening to minors under 18)
+- `tv_rating` (String) TV rating selected for France / TV content rating labels in France; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `agesAbove10` (The -10 classification is not recommended for children under 10), `agesAbove12` (The -12 classification is not recommended for children under 12), `agesAbove16` (The -16 classification is not recommended for children under 16), `agesAbove18` (The -18 classification is not recommended for persons under 18)
 
 
 <a id="nestedatt--ios_general_device--media_content_rating_germany"></a>
@@ -1198,8 +1503,8 @@ Required:
 
 Required:
 
-- `movie_rating` (String) Movies rating selected for Germany
-- `tv_rating` (String) TV rating selected for Germany
+- `movie_rating` (String) Movies rating selected for Germany / Movies rating labels in Germany; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Ab 0 Jahren, no age restrictions), `agesAbove6` (Ab 6 Jahren, ages 6 and older), `agesAbove12` (Ab 12 Jahren, ages 12 and older), `agesAbove16` (Ab 16 Jahren, ages 16 and older), `adults` (Ab 18 Jahren, adults only)
+- `tv_rating` (String) TV rating selected for Germany / TV content rating labels in Germany; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `general` (Ab 0 Jahren, no age restrictions), `agesAbove6` (Ab 6 Jahren, ages 6 and older), `agesAbove12` (Ab 12 Jahren, ages 12 and older), `agesAbove16` (Ab 16 Jahren, ages 16 and older), `adults` (Ab 18 Jahren, adults only)
 
 
 <a id="nestedatt--ios_general_device--media_content_rating_ireland"></a>
@@ -1207,8 +1512,8 @@ Required:
 
 Required:
 
-- `movie_rating` (String) Movies rating selected for Ireland
-- `tv_rating` (String) TV rating selected for Ireland
+- `movie_rating` (String) Movies rating selected for Ireland / Movies rating labels in Ireland; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Suitable for children of school going age), `parentalGuidance` (The PG classification advises parental guidance), `agesAbove12` (The 12A classification is suitable for viewers of 12 or older), `agesAbove15` (The 15A classification is suitable for viewers of 15 or older), `agesAbove16` (The 16 classification is suitable for viewers of 16 or older), `adults` (The 18 classification, suitable only for adults)
+- `tv_rating` (String) TV rating selected for Ireland / TV content rating labels in Ireland; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `general` (The GA classification is suitable for all audiences), `children` (The CH classification is suitable for children), `youngAdults` (The YA classification is suitable for teenage audience), `parentalSupervision` (The PS classification invites parents and guardians to consider restriction children’s access), `mature` (The MA classification is suitable for adults)
 
 
 <a id="nestedatt--ios_general_device--media_content_rating_japan"></a>
@@ -1216,8 +1521,8 @@ Required:
 
 Required:
 
-- `movie_rating` (String) Movies rating selected for Japan
-- `tv_rating` (String) TV rating selected for Japan
+- `movie_rating` (String) Movies rating selected for Japan / Movies rating labels in Japan; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Suitable for all ages), `parentalGuidance` (The PG-12 classification requests parental guidance for young people under 12), `agesAbove15` (The R15+ classification is suitable for viewers of 15 or older), `agesAbove18` (The R18+ classification is suitable for viewers of 18 or older)
+- `tv_rating` (String) TV rating selected for Japan / TV content rating labels in Japan; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `explicitAllowed` (All TV content is explicitly allowed)
 
 
 <a id="nestedatt--ios_general_device--media_content_rating_new_zealand"></a>
@@ -1225,8 +1530,8 @@ Required:
 
 Required:
 
-- `movie_rating` (String) Movies rating selected for New Zealand
-- `tv_rating` (String) TV rating selected for New Zealand
+- `movie_rating` (String) Movies rating selected for New Zealand / Movies rating labels in New Zealand; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Suitable for general audience), `parentalGuidance` (The PG classification recommends parental guidance), `mature` (The M classification is suitable for mature audience), `agesAbove13` (The R13 classification is restricted to persons 13 years and over), `agesAbove15` (The R15 classification is restricted to persons 15 years and over), `agesAbove16` (The R16 classification is restricted to persons 16 years and over), `agesAbove18` (The R18 classification is restricted to persons 18 years and over), `restricted` (The R classification is restricted to a certain audience), `agesAbove16Restricted` (The RP16 classification requires viewers under 16 accompanied by a parent or an adult)
+- `tv_rating` (String) TV rating selected for New Zealand / TV content rating labels in New Zealand; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `general` (The G classification excludes materials likely to harm children under 14), `parentalGuidance` (The PGR classification encourages parents and guardians to supervise younger viewers), `adults` (The AO classification is not suitable for children)
 
 
 <a id="nestedatt--ios_general_device--media_content_rating_united_kingdom"></a>
@@ -1234,8 +1539,8 @@ Required:
 
 Required:
 
-- `movie_rating` (String) Movies rating selected for United Kingdom
-- `tv_rating` (String) TV rating selected for United Kingdom
+- `movie_rating` (String) Movies rating selected for United Kingdom / Movies rating labels in United Kingdom; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (The U classification is suitable for all ages), `universalChildren` (The UC classification is suitable for pre-school children, an old rating label), `parentalGuidance` (The PG classification is suitable for mature), `agesAbove12Video` (12, video release suitable for 12 years and over), `agesAbove12Cinema` (12A, cinema release suitable for 12 years and over), `agesAbove15` (15, suitable only for 15 years and older), `adults` (Suitable only for adults)
+- `tv_rating` (String) TV rating selected for United Kingdom / TV content rating labels in United Kingdom; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `caution` (Allowing TV contents with a warning message)
 
 
 <a id="nestedatt--ios_general_device--media_content_rating_united_states"></a>
@@ -1243,8 +1548,8 @@ Required:
 
 Required:
 
-- `movie_rating` (String) Movies rating selected for United States
-- `tv_rating` (String) TV rating selected for United States
+- `movie_rating` (String) Movies rating selected for United States / Movies rating labels in United States; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (G, all ages admitted), `parentalGuidance` (PG, some material may not be suitable for children), `parentalGuidance13` (PG13, some material may be inappropriate for children under 13), `restricted` (R, viewers under 17 require accompanying parent or adult guardian), `adults` (NC17, adults only)
+- `tv_rating` (String) TV rating selected for United States / TV content rating labels in United States; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `childrenAll` (TV-Y, all children), `childrenAbove7` (TV-Y7, children age 7 and above), `general` (TV-G, suitable for all ages), `parentalGuidance` (TV-PG, parental guidance), `childrenAbove14` (TV-14, children age 14 and above), `adults` (TV-MA, adults only)
 
 
 <a id="nestedatt--ios_general_device--network_usage_rules"></a>
@@ -1285,8 +1590,8 @@ Optional:
 - `custom_update_time_windows` (Attributes Set) If update schedule type is set to use time window scheduling, custom time windows when updates will be scheduled. This collection can contain a maximum of 20 elements. / Custom update time window / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-customUpdateTimeWindow?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_update--custom_update_time_windows))
 - `desired_os_version` (String) If left unspecified, devices will update to the latest version of the OS.
 - `enforced_software_update_delay_in_days` (Number) Days before software updates are visible to iOS devices ranging from 0 to 90 inclusive
-- `scheduled_install_days` (Set of String) Days in week for which active hours are configured. This collection can contain a maximum of 7 elements.
-- `update_schedule_type` (String) Update schedule type
+- `scheduled_install_days` (Set of String) Days in week for which active hours are configured. This collection can contain a maximum of 7 elements. / ; possible values are: `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`
+- `update_schedule_type` (String) Update schedule type / Update schedule type for iOS software updates; possible values are: `updateOutsideOfActiveHours` (Update outside of active hours.), `alwaysUpdate` (Always update.), `updateDuringTimeWindows` (Update during time windows.), `updateOutsideOfTimeWindows` (Update outside of time windows.)
 - `utc_time_offset_in_minutes` (Number) UTC Time Offset indicated in minutes
 
 Read-Only:
@@ -1298,9 +1603,9 @@ Read-Only:
 
 Required:
 
-- `end_day` (String) End day of the time window
+- `end_day` (String) End day of the time window / ; possible values are: `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`
 - `end_time` (String) End time of the time window
-- `start_day` (String) Start day of the time window
+- `start_day` (String) Start day of the time window / ; possible values are: `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`
 - `start_time` (String) Start time of the time window
 
 
@@ -1310,9 +1615,9 @@ Required:
 
 Required:
 
-- `authentication_method` (String) Authentication method for this VPN connection.
+- `authentication_method` (String) Authentication method for this VPN connection. / VPN Authentication Method; possible values are: `certificate` (Authenticate with a certificate.), `usernameAndPassword` (Use username and password for authentication.), `sharedSecret` (Use Shared Secret for Authentication.  Only valid for iOS IKEv2.), `derivedCredential` (Use Derived Credential for Authentication.), `azureAD` (Use Azure AD for authentication.)
 - `connection_name` (String) Connection name displayed to the user.
-- `connection_type` (String) Connection type.
+- `connection_type` (String) Connection type. / Apple VPN connection type; possible values are: `ciscoAnyConnect` (Cisco AnyConnect.), `pulseSecure` (Pulse Secure.), `f5EdgeClient` (F5 Edge Client.), `dellSonicWallMobileConnect` (Dell SonicWALL Mobile Connection.), `checkPointCapsuleVpn` (Check Point Capsule VPN.), `customVpn` (Custom VPN.), `ciscoIPSec` (Cisco (IPSec).), `citrix` (Citrix.), `ciscoAnyConnectV2` (Cisco AnyConnect V2.), `paloAltoGlobalProtect` (Palo Alto Networks GlobalProtect.), `zscalerPrivateAccess` (Zscaler Private Access.), `f5Access2018` (F5 Access 2018.), `citrixSso` (Citrix Sso.), `paloAltoGlobalProtectV2` (Palo Alto Networks GlobalProtect V2.), `ikEv2` (IKEv2.), `alwaysOn` (AlwaysOn.), `microsoftTunnel` (Microsoft Tunnel.), `netMotionMobility` (NetMotion Mobility.), `microsoftProtect` (Microsoft Protect.)
 - `server` (Attributes) VPN Server on the network. Make sure end users can access this network location. / VPN Server definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnServer?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_vpn--server))
 
 Optional:
@@ -1332,7 +1637,7 @@ Optional:
 - `microsoft_tunnel_site_id` (String) Microsoft Tunnel site ID.
 - `on_demand_rules` (Attributes Set) On-Demand Rules. This collection can contain a maximum of 500 elements. / VPN On-Demand Rule definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnOnDemandRule?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_vpn--on_demand_rules))
 - `opt_in_to_device_id_sharing` (Boolean) Opt-In to sharing the device's Id to third-party vpn clients for use during network access control validation.
-- `provider_type` (String) Provider type for per-app VPN.
+- `provider_type` (String) Provider type for per-app VPN. / Provider type for per-app VPN; possible values are: `notConfigured` (Tunnel traffic is not explicitly configured.), `appProxy` (Tunnel traffic at the application layer.), `packetTunnel` (Tunnel traffic at the IP layer.)
 - `proxy_server` (Attributes) Proxy Server. / VPN Proxy Server. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnProxyServer?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_vpn--proxy_server))
 - `realm` (String) Realm when connection type is set to Pulse Secure.
 - `role` (String) Role when connection type is set to Pulse Secure.
@@ -1368,15 +1673,15 @@ Optional:
 
 Required:
 
-- `action` (String) Action.
+- `action` (String) Action. / VPN On-Demand Rule Connection Action; possible values are: `connect` (Connect.), `evaluateConnection` (Evaluate Connection.), `ignore` (Ignore.), `disconnect` (Disconnect.)
 
 Optional:
 
 - `dns_search_domains` (Set of String) DNS Search Domains.
 - `dns_server_address_match` (Set of String) DNS Search Server Address.
-- `domain_action` (String) Domain Action (Only applicable when Action is evaluate connection).
+- `domain_action` (String) Domain Action (Only applicable when Action is evaluate connection). / VPN On-Demand Rule Connection Domain Action; possible values are: `connectIfNeeded` (Connect if needed.), `neverConnect` (Never connect.)
 - `domains` (Set of String) Domains (Only applicable when Action is evaluate connection).
-- `interface_type_match` (String) Network interface to trigger VPN.
+- `interface_type_match` (String) Network interface to trigger VPN. / VPN On-Demand Rule Connection network interface type; possible values are: `notConfigured` (NotConfigured), `ethernet` (Ethernet.), `wiFi` (WiFi.), `cellular` (Cellular.)
 - `probe_required_url` (String) Probe Required Url (Only applicable when Action is evaluate connection and DomainAction is connect if needed).
 - `probe_url` (String) A URL to probe. If this URL is successfully fetched (returning a 200 HTTP status code) without redirection, this rule matches.
 - `ssids` (Set of String) Network Service Set Identifiers (SSIDs).
@@ -1412,7 +1717,7 @@ Optional:
 
 Required:
 
-- `deployment_channel` (String) Indicates the channel used to deploy the configuration profile. Available choices are DeviceChannel, UserChannel.
+- `deployment_channel` (String) Indicates the channel used to deploy the configuration profile. Available choices are DeviceChannel, UserChannel. / Indicates the channel used to deploy the configuration profile. Available choices are DeviceChannel, UserChannel; possible values are: `deviceChannel` (Send payload down over Device Channel.), `userChannel` (Send payload down over User Channel.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
 - `file_name` (String) Payload file name (*.mobileconfig | *.xml).
 - `name` (String) Name that is displayed to the user.
 - `payload` (String) Payload. (UTF8 encoded byte array)
@@ -1446,7 +1751,7 @@ Optional:
 - `console_access_disabled` (Boolean) Whether the Other user will disregard use of the '>console> special user name.
 - `content_caching_block_deletion` (Boolean) Prevents content caches from purging content to free up disk space for other apps.
 - `content_caching_client_listen_ranges` (Attributes Set) A list of custom IP ranges content caches will use to listen for clients. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ipRange?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--content_caching_client_listen_ranges))
-- `content_caching_client_policy` (String) Determines the method in which content caching servers will listen for clients.
+- `content_caching_client_policy` (String) Determines the method in which content caching servers will listen for clients. / Determines which clients a content cache will serve; possible values are: `notConfigured` (Defaults to clients in local network.), `clientsInLocalNetwork` (Content caches will provide content to devices only in their immediate local network.), `clientsWithSamePublicIpAddress` (Content caches will provide content to devices that share the same public IP address.), `clientsInCustomLocalNetworks` (Content caches will provide content to devices in contentCachingClientListenRanges.), `clientsInCustomLocalNetworksWithFallback` (Content caches will provide content to devices in contentCachingClientListenRanges, contentCachingPeerListenRanges, and contentCachingParents.)
 - `content_caching_data_path` (String) The path to the directory used to store cached content. The value must be (or end with) /Library/Application Support/Apple/AssetCache/Data
 - `content_caching_disable_connection_sharing` (Boolean) Disables internet connection sharing.
 - `content_caching_enabled` (Boolean) Enables content caching and prevents it from being disabled by the user.
@@ -1454,15 +1759,15 @@ Optional:
 - `content_caching_keep_awake` (Boolean) Prevent the device from sleeping if content caching is enabled.
 - `content_caching_log_client_identities` (Boolean) Enables logging of IP addresses and ports of clients that request cached content.
 - `content_caching_max_size_bytes` (Number) The maximum number of bytes of disk space that will be used for the content cache. A value of 0 (default) indicates unlimited disk space.
-- `content_caching_parent_selection_policy` (String) Determines the method in which content caching servers will select parents if multiple are present.
+- `content_caching_parent_selection_policy` (String) Determines the method in which content caching servers will select parents if multiple are present. / Determines how content caches select a parent cache; possible values are: `notConfigured` (Defaults to round-robin strategy.), `roundRobin` (Rotate through the parents in order. Use this policy for load balancing.), `firstAvailable` (Always use the first available parent in the Parents list. Use this policy to designate permanent primary, secondary, and subsequent parents.), `urlPathHash` (Hash the path part of the requested URL so that the same parent is always used for the same URL. This is useful for maximizing the size of the combined caches of the parents.), `random` (Choose a parent at random. Use this policy for load balancing.), `stickyAvailable` (Use the first available parent that is available in the Parents list until it becomes unavailable, then advance to the next one. Use this policy for designating floating primary, secondary, and subsequent parents.)
 - `content_caching_parents` (Set of String) A list of IP addresses representing parent content caches.
 - `content_caching_peer_filter_ranges` (Attributes Set) A list of custom IP ranges content caches will use to query for content from peers caches. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ipRange?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--content_caching_peer_filter_ranges))
 - `content_caching_peer_listen_ranges` (Attributes Set) A list of custom IP ranges content caches will use to listen for peer caches. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ipRange?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--content_caching_peer_listen_ranges))
-- `content_caching_peer_policy` (String) Determines the method in which content caches peer with other caches.
+- `content_caching_peer_policy` (String) Determines the method in which content caches peer with other caches. / Determines which content caches other content caches will peer with; possible values are: `notConfigured` (Defaults to peers in local network.), `peersInLocalNetwork` (Content caches will only peer with caches in their immediate local network.), `peersWithSamePublicIpAddress` (Content caches will only peer with caches that share the same public IP address.), `peersInCustomLocalNetworks` (Content caches will use contentCachingPeerFilterRanges and contentCachingPeerListenRanges to determine which caches to peer with.)
 - `content_caching_port` (Number) Sets the port used for content caching. If the value is 0, a random available port will be selected. Valid values 0 to 65535
 - `content_caching_public_ranges` (Attributes Set) A list of custom IP ranges that Apple's content caching service should use to match clients to content caches. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ipRange?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--content_caching_public_ranges))
 - `content_caching_show_alerts` (Boolean) Display content caching alerts as system notifications.
-- `content_caching_type` (String) Determines what type of content is allowed to be cached by Apple's content caching service.
+- `content_caching_type` (String) Determines what type of content is allowed to be cached by Apple's content caching service. / Indicates the type of content allowed to be cached by Apple's content caching service; possible values are: `notConfigured` (Default. Both user iCloud data and non-iCloud data will be cached.), `userContentOnly` (Allow Apple's content caching service to cache user iCloud data.), `sharedContentOnly` (Allow Apple's content caching service to cache non-iCloud data (e.g. app and software updates).)
 - `login_window_text` (String) Custom text to be displayed on the login window.
 - `logout_disabled_while_logged_in` (Boolean) Whether the Log Out menu item on the login window will be disabled while the user is logged in.
 - `macos_single_sign_on_extension` (Attributes) Gets or sets a single sign-on extension profile. / An abstract base class for all macOS-specific single sign-on extension types. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSSingleSignOnExtension?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension))
@@ -1961,7 +2266,7 @@ Optional:
 
 Required:
 
-- `allowed_types` (String) Gets or sets the allowed macOS system extension types.
+- `allowed_types` (String) Gets or sets the allowed macOS system extension types. / Flag enum representing the allowed macOS system extension types; possible values are: `driverExtensionsAllowed` (Enables driver extensions.), `networkExtensionsAllowed` (Enables network extensions.), `endpointSecurityExtensionsAllowed` (Enables endpoint security extensions.)
 - `team_identifier` (String) Gets or sets the team identifier used to sign the system extension.
 
 
@@ -1971,14 +2276,14 @@ Required:
 
 Optional:
 
-- `all_other_update_behavior` (String) Update behavior for all other updates.
-- `config_data_update_behavior` (String) Update behavior for configuration data file updates.
-- `critical_update_behavior` (String) Update behavior for critical updates.
+- `all_other_update_behavior` (String) Update behavior for all other updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.)
+- `config_data_update_behavior` (String) Update behavior for configuration data file updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.)
+- `critical_update_behavior` (String) Update behavior for critical updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.)
 - `custom_update_time_windows` (Attributes Set) Custom Time windows when updates will be allowed or blocked. This collection can contain a maximum of 20 elements. / Custom update time window / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-customUpdateTimeWindow?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_software_update--custom_update_time_windows))
-- `firmware_update_behavior` (String) Update behavior for firmware updates.
+- `firmware_update_behavior` (String) Update behavior for firmware updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.)
 - `max_user_deferrals_count` (Number) The maximum number of times the system allows the user to postpone an update before it’s installed. Supported values: 0 - 366. Valid values 0 to 365
-- `priority` (String) The scheduling priority for downloading and preparing the requested update. Default: Low. Possible values: Null, Low, High
-- `update_schedule_type` (String) Update schedule type
+- `priority` (String) The scheduling priority for downloading and preparing the requested update. Default: Low. Possible values: Null, Low, High / The scheduling priority options for downloading and preparing the requested mac OS update; possible values are: `low` (Indicates low scheduling priority for downloading and preparing the requested update), `high` (Indicates high scheduling priority for downloading and preparing the requested update), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
+- `update_schedule_type` (String) Update schedule type / Update schedule type for macOS software updates; possible values are: `alwaysUpdate` (Always update.), `updateDuringTimeWindows` (Update during time windows.), `updateOutsideOfTimeWindows` (Update outside of time windows.)
 - `update_time_window_utc_offset_in_minutes` (Number) Minutes indicating UTC offset for each update time window
 
 <a id="nestedatt--macos_software_update--custom_update_time_windows"></a>
@@ -1986,9 +2291,9 @@ Optional:
 
 Required:
 
-- `end_day` (String) End day of the time window
+- `end_day` (String) End day of the time window / ; possible values are: `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`
 - `end_time` (String) End time of the time window
-- `start_day` (String) Start day of the time window
+- `start_day` (String) Start day of the time window / ; possible values are: `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`
 - `start_time` (String) Start time of the time window
 
 
@@ -1998,9 +2303,9 @@ Required:
 
 Optional:
 
-- `allow` (String) Enables device health monitoring on the device
+- `allow` (String) Enables device health monitoring on the device / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.)
 - `custom_scope` (String) Specifies custom set of events collected from the device where health monitoring is enabled
-- `scope` (String) Specifies set of events collected from the device where health monitoring is enabled
+- `scope` (String) Specifies set of events collected from the device where health monitoring is enabled / Device health monitoring scope; possible values are: `undefined` (Undefined), `healthMonitoring` (Basic events for windows device health monitoring), `bootPerformance` (Boot performance events), `windowsUpdates` (Windows updates events), `privilegeManagement` (PrivilegeManagement)
 
 
 <a id="nestedatt--windows_update_for_business"></a>
@@ -2009,13 +2314,13 @@ Optional:
 Optional:
 
 - `allow_windows11_upgrade` (Boolean) When TRUE, allows eligible Windows 10 devices to upgrade to Windows 11. When FALSE, implies the device stays on the existing operating system. Returned by default. Query parameters are not supported.
-- `auto_restart_notification_dismissal` (String) Specify the method by which the auto-restart required notification is dismissed. Possible values are: NotConfigured, Automatic, User. Returned by default. Query parameters are not supported.
-- `automatic_update_mode` (String) The Automatic Update Mode. Possible values are: UserDefined, NotifyDownload, AutoInstallAtMaintenanceTime, AutoInstallAndRebootAtMaintenanceTime, AutoInstallAndRebootAtScheduledTime, AutoInstallAndRebootWithoutEndUserControl, WindowsDefault. UserDefined is the default value, no intent. Returned by default. Query parameters are not supported.
-- `business_ready_updates_only` (String) Determines which branch devices will receive their updates from. Possible values are: UserDefined, All, BusinessReadyOnly, WindowsInsiderBuildFast, WindowsInsiderBuildSlow, WindowsInsiderBuildRelease. Returned by default. Query parameters are not supported.
+- `auto_restart_notification_dismissal` (String) Specify the method by which the auto-restart required notification is dismissed. Possible values are: NotConfigured, Automatic, User. Returned by default. Query parameters are not supported. / Auto restart required notification dismissal method; possible values are: `notConfigured` (Not configured), `automatic` (Auto dismissal Indicates that the notification is automatically dismissed without user intervention), `user` (User dismissal. Allows the user to dismiss the notification), `unknownFutureValue` (Evolvable enum member)
+- `automatic_update_mode` (String) The Automatic Update Mode. Possible values are: UserDefined, NotifyDownload, AutoInstallAtMaintenanceTime, AutoInstallAndRebootAtMaintenanceTime, AutoInstallAndRebootAtScheduledTime, AutoInstallAndRebootWithoutEndUserControl, WindowsDefault. UserDefined is the default value, no intent. Returned by default. Query parameters are not supported. / Possible values for automatic update mode; possible values are: `userDefined` (User Defined, default value, no intent.), `notifyDownload` (Notify on download.), `autoInstallAtMaintenanceTime` (Auto-install at maintenance time.), `autoInstallAndRebootAtMaintenanceTime` (Auto-install and reboot at maintenance time.), `autoInstallAndRebootAtScheduledTime` (Auto-install and reboot at scheduled time.), `autoInstallAndRebootWithoutEndUserControl` (Auto-install and restart without end-user control), `windowsDefault` (Reset to Windows default value.)
+- `business_ready_updates_only` (String) Determines which branch devices will receive their updates from. Possible values are: UserDefined, All, BusinessReadyOnly, WindowsInsiderBuildFast, WindowsInsiderBuildSlow, WindowsInsiderBuildRelease. Returned by default. Query parameters are not supported. / Which branch devices will receive their updates from; possible values are: `userDefined` (Allow the user to set.), `all` (Semi-annual Channel (Targeted). Device gets all applicable feature updates from Semi-annual Channel (Targeted).), `businessReadyOnly` (Semi-annual Channel. Device gets feature updates from Semi-annual Channel.), `windowsInsiderBuildFast` (Windows Insider build - Fast), `windowsInsiderBuildSlow` (Windows Insider build - Slow), `windowsInsiderBuildRelease` (Release Windows Insider build)
 - `deadline_for_feature_updates_in_days` (Number) Number of days before feature updates are installed automatically with valid range from 0 to 30 days. Returned by default. Query parameters are not supported.
 - `deadline_for_quality_updates_in_days` (Number) Number of days before quality updates are installed automatically with valid range from 0 to 30 days. Returned by default. Query parameters are not supported.
 - `deadline_grace_period_in_days` (Number) Number of days after deadline until restarts occur automatically with valid range from 0 to 7 days. Returned by default. Query parameters are not supported.
-- `delivery_optimization_mode` (String) The Delivery Optimization Mode. Possible values are: UserDefined, HttpOnly, HttpWithPeeringNat, HttpWithPeeringPrivateGroup, HttpWithInternetPeering, SimpleDownload, BypassMode. UserDefined allows the user to set. Returned by default. Query parameters are not supported.
+- `delivery_optimization_mode` (String) The Delivery Optimization Mode. Possible values are: UserDefined, HttpOnly, HttpWithPeeringNat, HttpWithPeeringPrivateGroup, HttpWithInternetPeering, SimpleDownload, BypassMode. UserDefined allows the user to set. Returned by default. Query parameters are not supported. / Delivery optimization mode for peer distribution; possible values are: `userDefined` (Allow the user to set.), `httpOnly` (HTTP only, no peering), `httpWithPeeringNat` (OS default – Http blended with peering behind the same network address translator), `httpWithPeeringPrivateGroup` (HTTP blended with peering across a private group), `httpWithInternetPeering` (HTTP blended with Internet peering), `simpleDownload` (Simple download mode with no peering), `bypassMode` (Bypass mode. Do not use Delivery Optimization and use BITS instead)
 - `drivers_excluded` (Boolean) When TRUE, excludes Windows update Drivers. When FALSE, does not exclude Windows update Drivers. Returned by default. Query parameters are not supported.
 - `engaged_restart_deadline_in_days` (Number) Deadline in days before automatically scheduling and executing a pending restart outside of active hours, with valid range from 2 to 30 days. Returned by default. Query parameters are not supported.
 - `engaged_restart_snooze_schedule_in_days` (Number) Number of days a user can snooze Engaged Restart reminder notifications with valid range from 1 to 3 days. Returned by default. Query parameters are not supported.
@@ -2026,16 +2331,16 @@ Optional:
 - `installation_schedule` (Attributes) The Installation Schedule. Possible values are: ActiveHoursStart, ActiveHoursEnd, ScheduledInstallDay, ScheduledInstallTime. Returned by default. Query parameters are not supported. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsUpdateInstallScheduleType?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows_update_for_business--installation_schedule))
 - `microsoft_update_service_allowed` (Boolean) When TRUE, allows Microsoft Update Service. When FALSE, does not allow Microsoft Update Service. Returned by default. Query parameters are not supported.
 - `postpone_reboot_until_after_deadline` (Boolean) When TRUE the device should wait until deadline for rebooting outside of active hours. When FALSE the device should not wait until deadline for rebooting outside of active hours. Returned by default. Query parameters are not supported.
-- `prerelease_features` (String) The Pre-Release Features. Possible values are: UserDefined, SettingsOnly, SettingsAndExperimentations, NotAllowed. UserDefined is the default value, no intent. Returned by default. Query parameters are not supported.
+- `prerelease_features` (String) The Pre-Release Features. Possible values are: UserDefined, SettingsOnly, SettingsAndExperimentations, NotAllowed. UserDefined is the default value, no intent. Returned by default. Query parameters are not supported. / Possible values for pre-release features; possible values are: `userDefined` (User Defined, default value, no intent.), `settingsOnly` (Settings only pre-release features.), `settingsAndExperimentations` (Settings and experimentations pre-release features.), `notAllowed` (Pre-release features not allowed.)
 - `quality_updates_deferral_period_in_days` (Number) Defer Quality Updates by these many days with valid range from 0 to 30 days. Returned by default. Query parameters are not supported.
 - `quality_updates_paused` (Boolean) When TRUE, assigned devices are paused from receiving quality updates for up to 35 days from the time you pause the ring. When FALSE, does not pause Quality Updates. Returned by default. Query parameters are not supported.
 - `schedule_imminent_restart_warning_in_minutes` (Number) Specify the period for auto-restart imminent warning notifications. Supported values: 15, 30 or 60 (minutes). Returned by default. Query parameters are not supported.
 - `schedule_restart_warning_in_hours` (Number) Specify the period for auto-restart warning reminder notifications. Supported values: 2, 4, 8, 12 or 24 (hours). Returned by default. Query parameters are not supported.
 - `skip_checks_before_restart` (Boolean) When TRUE, skips all checks before restart: Battery level = 40%, User presence, Display Needed, Presentation mode, Full screen mode, phone call state, game mode etc. When FALSE, does not skip all checks before restart. Returned by default. Query parameters are not supported.
-- `update_notification_level` (String) Specifies what Windows Update notifications users see. Possible values are: NotConfigured, DefaultNotifications, RestartWarningsOnly, DisableAllNotifications. Returned by default. Query parameters are not supported.
-- `update_weeks` (String) Schedule the update installation on the weeks of the month. Possible values are: UserDefined, FirstWeek, SecondWeek, ThirdWeek, FourthWeek, EveryWeek. Returned by default. Query parameters are not supported.
-- `user_pause_access` (String) Specifies whether to enable end user’s access to pause software updates. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported.
-- `user_windows_update_scan_access` (String) Specifies whether to disable user’s access to scan Windows Update. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported.
+- `update_notification_level` (String) Specifies what Windows Update notifications users see. Possible values are: NotConfigured, DefaultNotifications, RestartWarningsOnly, DisableAllNotifications. Returned by default. Query parameters are not supported. / Windows Update Notification Display Options; possible values are: `notConfigured` (Not configured), `defaultNotifications` (Use the default Windows Update notifications.), `restartWarningsOnly` (Turn off all notifications, excluding restart warnings.), `disableAllNotifications` (Turn off all notifications, including restart warnings.), `unknownFutureValue` (Evolvable enum member)
+- `update_weeks` (String) Schedule the update installation on the weeks of the month. Possible values are: UserDefined, FirstWeek, SecondWeek, ThirdWeek, FourthWeek, EveryWeek. Returned by default. Query parameters are not supported. / Scheduled the update installation on the weeks of the month; possible values are: `userDefined` (Allow the user to set.), `firstWeek` (Scheduled the update installation on the first week of the month), `secondWeek` (Scheduled the update installation on the second week of the month), `thirdWeek` (Scheduled the update installation on the third week of the month), `fourthWeek` (Scheduled the update installation on the fourth week of the month), `everyWeek` (Scheduled the update installation on every week of the month), `unknownFutureValue` (Evolvable enum member)
+- `user_pause_access` (String) Specifies whether to enable end user’s access to pause software updates. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.)
+- `user_windows_update_scan_access` (String) Specifies whether to disable user’s access to scan Windows Update. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.)
 
 <a id="nestedatt--windows_update_for_business--installation_schedule"></a>
 ### Nested Schema for `windows_update_for_business.installation_schedule`
@@ -2059,7 +2364,7 @@ Optional:
 
 Optional:
 
-- `day` (String) Scheduled Install Day in week
+- `day` (String) Scheduled Install Day in week / Possible values for a weekly schedule; possible values are: `userDefined` (User Defined, default value, no intent.), `everyday` (Everyday.), `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.), `noScheduledScan` (No Scheduled Scan)
 - `time` (String) Scheduled Install Time during day
 
 

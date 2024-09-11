@@ -76,6 +76,7 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 								Validators: []validator.Object{
 									cloudPcUserSettingCloudPcDisasterRecoveryNetworkSettingValidator,
 								},
+								MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDisasterRecoveryAzureConnectionSetting?view=graph-rest-beta",
 							},
 						},
 						"microsoft_hosted_network": generic.OdataDerivedTypeNestedAttributeRs{
@@ -86,8 +87,9 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 									"region_group": schema.StringAttribute{
 										Required: true,
 										Validators: []validator.String{
-											stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea"),
+											stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico"),
 										},
+										MarkdownDescription: "; possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`",
 									},
 									"region_name": schema.StringAttribute{
 										Required: true,
@@ -96,14 +98,17 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 								Validators: []validator.Object{
 									cloudPcUserSettingCloudPcDisasterRecoveryNetworkSettingValidator,
 								},
+								MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDisasterRecoveryMicrosoftHostedNetworkSetting?view=graph-rest-beta",
 							},
 						},
 					},
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDisasterRecoveryNetworkSetting?view=graph-rest-beta",
 				},
 				"maintain_cross_region_restore_point_enabled": schema.BoolAttribute{
 					Optional: true,
 				},
 			},
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcCrossRegionDisasterRecoverySetting?view=graph-rest-beta",
 		},
 		"display_name": schema.StringAttribute{
 			Required: true,
@@ -115,6 +120,16 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 		"local_admin_enabled": schema.BoolAttribute{
 			Optional:      true,
 			PlanModifiers: []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+			Computed:      true,
+		},
+		"notification_setting": schema.SingleNestedAttribute{
+			Optional: true,
+			Attributes: map[string]schema.Attribute{ // cloudPcNotificationSetting
+				"restart_prompts_disabled": schema.BoolAttribute{
+					Optional: true,
+				},
+			},
+			PlanModifiers: []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 			Computed:      true,
 		},
 		"reset_enabled": schema.BoolAttribute{
@@ -134,8 +149,9 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 					Validators: []validator.String{
 						stringvalidator.OneOf("default", "fourHours", "sixHours", "twelveHours", "sixteenHours", "twentyFourHours", "unknownFutureValue"),
 					},
-					PlanModifiers: []planmodifier.String{wpdefaultvalue.StringDefaultValue("twelveHours")},
-					Computed:      true,
+					PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("twelveHours")},
+					Computed:            true,
+					MarkdownDescription: "; possible values are: `default`, `fourHours`, `sixHours`, `twelveHours`, `sixteenHours`, `twentyFourHours`, `unknownFutureValue`",
 				},
 				"user_restore_enabled": schema.BoolAttribute{
 					Optional:      true,
@@ -145,7 +161,7 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcRestorePointSetting?view=graph-rest-beta`,
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcRestorePointSetting?view=graph-rest-beta",
 		},
 		"assignments": schema.SetNestedAttribute{
 			Optional: true,
@@ -175,18 +191,18 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										cloudPcUserSettingCloudPcManagementAssignmentTargetValidator,
 									},
-									MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcManagementGroupAssignmentTarget?view=graph-rest-beta`,
+									MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcManagementGroupAssignmentTarget?view=graph-rest-beta",
 								},
 							},
 						},
-						MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcManagementAssignmentTarget?view=graph-rest-beta`,
+						MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcManagementAssignmentTarget?view=graph-rest-beta",
 					},
 				},
 			},
-			MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcUserSettingAssignment?view=graph-rest-beta`,
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcUserSettingAssignment?view=graph-rest-beta",
 		},
 	},
-	MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudPcUserSetting?view=graph-rest-beta`,
+	MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcUserSetting?view=graph-rest-beta",
 }
 
 var cloudPcUserSettingCloudPcDisasterRecoveryNetworkSettingValidator = objectvalidator.ExactlyOneOf(

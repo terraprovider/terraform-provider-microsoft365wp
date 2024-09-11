@@ -351,9 +351,9 @@ resource "microsoft365wp_device_management_configuration_policy" "test_atp" {
 
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `description` (String) Policy description
-- `platforms` (String) Platforms for this policy
+- `platforms` (String) Platforms for this policy / Supported platform types; possible values are: `none` (Indicates the settings contained in this configuration don't have a platform set.), `android` (Indicates that the settings contained in associated configuration applies to the Android operating system. ), `iOS` (Indicates that the settings contained in associated configuration applies to the iOS operating system.), `macOS` (Indicates that the settings contained in associated configuration applies to the MacOS operating system.), `windows10X` (Indicates that the settings contained in associated configuration applies to the Windows 10X operating system.), `windows10` (Indicates that the settings contained in associated configuration applies to the Windows 10 operating system.), `linux` (Indicates that the settings contained in associated configuration applies to the Linux operating system.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
 - `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
-- `technologies` (String) Technologies for this policy
+- `technologies` (String) Technologies for this policy / Describes which technology this setting can be deployed with; possible values are: `none` (Default. Setting cannot be deployed through any channel.), `mdm` (Setting can be deployed through the MDM channel.), `windows10XManagement` (Setting can be deployed through the Windows10XManagement channel), `configManager` (Setting can be deployed through the ConfigManager channel.), `appleRemoteManagement` (Setting can be deployed through the AppleRemoteManagement channel.), `microsoftSense` (Setting can be deployed through the SENSE agent channel.), `exchangeOnline` (Setting can be deployed through the Exchange Online agent channel.), `mobileApplicationManagement` (Setting can be deployed through the Mobile Application Management (MAM) channel), `linuxMdm` (Setting can be deployed through the Linux Mdm channel.), `enrollment` (Setting can be deployed through device enrollment.), `endpointPrivilegeManagement` (Setting can be deployed using the Endpoint privilege management channel), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.), `windowsOsRecovery` (Setting can be deployed using the Operating System Recovery channel)
 - `template_reference` (Attributes) Template reference information / Policy template reference information / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-deviceManagementConfigurationPolicyTemplateReference?view=graph-rest-beta (see [below for nested schema](#nestedatt--template_reference))
 
 ### Read-Only
@@ -570,7 +570,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -626,7 +626,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -713,7 +713,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -769,7 +769,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -919,7 +919,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -975,7 +975,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1062,7 +1062,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1118,7 +1118,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1267,7 +1267,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1323,7 +1323,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1410,7 +1410,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1466,7 +1466,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1553,7 +1553,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1609,7 +1609,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1793,7 +1793,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1849,7 +1849,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1936,7 +1936,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -1992,7 +1992,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -2142,7 +2142,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -2198,7 +2198,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -2285,7 +2285,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -2341,7 +2341,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -2490,7 +2490,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -2546,7 +2546,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -2633,7 +2633,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -2689,7 +2689,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -2776,7 +2776,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -2832,7 +2832,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3015,7 +3015,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3071,7 +3071,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3158,7 +3158,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3214,7 +3214,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3364,7 +3364,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3420,7 +3420,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3507,7 +3507,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3563,7 +3563,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3712,7 +3712,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3768,7 +3768,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3855,7 +3855,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3911,7 +3911,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -3998,7 +3998,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4054,7 +4054,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4237,7 +4237,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4293,7 +4293,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4380,7 +4380,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4436,7 +4436,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4586,7 +4586,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4642,7 +4642,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4729,7 +4729,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4785,7 +4785,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4934,7 +4934,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -4990,7 +4990,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5077,7 +5077,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5133,7 +5133,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5220,7 +5220,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5276,7 +5276,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5363,7 +5363,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5419,7 +5419,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5638,7 +5638,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5694,7 +5694,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5781,7 +5781,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5837,7 +5837,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -5987,7 +5987,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6043,7 +6043,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6130,7 +6130,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6186,7 +6186,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6335,7 +6335,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6391,7 +6391,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6478,7 +6478,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6534,7 +6534,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6621,7 +6621,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6677,7 +6677,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6861,7 +6861,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -6917,7 +6917,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7004,7 +7004,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7060,7 +7060,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7210,7 +7210,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7266,7 +7266,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7353,7 +7353,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7409,7 +7409,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7558,7 +7558,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7614,7 +7614,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7701,7 +7701,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7757,7 +7757,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7844,7 +7844,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -7900,7 +7900,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8083,7 +8083,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8139,7 +8139,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8226,7 +8226,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8282,7 +8282,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8432,7 +8432,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8488,7 +8488,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8575,7 +8575,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8631,7 +8631,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8780,7 +8780,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8836,7 +8836,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8923,7 +8923,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -8979,7 +8979,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -9066,7 +9066,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -9122,7 +9122,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -9305,7 +9305,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -9361,7 +9361,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -9448,7 +9448,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -9504,7 +9504,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -9654,7 +9654,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -9710,7 +9710,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -9797,7 +9797,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -9853,7 +9853,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10002,7 +10002,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10058,7 +10058,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10145,7 +10145,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10201,7 +10201,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10288,7 +10288,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10344,7 +10344,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10431,7 +10431,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10487,7 +10487,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10705,7 +10705,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10761,7 +10761,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10848,7 +10848,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -10904,7 +10904,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11054,7 +11054,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11110,7 +11110,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11197,7 +11197,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11253,7 +11253,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11402,7 +11402,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11458,7 +11458,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11545,7 +11545,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11601,7 +11601,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11688,7 +11688,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11744,7 +11744,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11928,7 +11928,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -11984,7 +11984,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12071,7 +12071,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12127,7 +12127,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12277,7 +12277,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12333,7 +12333,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12420,7 +12420,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12476,7 +12476,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12625,7 +12625,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12681,7 +12681,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12768,7 +12768,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12824,7 +12824,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12911,7 +12911,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -12967,7 +12967,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13150,7 +13150,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13206,7 +13206,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13293,7 +13293,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13349,7 +13349,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13499,7 +13499,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13555,7 +13555,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13642,7 +13642,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13698,7 +13698,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13847,7 +13847,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13903,7 +13903,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -13990,7 +13990,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14046,7 +14046,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14133,7 +14133,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14189,7 +14189,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14372,7 +14372,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14428,7 +14428,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14515,7 +14515,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14571,7 +14571,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14721,7 +14721,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14777,7 +14777,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14864,7 +14864,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -14920,7 +14920,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15069,7 +15069,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15125,7 +15125,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15212,7 +15212,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15268,7 +15268,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15355,7 +15355,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15411,7 +15411,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15498,7 +15498,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15554,7 +15554,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15772,7 +15772,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15828,7 +15828,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15915,7 +15915,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -15971,7 +15971,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16121,7 +16121,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16177,7 +16177,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16264,7 +16264,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16320,7 +16320,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16469,7 +16469,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16525,7 +16525,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16612,7 +16612,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16668,7 +16668,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16755,7 +16755,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16811,7 +16811,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -16995,7 +16995,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17051,7 +17051,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17138,7 +17138,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17194,7 +17194,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17344,7 +17344,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17400,7 +17400,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17487,7 +17487,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17543,7 +17543,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17692,7 +17692,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17748,7 +17748,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17835,7 +17835,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17891,7 +17891,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -17978,7 +17978,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18034,7 +18034,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18217,7 +18217,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18273,7 +18273,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18360,7 +18360,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18416,7 +18416,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18566,7 +18566,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18622,7 +18622,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18709,7 +18709,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18765,7 +18765,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18914,7 +18914,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -18970,7 +18970,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19057,7 +19057,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19113,7 +19113,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19200,7 +19200,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19256,7 +19256,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19439,7 +19439,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19495,7 +19495,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19582,7 +19582,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19638,7 +19638,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19788,7 +19788,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19844,7 +19844,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19931,7 +19931,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -19987,7 +19987,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20136,7 +20136,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20192,7 +20192,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20279,7 +20279,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20335,7 +20335,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20422,7 +20422,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20478,7 +20478,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20565,7 +20565,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20621,7 +20621,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20708,7 +20708,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20764,7 +20764,7 @@ Optional:
 
 Required:
 
-- `state` (String) Gets or sets a value indicating the encryption state of the Value property.
+- `state` (String) Gets or sets a value indicating the encryption state of the Value property. / type tracking the encryption state of a secret setting value; possible values are: `invalid` (default invalid value), `notEncrypted` (secret value is not encrypted), `encryptedValueToken` (a token for the encrypted value is returned by the service)
 
 Optional:
 
@@ -20847,6 +20847,6 @@ Read-Only:
 
 - `display_name` (String) templateDisplayName
 - `display_version` (String) templateDisplayVersion
-- `family` (String) templateFamily
+- `family` (String) Describes the TemplateFamily for the Template entity; possible values are: `none` (Default for Template Family when Policy is not linked to a Template), `endpointSecurityAntivirus` (Template Family for EndpointSecurityAntivirus that manages the discrete group of antivirus settings for managed devices), `endpointSecurityDiskEncryption` (Template Family for EndpointSecurityDiskEncryption that provides settings that are relevant for a devices built-in encryption  method, like FileVault or BitLocker), `endpointSecurityFirewall` (Template Family for EndpointSecurityFirewall that helps configure a devices built-in firewall for device that run macOS and Windows 10), `endpointSecurityEndpointDetectionAndResponse` (Template Family for EndpointSecurityEndpointDetectionAndResponse that facilitates management of the EDR settings and onboard devices to Microsoft Defender for Endpoint), `endpointSecurityAttackSurfaceReduction` (Template Family for EndpointSecurityAttackSurfaceReduction that help reduce your attack surfaces, by minimizing the places where your organization is vulnerable to cyberthreats and attacks), `endpointSecurityAccountProtection` (Template Family for EndpointSecurityAccountProtection that facilitates protecting the identity and accounts of users), `endpointSecurityApplicationControl` (Template Family for ApplicationControl that helps mitigate security threats by restricting the applications that users can run and the code that runs in the System Core (kernel)), `endpointSecurityEndpointPrivilegeManagement` (Template Family for EPM Elevation Rules), `enrollmentConfiguration` (Template Family for EnrollmentConfiguration), `appQuietTime` (Template Family for QuietTimeIndicates Template Family for all the Apps QuietTime policies and templates), `baseline` (Template Family for Baseline), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.), `deviceConfigurationScripts` (Template Family for device configuration scripts), `deviceConfigurationPolicies` (Template Family for device configuration policies), `windowsOsRecoveryPolicies` (Template Family for windowsOsRecovery that can be applied during a Windows operating system recovery), `companyPortal` (Template Family for Company Portal settings)
 
 

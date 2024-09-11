@@ -88,18 +88,19 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_shared" {
 
 - `alternate_resource_url` (String)
 - `assignments` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcProvisioningPolicyAssignment?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments))
-- `autopatch` (Attributes) (see [below for nested schema](#nestedatt--autopatch))
+- `autopatch` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcProvisioningPolicyAutopatch?view=graph-rest-beta (see [below for nested schema](#nestedatt--autopatch))
+- `autopilot_configuration` (Attributes) (see [below for nested schema](#nestedatt--autopilot_configuration))
 - `cloud_pc_group_display_name` (String)
 - `cloud_pc_naming_template` (String)
 - `description` (String)
 - `domain_join_configurations` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDomainJoinConfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--domain_join_configurations))
 - `enable_single_sign_on` (Boolean)
 - `grace_period_in_hours` (Number)
-- `image_type` (String)
+- `image_type` (String) ; possible values are: `gallery`, `custom`, `unknownFutureValue`
 - `local_admin_enabled` (Boolean)
-- `managed_by` (String)
+- `managed_by` (String) ; possible values are: `windows365`, `devBox`, `unknownFutureValue`, `rpaBox`
 - `microsoft_managed_desktop` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/microsoftManagedDesktop?view=graph-rest-beta (see [below for nested schema](#nestedatt--microsoft_managed_desktop))
-- `provisioning_type` (String)
+- `provisioning_type` (String) ; possible values are: `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`
 - `scope_ids` (Set of String)
 - `windows_setting` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcWindowsSetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows_setting))
 
@@ -145,16 +146,26 @@ Optional:
 - `autopatch_group_id` (String)
 
 
+<a id="nestedatt--autopilot_configuration"></a>
+### Nested Schema for `autopilot_configuration`
+
+Required:
+
+- `application_timeout_in_minutes` (Number)
+- `device_preparation_profile_id` (String)
+- `on_failure_device_access_denied` (Boolean)
+
+
 <a id="nestedatt--domain_join_configurations"></a>
 ### Nested Schema for `domain_join_configurations`
 
 Optional:
 
-- `domain_join_type` (String)
+- `domain_join_type` (String) ; possible values are: `azureADJoin`, `hybridAzureADJoin`, `unknownFutureValue`
 - `on_premises_connection_id` (String)
-- `region_group` (String)
+- `region_group` (String) ; possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`
 - `region_name` (String)
-- `type` (String)
+- `type` (String) ; possible values are: `azureADJoin`, `hybridAzureADJoin`, `unknownFutureValue`
 
 
 <a id="nestedatt--microsoft_managed_desktop"></a>
@@ -162,9 +173,9 @@ Optional:
 
 Optional:
 
-- `managed_type` (String)
+- `managed_type` (String) ; possible values are: `notManaged`, `premiumManaged`, `standardManaged`, `starterManaged`, `unknownFutureValue`
 - `profile` (String)
-- `type` (String)
+- `type` (String) ; possible values are: `notManaged`, `premiumManaged`, `standardManaged`, `starterManaged`, `unknownFutureValue`
 
 
 <a id="nestedatt--windows_setting"></a>

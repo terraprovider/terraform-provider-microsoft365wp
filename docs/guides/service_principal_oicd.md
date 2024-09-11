@@ -110,21 +110,21 @@ permissions:
 
 For more information about OIDC in GitHub Actions, see [official documentation](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers).
 
-The following Terraform and Provider blocks can be specified - where `2.23.0` is the version of the Azure Provider that you'd like to use:
+The following Terraform and Provider blocks can be specified - where `1.00.0` is the version of the Provider that you'd like to use:
 
 ```hcl
 # We strongly recommend using the required_providers block to set the
 # Azure Provider source and version being used
 terraform {
   required_providers {
-    workplace = {
-      source  = "terraprovider/workplace"
-      version = "=2.23.0"
+    microsoft365wp = {
+      source  = "terraprovider/microsoft365wp"
+      version = "=1.00.0"
     }
   }
 }
 # Configure the Microsoft Azure Provider
-provider "workplace" {
+provider "microsoft365wp" {
   use_oidc = true # or use the environment variable "ARM_USE_OIDC=true"
   features {}
 }

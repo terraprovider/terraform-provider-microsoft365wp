@@ -15,9 +15,16 @@ export ARM_CLIENT_SECRET='...'
 
 
 resource "microsoft365wp_device_configuration" "android_device_owner_general_device" {
-  display_name = "TF Test Android Enterprise Device Restrictions"
+  display_name = "TF Test Android Enterprise Corp Owned Device Restrictions"
   android_device_owner_general_device = {
     camera_blocked = true
+  }
+}
+
+resource "microsoft365wp_device_configuration" "android_work_profile_general_device" {
+  display_name = "TF Test Android Enterprise Personally Owned Device Restrictions"
+  android_work_profile_general_device = {
+    work_profile_block_screen_capture = true
   }
 }
 
@@ -105,6 +112,28 @@ resource "microsoft365wp_device_configuration" "ios_device_features" {
   display_name = "TF Test iOS Device Features"
   ios_device_features = {
     lock_screen_footnote = "This device belongs to somebody."
+    ios_single_sign_on_extension = {
+      azure_ad = {
+        configurations = [
+          {
+            key     = "browser_sso_interaction_enabled"
+            integer = { value = 1 }
+          },
+          {
+            key     = "disable_explicit_app_prompt_and_autologin"
+            integer = { value = 1 }
+          },
+          {
+            key     = "browser_sso_disable_mfa"
+            integer = { value = 0 }
+          },
+          {
+            key    = "device_registration"
+            string = { value = "{{DEVICEREGISTRATION}}" }
+          },
+        ]
+      }
+    }
   }
 }
 

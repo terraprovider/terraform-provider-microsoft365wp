@@ -44,20 +44,20 @@ output "microsoft365wp_ios_managed_app_protection" {
 ### Read-Only
 
 - `allow_widget_content_sync` (Boolean) Indicates  if content sync for widgets is allowed for iOS on App Protection Policies
-- `allowed_data_ingestion_locations` (Set of String)
-- `allowed_data_storage_locations` (Set of String)
-- `allowed_inbound_data_transfer_sources` (String)
+- `allowed_data_ingestion_locations` (Set of String) Locations which can be used to bring data into organization documents; possible values are: `oneDriveForBusiness` (OneDrive for business), `sharePoint` (SharePoint Online), `camera` (The device's camera), `photoLibrary` (The device's photo library)
+- `allowed_data_storage_locations` (Set of String) Storage locations where managed apps can potentially store their data; possible values are: `oneDriveForBusiness` (OneDrive for business), `sharePoint` (SharePoint), `box` (Box), `localStorage` (Local storage on the device), `photoLibrary` (The device's photo library)
+- `allowed_inbound_data_transfer_sources` (String) Data can be transferred from/to these classes of apps; possible values are: `allApps` (All apps.), `managedApps` (Managed apps.), `none` (No apps.)
 - `allowed_ios_device_models` (String) Semicolon seperated list of device models allowed, as a string, for the managed app to work.
 - `allowed_outbound_clipboard_sharing_exception_length` (Number)
-- `allowed_outbound_clipboard_sharing_level` (String)
-- `allowed_outbound_data_transfer_destinations` (String)
-- `app_action_if_account_is_clocked_out` (String) Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time).
-- `app_action_if_device_compliance_required` (String)
-- `app_action_if_ios_device_model_not_allowed` (String) Defines a managed app behavior, either block or wipe, if the specified device model is not allowed.
-- `app_action_if_maximum_pin_retries_exceeded` (String)
-- `app_action_if_unable_to_authenticate_user` (String)
-- `app_data_encryption_type` (String) Type of encryption which should be used for data in a managed app.
-- `app_group_type` (String) Public Apps selection: group or individual
+- `allowed_outbound_clipboard_sharing_level` (String) Represents the level to which the device's clipboard may be shared between apps; possible values are: `allApps` (Sharing is allowed between all apps, managed or not), `managedAppsWithPasteIn` (Sharing is allowed between all managed apps with paste in enabled), `managedApps` (Sharing is allowed between all managed apps), `blocked` (Sharing between apps is disabled)
+- `allowed_outbound_data_transfer_destinations` (String) Data can be transferred from/to these classes of apps; possible values are: `allApps` (All apps.), `managedApps` (Managed apps.), `none` (No apps.)
+- `app_action_if_account_is_clocked_out` (String) Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time). / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_device_compliance_required` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_ios_device_model_not_allowed` (String) Defines a managed app behavior, either block or wipe, if the specified device model is not allowed. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_maximum_pin_retries_exceeded` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_unable_to_authenticate_user` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_data_encryption_type` (String) Type of encryption which should be used for data in a managed app. / Represents the level to which app data is encrypted for managed apps; possible values are: `useDeviceSettings` (App data is encrypted based on the default settings on the device.), `afterDeviceRestart` (App data is encrypted when the device is restarted.), `whenDeviceLockedExceptOpenFiles` (App data associated with this policy is encrypted when the device is locked, except data in files that are open), `whenDeviceLocked` (App data associated with this policy is encrypted when the device is locked)
+- `app_group_type` (String) Public Apps selection: group or individual / Indicates a collection of apps to target which can be one of several pre-defined lists of apps or a manually selected list of apps; possible values are: `selectedPublicApps` (Target the collection of apps manually selected by the admin.), `allCoreMicrosoftApps` (Target the core set of Microsoft apps (Office, Edge, etc).), `allMicrosoftApps` (Target all apps with Microsoft as publisher.), `allApps` (Target all apps with an available assignment.)
 - `apps` (Attributes Set) List of apps to which the policy is deployed. / The identifier for the deployment an app. (see [below for nested schema](#nestedatt--apps))
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `block_data_ingestion_into_organization_documents` (Boolean)
@@ -69,7 +69,7 @@ output "microsoft365wp_ios_managed_app_protection" {
 - `deployed_app_count` (Number) Count of apps to which the current policy is deployed.
 - `description` (String)
 - `device_compliance_required` (Boolean)
-- `dialer_restriction_level` (String)
+- `dialer_restriction_level` (String) The classes of apps that are allowed to click-to-open a phone number, for making phone calls or sending text messages; possible values are: `allApps` (Sharing is allowed to all apps.), `managedApps` (Sharing is allowed to all managed apps.), `customApp` (Sharing is allowed to a custom app.), `blocked` (Sharing between apps is blocked.)
 - `disable_app_pin_if_device_pin_is_set` (Boolean)
 - `disable_protection_of_managed_outbound_open_in_data` (Boolean) Disable protection of data transferred to other apps through IOS OpenIn option. This setting is only allowed to be True when AllowedOutboundDataTransferDestinations is set to ManagedApps.
 - `display_name` (String)
@@ -82,10 +82,10 @@ output "microsoft365wp_ios_managed_app_protection" {
 - `id` (String) The ID of this resource.
 - `is_assigned` (Boolean) Indicates if the policy is deployed to any inclusion groups or not.
 - `last_modified_date_time` (String)
-- `managed_browser` (String)
+- `managed_browser` (String) Type of managed browser; possible values are: `notConfigured` (Not configured), `microsoftEdge` (Microsoft Edge)
 - `managed_browser_to_open_links_required` (Boolean)
 - `managed_universal_links` (Set of String) A list of custom urls that are allowed to invocate a managed app
-- `maximum_allowed_device_threat_level` (String)
+- `maximum_allowed_device_threat_level` (String) The maxium threat level allowed for an app to be compliant; possible values are: `notConfigured` (Value not configured), `secured` (Device needs to have no threat), `low` (Device needs to have a low threat.), `medium` (Device needs to have not more than medium threat.), `high` (Device needs to have not more than high threat)
 - `maximum_pin_retries` (Number)
 - `maximum_required_os_version` (String)
 - `maximum_warning_os_version` (String)
@@ -101,25 +101,25 @@ output "microsoft365wp_ios_managed_app_protection" {
 - `minimum_wipe_app_version` (String)
 - `minimum_wipe_os_version` (String)
 - `minimum_wipe_sdk_version` (String) Versions less than the specified version will block the managed app from accessing company data.
-- `mobile_threat_defense_partner_priority` (String)
-- `mobile_threat_defense_remediation_action` (String)
-- `notification_restriction` (String)
+- `mobile_threat_defense_partner_priority` (String) Determines the conflict resolution strategy, when more than one Mobile Threat Defense provider is enabled; possible values are: `defenderOverThirdPartyPartner` (Indicates use of Microsoft Defender Endpoint over 3rd party MTD connectors), `thirdPartyPartnerOverDefender` (Indicates use of a 3rd party MTD connector over Microsoft Defender Endpoint), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
+- `mobile_threat_defense_remediation_action` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `notification_restriction` (String) Restrict managed app notification; possible values are: `allow` (Share all notifications.), `blockOrganizationalData` (Do not share Orgnizational data in notifications.), `block` (Do not share notifications.)
 - `organizational_credentials_required` (Boolean)
 - `period_before_pin_reset` (String)
 - `period_offline_before_access_check` (String)
 - `period_offline_before_wipe_is_enforced` (String)
 - `period_online_before_access_check` (String)
-- `pin_character_set` (String)
+- `pin_character_set` (String) Character set which is to be used for a user's app PIN; possible values are: `numeric` (Numeric characters), `alphanumericAndSymbol` (Alphanumeric and symbolic characters)
 - `pin_required` (Boolean)
 - `pin_required_instead_of_biometric_timeout` (String)
 - `previous_pin_block_count` (Number)
 - `print_blocked` (Boolean)
 - `protect_inbound_data_from_unknown_sources` (Boolean) Protect incoming data from unknown source. This setting is only allowed to be True when AllowedInboundDataTransferSources is set to AllApps.
-- `protected_messaging_redirect_app_type` (String)
+- `protected_messaging_redirect_app_type` (String) Defines how app messaging redirection is protected by an App Protection Policy. Default is anyApp; possible values are: `anyApp` (App protection policy will allow messaging redirection to any app.), `anyManagedApp` (App protection policy will allow messaging redirection to any managed application.), `specificApps` (App protection policy will allow messaging redirection only to specified applications in related App protection policy settings. See related settings 'messagingRedirectAppDisplayName', 'messagingRedirectAppPackageId' and 'messagingRedirectAppUrlScheme'.), `blocked` (App protection policy will block messaging redirection to any app.)
 - `role_scope_tag_ids` (Set of String)
 - `save_as_blocked` (Boolean)
 - `simple_pin_blocked` (Boolean)
-- `targeted_app_management_levels` (String) The intended app management levels for this policy
+- `targeted_app_management_levels` (String) The intended app management levels for this policy / Management levels for apps; possible values are: `unspecified` (Unspecified), `unmanaged` (Unmanaged), `mdm` (MDM), `androidEnterprise` (Android Enterprise), `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode` (Android Enterprise dedicated devices with Azure AD Shared mode), `androidOpenSourceProjectUserAssociated` (Android Open Source Project (AOSP) devices), `androidOpenSourceProjectUserless` (Android Open Source Project (AOSP) userless devices), `unknownFutureValue` (Place holder for evolvable enum)
 - `third_party_keyboards_blocked` (Boolean) Defines if third party keyboards are allowed while accessing a managed app
 - `version` (String)
 

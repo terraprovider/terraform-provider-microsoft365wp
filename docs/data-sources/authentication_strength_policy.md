@@ -43,13 +43,13 @@ output "microsoft365wp_authentication_strength_policy" {
 
 ### Read-Only
 
-- `allowed_combinations` (Set of String)
+- `allowed_combinations` (Set of String) ; possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`
 - `created_date_time` (String)
 - `description` (String)
 - `display_name` (String)
 - `id` (String) The ID of this resource.
 - `modified_date_time` (String)
-- `policy_type` (String)
-- `requirements_satisfied` (String)
+- `policy_type` (String) ; possible values are: `builtIn`, `custom`, `unknownFutureValue`
+- `requirements_satisfied` (String) ; possible values are: `none`, `mfa`, `unknownFutureValue`
 
 

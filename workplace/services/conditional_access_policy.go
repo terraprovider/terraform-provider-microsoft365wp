@@ -59,14 +59,15 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Optional: true,
 							Attributes: map[string]schema.Attribute{ // conditionalAccessFilter
 								"mode": schema.StringAttribute{
-									Required:   true,
-									Validators: []validator.String{stringvalidator.OneOf("include", "exclude")},
+									Required:            true,
+									Validators:          []validator.String{stringvalidator.OneOf("include", "exclude")},
+									MarkdownDescription: "; possible values are: `include`, `exclude`",
 								},
 								"rule": schema.StringAttribute{
 									Required: true,
 								},
 							},
-							MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessFilter?view=graph-rest-beta`,
+							MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessFilter?view=graph-rest-beta",
 						},
 						"exclude_applications": schema.SetAttribute{
 							ElementType:   types.StringType,
@@ -93,7 +94,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Computed:      true,
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessApplications?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessApplications?view=graph-rest-beta",
 				},
 				"authentication_flows": schema.SingleNestedAttribute{
 					Optional: true,
@@ -103,9 +104,10 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Validators: []validator.String{
 								wpvalidator.FlagEnumValues("none", "deviceCodeFlow", "authenticationTransfer", "unknownFutureValue"),
 							},
+							MarkdownDescription: "; possible values are: `none`, `deviceCodeFlow`, `authenticationTransfer`, `unknownFutureValue`",
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAuthenticationFlows?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAuthenticationFlows?view=graph-rest-beta",
 				},
 				"client_applications": schema.SingleNestedAttribute{
 					Optional: true,
@@ -126,17 +128,18 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Optional: true,
 							Attributes: map[string]schema.Attribute{ // conditionalAccessFilter
 								"mode": schema.StringAttribute{
-									Required:   true,
-									Validators: []validator.String{stringvalidator.OneOf("include", "exclude")},
+									Required:            true,
+									Validators:          []validator.String{stringvalidator.OneOf("include", "exclude")},
+									MarkdownDescription: "; possible values are: `include`, `exclude`",
 								},
 								"rule": schema.StringAttribute{
 									Required: true,
 								},
 							},
-							MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessFilter?view=graph-rest-beta`,
+							MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessFilter?view=graph-rest-beta",
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessClientApplications?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessClientApplications?view=graph-rest-beta",
 				},
 				"client_app_types": schema.SetAttribute{
 					ElementType: types.StringType,
@@ -146,8 +149,9 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							stringvalidator.OneOf("all", "browser", "mobileAppsAndDesktopClients", "exchangeActiveSync", "easSupported", "other", "unknownFutureValue"),
 						),
 					},
-					PlanModifiers: []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"all"})},
-					Computed:      true,
+					PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"all"})},
+					Computed:            true,
+					MarkdownDescription: "; possible values are: `all`, `browser`, `mobileAppsAndDesktopClients`, `exchangeActiveSync`, `easSupported`, `other`, `unknownFutureValue`",
 				},
 				"devices": schema.SingleNestedAttribute{
 					Optional: true,
@@ -156,14 +160,15 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Optional: true,
 							Attributes: map[string]schema.Attribute{ // conditionalAccessFilter
 								"mode": schema.StringAttribute{
-									Required:   true,
-									Validators: []validator.String{stringvalidator.OneOf("include", "exclude")},
+									Required:            true,
+									Validators:          []validator.String{stringvalidator.OneOf("include", "exclude")},
+									MarkdownDescription: "; possible values are: `include`, `exclude`",
 								},
 								"rule": schema.StringAttribute{
 									Required: true,
 								},
 							},
-							MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessFilter?view=graph-rest-beta`,
+							MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessFilter?view=graph-rest-beta",
 						},
 						"exclude_devices": schema.SetAttribute{
 							ElementType:   types.StringType,
@@ -190,7 +195,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Computed:      true,
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessDevices?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessDevices?view=graph-rest-beta",
 				},
 				"device_states": schema.SingleNestedAttribute{
 					Optional: true,
@@ -208,13 +213,14 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Computed:      true,
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessDeviceStates?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessDeviceStates?view=graph-rest-beta",
 				},
 				"insider_risk_levels": schema.StringAttribute{
 					Optional: true,
 					Validators: []validator.String{
 						wpvalidator.FlagEnumValues("minor", "moderate", "elevated", "unknownFutureValue"),
 					},
+					MarkdownDescription: "; possible values are: `minor`, `moderate`, `elevated`, `unknownFutureValue`",
 				},
 				"locations": schema.SingleNestedAttribute{
 					Optional: true,
@@ -232,7 +238,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Computed:      true,
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessLocations?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessLocations?view=graph-rest-beta",
 				},
 				"platforms": schema.SingleNestedAttribute{
 					Optional: true,
@@ -245,8 +251,9 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 									stringvalidator.OneOf("android", "iOS", "windows", "windowsPhone", "macOS", "all", "unknownFutureValue", "linux"),
 								),
 							},
-							PlanModifiers: []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
-							Computed:      true,
+							PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+							Computed:            true,
+							MarkdownDescription: "; possible values are: `android`, `iOS`, `windows`, `windowsPhone`, `macOS`, `all`, `unknownFutureValue`, `linux`",
 						},
 						"include_platforms": schema.SetAttribute{
 							ElementType: types.StringType,
@@ -256,9 +263,10 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 									stringvalidator.OneOf("android", "iOS", "windows", "windowsPhone", "macOS", "all", "unknownFutureValue", "linux"),
 								),
 							},
+							MarkdownDescription: "; possible values are: `android`, `iOS`, `windows`, `windowsPhone`, `macOS`, `all`, `unknownFutureValue`, `linux`",
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessPlatforms?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessPlatforms?view=graph-rest-beta",
 				},
 				"service_principal_risk_levels": schema.SetAttribute{
 					ElementType: types.StringType,
@@ -269,8 +277,9 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 						),
 						wpvalidator.TranslateGraphMissingWithTfDefault(tftypes.Set{ElementType: tftypes.String}),
 					},
-					PlanModifiers: []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
-					Computed:      true,
+					PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+					Computed:            true,
+					MarkdownDescription: "; possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`",
 				},
 				"sign_in_risk_levels": schema.SetAttribute{
 					ElementType: types.StringType,
@@ -280,8 +289,9 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							stringvalidator.OneOf("low", "medium", "high", "hidden", "none", "unknownFutureValue"),
 						),
 					},
-					PlanModifiers: []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
-					Computed:      true,
+					PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+					Computed:            true,
+					MarkdownDescription: "; possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`",
 				},
 				"user_risk_levels": schema.SetAttribute{
 					ElementType: types.StringType,
@@ -291,8 +301,9 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							stringvalidator.OneOf("low", "medium", "high", "hidden", "none", "unknownFutureValue"),
 						),
 					},
-					PlanModifiers: []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
-					Computed:      true,
+					PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+					Computed:            true,
+					MarkdownDescription: "; possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`",
 				},
 				"users": schema.SingleNestedAttribute{
 					Optional: true,
@@ -314,6 +325,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 											Validators: []validator.String{
 												stringvalidator.OneOf("all", "enumerated", "unknownFutureValue"),
 											},
+											MarkdownDescription: "; possible values are: `all`, `enumerated`, `unknownFutureValue`",
 										},
 										"all": generic.OdataDerivedTypeNestedAttributeRs{
 											DerivedType: "#microsoft.graph.conditionalAccessAllExternalTenants",
@@ -324,7 +336,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 												Validators: []validator.Object{
 													conditionalAccessPolicyConditionalAccessExternalTenantsValidator,
 												},
-												MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAllExternalTenants?view=graph-rest-beta`,
+												MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAllExternalTenants?view=graph-rest-beta",
 											},
 										},
 										"enumerated": generic.OdataDerivedTypeNestedAttributeRs{
@@ -341,20 +353,21 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 												Validators: []validator.Object{
 													conditionalAccessPolicyConditionalAccessExternalTenantsValidator,
 												},
-												MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessEnumeratedExternalTenants?view=graph-rest-beta`,
+												MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessEnumeratedExternalTenants?view=graph-rest-beta",
 											},
 										},
 									},
-									MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessExternalTenants?view=graph-rest-beta`,
+									MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessExternalTenants?view=graph-rest-beta",
 								},
 								"guest_or_external_user_types": schema.StringAttribute{
 									Required: true,
 									Validators: []validator.String{
 										wpvalidator.FlagEnumValues("none", "internalGuest", "b2bCollaborationGuest", "b2bCollaborationMember", "b2bDirectConnectUser", "otherExternalUser", "serviceProvider", "unknownFutureValue"),
 									},
+									MarkdownDescription: "; possible values are: `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue`",
 								},
 							},
-							MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessGuestsOrExternalUsers?view=graph-rest-beta`,
+							MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessGuestsOrExternalUsers?view=graph-rest-beta",
 						},
 						"exclude_roles": schema.SetAttribute{
 							ElementType:   types.StringType,
@@ -385,6 +398,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 											Validators: []validator.String{
 												stringvalidator.OneOf("all", "enumerated", "unknownFutureValue"),
 											},
+											MarkdownDescription: "; possible values are: `all`, `enumerated`, `unknownFutureValue`",
 										},
 										"all": generic.OdataDerivedTypeNestedAttributeRs{
 											DerivedType: "#microsoft.graph.conditionalAccessAllExternalTenants",
@@ -395,7 +409,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 												Validators: []validator.Object{
 													conditionalAccessPolicyConditionalAccessExternalTenantsValidator,
 												},
-												MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAllExternalTenants?view=graph-rest-beta`,
+												MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAllExternalTenants?view=graph-rest-beta",
 											},
 										},
 										"enumerated": generic.OdataDerivedTypeNestedAttributeRs{
@@ -412,20 +426,21 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 												Validators: []validator.Object{
 													conditionalAccessPolicyConditionalAccessExternalTenantsValidator,
 												},
-												MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessEnumeratedExternalTenants?view=graph-rest-beta`,
+												MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessEnumeratedExternalTenants?view=graph-rest-beta",
 											},
 										},
 									},
-									MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessExternalTenants?view=graph-rest-beta`,
+									MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessExternalTenants?view=graph-rest-beta",
 								},
 								"guest_or_external_user_types": schema.StringAttribute{
 									Required: true,
 									Validators: []validator.String{
 										wpvalidator.FlagEnumValues("none", "internalGuest", "b2bCollaborationGuest", "b2bCollaborationMember", "b2bDirectConnectUser", "otherExternalUser", "serviceProvider", "unknownFutureValue"),
 									},
+									MarkdownDescription: "; possible values are: `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue`",
 								},
 							},
-							MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessGuestsOrExternalUsers?view=graph-rest-beta`,
+							MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessGuestsOrExternalUsers?view=graph-rest-beta",
 						},
 						"include_roles": schema.SetAttribute{
 							ElementType:   types.StringType,
@@ -440,10 +455,10 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Computed:      true,
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessUsers?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessUsers?view=graph-rest-beta",
 				},
 			},
-			MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessConditionSet?view=graph-rest-beta`,
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessConditionSet?view=graph-rest-beta",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:      true,
@@ -463,8 +478,9 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							stringvalidator.OneOf("block", "mfa", "compliantDevice", "domainJoinedDevice", "approvedApplication", "compliantApplication", "passwordChange", "unknownFutureValue"),
 						),
 					},
-					PlanModifiers: []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
-					Computed:      true,
+					PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+					Computed:            true,
+					MarkdownDescription: "; possible values are: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`",
 				},
 				"custom_authentication_factors": schema.SetAttribute{
 					ElementType:   types.StringType,
@@ -496,7 +512,8 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 									wpvalidator.FlagEnumValues("password", "voice", "hardwareOath", "softwareOath", "sms", "fido2", "windowsHelloForBusiness", "microsoftAuthenticatorPush", "deviceBasedPush", "temporaryAccessPassOneTime", "temporaryAccessPassMultiUse", "email", "x509CertificateSingleFactor", "x509CertificateMultiFactor", "federatedSingleFactor", "federatedMultiFactor", "unknownFutureValue"),
 								),
 							},
-							PlanModifiers: []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
+							PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
+							MarkdownDescription: "; possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`",
 						},
 						"created_date_time": schema.StringAttribute{
 							Computed:      true,
@@ -519,20 +536,22 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Validators: []validator.String{
 								stringvalidator.OneOf("builtIn", "custom", "unknownFutureValue"),
 							},
-							PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+							PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+							MarkdownDescription: "; possible values are: `builtIn`, `custom`, `unknownFutureValue`",
 						},
 						"requirements_satisfied": schema.StringAttribute{
 							Computed: true,
 							Validators: []validator.String{
 								wpvalidator.FlagEnumValues("none", "mfa", "unknownFutureValue"),
 							},
-							PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+							PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+							MarkdownDescription: "; possible values are: `none`, `mfa`, `unknownFutureValue`",
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/authenticationStrengthPolicy?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/authenticationStrengthPolicy?view=graph-rest-beta",
 				},
 			},
-			MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessGrantControls?view=graph-rest-beta`,
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessGrantControls?view=graph-rest-beta",
 		},
 		"session_controls": schema.SingleNestedAttribute{
 			Optional: true,
@@ -544,7 +563,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Optional: true,
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/applicationEnforcedRestrictionsSessionControl?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/applicationEnforcedRestrictionsSessionControl?view=graph-rest-beta",
 				},
 				"cloud_app_security": schema.SingleNestedAttribute{
 					Optional: true,
@@ -557,9 +576,10 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Validators: []validator.String{
 								stringvalidator.OneOf("mcasConfigured", "monitorOnly", "blockDownloads", "unknownFutureValue"),
 							},
+							MarkdownDescription: "; possible values are: `mcasConfigured`, `monitorOnly`, `blockDownloads`, `unknownFutureValue`",
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/cloudAppSecuritySessionControl?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudAppSecuritySessionControl?view=graph-rest-beta",
 				},
 				"continuous_access_evaluation": schema.SingleNestedAttribute{
 					Optional: true,
@@ -569,9 +589,10 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Validators: []validator.String{
 								stringvalidator.OneOf("strictEnforcement", "disabled", "unknownFutureValue", "strictLocation"),
 							},
+							MarkdownDescription: "; possible values are: `strictEnforcement`, `disabled`, `unknownFutureValue`, `strictLocation`",
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/continuousAccessEvaluationSessionControl?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/continuousAccessEvaluationSessionControl?view=graph-rest-beta",
 				},
 				"disable_resilience_defaults": schema.BoolAttribute{
 					Optional: true,
@@ -588,11 +609,12 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Optional: true,
 						},
 						"mode": schema.StringAttribute{
-							Optional:   true,
-							Validators: []validator.String{stringvalidator.OneOf("always", "never")},
+							Optional:            true,
+							Validators:          []validator.String{stringvalidator.OneOf("always", "never")},
+							MarkdownDescription: "; possible values are: `always`, `never`",
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/persistentBrowserSessionControl?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/persistentBrowserSessionControl?view=graph-rest-beta",
 				},
 				"secure_sign_in_session": schema.SingleNestedAttribute{
 					Optional: true,
@@ -601,7 +623,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Optional: true,
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/secureSignInSessionControl?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/secureSignInSessionControl?view=graph-rest-beta",
 				},
 				"sign_in_frequency": schema.SingleNestedAttribute{
 					Optional: true,
@@ -614,25 +636,28 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Validators: []validator.String{
 								stringvalidator.OneOf("primaryAndSecondaryAuthentication", "secondaryAuthentication", "unknownFutureValue"),
 							},
+							MarkdownDescription: "; possible values are: `primaryAndSecondaryAuthentication`, `secondaryAuthentication`, `unknownFutureValue`",
 						},
 						"frequency_interval": schema.StringAttribute{
 							Optional: true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("timeBased", "everyTime", "unknownFutureValue"),
 							},
+							MarkdownDescription: "; possible values are: `timeBased`, `everyTime`, `unknownFutureValue`",
 						},
 						"type": schema.StringAttribute{
-							Optional:   true,
-							Validators: []validator.String{stringvalidator.OneOf("days", "hours")},
+							Optional:            true,
+							Validators:          []validator.String{stringvalidator.OneOf("days", "hours")},
+							MarkdownDescription: "; possible values are: `days`, `hours`",
 						},
 						"value": schema.Int64Attribute{
 							Optional: true,
 						},
 					},
-					MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/signInFrequencySessionControl?view=graph-rest-beta`,
+					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/signInFrequencySessionControl?view=graph-rest-beta",
 				},
 			},
-			MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessSessionControls?view=graph-rest-beta`,
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessSessionControls?view=graph-rest-beta",
 		},
 		"state": schema.StringAttribute{
 			Optional: true,
@@ -642,10 +667,11 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 			PlanModifiers: []planmodifier.String{
 				wpdefaultvalue.StringDefaultValue("enabledForReportingButNotEnforced"),
 			},
-			Computed: true,
+			Computed:            true,
+			MarkdownDescription: "; possible values are: `enabled`, `disabled`, `enabledForReportingButNotEnforced`",
 		},
 	},
-	MarkdownDescription: `https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessPolicy?view=graph-rest-beta`,
+	MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessPolicy?view=graph-rest-beta",
 }
 
 var conditionalAccessPolicyConditionalAccessExternalTenantsValidator = objectvalidator.ExactlyOneOf(

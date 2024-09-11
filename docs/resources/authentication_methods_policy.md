@@ -97,7 +97,7 @@ resource "microsoft365wp_authentication_methods_policy" "singleton" {
 ### Optional
 
 - `authentication_method_configurations` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/authenticationMethodConfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations))
-- `policy_migration_state` (String)
+- `policy_migration_state` (String) ; possible values are: `preMigration`, `migrationInProgress`, `migrationComplete`, `unknownFutureValue`
 - `registration_enforcement` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/registrationEnforcement?view=graph-rest-beta (see [below for nested schema](#nestedatt--registration_enforcement))
 - `report_suspicious_activity_settings` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/reportSuspiciousActivitySettings?view=graph-rest-beta (see [below for nested schema](#nestedatt--report_suspicious_activity_settings))
 - `system_credential_preferences` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/systemCredentialPreferences?view=graph-rest-beta (see [below for nested schema](#nestedatt--system_credential_preferences))
@@ -116,7 +116,7 @@ resource "microsoft365wp_authentication_methods_policy" "singleton" {
 Required:
 
 - `id` (String)
-- `state` (String)
+- `state` (String) ; possible values are: `enabled`, `disabled`
 
 Optional:
 
@@ -136,7 +136,7 @@ Optional:
 
 Optional:
 
-- `allow_external_id_to_use_email_otp` (String)
+- `allow_external_id_to_use_email_otp` (String) ; possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`
 - `include_targets` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/authenticationMethodTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--email--include_targets))
 
 <a id="nestedatt--authentication_method_configurations--email--include_targets"></a>
@@ -145,7 +145,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 Optional:
 
@@ -159,7 +159,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 
 <a id="nestedatt--authentication_method_configurations--fido2"></a>
@@ -167,7 +167,7 @@ Required:
 
 Optional:
 
-- `include_targets` (Attributes Set) (see [below for nested schema](#nestedatt--authentication_method_configurations--fido2--include_targets))
+- `include_targets` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/passkeyAuthenticationMethodTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--fido2--include_targets))
 - `is_attestation_enforced` (Boolean)
 - `is_self_service_registration_allowed` (Boolean)
 - `key_restrictions` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/fido2KeyRestrictions?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--fido2--key_restrictions))
@@ -178,7 +178,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 Optional:
 
@@ -191,7 +191,7 @@ Optional:
 Optional:
 
 - `aa_guids` (Set of String)
-- `enforcement_type` (String)
+- `enforcement_type` (String) ; possible values are: `allow`, `block`, `unknownFutureValue`
 - `is_enforced` (Boolean)
 
 
@@ -209,7 +209,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 Optional:
 
@@ -242,7 +242,7 @@ Optional:
 
 - `exclude_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target))
 - `include_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target))
-- `state` (String)
+- `state` (String) ; possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target"></a>
 ### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_location_information_required_state.exclude_target`
@@ -250,7 +250,7 @@ Optional:
 Optional:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `group`, `administrativeUnit`, `role`, `unknownFutureValue`
 
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target"></a>
@@ -259,7 +259,7 @@ Optional:
 Optional:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `group`, `administrativeUnit`, `role`, `unknownFutureValue`
 
 
 
@@ -270,7 +270,7 @@ Optional:
 
 - `exclude_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target))
 - `include_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target))
-- `state` (String)
+- `state` (String) ; possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target"></a>
 ### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_location_information_required_state.exclude_target`
@@ -278,7 +278,7 @@ Optional:
 Optional:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `group`, `administrativeUnit`, `role`, `unknownFutureValue`
 
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target"></a>
@@ -287,7 +287,7 @@ Optional:
 Optional:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `group`, `administrativeUnit`, `role`, `unknownFutureValue`
 
 
 
@@ -298,7 +298,7 @@ Optional:
 
 - `exclude_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target))
 - `include_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target))
-- `state` (String)
+- `state` (String) ; possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target"></a>
 ### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_location_information_required_state.exclude_target`
@@ -306,7 +306,7 @@ Optional:
 Optional:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `group`, `administrativeUnit`, `role`, `unknownFutureValue`
 
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target"></a>
@@ -315,7 +315,7 @@ Optional:
 Optional:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `group`, `administrativeUnit`, `role`, `unknownFutureValue`
 
 
 
@@ -326,11 +326,11 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 Optional:
 
-- `authentication_mode` (String)
+- `authentication_mode` (String) ; possible values are: `deviceBasedPush`, `push`, `any`
 - `is_registration_required` (Boolean)
 
 
@@ -348,7 +348,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 Optional:
 
@@ -370,7 +370,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 Optional:
 
@@ -396,7 +396,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 Optional:
 
@@ -418,7 +418,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 Optional:
 
@@ -442,8 +442,8 @@ Optional:
 Optional:
 
 - `rules` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/x509CertificateRule?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration--rules))
-- `x509_certificate_authentication_default_mode` (String) x509CertificateAuthenticationDefaultMode
-- `x509_certificate_default_required_affinity_level` (String) x509CertificateDefaultRequiredAffinityLevel
+- `x509_certificate_authentication_default_mode` (String) ; possible values are: `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `unknownFutureValue`
+- `x509_certificate_default_required_affinity_level` (String) ; possible values are: `low`, `high`, `unknownFutureValue`
 
 <a id="nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration--rules"></a>
 ### Nested Schema for `authentication_method_configurations.x509_certificate.authentication_mode_configuration.x509_certificate_default_required_affinity_level`
@@ -453,9 +453,9 @@ Optional:
 - `identifier` (String)
 - `issuer_subject_identifier` (String)
 - `policy_oid_identifier` (String)
-- `x509_certificate_authentication_mode` (String) x509CertificateAuthenticationMode
-- `x509_certificate_required_affinity_level` (String) x509CertificateRequiredAffinityLevel
-- `x509_certificate_rule_type` (String) x509CertificateRuleType
+- `x509_certificate_authentication_mode` (String) ; possible values are: `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `unknownFutureValue`
+- `x509_certificate_required_affinity_level` (String) ; possible values are: `low`, `high`, `unknownFutureValue`
+- `x509_certificate_rule_type` (String) ; possible values are: `issuerSubject`, `policyOID`, `unknownFutureValue`, `issuerSubjectAndPolicyOID`
 
 
 
@@ -468,7 +468,7 @@ Required:
 
 Optional:
 
-- `trust_affinity_level` (String)
+- `trust_affinity_level` (String) ; possible values are: `low`, `high`, `unknownFutureValue`
 - `user_property` (String)
 - `x509_certificate_field` (String) x509CertificateField
 
@@ -479,7 +479,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 Optional:
 
@@ -491,7 +491,7 @@ Optional:
 
 Optional:
 
-- `state` (String)
+- `state` (String) ; possible values are: `disabled`, `enabled`, `unknownFutureValue`
 
 
 
@@ -512,7 +512,7 @@ Optional:
 - `exclude_targets` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/excludeTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--registration_enforcement--authentication_methods_registration_campaign--exclude_targets))
 - `include_targets` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/authenticationMethodsRegistrationCampaignIncludeTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--registration_enforcement--authentication_methods_registration_campaign--include_targets))
 - `snooze_duration_in_days` (Number)
-- `state` (String)
+- `state` (String) ; possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`
 
 <a id="nestedatt--registration_enforcement--authentication_methods_registration_campaign--exclude_targets"></a>
 ### Nested Schema for `registration_enforcement.authentication_methods_registration_campaign.exclude_targets`
@@ -520,7 +520,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 
 <a id="nestedatt--registration_enforcement--authentication_methods_registration_campaign--include_targets"></a>
@@ -529,7 +529,7 @@ Required:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 Optional:
 
@@ -544,7 +544,7 @@ Optional:
 Optional:
 
 - `include_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/includeTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--report_suspicious_activity_settings--include_target))
-- `state` (String)
+- `state` (String) ; possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`
 - `voice_reporting_code` (Number)
 
 <a id="nestedatt--report_suspicious_activity_settings--include_target"></a>
@@ -553,7 +553,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 
 
@@ -564,7 +564,7 @@ Optional:
 
 - `exclude_targets` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/excludeTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--system_credential_preferences--exclude_targets))
 - `include_targets` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/includeTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--system_credential_preferences--include_targets))
-- `state` (String)
+- `state` (String) ; possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`
 
 <a id="nestedatt--system_credential_preferences--exclude_targets"></a>
 ### Nested Schema for `system_credential_preferences.exclude_targets`
@@ -572,7 +572,7 @@ Optional:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 
 <a id="nestedatt--system_credential_preferences--include_targets"></a>
@@ -581,6 +581,6 @@ Required:
 Required:
 
 - `id` (String)
-- `target_type` (String)
+- `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
 
 

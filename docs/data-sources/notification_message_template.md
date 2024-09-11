@@ -43,7 +43,7 @@ output "microsoft365wp_notification_message_template" {
 
 ### Read-Only
 
-- `branding_options` (String) The Message Template Branding Options. Branding is defined in the Intune Admin Console.
+- `branding_options` (String) The Message Template Branding Options. Branding is defined in the Intune Admin Console. / Branding Options for the Message Template. Branding is defined in the Intune Admin Console; possible values are: `none` (Indicates that no branding options are set in the message template.), `includeCompanyLogo` (Indicates to include company logo in the message template.), `includeCompanyName` (Indicates to include company name in the message template.), `includeContactInformation` (Indicates to include contact information in the message template.), `includeCompanyPortalLink` (Indicates to include company portal website link in the message template.), `includeDeviceDetails` (Indicates to include device details in the message template.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
 - `display_name` (String) Display name for the Notification Message Template.
 - `id` (String) The ID of this resource.
 - `last_modified_date_time` (String) DateTime the object was last modified.

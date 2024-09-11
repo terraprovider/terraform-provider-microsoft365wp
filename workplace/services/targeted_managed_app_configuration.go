@@ -99,24 +99,24 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 					},
 				},
 			},
-			MarkdownDescription: `A set of string key and string value pairs to be sent to apps for users to whom the configuration is scoped, unalterned by this service / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyValuePair?view=graph-rest-beta`,
+			MarkdownDescription: "A set of string key and string value pairs to be sent to apps for users to whom the configuration is scoped, unalterned by this service / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyValuePair?view=graph-rest-beta",
 		},
 		"app_group_type": schema.StringAttribute{
 			Required: true,
 			Validators: []validator.String{
 				stringvalidator.OneOf("selectedPublicApps", "allCoreMicrosoftApps", "allMicrosoftApps", "allApps"),
 			},
-			MarkdownDescription: `Public Apps selection: group or individual`,
+			MarkdownDescription: "Public Apps selection: group or individual / Indicates a collection of apps to target which can be one of several pre-defined lists of apps or a manually selected list of apps; possible values are: `selectedPublicApps` (Target the collection of apps manually selected by the admin.), `allCoreMicrosoftApps` (Target the core set of Microsoft apps (Office, Edge, etc).), `allMicrosoftApps` (Target all apps with Microsoft as publisher.), `allApps` (Target all apps with an available assignment.)",
 		},
 		"deployed_app_count": schema.Int64Attribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
-			MarkdownDescription: `Count of apps to which the current policy is deployed.`,
+			MarkdownDescription: "Count of apps to which the current policy is deployed.",
 		},
 		"is_assigned": schema.BoolAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
-			MarkdownDescription: `Indicates if the policy is deployed to any inclusion groups or not.`,
+			MarkdownDescription: "Indicates if the policy is deployed to any inclusion groups or not.",
 		},
 		"targeted_app_management_levels": schema.StringAttribute{
 			Optional: true,
@@ -125,7 +125,7 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("unspecified")},
 			Computed:            true,
-			MarkdownDescription: `The intended app management levels for this policy`,
+			MarkdownDescription: "The intended app management levels for this policy / Management levels for apps; possible values are: `unspecified` (Unspecified), `unmanaged` (Unmanaged), `mdm` (MDM), `androidEnterprise` (Android Enterprise), `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode` (Android Enterprise dedicated devices with Azure AD Shared mode), `androidOpenSourceProjectUserAssociated` (Android Open Source Project (AOSP) devices), `androidOpenSourceProjectUserless` (Android Open Source Project (AOSP) userless devices), `unknownFutureValue` (Place holder for evolvable enum)",
 		},
 		"apps": schema.SetNestedAttribute{
 			Required: true,
@@ -141,13 +141,13 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 									Attributes: map[string]schema.Attribute{ // androidMobileAppIdentifier
 										"package_id": schema.StringAttribute{
 											Required:            true,
-											MarkdownDescription: `The identifier for an app, as specified in the play store.`,
+											MarkdownDescription: "The identifier for an app, as specified in the play store.",
 										},
 									},
 									Validators: []validator.Object{
 										targetedManagedAppConfigurationMobileAppIdentifierValidator,
 									},
-									MarkdownDescription: `The identifier for an Android app.`,
+									MarkdownDescription: "The identifier for an Android app.",
 								},
 							},
 							"ios": generic.OdataDerivedTypeNestedAttributeRs{
@@ -157,13 +157,13 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 									Attributes: map[string]schema.Attribute{ // iosMobileAppIdentifier
 										"bundle_id": schema.StringAttribute{
 											Required:            true,
-											MarkdownDescription: `The identifier for an app, as specified in the app store.`,
+											MarkdownDescription: "The identifier for an app, as specified in the app store.",
 										},
 									},
 									Validators: []validator.Object{
 										targetedManagedAppConfigurationMobileAppIdentifierValidator,
 									},
-									MarkdownDescription: `The identifier for an iOS app.`,
+									MarkdownDescription: "The identifier for an iOS app.",
 								},
 							},
 							"mac": generic.OdataDerivedTypeNestedAttributeRs{
@@ -173,13 +173,13 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 									Attributes: map[string]schema.Attribute{ // macAppIdentifier
 										"bundle_id": schema.StringAttribute{
 											Required:            true,
-											MarkdownDescription: `The identifier for an app, as specified in the app store.`,
+											MarkdownDescription: "The identifier for an app, as specified in the app store.",
 										},
 									},
 									Validators: []validator.Object{
 										targetedManagedAppConfigurationMobileAppIdentifierValidator,
 									},
-									MarkdownDescription: `The identifier for a Mac app.`,
+									MarkdownDescription: "The identifier for a Mac app.",
 								},
 							},
 							"windows": generic.OdataDerivedTypeNestedAttributeRs{
@@ -190,29 +190,29 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 										"app_id": schema.StringAttribute{
 											Required:            true,
 											Description:         `windowsAppId`, // custom MS Graph attribute name
-											MarkdownDescription: `The identifier for an app, as specified in the app store.`,
+											MarkdownDescription: "The identifier for an app, as specified in the app store.",
 										},
 									},
 									Validators: []validator.Object{
 										targetedManagedAppConfigurationMobileAppIdentifierValidator,
 									},
-									MarkdownDescription: `The identifier for a Windows app.`,
+									MarkdownDescription: "The identifier for a Windows app.",
 								},
 							},
 						},
 						Description:         `mobileAppIdentifier`, // custom MS Graph attribute name
-						MarkdownDescription: `The identifier for an app with it's operating system type. / The identifier for a mobile app.`,
+						MarkdownDescription: "The identifier for an app with it's operating system type. / The identifier for a mobile app.",
 					},
 				},
 			},
 			PlanModifiers: []planmodifier.Set{
 				&wpplanmodifier.IgnoreOnOtherAttributeValuePlanModifier{OtherAttributePath: path.Root("app_group_type"), ValuesRespect: []attr.Value{types.StringValue("selectedPublicApps")}},
 			},
-			MarkdownDescription: `List of apps to which the policy is deployed. / The identifier for the deployment an app.`,
+			MarkdownDescription: "List of apps to which the policy is deployed. / The identifier for the deployment an app.",
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: `Configuration used to deliver a set of custom settings as-is to all users in the targeted security group / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-targetedManagedAppConfiguration?view=graph-rest-beta`,
+	MarkdownDescription: "Configuration used to deliver a set of custom settings as-is to all users in the targeted security group / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-targetedManagedAppConfiguration?view=graph-rest-beta",
 }
 
 var targetedManagedAppConfigurationMobileAppIdentifierValidator = objectvalidator.ExactlyOneOf(

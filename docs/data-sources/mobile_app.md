@@ -68,7 +68,7 @@ output "microsoft365wp_mobile_app" {
 - `owner` (String) The owner of the app.
 - `privacy_information_url` (String) The privacy statement Url.
 - `publisher` (String) The publisher of the app.
-- `publishing_state` (String)
+- `publishing_state` (String) Indicates the publishing state of an app; possible values are: `notPublished` (The app is not yet published.), `processing` (The app is pending service-side processing.), `published` (The app is published.)
 - `role_scope_tag_ids` (Set of String) List of scope tag ids for this mobile app.
 - `superseded_app_count` (Number)
 - `superseding_app_count` (Number)
@@ -208,7 +208,7 @@ Read-Only:
 - `revoke_license_action_results` (Attributes Set) Results of revoke license actions on this app. / Defines results for actions on iOS Vpp Apps, contains inherited properties for ActionResult. (see [below for nested schema](#nestedatt--ios_vpp--revoke_license_action_results))
 - `total_license_count` (Number) The total number of VPP licenses.
 - `used_license_count` (Number) The number of VPP licenses in use.
-- `vpp_token_account_type` (String) The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. Possible values are: 'business', 'education'.
+- `vpp_token_account_type` (String) The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. Possible values are: 'business', 'education'. / Possible types of an Apple Volume Purchase Program token; possible values are: `business` (Apple Volume Purchase Program token associated with an business program.), `education` (Apple Volume Purchase Program token associated with an education program.)
 - `vpp_token_apple_id` (String) The Apple Id associated with the given Apple Volume Purchase Program Token.
 - `vpp_token_id` (String) Identifier of the VPP token associated with this app.
 - `vpp_token_organization_name` (String) The organization associated with the Apple Volume Purchase Program Token
@@ -250,9 +250,9 @@ Read-Only:
 
 Read-Only:
 
-- `action_failure_reason` (String) The reason for the revoke licenses action failure.
+- `action_failure_reason` (String) The reason for the revoke licenses action failure. / Possible types of reasons for an Apple Volume Purchase Program token action failure; possible values are: `none` (None.), `appleFailure` (There was an error on Apple's service.), `internalError` (There was an internal error.), `expiredVppToken` (There was an error because the Apple Volume Purchase Program token was expired.), `expiredApplePushNotificationCertificate` (There was an error because the Apple Volume Purchase Program Push Notification certificate expired.)
 - `action_name` (String) Action name
-- `action_state` (String) State of the action
+- `action_state` (String) State of the action / ; possible values are: `none`, `pending`, `canceled`, `active`, `done`, `failed`, `notSupported`
 - `failed_licenses_count` (Number) A count of the number of licenses for which revoke failed.
 - `last_updated_date_time` (String) Time the action state was last updated
 - `managed_device_id` (String) DeviceId associated with the action.
@@ -321,7 +321,7 @@ Read-Only:
 
 Read-Only:
 
-- `channel` (String) The channel to install on target devices.
+- `channel` (String) The channel to install on target devices. / The enum to specify the channels for Microsoft Edge apps; possible values are: `dev` (The Dev Channel is intended to help you plan and develop with the latest capabilities of Microsoft Edge.), `beta` (The Beta Channel is intended for production deployment to a representative sample set of users. New features ship about every 4 weeks. Security and quality updates ship as needed.), `stable` (The Stable Channel is intended for broad deployment within organizations, and it's the channel that most users should be on. New features ship about every 4 weeks. Security and quality updates ship as needed.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
 
 
 <a id="nestedatt--macos_office_suite"></a>
@@ -341,7 +341,7 @@ Read-Only:
 - `revoke_license_action_results` (Attributes Set) Results of revoke license actions on this app. / Defines results for actions on MacOS Vpp Apps, contains inherited properties for ActionResult. (see [below for nested schema](#nestedatt--macos_vpp--revoke_license_action_results))
 - `total_license_count` (Number) The total number of VPP licenses.
 - `used_license_count` (Number) The number of VPP licenses in use.
-- `vpp_token_account_type` (String) The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. Possible values are: 'business', 'education'.
+- `vpp_token_account_type` (String) The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. Possible values are: 'business', 'education'. / Possible types of an Apple Volume Purchase Program token; possible values are: `business` (Apple Volume Purchase Program token associated with an business program.), `education` (Apple Volume Purchase Program token associated with an education program.)
 - `vpp_token_apple_id` (String) The Apple Id associated with the given Apple Volume Purchase Program Token.
 - `vpp_token_id` (String) Identifier of the VPP token associated with this app.
 - `vpp_token_organization_name` (String) The organization associated with the Apple Volume Purchase Program Token
@@ -374,9 +374,9 @@ Read-Only:
 
 Read-Only:
 
-- `action_failure_reason` (String) The reason for the revoke licenses action failure.
+- `action_failure_reason` (String) The reason for the revoke licenses action failure. / Possible types of reasons for an Apple Volume Purchase Program token action failure; possible values are: `none` (None.), `appleFailure` (There was an error on Apple's service.), `internalError` (There was an internal error.), `expiredVppToken` (There was an error because the Apple Volume Purchase Program token was expired.), `expiredApplePushNotificationCertificate` (There was an error because the Apple Volume Purchase Program Push Notification certificate expired.)
 - `action_name` (String) Action name
-- `action_state` (String) State of the action
+- `action_state` (String) State of the action / ; possible values are: `none`, `pending`, `canceled`, `active`, `done`, `failed`, `notSupported`
 - `failed_licenses_count` (Number) A count of the number of licenses for which revoke failed.
 - `last_updated_date_time` (String) Time the action state was last updated
 - `managed_device_id` (String) DeviceId associated with the action.
@@ -405,7 +405,7 @@ Read-Only:
 Read-Only:
 
 - `allow_available_uninstall` (Boolean) When TRUE, indicates that uninstall is supported from the company portal for the Windows app (Win32) with an Available assignment. When FALSE, indicates that uninstall is not supported for the Windows app (Win32) with an Available assignment. Default value is FALSE.
-- `applicable_architectures` (String) The Windows architecture(s) for which this app can run on.
+- `applicable_architectures` (String) The Windows architecture(s) for which this app can run on. / Contains properties for Windows architecture; possible values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.)
 - `detection_rules` (Attributes Set) The detection rules to detect Win32 Line of Business (LoB) app. / Base class to detect a Win32 App (see [below for nested schema](#nestedatt--windows_win32lob--detection_rules))
 - `display_version` (String) The version displayed in the UX for this app.
 - `install_command_line` (String) The command line to install this app
@@ -432,9 +432,9 @@ Read-Only:
 
 Read-Only:
 
-- `device_restart_behavior` (String) Device restart behavior.
+- `device_restart_behavior` (String) Device restart behavior. / Indicates the type of restart action; possible values are: `basedOnReturnCode` (Intune will restart the device after running the app installation if the operation returns a reboot code.), `allow` (Intune will not take any specific action on reboot codes resulting from app installations. Intune will not attempt to suppress restarts for MSI apps.), `suppress` (Intune will attempt to suppress restarts for MSI apps.), `force` (Intune will force the device to restart immediately after the app installation operation.)
 - `max_run_time_in_minutes` (Number) The number of minutes the system will wait for install program to finish. Default value is 60 minutes.
-- `run_as_account` (String) Indicates the type of execution context the app runs in.
+- `run_as_account` (String) Indicates the type of execution context the app runs in. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context)
 
 
 <a id="nestedatt--windows_win32lob--minimum_supported_operating_system"></a>
@@ -462,7 +462,7 @@ Read-Only:
 
 Read-Only:
 
-- `package_type` (String) The MSI package type.
+- `package_type` (String) The MSI package type. / Indicates the package type of an MSI Win32LobApp; possible values are: `perMachine` (Indicates a per-machine app package.), `perUser` (Indicates a per-user app package.), `dualPurpose` (Indicates a dual-purpose app package.)
 - `product_code` (String) The MSI product code.
 - `product_name` (String) The MSI product name.
 - `product_version` (String) The MSI product version.
@@ -477,7 +477,7 @@ Read-Only:
 Read-Only:
 
 - `detection_value` (String) The detection value
-- `operator` (String) The operator for detection
+- `operator` (String) The operator for detection / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.)
 
 
 <a id="nestedatt--windows_win32lob--return_codes"></a>
@@ -486,7 +486,7 @@ Read-Only:
 Read-Only:
 
 - `return_code` (Number) Return code.
-- `type` (String) The type of return code.
+- `type` (String) The type of return code. / Indicates the type of return code; possible values are: `failed` (Failed.), `success` (Success.), `softReboot` (Soft-reboot is required.), `hardReboot` (Hard-reboot is required.), `retry` (Retry.)
 
 
 <a id="nestedatt--windows_win32lob--rules"></a>
@@ -494,7 +494,7 @@ Read-Only:
 
 Read-Only:
 
-- `rule_type` (String) The rule type indicating the purpose of the rule.
+- `rule_type` (String) The rule type indicating the purpose of the rule. / Contains rule types for Win32 LOB apps; possible values are: `detection` (Detection rule.), `requirement` (Requirement rule.)
 
 
 
@@ -512,6 +512,6 @@ Read-Only:
 
 Read-Only:
 
-- `run_as_account` (String) Indicates the type of execution context the app setup runs in on target devices. Options include values of the RunAsAccountType enum, which are System and User. Required at creation time, cannot be modified on existing objects.
+- `run_as_account` (String) Indicates the type of execution context the app setup runs in on target devices. Options include values of the RunAsAccountType enum, which are System and User. Required at creation time, cannot be modified on existing objects. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context)
 
 

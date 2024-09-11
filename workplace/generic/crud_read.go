@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/go-azure-sdk/sdk/odata"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/manicminer/hamilton/msgraph"
 )
 
@@ -85,8 +86,7 @@ func ReadRaw(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph.
 	if err != nil {
 		if status == http.StatusNotFound || (odata != nil && odata.Error != nil && *odata.Error.Code == "ResourceNotFound") {
 			if tolerateNotFound {
-				diags.AddWarning(fmt.Sprintf("Item %q not found in MS Graph", uri.Entity),
-					"Automatically removing from Terraform State instead of returning the error.")
+				tflog.Info(ctx, fmt.Sprintf("Item %q not found in MS Graph.", uri.Entity))
 			} else {
 				diags.AddError(fmt.Sprintf("Item %q not found in MS Graph", uri.Entity),
 					fmt.Sprintf("After attempting to read, MS Graph returned a resource not found error for the id provided. Original Error: %s", err.Error()))

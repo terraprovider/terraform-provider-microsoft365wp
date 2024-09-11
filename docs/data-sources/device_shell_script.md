@@ -54,7 +54,7 @@ output "microsoft365wp_device_shell_script" {
 - `last_modified_date_time` (String)
 - `retry_count` (Number) Number of times for the script to be retried if it fails
 - `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for this PowerShellScript instance.
-- `run_as_account` (String) Indicates the type of execution context.
+- `run_as_account` (String) Indicates the type of execution context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context)
 - `script_content` (String) The script content.
 
 <a id="nestedatt--assignments"></a>

@@ -56,8 +56,9 @@ resource "microsoft365wp_cloud_pc_user_setting" "test" {
 ### Optional
 
 - `assignments` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcUserSettingAssignment?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments))
-- `cross_region_disaster_recovery_setting` (Attributes) (see [below for nested schema](#nestedatt--cross_region_disaster_recovery_setting))
+- `cross_region_disaster_recovery_setting` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcCrossRegionDisasterRecoverySetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--cross_region_disaster_recovery_setting))
 - `local_admin_enabled` (Boolean)
+- `notification_setting` (Attributes) (see [below for nested schema](#nestedatt--notification_setting))
 - `reset_enabled` (Boolean)
 - `restore_point_setting` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcRestorePointSetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--restore_point_setting))
 
@@ -106,7 +107,7 @@ Required:
 
 Optional:
 
-- `disaster_recovery_network_setting` (Attributes) (see [below for nested schema](#nestedatt--cross_region_disaster_recovery_setting--disaster_recovery_network_setting))
+- `disaster_recovery_network_setting` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDisasterRecoveryNetworkSetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--cross_region_disaster_recovery_setting--disaster_recovery_network_setting))
 - `maintain_cross_region_restore_point_enabled` (Boolean)
 
 <a id="nestedatt--cross_region_disaster_recovery_setting--disaster_recovery_network_setting"></a>
@@ -114,8 +115,8 @@ Optional:
 
 Optional:
 
-- `azure_connection` (Attributes) (see [below for nested schema](#nestedatt--cross_region_disaster_recovery_setting--disaster_recovery_network_setting--azure_connection))
-- `microsoft_hosted_network` (Attributes) (see [below for nested schema](#nestedatt--cross_region_disaster_recovery_setting--disaster_recovery_network_setting--microsoft_hosted_network))
+- `azure_connection` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDisasterRecoveryAzureConnectionSetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--cross_region_disaster_recovery_setting--disaster_recovery_network_setting--azure_connection))
+- `microsoft_hosted_network` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDisasterRecoveryMicrosoftHostedNetworkSetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--cross_region_disaster_recovery_setting--disaster_recovery_network_setting--microsoft_hosted_network))
 
 <a id="nestedatt--cross_region_disaster_recovery_setting--disaster_recovery_network_setting--azure_connection"></a>
 ### Nested Schema for `cross_region_disaster_recovery_setting.disaster_recovery_network_setting.azure_connection`
@@ -130,10 +131,18 @@ Required:
 
 Required:
 
-- `region_group` (String)
+- `region_group` (String) ; possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`
 - `region_name` (String)
 
 
+
+
+<a id="nestedatt--notification_setting"></a>
+### Nested Schema for `notification_setting`
+
+Optional:
+
+- `restart_prompts_disabled` (Boolean)
 
 
 <a id="nestedatt--restore_point_setting"></a>
@@ -141,7 +150,7 @@ Required:
 
 Optional:
 
-- `frequency_type` (String)
+- `frequency_type` (String) ; possible values are: `default`, `fourHours`, `sixHours`, `twelveHours`, `sixteenHours`, `twentyFourHours`, `unknownFutureValue`
 - `user_restore_enabled` (Boolean)
 
 Read-Only:

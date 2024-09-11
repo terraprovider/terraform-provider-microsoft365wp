@@ -62,7 +62,7 @@ resource "microsoft365wp_notification_message_template" "test" {
 
 ### Optional
 
-- `branding_options` (String) The Message Template Branding Options. Branding is defined in the Intune Admin Console.
+- `branding_options` (String) The Message Template Branding Options. Branding is defined in the Intune Admin Console. / Branding Options for the Message Template. Branding is defined in the Intune Admin Console; possible values are: `none` (Indicates that no branding options are set in the message template.), `includeCompanyLogo` (Indicates to include company logo in the message template.), `includeCompanyName` (Indicates to include company name in the message template.), `includeContactInformation` (Indicates to include contact information in the message template.), `includeCompanyPortalLink` (Indicates to include company portal website link in the message template.), `includeDeviceDetails` (Indicates to include device details in the message template.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
 - `localized_notification_messages` (Attributes Set) The list of localized messages for this Notification Message Template. / The text content of a Notification Message Template for the specified locale. (see [below for nested schema](#nestedatt--localized_notification_messages))
 - `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
 

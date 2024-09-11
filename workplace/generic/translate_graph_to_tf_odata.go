@@ -43,11 +43,18 @@ func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, sc
 	}
 
 	if valueToTargetSetName == "" {
-		// In rare cases we might actually receive a value collection with just one item (e.g. if there does not exist a
-		// direct route an item and instead an OData $filter is required to target it)
-		if items, ok := rawVal["value"].([]any); ok && len(items) == 1 {
-			if singleValue, ok := items[0].(map[string]any); ok {
-				rawVal = singleValue
+		// In rare cases we might actually receive a value collection with zero or just one item (e.g. if there does not
+		// exist a direct route an item and instead an OData $filter is required to target it)
+		// Added "len(rawVal) <= 5" as an additional sanity check to not trigger on any other entity that might have
+		// a "value" attribute containing an array
+		if items, ok := rawVal["value"].([]any); ok && len(rawVal) <= 5 {
+			switch len(items) {
+			case 0:
+				return tftypes.Value{} // gets translated to "not found" upstream
+			case 1:
+				if singleValue, ok := items[0].(map[string]any); ok {
+					rawVal = singleValue
+				}
 			}
 		}
 		if middlewareFunc != nil {

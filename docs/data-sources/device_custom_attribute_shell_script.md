@@ -45,14 +45,14 @@ output "microsoft365wp_device_custom_attribute_shell_script" {
 
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `created_date_time` (String)
-- `custom_attribute_type` (String) The expected type of the custom attribute's value.
+- `custom_attribute_type` (String) The expected type of the custom attribute's value. / Represents the expected type for a macOS custom attribute script value; possible values are: `integer` (Indicates the value for a custom attribute script is an integer.), `string` (Indicates the value for a custom attribute script is a string.), `dateTime` (Indicates the value for a custom attribute script is a date conforming to ISO 8601.)
 - `description` (String) Optional description for the device management script.
 - `display_name` (String) Name of the device management script.
 - `file_name` (String) Script file name.
 - `id` (String) The ID of this resource.
 - `last_modified_date_time` (String)
 - `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for this PowerShellScript instance.
-- `run_as_account` (String) Indicates the type of execution context.
+- `run_as_account` (String) Indicates the type of execution context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context)
 - `script_content` (String) The script content.
 
 <a id="nestedatt--assignments"></a>

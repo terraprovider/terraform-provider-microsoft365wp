@@ -115,7 +115,7 @@ resource "microsoft365wp_managed_device_mobile_app_configuration" "android_manag
 Required:
 
 - `package_id` (String) Android Enterprise app configuration package id.
-- `profile_applicability` (String) Android Enterprise profile applicability (AndroidWorkProfile, DeviceOwner, or default (applies to both)).
+- `profile_applicability` (String) Android Enterprise profile applicability (AndroidWorkProfile, DeviceOwner, or default (applies to both)). / Android profile applicability; possible values are: `default`, `androidWorkProfile`, `androidDeviceOwner`
 
 Optional:
 
@@ -129,7 +129,7 @@ Optional:
 
 Required:
 
-- `action` (String) Type of Android permission action.
+- `action` (String) Type of Android permission action. / Android action taken when an app requests a dangerous permission; possible values are: `prompt`, `autoGrant`, `autoDeny`
 
 Optional:
 
@@ -196,7 +196,7 @@ Optional:
 Required:
 
 - `app_config_key` (String) app configuration key.
-- `app_config_key_type` (String) app configuration key type.
+- `app_config_key_type` (String) app configuration key type. / App configuration key types; possible values are: `stringType`, `integerType`, `realType`, `booleanType`, `tokenType`
 - `app_config_key_value` (String) app configuration key value.
 
 
