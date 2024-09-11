@@ -10,7 +10,8 @@ import (
 )
 
 // Provider documentation generation.
-//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-name microsoft365wp --rendered-website-dir docs
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs validate
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-name microsoft365wp
 
 func main() {
 	var debug bool
