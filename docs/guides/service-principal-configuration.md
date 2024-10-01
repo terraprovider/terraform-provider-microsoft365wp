@@ -10,8 +10,8 @@ Terraform supports a number of different methods for authenticating to Azure
 
 A Service Principal represents an application within Microsoft EntraID whose properties and authentication tokens can be used as the `tenant_id`, `client_id` and `client_secret` fields needed by Terraform.
 
-* [Authenticating to Azure using a Service Principal and a Client Secret](service\_principal\_client\_secret.md)
-* [Authenticating to Azure using a Service Principal and OpenID Connect](service\_principal\_oicd.md)
+* [Authenticating to Azure using a Service Principal and a Client Secret](service_principal_client_secret.md)
+* [Authenticating to Azure using a Service Principal and OpenID Connect](service_principal_oicd.md)
 
 ***
 
@@ -27,7 +27,7 @@ Navigate to the [Microsoft Entra ID overview](https://portal.azure.com/#blade/Mi
 
 Go to the API Permissions blade for the Application and click the "Add a permission" button. In the pane that opens, select `Microsoft Graph`.
 
-Choose `Application Permissions` for the permission type, and check the permissions you would like to assign. The permissions you need will depend on which directory objects you wish to manage with Terraform. The following table show the required permissions for some common resources:
+Choose `Application Permissions` for the permission type and check the permissions you would like to assign. The permissions you need will depend on which directory objects you wish to manage with Terraform. The following table show the required permissions for some common resources:
 
 | Resource(s)                                   | Description                                                       |
 | --------------------------------------------- | ----------------------------------------------------------------- |
@@ -40,6 +40,7 @@ Choose `Application Permissions` for the permission type, and check the permissi
 | `Policy.Read.All`                             | Read your organization's policies                                 |
 | `Policy.ReadWrite.ConditionalAccess`          | Read and write your organization's conditional access policies    |
 | `User.ReadWrite.All`                          | Read and write all users' full profiles                           |
+| `CloudPC.ReadWrite.All`                       | Read and write Windows365 configurations                          |
 
 
 

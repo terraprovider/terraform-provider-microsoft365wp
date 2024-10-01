@@ -10,7 +10,7 @@ subcategory: "Authentication"
 
 ***
 
-Once you have configured a Service Principal as described in this guide, you should follow the [Configuring a Service Principal for managing EntraID](../service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects.
+Once you have configured a Service Principal as described in this guide, you should follow the [Configuring a Service Principal for managing EntraID](service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects.
 
 ***
 
@@ -134,8 +134,8 @@ provider "microsoft365wp" {
 
 ~> **Note:** If using the AzureRM Backend you may also need to configure OIDC there too, see [the documentation for the AzureRM Backend](https://www.terraform.io/language/settings/backends/azurerm) for more information.
 
-More information on [the fields supported in the Provider block can be found here](../../index.md#argument-reference).
+More information on [the fields supported in the Provider block can be found here](../index.md#argument-reference).
 
 At this point running either `terraform plan` or `terraform apply` should allow Terraform to run using the Service Principal to authenticate.
 
-Next you should follow the [Configuring a Service Principal for managing Microsoft EntraID](../service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects such as users and groups.
+Next you should follow the [Configuring a Service Principal for managing Microsoft EntraID](service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects such as users and groups.

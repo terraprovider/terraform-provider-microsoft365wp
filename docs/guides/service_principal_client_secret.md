@@ -10,7 +10,7 @@ subcategory: "Authentication"
 
 ***
 
-Once you have configured a Service Principal as described in this guide, you should follow the [Configuring a Service Principal for managing EntraID](../service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects.
+Once you have configured a Service Principal as described in this guide, you should follow the [Configuring a Service Principal for managing EntraID](service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects.
 
 ***
 
@@ -77,7 +77,7 @@ export ARM_SUBSCRIPTION_ID="20000000-0000-0000-0000-000000000000"
 
 At this point running either `terraform plan` or `terraform apply` should allow Terraform to authenticate using the Client Secret.
 
-Next you should follow the [Configuring a Service Principal for managing Microsoft EntraID](../service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects such as users and groups.
+Next you should follow the [Configuring a Service Principal for managing Microsoft EntraID](service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects such as users and groups.
 
 ## Provider Block
 
@@ -105,8 +105,8 @@ provider "microsoft365wp" {
 }
 ```
 
-More information on [the fields supported in the Provider block can be found here](../../index.md#argument-reference).
+More information on [the fields supported in the Provider block can be found here](../index.md#argument-reference).
 
 At this point running either `terraform plan` or `terraform apply` should allow Terraform to authenticate using the Client Secret.
 
-Next you should follow the [Configuring a Service Principal for managing Microsoft EntraID](../service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects such as users and groups.
+Next you should follow the [Configuring a Service Principal for managing Microsoft EntraID](service-principal-configuration.md) guide to grant the Service Principal necessary permissions to create and modify Microsoft EntraID objects such as users and groups.
