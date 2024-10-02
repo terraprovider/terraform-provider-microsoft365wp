@@ -20,7 +20,7 @@ subcategory: "Licensing"
 *   In the PDF invoice you will receive from Microsoft, all TerraProvider fees are lumped into an item called "SaaS". The related Publisher is "glueckkanja".\
 
 
-    <figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/.mdassets/image.png" alt=""><figcaption></figcaption></figure>
 
 -> For a more detailed cost breakdown of your base and additional user fees, please refer to the invoice in your Azure portal.
 
@@ -66,7 +66,7 @@ If you decide to disable **Recurring billing**, your subscription will not renew
 *   If you would like to (irreversibly) cancel your subscription, navigate to your **RADIUSaaS subscription** in the [Azure SaaS portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceBlade/resourceType/Microsoft.SaaS%2Fresources) and click **Cancel subscription**.\
 
 
-    <figure><img src="../../.gitbook/assets/MASTER copy (2).jpg" alt=""><figcaption></figcaption></figure>
+    <figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/.mdassets/MASTER copy (2).jpg" alt=""><figcaption></figcaption></figure>
 * If you cancel within the grace period, the license will be revoked immediately.
 * If you cancel after the grace period, the license will remain active until the end of the current subscription cycle.
 
@@ -87,26 +87,26 @@ To  get started with your TerraProvider subscription, follow below steps:
 *   Click **Subscribe**.\
 
 
-    <figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/.mdassets/image (1).png" alt=""><figcaption></figcaption></figure>
 * Create or select the **Resource group** you would like to deploy the subscription to.
 * Assign a descriptive **Name** to later identify your subscription.
 * We recommend to keep **Recurring billing** **On** so that you do not have to worry about an automatic termination of your subscription.
 *   Click **Review + subscribe** and then **Subscribe** to deploy the **SaaS** resource to your **Resource group**.\
 
 
-    <figure><img src="../../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/.mdassets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 -> The random order of **Base Fees** und **Additional Users** under the **Price** information is attributed to limitations of the Azure Marketplace. Later during the the enrolment process, we will provide you with transparent information on the expected licensing fees.
 
 *   Once the deployment is complete, please navigate to our platform to complete the checkout. Therefore click **Configure account now**.\
 
 
-    <figure><img src="../../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/.mdassets/image (3).png" alt=""><figcaption></figcaption></figure>
 * After authenticating on our platform using your Microsoft credentials, you will be prompted for additional information, such as the desired total **User** amount and a **Technical contact**.
 
 -> The **Technical contact** must have a mailbox connected to it, so we are able to notify you in case there are relevant issues with TerraProvider.
 
-<figure><img src="../../.gitbook/assets/Screenshot_2024-09-13_at_15_25_38.jpg" alt=""><figcaption></figcaption></figure>
+<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/.mdassets/Screenshot_2024-09-13_at_15_25_38.jpg" alt=""><figcaption></figcaption></figure>
 
 * Based on the amount of users provided, we will charge the relevant base fee for your user segment as well as additional users, in case you require more than the included amount in your base fee. **The platform automatically selects the best price / tier**.
 * The platform will show you the licensing fees you have to expect under **Cost Projection**.
