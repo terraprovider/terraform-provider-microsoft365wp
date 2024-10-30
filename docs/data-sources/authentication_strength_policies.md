@@ -62,5 +62,3 @@ Read-Only:
 
 - `created_date_time` (String)
 - `display_name` (String)
-
-

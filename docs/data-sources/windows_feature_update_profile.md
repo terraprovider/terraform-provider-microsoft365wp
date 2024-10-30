@@ -72,7 +72,7 @@ Read-Only:
 - `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-allLicensedUsersAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
 - `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusionGroupAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The Id of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include.
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.)
 - `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
@@ -88,7 +88,7 @@ Read-Only:
 
 Read-Only:
 
-- `group_id` (String) The group Id that is the target of the assignment.
+- `group_id` (String) AAD Group Id.
 
 
 <a id="nestedatt--assignments--target--group"></a>
@@ -96,7 +96,7 @@ Read-Only:
 
 Read-Only:
 
-- `group_id` (String) The group Id that is the target of the assignment.
+- `group_id` (String) AAD Group Id.
 
 
 
@@ -109,5 +109,3 @@ Read-Only:
 - `offer_end_date_time_in_utc` (String) The feature update's ending  of release date and time to be set, update, and displayed for a feature Update profile for example: 2020-06-09T10:00:00Z.
 - `offer_interval_in_days` (Number) The number of day(s) between each set of offers to be set, updated, and displayed for a feature update profile, for example: if OfferStartDateTimeInUTC is 2020-06-09T10:00:00Z, and OfferIntervalInDays is 1, then the next two sets of offers will be made consecutively on 2020-06-10T10:00:00Z (next day at the same specified time) and 2020-06-11T10:00:00Z (next next day at the same specified time) with 1 day in between each set of offers.
 - `offer_start_date_time_in_utc` (String) The feature update's starting date and time to be set, update, and displayed for a feature Update profile for example: 2020-06-09T10:00:00Z.
-
-

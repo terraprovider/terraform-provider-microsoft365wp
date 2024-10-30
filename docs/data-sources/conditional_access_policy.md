@@ -189,20 +189,20 @@ Read-Only:
 - `guest_or_external_user_types` (String) ; possible values are: `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue`
 
 <a id="nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants"></a>
-### Nested Schema for `conditions.users.exclude_guests_or_external_users.guest_or_external_user_types`
+### Nested Schema for `conditions.users.exclude_guests_or_external_users.external_tenants`
 
 Read-Only:
 
-- `all` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAllExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--guest_or_external_user_types--all))
-- `enumerated` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessEnumeratedExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--guest_or_external_user_types--enumerated))
+- `all` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAllExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--all))
+- `enumerated` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessEnumeratedExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--enumerated))
 - `membership_kind` (String) ; possible values are: `all`, `enumerated`, `unknownFutureValue`
 
-<a id="nestedatt--conditions--users--exclude_guests_or_external_users--guest_or_external_user_types--all"></a>
-### Nested Schema for `conditions.users.exclude_guests_or_external_users.guest_or_external_user_types.all`
+<a id="nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--all"></a>
+### Nested Schema for `conditions.users.exclude_guests_or_external_users.external_tenants.all`
 
 
-<a id="nestedatt--conditions--users--exclude_guests_or_external_users--guest_or_external_user_types--enumerated"></a>
-### Nested Schema for `conditions.users.exclude_guests_or_external_users.guest_or_external_user_types.enumerated`
+<a id="nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--enumerated"></a>
+### Nested Schema for `conditions.users.exclude_guests_or_external_users.external_tenants.enumerated`
 
 Read-Only:
 
@@ -220,20 +220,20 @@ Read-Only:
 - `guest_or_external_user_types` (String) ; possible values are: `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue`
 
 <a id="nestedatt--conditions--users--include_guests_or_external_users--external_tenants"></a>
-### Nested Schema for `conditions.users.include_guests_or_external_users.guest_or_external_user_types`
+### Nested Schema for `conditions.users.include_guests_or_external_users.external_tenants`
 
 Read-Only:
 
-- `all` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAllExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--guest_or_external_user_types--all))
-- `enumerated` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessEnumeratedExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--guest_or_external_user_types--enumerated))
+- `all` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessAllExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--external_tenants--all))
+- `enumerated` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/conditionalAccessEnumeratedExternalTenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--external_tenants--enumerated))
 - `membership_kind` (String) ; possible values are: `all`, `enumerated`, `unknownFutureValue`
 
-<a id="nestedatt--conditions--users--include_guests_or_external_users--guest_or_external_user_types--all"></a>
-### Nested Schema for `conditions.users.include_guests_or_external_users.guest_or_external_user_types.all`
+<a id="nestedatt--conditions--users--include_guests_or_external_users--external_tenants--all"></a>
+### Nested Schema for `conditions.users.include_guests_or_external_users.external_tenants.all`
 
 
-<a id="nestedatt--conditions--users--include_guests_or_external_users--guest_or_external_user_types--enumerated"></a>
-### Nested Schema for `conditions.users.include_guests_or_external_users.guest_or_external_user_types.enumerated`
+<a id="nestedatt--conditions--users--include_guests_or_external_users--external_tenants--enumerated"></a>
+### Nested Schema for `conditions.users.include_guests_or_external_users.external_tenants.enumerated`
 
 Read-Only:
 
@@ -336,5 +336,3 @@ Read-Only:
 - `is_enabled` (Boolean)
 - `type` (String) ; possible values are: `days`, `hours`
 - `value` (Number)
-
-

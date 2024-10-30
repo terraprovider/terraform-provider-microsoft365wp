@@ -99,5 +99,3 @@ Read-Only:
 - `privacy_settings_hidden` (Boolean) When TRUE, privacy settings is hidden to the end user during OOBE. When FALSE, privacy settings is shown to the end user during OOBE. Default value is FALSE.
 - `user_type` (String) The type of user. Possible values are administrator and standard. Default value is administrator. Yes No
  / ; possible values are: `administrator` (Indicates that the user has administrator privileges.), `standard` (Indicates that the user is a low-rights user without administrator privileges.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
-
-

@@ -1,5 +1,14 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+
+## 0.14.0 (2024-10-30)
+
+### added (2 changes)
+
+- Update MS Graph metadata
+- Update dependencies
+
+
 ## 0.13.0 (2024-09-11)
 
 ### added (4 changes)

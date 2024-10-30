@@ -74,5 +74,3 @@ Read-Only:
 
 <a id="nestedatt--managed_device_mobile_app_configurations--ios"></a>
 ### Nested Schema for `managed_device_mobile_app_configurations.ios`
-
-

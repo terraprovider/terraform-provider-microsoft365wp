@@ -295,7 +295,7 @@ Optional:
 - `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-allLicensedUsersAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
 - `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusionGroupAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The Id of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include.
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.)
 - `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
@@ -311,7 +311,7 @@ Optional:
 
 Required:
 
-- `group_id` (String) The group Id that is the target of the assignment.
+- `group_id` (String) AAD Group Id.
 
 
 <a id="nestedatt--assignments--target--group"></a>
@@ -319,7 +319,7 @@ Required:
 
 Required:
 
-- `group_id` (String) The group Id that is the target of the assignment.
+- `group_id` (String) AAD Group Id.
 
 
 
@@ -433,6 +433,7 @@ Optional:
 - `tpm_required` (Boolean) Require Trusted Platform Module(TPM) to be present.
 - `valid_operating_system_build_ranges` (Attributes Set) The valid operating system build ranges on Windows devices. This collection can contain a maximum of 10000 elements. / Operating System version range. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-operatingSystemVersionRange?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10--valid_operating_system_build_ranges))
 - `virtualization_based_security_enabled` (Boolean) When TRUE, indicates that Virtualization-based Security is required to be reported as healthy by Microsoft Azure Attestion. When FALSE, indicates that Virtualization-based Security is not required to be reported as healthy. Default value is FALSE.
+- `wsl_distributions` (Attributes Set) (see [below for nested schema](#nestedatt--windows10--wsl_distributions))
 
 <a id="nestedatt--windows10--device_compliance_policy_script"></a>
 ### Nested Schema for `windows10.device_compliance_policy_script`
@@ -453,3 +454,11 @@ Required:
 - `lowest_version` (String) The lowest inclusive version that this range contains.
 
 
+<a id="nestedatt--windows10--wsl_distributions"></a>
+### Nested Schema for `windows10.wsl_distributions`
+
+Optional:
+
+- `distribution` (String) Linux distribution like Debian, Fedora, Ubuntu etc.
+- `maximum_o_s_version` (String) Maximum supported operating system version of the linux version.
+- `minimum_o_s_version` (String) Minimum supported operating system version of the linux version.

@@ -59,5 +59,3 @@ Read-Only:
 - `locale` (String) The Locale for which this message is destined.
 - `message_template` (String) The Message Template content.
 - `subject` (String) The Message Template Subject.
-
-

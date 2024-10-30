@@ -50,7 +50,7 @@ output "microsoft365wp_cloud_pc_user_setting" {
 - `id` (String) The ID of this resource.
 - `last_modified_date_time` (String)
 - `local_admin_enabled` (Boolean)
-- `notification_setting` (Attributes) (see [below for nested schema](#nestedatt--notification_setting))
+- `notification_setting` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcNotificationSetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--notification_setting))
 - `reset_enabled` (Boolean)
 - `restore_point_setting` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcRestorePointSetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--restore_point_setting))
 
@@ -88,6 +88,7 @@ Read-Only:
 
 - `cross_region_disaster_recovery_enabled` (Boolean)
 - `disaster_recovery_network_setting` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDisasterRecoveryNetworkSetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--cross_region_disaster_recovery_setting--disaster_recovery_network_setting))
+- `disaster_recovery_type` (String) ; possible values are: `notConfigured`, `crossRegion`, `premium`, `unknownFutureValue`
 - `maintain_cross_region_restore_point_enabled` (Boolean)
 
 <a id="nestedatt--cross_region_disaster_recovery_setting--disaster_recovery_network_setting"></a>
@@ -133,5 +134,3 @@ Read-Only:
 - `frequency_in_hours` (Number)
 - `frequency_type` (String) ; possible values are: `default`, `fourHours`, `sixHours`, `twelveHours`, `sixteenHours`, `twentyFourHours`, `unknownFutureValue`
 - `user_restore_enabled` (Boolean)
-
-

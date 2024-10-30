@@ -104,6 +104,13 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 					},
 					MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcDisasterRecoveryNetworkSetting?view=graph-rest-beta",
 				},
+				"disaster_recovery_type": schema.StringAttribute{
+					Optional: true,
+					Validators: []validator.String{
+						stringvalidator.OneOf("notConfigured", "crossRegion", "premium", "unknownFutureValue"),
+					},
+					MarkdownDescription: "; possible values are: `notConfigured`, `crossRegion`, `premium`, `unknownFutureValue`",
+				},
 				"maintain_cross_region_restore_point_enabled": schema.BoolAttribute{
 					Optional: true,
 				},
@@ -129,8 +136,9 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 					Optional: true,
 				},
 			},
-			PlanModifiers: []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
-			Computed:      true,
+			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+			Computed:            true,
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcNotificationSetting?view=graph-rest-beta",
 		},
 		"reset_enabled": schema.BoolAttribute{
 			Optional:      true,

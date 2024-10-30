@@ -430,5 +430,3 @@ Optional:
 - `is_enabled` (Boolean)
 - `type` (String) ; possible values are: `days`, `hours`
 - `value` (Number)
-
-

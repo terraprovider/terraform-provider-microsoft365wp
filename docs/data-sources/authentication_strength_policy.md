@@ -51,5 +51,3 @@ output "microsoft365wp_authentication_strength_policy" {
 - `modified_date_time` (String)
 - `policy_type` (String) ; possible values are: `builtIn`, `custom`, `unknownFutureValue`
 - `requirements_satisfied` (String) ; possible values are: `none`, `mfa`, `unknownFutureValue`
-
-

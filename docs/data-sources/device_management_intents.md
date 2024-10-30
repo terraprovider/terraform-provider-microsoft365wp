@@ -63,5 +63,3 @@ Read-Only:
 - `display_name` (String) The user given display name
 - `last_modified_date_time` (String) When the intent was last modified
 - `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
-
-

@@ -63,5 +63,3 @@ Read-Only:
 - `display_name` (String) Display name for the Notification Message Template.
 - `last_modified_date_time` (String) DateTime the object was last modified.
 - `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
-
-

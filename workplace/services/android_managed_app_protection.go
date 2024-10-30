@@ -149,23 +149,29 @@ var androidManagedAppProtectionResourceSchema = schema.Schema{
 			MarkdownDescription: "Data can be transferred from/to these classes of apps; possible values are: `allApps` (All apps.), `managedApps` (Managed apps.), `none` (No apps.)",
 		},
 		"app_action_if_device_compliance_required": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("block")},
 			Computed:            true,
-			MarkdownDescription: "An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			MarkdownDescription: "An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_maximum_pin_retries_exceeded": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("block")},
 			Computed:            true,
-			MarkdownDescription: "An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			MarkdownDescription: "An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_unable_to_authenticate_user": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
-			MarkdownDescription: "An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
+			MarkdownDescription: "An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"block_data_ingestion_into_organization_documents": schema.BoolAttribute{
 			Optional:      true,
@@ -277,11 +283,13 @@ var androidManagedAppProtectionResourceSchema = schema.Schema{
 			MarkdownDescription: "Determines the conflict resolution strategy, when more than one Mobile Threat Defense provider is enabled; possible values are: `defenderOverThirdPartyPartner` (Indicates use of Microsoft Defender Endpoint over 3rd party MTD connectors), `thirdPartyPartnerOverDefender` (Indicates use of a 3rd party MTD connector over Microsoft Defender Endpoint), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)",
 		},
 		"mobile_threat_defense_remediation_action": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("block")},
 			Computed:            true,
-			MarkdownDescription: "An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			MarkdownDescription: "An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"notification_restriction": schema.StringAttribute{
 			Optional: true,
@@ -399,64 +407,84 @@ var androidManagedAppProtectionResourceSchema = schema.Schema{
 			MarkdownDescription: "List of device models allowed, as a string, for the managed app to work.",
 		},
 		"app_action_if_account_is_clocked_out": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
-			MarkdownDescription: "Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time). / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
+			MarkdownDescription: "Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time). / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_android_device_manufacturer_not_allowed": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("block")},
 			Computed:            true,
-			MarkdownDescription: "Defines a managed app behavior, either block or wipe, if the specified device manufacturer is not allowed. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			MarkdownDescription: "Defines a managed app behavior, either block or wipe, if the specified device manufacturer is not allowed. / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_android_device_model_not_allowed": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("block")},
 			Computed:            true,
-			MarkdownDescription: "Defines a managed app behavior, either block or wipe, if the specified device model is not allowed. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			MarkdownDescription: "Defines a managed app behavior, either block or wipe, if the specified device model is not allowed. / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_android_safety_net_apps_verification_failed": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("block")},
 			Computed:            true,
-			MarkdownDescription: "Defines a managed app behavior, either warn or block, if the specified Android App Verification requirement fails. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			MarkdownDescription: "Defines a managed app behavior, either warn or block, if the specified Android App Verification requirement fails. / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_android_safety_net_device_attestation_failed": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("block")},
 			Computed:            true,
-			MarkdownDescription: "Defines a managed app behavior, either warn or block, if the specified Android SafetyNet Attestation requirement fails. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			MarkdownDescription: "Defines a managed app behavior, either warn or block, if the specified Android SafetyNet Attestation requirement fails. / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_device_lock_not_set": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("block")},
 			Computed:            true,
-			MarkdownDescription: "Defines a managed app behavior, either warn, block or wipe, if the screen lock is required on android device but is not set. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			MarkdownDescription: "Defines a managed app behavior, either warn, block or wipe, if the screen lock is required on android device but is not set. / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_device_passcode_complexity_less_than_high": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
-			MarkdownDescription: "If the device does not have a passcode of high complexity or higher, trigger the stored action. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
+			MarkdownDescription: "If the device does not have a passcode of high complexity or higher, trigger the stored action. / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_device_passcode_complexity_less_than_low": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
-			MarkdownDescription: "If the device does not have a passcode of low complexity or higher, trigger the stored action. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
+			MarkdownDescription: "If the device does not have a passcode of low complexity or higher, trigger the stored action. / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_device_passcode_complexity_less_than_medium": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
-			MarkdownDescription: "If the device does not have a passcode of medium complexity or higher, trigger the stored action. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
+			MarkdownDescription: "If the device does not have a passcode of medium complexity or higher, trigger the stored action. / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_samsung_knox_attestation_required": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("block", "wipe", "warn")},
-			MarkdownDescription: "Defines the behavior of a managed app when Samsung Knox Attestation is required. Possible values are null, warn, block & wipe. If the admin does not set this action, the default is null, which indicates this setting is not configured. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)",
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
+			MarkdownDescription: "Defines the behavior of a managed app when Samsung Knox Attestation is required. Possible values are null, warn, block & wipe. If the admin does not set this action, the default is null, which indicates this setting is not configured. / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"approved_keyboards": schema.SetNestedAttribute{
 			Optional: true,

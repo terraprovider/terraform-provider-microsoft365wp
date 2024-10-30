@@ -46,7 +46,7 @@ output "microsoft365wp_cloud_pc_provisioning_policy" {
 - `alternate_resource_url` (String)
 - `assignments` (Attributes Set) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcProvisioningPolicyAssignment?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments))
 - `autopatch` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcProvisioningPolicyAutopatch?view=graph-rest-beta (see [below for nested schema](#nestedatt--autopatch))
-- `autopilot_configuration` (Attributes) (see [below for nested schema](#nestedatt--autopilot_configuration))
+- `autopilot_configuration` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/cloudPcAutopilotConfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--autopilot_configuration))
 - `cloud_pc_group_display_name` (String)
 - `cloud_pc_naming_template` (String)
 - `description` (String)
@@ -137,5 +137,3 @@ Read-Only:
 Read-Only:
 
 - `locale` (String)
-
-

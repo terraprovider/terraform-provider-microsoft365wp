@@ -99,5 +99,3 @@ Read-Only:
 
 <a id="nestedatt--device_compliance_policies--windows10"></a>
 ### Nested Schema for `device_compliance_policies.windows10`
-
-

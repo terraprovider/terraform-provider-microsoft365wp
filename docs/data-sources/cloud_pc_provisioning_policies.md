@@ -54,5 +54,3 @@ Required:
 Read-Only:
 
 - `display_name` (String)
-
-

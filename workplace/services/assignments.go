@@ -40,7 +40,7 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 			Description:         `deviceAndAppManagementAssignmentFilterId`, // custom MS Graph attribute name
-			MarkdownDescription: `The Id of the filter for the target assignment.`,
+			MarkdownDescription: "The Id of the filter for the target assignment.",
 		},
 		"filter_type": schema.StringAttribute{
 			Optional: true,
@@ -50,7 +50,7 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("none")},
 			Computed:            true,
 			Description:         `deviceAndAppManagementAssignmentFilterType`, // custom MS Graph attribute name
-			MarkdownDescription: `The type of filter of the target assignment i.e. Exclude or Include.`,
+			MarkdownDescription: "The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.)",
 		},
 		"all_devices": generic.OdataDerivedTypeNestedAttributeRs{
 			DerivedType: "#microsoft.graph.allDevicesAssignmentTarget",
@@ -61,7 +61,7 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 				Validators: []validator.Object{
 					deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator,
 				},
-				MarkdownDescription: `Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-allDevicesAssignmentTarget?view=graph-rest-beta`,
+				MarkdownDescription: "Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-allDevicesAssignmentTarget?view=graph-rest-beta",
 			},
 		},
 		"all_licensed_users": generic.OdataDerivedTypeNestedAttributeRs{
@@ -73,7 +73,7 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 				Validators: []validator.Object{
 					deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator,
 				},
-				MarkdownDescription: `Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-allLicensedUsersAssignmentTarget?view=graph-rest-beta`,
+				MarkdownDescription: "Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-allLicensedUsersAssignmentTarget?view=graph-rest-beta",
 			},
 		},
 		"exclusion_group": generic.OdataDerivedTypeNestedAttributeRs{
@@ -83,13 +83,13 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{ // exclusionGroupAssignmentTarget
 					"group_id": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: `The group Id that is the target of the assignment.`,
+						MarkdownDescription: "AAD Group Id.",
 					},
 				},
 				Validators: []validator.Object{
 					deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator,
 				},
-				MarkdownDescription: `Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusionGroupAssignmentTarget?view=graph-rest-beta`,
+				MarkdownDescription: "Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusionGroupAssignmentTarget?view=graph-rest-beta",
 			},
 		},
 		"group": generic.OdataDerivedTypeNestedAttributeRs{
@@ -99,17 +99,17 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{ // groupAssignmentTarget
 					"group_id": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: `The group Id that is the target of the assignment.`,
+						MarkdownDescription: "AAD Group Id.",
 					},
 				},
 				Validators: []validator.Object{
 					deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator,
 				},
-				MarkdownDescription: `Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupAssignmentTarget?view=graph-rest-beta`,
+				MarkdownDescription: "Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupAssignmentTarget?view=graph-rest-beta",
 			},
 		},
 	},
-	MarkdownDescription: `Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceAndAppManagementAssignmentTarget?view=graph-rest-beta`,
+	MarkdownDescription: "Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceAndAppManagementAssignmentTarget?view=graph-rest-beta",
 }
 
 var deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator = objectvalidator.ExactlyOneOf(
@@ -135,9 +135,10 @@ func GetAssignmentChildResource(parentResource *generic.GenericResource, singleI
 			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 		},
 		"source": schema.StringAttribute{
-			Computed:      true,
-			Validators:    []validator.String{stringvalidator.OneOf("direct", "policySets")},
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			Validators:          []validator.String{stringvalidator.OneOf("direct", "policySets")},
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "Represents source of assignment; possible values are: `direct` (Direct indicates a direct assignment.), `policySets` (PolicySets indicates assignment was made via PolicySet assignment.)",
 		},
 		"source_id": schema.StringAttribute{
 			Computed:      true,

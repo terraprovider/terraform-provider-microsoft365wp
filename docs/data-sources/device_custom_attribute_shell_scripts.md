@@ -64,5 +64,3 @@ Read-Only:
 - `display_name` (String) Name of the device management script.
 - `last_modified_date_time` (String)
 - `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for this PowerShellScript instance.
-
-

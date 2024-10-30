@@ -82,5 +82,3 @@ Read-Only:
 
 <a id="nestedatt--device_enrollment_configurations--windows_hello_for_business"></a>
 ### Nested Schema for `device_enrollment_configurations.windows_hello_for_business`
-
-

@@ -79,5 +79,3 @@ resource "microsoft365wp_device_and_app_management_assignment_filter" "apps_ios"
 - `created_date_time` (String) The creation time of the assignment filter. The value cannot be modified and is automatically populated during new assignment filter process. The timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 would look like this: '2014-01-01T00:00:00Z'.
 - `id` (String) The ID of this resource.
 - `last_modified_date_time` (String) Last modified time of the Assignment Filter. The timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 would look like this: '2014-01-01T00:00:00Z'
-
-

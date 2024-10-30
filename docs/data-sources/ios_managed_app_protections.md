@@ -65,5 +65,3 @@ Read-Only:
 - `last_modified_date_time` (String)
 - `role_scope_tag_ids` (Set of String)
 - `version` (String)
-
-

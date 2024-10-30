@@ -753,7 +753,7 @@ Optional:
 - `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-allLicensedUsersAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
 - `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusionGroupAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The Id of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include.
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.)
 - `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
@@ -769,7 +769,7 @@ Optional:
 
 Required:
 
-- `group_id` (String) The group Id that is the target of the assignment.
+- `group_id` (String) AAD Group Id.
 
 
 <a id="nestedatt--assignments--target--group"></a>
@@ -777,7 +777,7 @@ Required:
 
 Required:
 
-- `group_id` (String) The group Id that is the target of the assignment.
+- `group_id` (String) AAD Group Id.
 
 
 
@@ -891,7 +891,7 @@ Optional:
 - `website_list` (Attributes Set) URL bookmarks which will be installed into built-in browser and user is only allowed to access websites through bookmarks. This collection can contain a maximum of 500 elements. / iOS URL bookmark / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosBookmark?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--content_filter_settings--specific_websites_access--website_list))
 
 <a id="nestedatt--ios_device_features--content_filter_settings--specific_websites_access--specific_websites_only"></a>
-### Nested Schema for `ios_device_features.content_filter_settings.specific_websites_access.website_list`
+### Nested Schema for `ios_device_features.content_filter_settings.specific_websites_access.specific_websites_only`
 
 Optional:
 
@@ -957,7 +957,7 @@ Optional:
 - `enable_shared_device_mode` (Boolean) Enables or disables shared device mode.
 
 <a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations"></a>
-### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.enable_shared_device_mode`
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.configurations`
 
 Required:
 
@@ -965,37 +965,37 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--boolean))
-- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--integer))
-- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--real))
-- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--string))
+- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations--boolean))
+- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations--integer))
+- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations--real))
+- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations--string))
 
-<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--boolean"></a>
-### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.enable_shared_device_mode.boolean`
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations--boolean"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.configurations.boolean`
 
 Required:
 
 - `value` (Boolean) The Boolean value of the key-value pair.
 
 
-<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--integer"></a>
-### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.enable_shared_device_mode.integer`
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations--integer"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.configurations.integer`
 
 Required:
 
 - `value` (Number) The integer value of the key-value pair.
 
 
-<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--real"></a>
-### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.enable_shared_device_mode.real`
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations--real"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.configurations.real`
 
 Required:
 
 - `value` (Number) The real (floating-point) value of the key-value pair.
 
 
-<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--enable_shared_device_mode--string"></a>
-### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.enable_shared_device_mode.string`
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--azure_ad--configurations--string"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.azure_ad.configurations.string`
 
 Required:
 
@@ -1019,7 +1019,7 @@ Optional:
 - `domains` (Set of String) Gets or sets a list of hosts or domain names for which the app extension performs SSO.
 
 <a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations"></a>
-### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.domains`
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.configurations`
 
 Required:
 
@@ -1027,37 +1027,37 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--boolean))
-- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--integer))
-- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--real))
-- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--string))
+- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations--boolean))
+- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations--integer))
+- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations--real))
+- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations--string))
 
-<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--boolean"></a>
-### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.domains.boolean`
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations--boolean"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.configurations.boolean`
 
 Required:
 
 - `value` (Boolean) The Boolean value of the key-value pair.
 
 
-<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--integer"></a>
-### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.domains.integer`
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations--integer"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.configurations.integer`
 
 Required:
 
 - `value` (Number) The integer value of the key-value pair.
 
 
-<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--real"></a>
-### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.domains.real`
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations--real"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.configurations.real`
 
 Required:
 
 - `value` (Number) The real (floating-point) value of the key-value pair.
 
 
-<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--domains--string"></a>
-### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.domains.string`
+<a id="nestedatt--ios_device_features--ios_single_sign_on_extension--credential--configurations--string"></a>
+### Nested Schema for `ios_device_features.ios_single_sign_on_extension.credential.configurations.string`
 
 Required:
 
@@ -2012,7 +2012,7 @@ Optional:
 - `enable_shared_device_mode` (Boolean) Enables or disables shared device mode.
 
 <a id="nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--configurations"></a>
-### Nested Schema for `macos_device_features.macos_single_sign_on_extension.azure_ad.enable_shared_device_mode`
+### Nested Schema for `macos_device_features.macos_single_sign_on_extension.azure_ad.configurations`
 
 Required:
 
@@ -2020,37 +2020,37 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--enable_shared_device_mode--boolean))
-- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--enable_shared_device_mode--integer))
-- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--enable_shared_device_mode--real))
-- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--enable_shared_device_mode--string))
+- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--configurations--boolean))
+- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--configurations--integer))
+- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--configurations--real))
+- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--configurations--string))
 
-<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--enable_shared_device_mode--boolean"></a>
-### Nested Schema for `macos_device_features.macos_single_sign_on_extension.azure_ad.enable_shared_device_mode.boolean`
+<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--configurations--boolean"></a>
+### Nested Schema for `macos_device_features.macos_single_sign_on_extension.azure_ad.configurations.boolean`
 
 Required:
 
 - `value` (Boolean) The Boolean value of the key-value pair.
 
 
-<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--enable_shared_device_mode--integer"></a>
-### Nested Schema for `macos_device_features.macos_single_sign_on_extension.azure_ad.enable_shared_device_mode.integer`
+<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--configurations--integer"></a>
+### Nested Schema for `macos_device_features.macos_single_sign_on_extension.azure_ad.configurations.integer`
 
 Required:
 
 - `value` (Number) The integer value of the key-value pair.
 
 
-<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--enable_shared_device_mode--real"></a>
-### Nested Schema for `macos_device_features.macos_single_sign_on_extension.azure_ad.enable_shared_device_mode.real`
+<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--configurations--real"></a>
+### Nested Schema for `macos_device_features.macos_single_sign_on_extension.azure_ad.configurations.real`
 
 Required:
 
 - `value` (Number) The real (floating-point) value of the key-value pair.
 
 
-<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--enable_shared_device_mode--string"></a>
-### Nested Schema for `macos_device_features.macos_single_sign_on_extension.azure_ad.enable_shared_device_mode.string`
+<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--azure_ad--configurations--string"></a>
+### Nested Schema for `macos_device_features.macos_single_sign_on_extension.azure_ad.configurations.string`
 
 Required:
 
@@ -2074,7 +2074,7 @@ Optional:
 - `domains` (Set of String) Gets or sets a list of hosts or domain names for which the app extension performs SSO.
 
 <a id="nestedatt--macos_device_features--macos_single_sign_on_extension--credential--configurations"></a>
-### Nested Schema for `macos_device_features.macos_single_sign_on_extension.credential.domains`
+### Nested Schema for `macos_device_features.macos_single_sign_on_extension.credential.configurations`
 
 Required:
 
@@ -2082,37 +2082,37 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--credential--domains--boolean))
-- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--credential--domains--integer))
-- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--credential--domains--real))
-- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--credential--domains--string))
+- `boolean` (Attributes) A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--credential--configurations--boolean))
+- `integer` (Attributes) A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--credential--configurations--integer))
+- `real` (Attributes) A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--credential--configurations--real))
+- `string` (Attributes) A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta (see [below for nested schema](#nestedatt--macos_device_features--macos_single_sign_on_extension--credential--configurations--string))
 
-<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--credential--domains--boolean"></a>
-### Nested Schema for `macos_device_features.macos_single_sign_on_extension.credential.domains.boolean`
+<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--credential--configurations--boolean"></a>
+### Nested Schema for `macos_device_features.macos_single_sign_on_extension.credential.configurations.boolean`
 
 Required:
 
 - `value` (Boolean) The Boolean value of the key-value pair.
 
 
-<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--credential--domains--integer"></a>
-### Nested Schema for `macos_device_features.macos_single_sign_on_extension.credential.domains.integer`
+<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--credential--configurations--integer"></a>
+### Nested Schema for `macos_device_features.macos_single_sign_on_extension.credential.configurations.integer`
 
 Required:
 
 - `value` (Number) The integer value of the key-value pair.
 
 
-<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--credential--domains--real"></a>
-### Nested Schema for `macos_device_features.macos_single_sign_on_extension.credential.domains.real`
+<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--credential--configurations--real"></a>
+### Nested Schema for `macos_device_features.macos_single_sign_on_extension.credential.configurations.real`
 
 Required:
 
 - `value` (Number) The real (floating-point) value of the key-value pair.
 
 
-<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--credential--domains--string"></a>
-### Nested Schema for `macos_device_features.macos_single_sign_on_extension.credential.domains.string`
+<a id="nestedatt--macos_device_features--macos_single_sign_on_extension--credential--configurations--string"></a>
+### Nested Schema for `macos_device_features.macos_single_sign_on_extension.credential.configurations.string`
 
 Required:
 
@@ -2366,5 +2366,3 @@ Optional:
 
 - `day` (String) Scheduled Install Day in week / Possible values for a weekly schedule; possible values are: `userDefined` (User Defined, default value, no intent.), `everyday` (Everyday.), `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.), `noScheduledScan` (No Scheduled Scan)
 - `time` (String) Scheduled Install Time during day
-
-

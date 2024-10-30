@@ -118,5 +118,3 @@ Read-Only:
 
 <a id="nestedatt--mobile_apps--windows_winget"></a>
 ### Nested Schema for `mobile_apps.windows_winget`
-
-

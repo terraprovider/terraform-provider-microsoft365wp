@@ -83,5 +83,3 @@ Required:
 Optional:
 
 - `is_default` (Boolean) Flag to indicate whether or not this is the default locale for language fallback. This flag can only be set. To unset, set this property to true on another Localized Notification Message.
-
-

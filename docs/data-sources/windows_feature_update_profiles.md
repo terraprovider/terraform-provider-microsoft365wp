@@ -57,5 +57,3 @@ Read-Only:
 - `display_name` (String) The display name of the profile.
 - `last_modified_date_time` (String) The date time that the profile was last modified.
 - `role_scope_tag_ids` (Set of String) List of Scope Tags for this Feature Update entity.
-
-

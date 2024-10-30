@@ -57,5 +57,3 @@ Read-Only:
 - `display_name` (String) The name of the Assignment Filter.
 - `last_modified_date_time` (String) Last modified time of the Assignment Filter. The timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 would look like this: '2014-01-01T00:00:00Z'
 - `role_scope_tags` (Set of String) Indicates role scope tags assigned for the assignment filter.
-
-

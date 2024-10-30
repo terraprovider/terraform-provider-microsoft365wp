@@ -64,5 +64,3 @@ Read-Only:
 - `last_modified_date_time` (String) Policy last modification date and time
 - `name` (String) Policy name
 - `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
-
-

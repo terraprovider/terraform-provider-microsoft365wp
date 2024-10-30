@@ -139,5 +139,3 @@ Read-Only:
 
 <a id="nestedatt--device_configurations--windows_update_for_business"></a>
 ### Nested Schema for `device_configurations.windows_update_for_business`
-
-

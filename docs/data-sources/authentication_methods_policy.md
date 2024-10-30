@@ -167,16 +167,16 @@ Read-Only:
 - `display_location_information_required_state` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/authenticationMethodFeatureConfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state))
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state"></a>
-### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_location_information_required_state`
+### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.companion_app_allowed_state`
 
 Read-Only:
 
-- `exclude_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target))
-- `include_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target))
+- `exclude_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state--exclude_target))
+- `include_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state--include_target))
 - `state` (String) ; possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`
 
-<a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target"></a>
-### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_location_information_required_state.exclude_target`
+<a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state--exclude_target"></a>
+### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.companion_app_allowed_state.exclude_target`
 
 Read-Only:
 
@@ -184,8 +184,8 @@ Read-Only:
 - `target_type` (String) ; possible values are: `group`, `administrativeUnit`, `role`, `unknownFutureValue`
 
 
-<a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target"></a>
-### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_location_information_required_state.include_target`
+<a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state--include_target"></a>
+### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.companion_app_allowed_state.include_target`
 
 Read-Only:
 
@@ -195,16 +195,16 @@ Read-Only:
 
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state"></a>
-### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_location_information_required_state`
+### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_app_information_required_state`
 
 Read-Only:
 
-- `exclude_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target))
-- `include_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target))
+- `exclude_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state--exclude_target))
+- `include_target` (Attributes) https://learn.microsoft.com/en-us/graph/api/resources/featureTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state--include_target))
 - `state` (String) ; possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`
 
-<a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target"></a>
-### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_location_information_required_state.exclude_target`
+<a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state--exclude_target"></a>
+### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_app_information_required_state.exclude_target`
 
 Read-Only:
 
@@ -212,8 +212,8 @@ Read-Only:
 - `target_type` (String) ; possible values are: `group`, `administrativeUnit`, `role`, `unknownFutureValue`
 
 
-<a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target"></a>
-### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_location_information_required_state.include_target`
+<a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state--include_target"></a>
+### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_app_information_required_state.include_target`
 
 Read-Only:
 
@@ -362,7 +362,7 @@ Read-Only:
 - `x509_certificate_default_required_affinity_level` (String) ; possible values are: `low`, `high`, `unknownFutureValue`
 
 <a id="nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration--rules"></a>
-### Nested Schema for `authentication_method_configurations.x509_certificate.authentication_mode_configuration.x509_certificate_default_required_affinity_level`
+### Nested Schema for `authentication_method_configurations.x509_certificate.authentication_mode_configuration.rules`
 
 Read-Only:
 
@@ -489,5 +489,3 @@ Read-Only:
 
 - `id` (String)
 - `target_type` (String) ; possible values are: `user`, `group`, `unknownFutureValue`
-
-

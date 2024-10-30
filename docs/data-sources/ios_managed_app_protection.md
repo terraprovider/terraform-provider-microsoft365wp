@@ -51,11 +51,11 @@ output "microsoft365wp_ios_managed_app_protection" {
 - `allowed_outbound_clipboard_sharing_exception_length` (Number)
 - `allowed_outbound_clipboard_sharing_level` (String) Represents the level to which the device's clipboard may be shared between apps; possible values are: `allApps` (Sharing is allowed between all apps, managed or not), `managedAppsWithPasteIn` (Sharing is allowed between all managed apps with paste in enabled), `managedApps` (Sharing is allowed between all managed apps), `blocked` (Sharing between apps is disabled)
 - `allowed_outbound_data_transfer_destinations` (String) Data can be transferred from/to these classes of apps; possible values are: `allApps` (All apps.), `managedApps` (Managed apps.), `none` (No apps.)
-- `app_action_if_account_is_clocked_out` (String) Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time). / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
-- `app_action_if_device_compliance_required` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
-- `app_action_if_ios_device_model_not_allowed` (String) Defines a managed app behavior, either block or wipe, if the specified device model is not allowed. / An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
-- `app_action_if_maximum_pin_retries_exceeded` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
-- `app_action_if_unable_to_authenticate_user` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `app_action_if_account_is_clocked_out` (String) Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time). / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)
+- `app_action_if_device_compliance_required` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)
+- `app_action_if_ios_device_model_not_allowed` (String) Defines a managed app behavior, either block or wipe, if the specified device model is not allowed. / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)
+- `app_action_if_maximum_pin_retries_exceeded` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)
+- `app_action_if_unable_to_authenticate_user` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)
 - `app_data_encryption_type` (String) Type of encryption which should be used for data in a managed app. / Represents the level to which app data is encrypted for managed apps; possible values are: `useDeviceSettings` (App data is encrypted based on the default settings on the device.), `afterDeviceRestart` (App data is encrypted when the device is restarted.), `whenDeviceLockedExceptOpenFiles` (App data associated with this policy is encrypted when the device is locked, except data in files that are open), `whenDeviceLocked` (App data associated with this policy is encrypted when the device is locked)
 - `app_group_type` (String) Public Apps selection: group or individual / Indicates a collection of apps to target which can be one of several pre-defined lists of apps or a manually selected list of apps; possible values are: `selectedPublicApps` (Target the collection of apps manually selected by the admin.), `allCoreMicrosoftApps` (Target the core set of Microsoft apps (Office, Edge, etc).), `allMicrosoftApps` (Target all apps with Microsoft as publisher.), `allApps` (Target all apps with an available assignment.)
 - `apps` (Attributes Set) List of apps to which the policy is deployed. / The identifier for the deployment an app. (see [below for nested schema](#nestedatt--apps))
@@ -102,7 +102,7 @@ output "microsoft365wp_ios_managed_app_protection" {
 - `minimum_wipe_os_version` (String)
 - `minimum_wipe_sdk_version` (String) Versions less than the specified version will block the managed app from accessing company data.
 - `mobile_threat_defense_partner_priority` (String) Determines the conflict resolution strategy, when more than one Mobile Threat Defense provider is enabled; possible values are: `defenderOverThirdPartyPartner` (Indicates use of Microsoft Defender Endpoint over 3rd party MTD connectors), `thirdPartyPartnerOverDefender` (Indicates use of a 3rd party MTD connector over Microsoft Defender Endpoint), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
-- `mobile_threat_defense_remediation_action` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (app and the corresponding company data to be blocked), `wipe` (app and the corresponding company data to be wiped), `warn` (app and the corresponding user to be warned)
+- `mobile_threat_defense_remediation_action` (String) An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)
 - `notification_restriction` (String) Restrict managed app notification; possible values are: `allow` (Share all notifications.), `blockOrganizationalData` (Do not share Orgnizational data in notifications.), `block` (Do not share notifications.)
 - `organizational_credentials_required` (Boolean)
 - `period_before_pin_reset` (String)
@@ -163,7 +163,7 @@ Read-Only:
 - `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-allLicensedUsersAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
 - `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusionGroupAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The Id of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include.
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.)
 - `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
@@ -179,7 +179,7 @@ Read-Only:
 
 Read-Only:
 
-- `group_id` (String) The group Id that is the target of the assignment.
+- `group_id` (String) AAD Group Id.
 
 
 <a id="nestedatt--assignments--target--group"></a>
@@ -187,7 +187,7 @@ Read-Only:
 
 Read-Only:
 
-- `group_id` (String) The group Id that is the target of the assignment.
+- `group_id` (String) AAD Group Id.
 
 
 
@@ -199,5 +199,3 @@ Read-Only:
 
 - `name` (String)
 - `value` (String)
-
-

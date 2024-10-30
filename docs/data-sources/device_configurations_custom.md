@@ -69,5 +69,3 @@ Read-Only:
 
 <a id="nestedatt--device_configurations_custom--windows10"></a>
 ### Nested Schema for `device_configurations_custom.windows10`
-
-

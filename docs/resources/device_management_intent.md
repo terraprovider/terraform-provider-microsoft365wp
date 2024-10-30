@@ -145,18 +145,18 @@ Optional:
 - `string` (Attributes) A setting instance representing a string value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string))
 
 <a id="nestedatt--settings--abstract_complex--value--abstract_complex"></a>
-### Nested Schema for `settings.abstract_complex.value.string`
+### Nested Schema for `settings.abstract_complex.value.abstract_complex`
 
 Required:
 
-- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string--value))
+- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value))
 
 Optional:
 
 - `implementation_id` (String) The definition ID for the chosen implementation of this complex setting
 
-<a id="nestedatt--settings--abstract_complex--value--string--value"></a>
-### Nested Schema for `settings.abstract_complex.value.string.value`
+<a id="nestedatt--settings--abstract_complex--value--abstract_complex--value"></a>
+### Nested Schema for `settings.abstract_complex.value.abstract_complex.value`
 
 Required:
 
@@ -164,28 +164,28 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A setting instance representing a boolean value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string--value--boolean))
-- `integer` (Attributes) A setting instance representing an integer value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string--value--integer))
-- `string` (Attributes) A setting instance representing a string value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string--value--string))
+- `boolean` (Attributes) A setting instance representing a boolean value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value--boolean))
+- `integer` (Attributes) A setting instance representing an integer value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value--integer))
+- `string` (Attributes) A setting instance representing a string value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value--string))
 
-<a id="nestedatt--settings--abstract_complex--value--string--value--boolean"></a>
-### Nested Schema for `settings.abstract_complex.value.string.value.string`
+<a id="nestedatt--settings--abstract_complex--value--abstract_complex--value--boolean"></a>
+### Nested Schema for `settings.abstract_complex.value.abstract_complex.value.boolean`
 
 Required:
 
 - `value` (Boolean) The boolean value
 
 
-<a id="nestedatt--settings--abstract_complex--value--string--value--integer"></a>
-### Nested Schema for `settings.abstract_complex.value.string.value.string`
+<a id="nestedatt--settings--abstract_complex--value--abstract_complex--value--integer"></a>
+### Nested Schema for `settings.abstract_complex.value.abstract_complex.value.integer`
 
 Required:
 
 - `value` (Number) The integer value
 
 
-<a id="nestedatt--settings--abstract_complex--value--string--value--string"></a>
-### Nested Schema for `settings.abstract_complex.value.string.value.string`
+<a id="nestedatt--settings--abstract_complex--value--abstract_complex--value--string"></a>
+### Nested Schema for `settings.abstract_complex.value.abstract_complex.value.string`
 
 Required:
 
@@ -195,7 +195,7 @@ Required:
 
 
 <a id="nestedatt--settings--abstract_complex--value--boolean"></a>
-### Nested Schema for `settings.abstract_complex.value.string`
+### Nested Schema for `settings.abstract_complex.value.boolean`
 
 Required:
 
@@ -203,7 +203,7 @@ Required:
 
 
 <a id="nestedatt--settings--abstract_complex--value--collection"></a>
-### Nested Schema for `settings.abstract_complex.value.string`
+### Nested Schema for `settings.abstract_complex.value.collection`
 
 Required:
 
@@ -211,14 +211,14 @@ Required:
 
 
 <a id="nestedatt--settings--abstract_complex--value--complex"></a>
-### Nested Schema for `settings.abstract_complex.value.string`
+### Nested Schema for `settings.abstract_complex.value.complex`
 
 Required:
 
-- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string--value))
+- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value))
 
-<a id="nestedatt--settings--abstract_complex--value--string--value"></a>
-### Nested Schema for `settings.abstract_complex.value.string.value`
+<a id="nestedatt--settings--abstract_complex--value--complex--value"></a>
+### Nested Schema for `settings.abstract_complex.value.complex.value`
 
 Required:
 
@@ -226,28 +226,28 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A setting instance representing a boolean value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string--value--boolean))
-- `integer` (Attributes) A setting instance representing an integer value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string--value--integer))
-- `string` (Attributes) A setting instance representing a string value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string--value--string))
+- `boolean` (Attributes) A setting instance representing a boolean value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value--boolean))
+- `integer` (Attributes) A setting instance representing an integer value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value--integer))
+- `string` (Attributes) A setting instance representing a string value (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value--string))
 
-<a id="nestedatt--settings--abstract_complex--value--string--value--boolean"></a>
-### Nested Schema for `settings.abstract_complex.value.string.value.string`
+<a id="nestedatt--settings--abstract_complex--value--complex--value--boolean"></a>
+### Nested Schema for `settings.abstract_complex.value.complex.value.boolean`
 
 Required:
 
 - `value` (Boolean) The boolean value
 
 
-<a id="nestedatt--settings--abstract_complex--value--string--value--integer"></a>
-### Nested Schema for `settings.abstract_complex.value.string.value.string`
+<a id="nestedatt--settings--abstract_complex--value--complex--value--integer"></a>
+### Nested Schema for `settings.abstract_complex.value.complex.value.integer`
 
 Required:
 
 - `value` (Number) The integer value
 
 
-<a id="nestedatt--settings--abstract_complex--value--string--value--string"></a>
-### Nested Schema for `settings.abstract_complex.value.string.value.string`
+<a id="nestedatt--settings--abstract_complex--value--complex--value--string"></a>
+### Nested Schema for `settings.abstract_complex.value.complex.value.string`
 
 Required:
 
@@ -257,7 +257,7 @@ Required:
 
 
 <a id="nestedatt--settings--abstract_complex--value--integer"></a>
-### Nested Schema for `settings.abstract_complex.value.string`
+### Nested Schema for `settings.abstract_complex.value.integer`
 
 Required:
 
@@ -314,18 +314,18 @@ Optional:
 - `string` (Attributes) A setting instance representing a string value (see [below for nested schema](#nestedatt--settings--complex--value--string))
 
 <a id="nestedatt--settings--complex--value--abstract_complex"></a>
-### Nested Schema for `settings.complex.value.string`
+### Nested Schema for `settings.complex.value.abstract_complex`
 
 Required:
 
-- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--complex--value--string--value))
+- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value))
 
 Optional:
 
 - `implementation_id` (String) The definition ID for the chosen implementation of this complex setting
 
-<a id="nestedatt--settings--complex--value--string--value"></a>
-### Nested Schema for `settings.complex.value.string.value`
+<a id="nestedatt--settings--complex--value--abstract_complex--value"></a>
+### Nested Schema for `settings.complex.value.abstract_complex.value`
 
 Required:
 
@@ -333,28 +333,28 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A setting instance representing a boolean value (see [below for nested schema](#nestedatt--settings--complex--value--string--value--boolean))
-- `integer` (Attributes) A setting instance representing an integer value (see [below for nested schema](#nestedatt--settings--complex--value--string--value--integer))
-- `string` (Attributes) A setting instance representing a string value (see [below for nested schema](#nestedatt--settings--complex--value--string--value--string))
+- `boolean` (Attributes) A setting instance representing a boolean value (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value--boolean))
+- `integer` (Attributes) A setting instance representing an integer value (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value--integer))
+- `string` (Attributes) A setting instance representing a string value (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value--string))
 
-<a id="nestedatt--settings--complex--value--string--value--boolean"></a>
-### Nested Schema for `settings.complex.value.string.value.string`
+<a id="nestedatt--settings--complex--value--abstract_complex--value--boolean"></a>
+### Nested Schema for `settings.complex.value.abstract_complex.value.boolean`
 
 Required:
 
 - `value` (Boolean) The boolean value
 
 
-<a id="nestedatt--settings--complex--value--string--value--integer"></a>
-### Nested Schema for `settings.complex.value.string.value.string`
+<a id="nestedatt--settings--complex--value--abstract_complex--value--integer"></a>
+### Nested Schema for `settings.complex.value.abstract_complex.value.integer`
 
 Required:
 
 - `value` (Number) The integer value
 
 
-<a id="nestedatt--settings--complex--value--string--value--string"></a>
-### Nested Schema for `settings.complex.value.string.value.string`
+<a id="nestedatt--settings--complex--value--abstract_complex--value--string"></a>
+### Nested Schema for `settings.complex.value.abstract_complex.value.string`
 
 Required:
 
@@ -364,7 +364,7 @@ Required:
 
 
 <a id="nestedatt--settings--complex--value--boolean"></a>
-### Nested Schema for `settings.complex.value.string`
+### Nested Schema for `settings.complex.value.boolean`
 
 Required:
 
@@ -372,7 +372,7 @@ Required:
 
 
 <a id="nestedatt--settings--complex--value--collection"></a>
-### Nested Schema for `settings.complex.value.string`
+### Nested Schema for `settings.complex.value.collection`
 
 Required:
 
@@ -380,14 +380,14 @@ Required:
 
 
 <a id="nestedatt--settings--complex--value--complex"></a>
-### Nested Schema for `settings.complex.value.string`
+### Nested Schema for `settings.complex.value.complex`
 
 Required:
 
-- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--complex--value--string--value))
+- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--complex--value--complex--value))
 
-<a id="nestedatt--settings--complex--value--string--value"></a>
-### Nested Schema for `settings.complex.value.string.value`
+<a id="nestedatt--settings--complex--value--complex--value"></a>
+### Nested Schema for `settings.complex.value.complex.value`
 
 Required:
 
@@ -395,28 +395,28 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A setting instance representing a boolean value (see [below for nested schema](#nestedatt--settings--complex--value--string--value--boolean))
-- `integer` (Attributes) A setting instance representing an integer value (see [below for nested schema](#nestedatt--settings--complex--value--string--value--integer))
-- `string` (Attributes) A setting instance representing a string value (see [below for nested schema](#nestedatt--settings--complex--value--string--value--string))
+- `boolean` (Attributes) A setting instance representing a boolean value (see [below for nested schema](#nestedatt--settings--complex--value--complex--value--boolean))
+- `integer` (Attributes) A setting instance representing an integer value (see [below for nested schema](#nestedatt--settings--complex--value--complex--value--integer))
+- `string` (Attributes) A setting instance representing a string value (see [below for nested schema](#nestedatt--settings--complex--value--complex--value--string))
 
-<a id="nestedatt--settings--complex--value--string--value--boolean"></a>
-### Nested Schema for `settings.complex.value.string.value.string`
+<a id="nestedatt--settings--complex--value--complex--value--boolean"></a>
+### Nested Schema for `settings.complex.value.complex.value.boolean`
 
 Required:
 
 - `value` (Boolean) The boolean value
 
 
-<a id="nestedatt--settings--complex--value--string--value--integer"></a>
-### Nested Schema for `settings.complex.value.string.value.string`
+<a id="nestedatt--settings--complex--value--complex--value--integer"></a>
+### Nested Schema for `settings.complex.value.complex.value.integer`
 
 Required:
 
 - `value` (Number) The integer value
 
 
-<a id="nestedatt--settings--complex--value--string--value--string"></a>
-### Nested Schema for `settings.complex.value.string.value.string`
+<a id="nestedatt--settings--complex--value--complex--value--string"></a>
+### Nested Schema for `settings.complex.value.complex.value.string`
 
 Required:
 
@@ -426,7 +426,7 @@ Required:
 
 
 <a id="nestedatt--settings--complex--value--integer"></a>
-### Nested Schema for `settings.complex.value.string`
+### Nested Schema for `settings.complex.value.integer`
 
 Required:
 
@@ -476,7 +476,7 @@ Optional:
 - `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-allLicensedUsersAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
 - `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusionGroupAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The Id of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include.
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.)
 - `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupAssignmentTarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
@@ -492,7 +492,7 @@ Optional:
 
 Required:
 
-- `group_id` (String) The group Id that is the target of the assignment.
+- `group_id` (String) AAD Group Id.
 
 
 <a id="nestedatt--assignments--target--group"></a>
@@ -500,6 +500,4 @@ Required:
 
 Required:
 
-- `group_id` (String) The group Id that is the target of the assignment.
-
-
+- `group_id` (String) AAD Group Id.

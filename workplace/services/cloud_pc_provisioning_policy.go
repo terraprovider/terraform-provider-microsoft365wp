@@ -79,6 +79,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					Required: true,
 				},
 			},
+			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/cloudPcAutopilotConfiguration?view=graph-rest-beta",
 		},
 		"cloud_pc_group_display_name": schema.StringAttribute{
 			Optional: true,

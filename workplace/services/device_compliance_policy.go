@@ -1209,6 +1209,27 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "When TRUE, indicates that Virtualization-based Security is required to be reported as healthy by Microsoft Azure Attestion. When FALSE, indicates that Virtualization-based Security is not required to be reported as healthy. Default value is FALSE.",
 					},
+					"wsl_distributions": schema.SetNestedAttribute{
+						Optional: true,
+						NestedObject: schema.NestedAttributeObject{
+							Attributes: map[string]schema.Attribute{ // wslDistributionConfiguration
+								"distribution": schema.StringAttribute{
+									Optional:            true,
+									MarkdownDescription: "Linux distribution like Debian, Fedora, Ubuntu etc.",
+								},
+								"maximum_o_s_version": schema.StringAttribute{
+									Optional:            true,
+									MarkdownDescription: "Maximum supported operating system version of the linux version.",
+								},
+								"minimum_o_s_version": schema.StringAttribute{
+									Optional:            true,
+									MarkdownDescription: "Minimum supported operating system version of the linux version.",
+								},
+							},
+						},
+						PlanModifiers: []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:      true,
+					},
 				},
 				Validators: []validator.Object{
 					deviceCompliancePolicyDeviceCompliancePolicyValidator,
