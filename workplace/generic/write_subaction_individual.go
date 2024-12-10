@@ -6,7 +6,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
@@ -21,8 +20,9 @@ type WriteSubActionIndividual struct {
 	WriteSubActionBase
 	ComparisonKeyAttribute     string
 	SetNestedPath              *tftypes.AttributePath
-	IdGetterFunc               func(ctx context.Context, diags *diag.Diagnostics, vRaw map[string]any, parentId string) string
-	TerraformToGraphMiddleware func(TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns
+	IdGetterFunc               func(context.Context, *diag.Diagnostics, map[string]any, string) string
+	UriAddRef                  bool
+	TerraformToGraphMiddleware func(context.Context, TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns
 }
 
 var _ WriteSubAction = &WriteSubActionIndividual{}
@@ -35,23 +35,21 @@ func (a *WriteSubActionIndividual) CheckRunAction(wsaOperation OperationType) bo
 	return a.WriteSubActionBase.CheckRunAction(wsaOperation)
 }
 
-func (a *WriteSubActionIndividual) ExecutePre(ctx context.Context, diags *diag.Diagnostics, r *GenericResource, wsaOperation OperationType,
-	rawVal map[string]any, subActionsData map[string]any, id string, idAttributer GetAttributer) {
-	a.WriteSubActionBase.ExecutePre(ctx, diags, r, wsaOperation, rawVal, subActionsData, id, idAttributer, nil)
+func (a *WriteSubActionIndividual) ExecutePre(ctx context.Context, diags *diag.Diagnostics, wsaReq *WriteSubActionRequest) {
+	a.WriteSubActionBase.ExecutePre(ctx, diags, wsaReq, nil)
 }
 
-func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.Diagnostics, r *GenericResource, wsaOperation OperationType,
-	parentId string, parentIdAttributer GetAttributer, subActionsData map[string]any, reqState *tfsdk.State, reqPlan *tfsdk.Plan) {
+func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.Diagnostics, wsaReq *WriteSubActionRequest) {
 
 	const ErrorSummary = "Error in WriteSubActionIndividual.ExecutePost"
 
 	errorDetailPrefix := "Unable to retrieve state: "
 	var stateTfSlice []tftypes.Value
-	switch wsaOperation {
+	switch wsaReq.Operation {
 	case OperationCreate:
 		stateTfSlice = make([]tftypes.Value, 0)
 	case OperationUpdate:
-		stateTfRaw, _, _ := tftypes.WalkAttributePath(reqState.Raw, a.SetNestedPath)
+		stateTfRaw, _, _ := tftypes.WalkAttributePath(wsaReq.ReqState.Raw, a.SetNestedPath)
 		stateTf, ok := stateTfRaw.(tftypes.Value)
 		if !ok {
 			diags.AddError(ErrorSummary, fmt.Sprintf(errorDetailPrefix+"stateTfRaw is not tftypes.Value but %T", stateTfRaw))
@@ -65,7 +63,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 
 	errorDetailPrefix = "Unable to retrieve plan: "
 	var planTfSlice []tftypes.Value
-	planTfRaw, _, _ := tftypes.WalkAttributePath(reqPlan.Raw, a.SetNestedPath)
+	planTfRaw, _, _ := tftypes.WalkAttributePath(wsaReq.ReqPlan.Raw, a.SetNestedPath)
 	planTf, ok := planTfRaw.(tftypes.Value)
 	if !ok {
 		diags.AddError(ErrorSummary, fmt.Sprintf(errorDetailPrefix+"planTfRaw is not tftypes.Value but %T", planTfRaw))
@@ -130,18 +128,18 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 		return
 	}
 
-	parentId = r.AccessParams.GetId(ctx, diags, parentId, parentIdAttributer)
+	parentId := wsaReq.GenRes.AccessParams.GetId(ctx, diags, wsaReq.Id, wsaReq.IdAttributer)
 	if diags.HasError() {
 		return
 	}
 
-	parentUri := r.AccessParams.GetUriWithIdForUD(ctx, diags, "", parentId, nil)
+	parentUri := wsaReq.GenRes.AccessParams.GetUriWithIdForUD(ctx, diags, "", parentId, nil)
 	if diags.HasError() {
 		return
 	}
 	childBaseUri := fmt.Sprintf("%s/%s", parentUri.Entity, a.UriSuffix)
 
-	setPlanSchemaRaw, _, _ := tftypes.WalkAttributePath(reqPlan.Schema, a.SetNestedPath)
+	setPlanSchemaRaw, _, _ := tftypes.WalkAttributePath(wsaReq.ReqPlan.Schema, a.SetNestedPath)
 	setPlanSchema, ok := setPlanSchemaRaw.(schema.SetNestedAttribute)
 	if !ok {
 		diags.AddError(ErrorSummary, fmt.Sprintf("Unable to retrieve plan sub-schema: setPlanSchemaRaw is not schema.SetNestedAttribute but %T", setPlanSchemaRaw))
@@ -154,12 +152,12 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 	var diags2 diag.Diagnostics
 
 	for _, v := range elementsToAdd {
-		vRaw, _ := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, false, false)
+		vRaw, id := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, false, false)
 		if diags2.HasError() {
 			diags.Append(diags2...)
 			return
 		}
-		r.AccessParams.CreateRaw(ctx, diags, childBaseUri, nil, vRaw)
+		wsaReq.GenRes.AccessParams.CreateRaw(ctx, diags, childBaseUri+id, nil, vRaw, true) // id might contain /$ref
 	}
 
 	for _, v := range elementsToUpdate {
@@ -168,7 +166,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 			diags.Append(diags2...)
 			return
 		}
-		r.AccessParams.UpdateRaw(ctx, diags, childBaseUri, id, nil, vRaw, false)
+		wsaReq.GenRes.AccessParams.UpdateRaw(ctx, diags, childBaseUri, id, nil, vRaw, false)
 	}
 
 	for _, v := range elementsToDelete {
@@ -177,7 +175,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 			diags.Append(diags2...)
 			return
 		}
-		r.AccessParams.DeleteRaw(ctx, diags, childBaseUri, id, nil)
+		wsaReq.GenRes.AccessParams.DeleteRaw(ctx, diags, childBaseUri, id, nil)
 	}
 }
 
@@ -199,10 +197,13 @@ func (a *WriteSubActionIndividual) getElementRawValAndId(ctx context.Context, di
 			return nil, ""
 		}
 	}
+	if a.UriAddRef {
+		id += "/$ref"
+	}
 
 	if !isDelete && a.TerraformToGraphMiddleware != nil {
-		params := TerraformToGraphMiddlewareParams{Ctx: ctx, RawVal: vRaw, IsUpdate: isUpdate}
-		if err := a.TerraformToGraphMiddleware(params); err != nil {
+		params := TerraformToGraphMiddlewareParams{RawVal: vRaw, IsUpdate: isUpdate}
+		if err := a.TerraformToGraphMiddleware(ctx, params); err != nil {
 			diags.AddError(ErrorSummary, fmt.Sprintf("Error running middleware for element %s: %s", v, err.Error()))
 			return nil, ""
 		}

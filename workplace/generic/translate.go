@@ -9,7 +9,6 @@ import (
 	dsschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	rsschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 type ToFromGraphTranslator struct {
@@ -65,7 +64,7 @@ func NewToFromGraphTranslator(schema tftypes.AttributePathStepper, includeNullOb
 	return result
 }
 
-func (t ToFromGraphTranslator) GraphAttributeNameFromTerraformName(ctx context.Context, parentAttribute rsschema.Attribute, terraformAttributeName string) (string, bool) {
+func (t ToFromGraphTranslator) GraphAttributeNameFromTerraformName(ctx context.Context, parentAttribute rsschema.Attribute, terraformAttributeName string) (string, bool, bool) {
 
 	// cannot really extract this since GetAttributes() returns internal fwschema type :-(
 	parentNested, ok := parentAttribute.(rsschema.NestedAttribute)
@@ -74,22 +73,16 @@ func (t ToFromGraphTranslator) GraphAttributeNameFromTerraformName(ctx context.C
 	}
 
 	if attribute, ok := parentNested.GetNestedObject().GetAttributes()[terraformAttributeName]; ok {
+		attributeIsWritable := attribute.IsRequired() || attribute.IsOptional()
 		description := attribute.GetDescription()
 		if description != "" {
 			// custom mapping
-			return description, true
+			return description, attributeIsWritable, true
 		}
-		if t.IsDataSource || attribute.IsRequired() || attribute.IsOptional() {
-			// ok, attribute is _not_ read-only
-			return strcase.ToLowerCamel(terraformAttributeName), true
-		} else {
-			// also ok, but return empty string to signal to skip attribute
-			tflog.Info(ctx, fmt.Sprintf("attribute %s is read-only", terraformAttributeName))
-			return "", true
-		}
+		return strcase.ToLowerCamel(terraformAttributeName), attributeIsWritable, true
 	}
 
-	return "", false
+	return "", false, false
 }
 
 func (ToFromGraphTranslator) TerraformAttributeNameFromGraphName(ctx context.Context, parentAttribute rsschema.Attribute, graphAttributeName string) (string, bool) {
@@ -154,7 +147,7 @@ func (t ToFromGraphTranslator) NestedObjectAttributesByOdataType(ctx context.Con
 			if derivedTypeNested.GetDerivedType() == odataTypeName {
 				nestedAttributeNames := make([]string, 0)
 				for k := range derivedTypeNested.GetNestedObject().GetAttributes() {
-					graphAttributeName, ok := t.GraphAttributeNameFromTerraformName(ctx, derivedTypeNested, k)
+					graphAttributeName, _, ok := t.GraphAttributeNameFromTerraformName(ctx, derivedTypeNested, k)
 					if ok {
 						nestedAttributeNames = append(nestedAttributeNames, graphAttributeName)
 					}

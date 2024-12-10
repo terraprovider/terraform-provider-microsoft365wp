@@ -19,7 +19,7 @@ resource "microsoft365wp_azure_ad_windows_autopilot_deployment_profile" "test" {
 }
 
 // For this resource MS Graph requires for assignments to be individually created or deleted.
-// Therefore we use a separate resource type for them for now.
+// Therefore we use a separate resource type for them.
 resource "microsoft365wp_azure_ad_windows_autopilot_deployment_profile_assignment" "test" {
   azure_ad_windows_autopilot_deployment_profile_id = microsoft365wp_azure_ad_windows_autopilot_deployment_profile.test.id
 

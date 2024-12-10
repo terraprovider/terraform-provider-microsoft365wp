@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"encoding/base64"
 	"fmt"
 	"terraform-provider-microsoft365wp/workplace/generic"
@@ -10,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -59,7 +61,7 @@ var deviceConfigurationCustomWriteSubActions = []generic.WriteSubAction{
 	},
 }
 
-func deviceConfigurationCustomTerraformToGraphMiddleware(params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func deviceConfigurationCustomTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 
 	omaSettings := params.RawVal["omaSettings"].([]any)
 	if omaSettings == nil {
@@ -87,44 +89,44 @@ func deviceConfigurationCustomTerraformToGraphMiddleware(params generic.Terrafor
 	return nil
 }
 
-func deviceConfigurationCustomExtraRequestCustomReadSecretValue(params generic.ReadExtraRequestCustomFuncParams) {
+func deviceConfigurationCustomExtraRequestCustomReadSecretValue(ctx context.Context, diags *diag.Diagnostics, params generic.ReadExtraRequestCustomParams) {
 	warningDetail := "Skipping retrieval of secret value(s)"
 
 	omaSettings := params.RawVal["omaSettings"].([]any)
 	if omaSettings == nil {
-		params.Diags.AddWarning("omaSettings not found or not an array", warningDetail)
+		diags.AddWarning("omaSettings not found or not an array", warningDetail)
 		return
 	}
 
 	for i, omaSettingRaw := range omaSettings {
 		omaSetting, ok := omaSettingRaw.(map[string]any)
 		if !ok {
-			params.Diags.AddWarning(fmt.Sprintf("omaSettings[%d] not of type map[string]any", i), warningDetail)
+			diags.AddWarning(fmt.Sprintf("omaSettings[%d] not of type map[string]any", i), warningDetail)
 			continue
 		}
 		isEncrypted, ok := omaSetting["isEncrypted"].(bool)
 		if !ok {
-			params.Diags.AddWarning(fmt.Sprintf("omaSettings[%d]: isEncrypted not found or not of type bool", i), warningDetail)
+			diags.AddWarning(fmt.Sprintf("omaSettings[%d]: isEncrypted not found or not of type bool", i), warningDetail)
 			continue
 		}
 		if isEncrypted {
 			secretReferenceValueId, ok := omaSetting["secretReferenceValueId"].(string)
 			if !ok {
-				params.Diags.AddWarning(fmt.Sprintf("omaSettings[%d]: secretReferenceValueId not found or not of type string", i), warningDetail)
+				diags.AddWarning(fmt.Sprintf("omaSettings[%d]: secretReferenceValueId not found or not of type string", i), warningDetail)
 				continue
 			}
 
 			getSecretUri := msgraph.Uri{
 				Entity: fmt.Sprintf("%s/getOmaSettingPlainTextValue(secretReferenceValueId='%s')", params.Uri.Entity, secretReferenceValueId),
 			}
-			plainValueResponse := generic.ReadRaw(params.Ctx, params.Diags, params.Client, getSecretUri, "", "", nil, params.TolerateNotFound)
-			if params.Diags.HasError() {
+			plainValueResponse := generic.ReadRaw(ctx, diags, params.Client, getSecretUri, "", "", nil, nil, params.TolerateNotFound)
+			if diags.HasError() {
 				return
 			}
 
 			plainValue, ok := plainValueResponse["value"].(string)
 			if !ok {
-				params.Diags.AddWarning(fmt.Sprintf("omaSettings[%d] getOmaSettingPlainTextValue response: value not found or not of type string", i), warningDetail)
+				diags.AddWarning(fmt.Sprintf("omaSettings[%d] getOmaSettingPlainTextValue response: value not found or not of type string", i), warningDetail)
 				continue
 			}
 
@@ -136,8 +138,9 @@ func deviceConfigurationCustomExtraRequestCustomReadSecretValue(params generic.R
 var deviceConfigurationCustomResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // deviceConfiguration
 		"id": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "Key of the entity.",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -168,7 +171,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 					MarkdownDescription: "Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)",
 				},
 			},
-			MarkdownDescription: "The device mode applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleDeviceMode?view=graph-rest-beta",
+			MarkdownDescription: "The device mode applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruledevicemode?view=graph-rest-beta",
 		},
 		"device_management_applicability_rule_os_edition": schema.SingleNestedAttribute{
 			Optional: true,
@@ -193,7 +196,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 					MarkdownDescription: "Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)",
 				},
 			},
-			MarkdownDescription: "The OS edition applicability for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleOsEdition?view=graph-rest-beta",
+			MarkdownDescription: "The OS edition applicability for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruleosedition?view=graph-rest-beta",
 		},
 		"device_management_applicability_rule_os_version": schema.SingleNestedAttribute{
 			Optional: true,
@@ -218,7 +221,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 					MarkdownDescription: "Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)",
 				},
 			},
-			MarkdownDescription: "The OS version applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleOsVersion?view=graph-rest-beta",
+			MarkdownDescription: "The OS version applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruleosversion?view=graph-rest-beta",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -234,11 +237,12 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tags for this Entity instance.",
+			MarkdownDescription: "List of Scope Tags for this Entity instance. The _provider_ default value is `[\"0\"]`.",
 		},
 		"supports_scope_tags": schema.BoolAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
+			MarkdownDescription: "Indicates whether or not the underlying Device Configuration supports the assignment of scope tags. Assigning to the ScopeTags property is not allowed when this value is false and entities will not be visible to scoped users. This occurs for Legacy policies created in Silverlight and can be resolved by deleting and recreating the policy in the Azure Portal. This property is read-only.",
 		},
 		"version": schema.Int64Attribute{
 			Computed:            true,
@@ -274,7 +278,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // omaSettingBase64
 											"file_name": schema.StringAttribute{
 												Optional:            true,
-												MarkdownDescription: "File name associated with the Value property (*.cer | *.crt | *.p7b | *.bin).",
+												MarkdownDescription: "File name associated with the Value property (*.cer",
 											},
 											"value_base64": schema.StringAttribute{
 												Required:            true,
@@ -283,7 +287,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: "OMA Settings Base64 definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingBase64?view=graph-rest-beta",
+										MarkdownDescription: "OMA Settings Base64 definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingbase64?view=graph-rest-beta",
 									},
 								},
 								"boolean": generic.OdataDerivedTypeNestedAttributeRs{
@@ -297,7 +301,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: "OMA Settings Boolean definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingBoolean?view=graph-rest-beta",
+										MarkdownDescription: "OMA Settings Boolean definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingboolean?view=graph-rest-beta",
 									},
 								},
 								"date_time": generic.OdataDerivedTypeNestedAttributeRs{
@@ -311,7 +315,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: "OMA Settings DateTime definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingDateTime?view=graph-rest-beta",
+										MarkdownDescription: "OMA Settings DateTime definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingdatetime?view=graph-rest-beta",
 									},
 								},
 								"floating_point": generic.OdataDerivedTypeNestedAttributeRs{
@@ -325,7 +329,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: "OMA Settings Floating Point definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingFloatingPoint?view=graph-rest-beta",
+										MarkdownDescription: "OMA Settings Floating Point definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingfloatingpoint?view=graph-rest-beta",
 									},
 								},
 								"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -339,7 +343,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: "OMA Settings Integer definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingInteger?view=graph-rest-beta",
+										MarkdownDescription: "OMA Settings Integer definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettinginteger?view=graph-rest-beta",
 									},
 								},
 								"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -353,7 +357,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: "OMA Settings String definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingString?view=graph-rest-beta",
+										MarkdownDescription: "OMA Settings String definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingstring?view=graph-rest-beta",
 									},
 								},
 								"string_xml": generic.OdataDerivedTypeNestedAttributeRs{
@@ -371,24 +375,24 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{deviceConfigurationCustomOmaSettingValidator},
-										MarkdownDescription: "OMA Settings StringXML definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSettingStringXml?view=graph-rest-beta",
+										MarkdownDescription: "OMA Settings StringXML definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingstringxml?view=graph-rest-beta",
 									},
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "OMA settings. This collection can contain a maximum of 1000 elements. / OMA Settings definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omaSetting?view=graph-rest-beta",
+						MarkdownDescription: "OMA settings. This collection can contain a maximum of 1000 elements. / OMA Settings definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasetting?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 				},
 				Validators: []validator.Object{
 					deviceConfigurationCustomDeviceConfigurationValidator,
 				},
-				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the windows10CustomConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windows10CustomConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the windows10CustomConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windows10customconfiguration?view=graph-rest-beta",
 			},
 		},
 	},
-	MarkdownDescription: "Device Configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceConfiguration?view=graph-rest-beta",
+	MarkdownDescription: "Device Configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta\n\nProvider Note: When using values of type `base64`, `string` or `string_xml` the write permission `DeviceManagementConfiguration.ReadWrite.All` is required also for plan operations. This is due to the fact that values of these types are saved encrypted in MS Graph and need to be retrieved using the special MS Graph action `getOmaSettingPlainTextValue` (which requires write permissions) when reading. Also see https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-deviceconfiguration-getomasettingplaintextvalue ||| MS Graph: Device configuration",
 }
 
 var deviceConfigurationCustomDeviceConfigurationValidator = objectvalidator.ExactlyOneOf(

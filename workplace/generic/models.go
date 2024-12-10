@@ -2,6 +2,7 @@ package generic
 
 import (
 	"fmt"
+	"strings"
 
 	dsschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -24,7 +25,9 @@ func ConvertResourceSchemaToDataSourceSingular(resourceSchema *rsschema.Schema, 
 	}
 
 	return dsschema.Schema{
-		Attributes: dsSchemaAttributes,
+		Attributes:          dsSchemaAttributes,
+		Description:         resourceSchema.Description,
+		MarkdownDescription: resourceSchema.MarkdownDescription,
 	}
 }
 
@@ -190,6 +193,12 @@ func ConvertDataSourceSingularSchemaToPlural(singularSchema *dsschema.Schema, ne
 	}
 
 	return dsschema.Schema{
-		Attributes: rootAttributes,
+		Attributes:          rootAttributes,
+		Description:         singularSchema.Description,
+		MarkdownDescription: singularSchema.MarkdownDescription,
 	}
+}
+
+func GetSubcategorySuffixFromMarkdownDescription(markdownDescription string) string {
+	return " ||| " + strings.Split(markdownDescription, " ||| ")[1]
 }

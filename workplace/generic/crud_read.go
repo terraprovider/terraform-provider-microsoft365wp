@@ -8,13 +8,14 @@ import (
 
 	"github.com/hashicorp/go-azure-sdk/sdk/odata"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/manicminer/hamilton/msgraph"
 )
 
 func (aps *AccessParams) ReadSingleRaw(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper,
-	readOptions ReadOptions, id string, idAttributer GetAttributer, tolerateNotFound bool) tftypes.Value {
+	readOptions ReadOptions, id string, idAttributer GetAttributer, tolerateNotFound bool, reqState *tfsdk.State, respPrivate PrivateDataGetSetter) tftypes.Value {
 
 	uri, odataFilter := aps.GetUriWithIdForR(ctx, diags, "", id, idAttributer, readOptions.SingleItemUseODataFilter, readOptions.ODataFilter)
 	if diags.HasError() {
@@ -41,15 +42,15 @@ func (aps *AccessParams) ReadSingleRaw(ctx context.Context, diags *diag.Diagnost
 	}
 
 	for _, c := range readOptions.ExtraRequestsCustom {
-		params := ReadExtraRequestCustomFuncParams{
-			Ctx:              ctx,
-			Diags:            diags,
+		params := ReadExtraRequestCustomParams{
 			Client:           aps.graphClient,
 			Uri:              uri,
 			TolerateNotFound: tolerateNotFound,
+			ReqState:         reqState,
+			RespPrivate:      respPrivate,
 			RawVal:           rawVal,
 		}
-		c(params)
+		c(ctx, diags, params)
 		if diags.HasError() {
 			return tftypes.Value{}
 		}
@@ -65,11 +66,11 @@ func (aps *AccessParams) ReadSingleRaw(ctx context.Context, diags *diag.Diagnost
 
 func (aps *AccessParams) ReadRaw(ctx context.Context, diags *diag.Diagnostics,
 	uri msgraph.Uri, odataExpand string, odataFilter string, odataSelect []string, tolerateNotFound bool) map[string]any {
-	return ReadRaw(ctx, diags, aps.graphClient, uri, odataExpand, odataFilter, odataSelect, tolerateNotFound)
+	return ReadRaw(ctx, diags, aps.graphClient, uri, odataExpand, odataFilter, odataSelect, aps.ReadOptions.ValidStatusCodesExtra, tolerateNotFound)
 }
 
 func ReadRaw(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph.Client,
-	uri msgraph.Uri, odataExpand string, odataFilter string, odataSelect []string, tolerateNotFound bool) map[string]any {
+	uri msgraph.Uri, odataExpand string, odataFilter string, odataSelect []string, validStatusCodesExtra []int, tolerateNotFound bool) map[string]any {
 
 	odataQuery := odata.Query{
 		Filter: odataFilter,
@@ -80,7 +81,7 @@ func ReadRaw(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph.
 	}
 	graphResp, status, odata, err := graphClient.Get(ctx, msgraph.GetHttpRequestInput{
 		OData:            odataQuery,
-		ValidStatusCodes: []int{http.StatusOK},
+		ValidStatusCodes: append([]int{http.StatusOK}, validStatusCodesExtra...),
 		Uri:              uri,
 	})
 	if err != nil {

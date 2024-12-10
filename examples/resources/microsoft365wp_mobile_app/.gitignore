@@ -1,0 +1,6 @@
+*.intunewin
+*.dmg
+*.pkg
+*.msi
+*.appx
+*.msix

@@ -24,14 +24,13 @@ func ConvertOdataJsonToRaw(ctx context.Context, diags *diag.Diagnostics, jsonVal
 }
 
 func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper,
-	rawVal map[string]any, valueToTargetSetName string, middlewareFunc func(GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns) tftypes.Value {
+	rawVal map[string]any, valueToTargetSetName string, middlewareFunc func(context.Context, GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns) tftypes.Value {
 
 	runMiddleware := func(item map[string]any) bool {
 		params := GraphToTerraformMiddlewareParams{
-			Ctx:    ctx,
 			RawVal: item,
 		}
-		if err := middlewareFunc(params); err != nil {
+		if err := middlewareFunc(ctx, params); err != nil {
 			diags.AddError(
 				"Creation Of Terraform State Unsuccessful",
 				fmt.Sprintf("GraphToTerraformMiddleware returned an error: %s", err.Error()),
@@ -90,7 +89,7 @@ func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, sc
 }
 
 func ConvertOdataJsonToTerraform(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper, jsonVal []byte,
-	valueToTargetSetName string, middlewareFunc func(GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns) tftypes.Value {
+	valueToTargetSetName string, middlewareFunc func(context.Context, GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns) tftypes.Value {
 
 	rawVal := ConvertOdataJsonToRaw(ctx, diags, jsonVal)
 	if diags.HasError() {

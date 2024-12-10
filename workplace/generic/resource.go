@@ -57,7 +57,7 @@ func (r *GenericResource) Create(ctx context.Context, req resource.CreateRequest
 func (r *GenericResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 
 	tfVal := r.AccessParams.ReadSingleRaw(ctx, &resp.Diagnostics, req.State.Schema,
-		r.AccessParams.ReadOptions, "", &req.State, true)
+		r.AccessParams.ReadOptions, "", &req.State, true, &req.State, resp.Private)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -109,15 +109,13 @@ func (r *GenericResource) Delete(ctx context.Context, req resource.DeleteRequest
 		}
 		params := DeleteModifyFuncParams{
 			R:          r,
-			Ctx:        ctx,
-			Diags:      diags,
 			Req:        req,
 			Resp:       resp,
 			BaseUri:    baseUri,
 			Id:         id,
 			SkipDelete: false,
 		}
-		r.AccessParams.DeleteModifyFunc(&params)
+		r.AccessParams.DeleteModifyFunc(ctx, diags, &params)
 		if diags.HasError() {
 			return
 		}
@@ -131,7 +129,7 @@ func (r *GenericResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	subActionsData := r.executeWriteSubActionsPre(ctx, diags, OperationDelete, nil, id, thisIdAttributer)
+	subActionsData := r.executeWriteSubActionsPre(ctx, diags, OperationDelete, id, thisIdAttributer, nil, &req.State, nil, resp.Private)
 	if diags.HasError() {
 		return
 	}
@@ -141,7 +139,7 @@ func (r *GenericResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	r.executeWriteSubActionPost(ctx, diags, OperationDelete, id, thisIdAttributer, subActionsData, &req.State, nil)
+	r.executeWriteSubActionPost(ctx, diags, OperationDelete, id, thisIdAttributer, subActionsData, &req.State, nil, &resp.State, resp.Private)
 	if diags.HasError() {
 		return
 	}
@@ -165,6 +163,7 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	var requestPlan *tfsdk.Plan
 	var requestState *tfsdk.State
 	var responseState *tfsdk.State
+	var responsePrivate PrivateDataGetSetter
 	var parentIdAttributer GetAttributer = nil
 	var thisIdAttributer GetAttributer = nil
 	switch operationType {
@@ -173,12 +172,14 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 		requestPlan = &createRequest.Plan
 		parentIdAttributer = createRequest.Config
 		responseState = &createResponse.State
+		responsePrivate = createResponse.Private
 	case OperationUpdate:
 		diags = &updateResponse.Diagnostics
 		requestPlan = &updateRequest.Plan
 		requestState = &updateRequest.State
 		thisIdAttributer = updateRequest.State
 		responseState = &updateResponse.State
+		responsePrivate = updateResponse.Private
 	default:
 		panic(fmt.Sprintf("Invalid operation type %d", operationType))
 	}
@@ -198,15 +199,13 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 		if r.AccessParams.CreateModifyFunc != nil {
 			params := CreateModifyFuncParams{
 				R:              r,
-				Ctx:            ctx,
-				Diags:          diags,
 				Req:            *createRequest,
 				Resp:           createResponse,
 				BaseUri:        baseUri,
 				Id:             id,
 				UpdateExisting: updateExisting,
 			}
-			r.AccessParams.CreateModifyFunc(&params)
+			r.AccessParams.CreateModifyFunc(ctx, diags, &params)
 			if diags.HasError() {
 				return
 			}
@@ -223,14 +222,12 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 			}
 			params := UpdateModifyFuncParams{
 				R:       r,
-				Ctx:     ctx,
-				Diags:   diags,
 				Req:     *updateRequest,
 				Resp:    updateResponse,
 				BaseUri: baseUri,
 				Id:      id,
 			}
-			r.AccessParams.UpdateModifyFunc(&params)
+			r.AccessParams.UpdateModifyFunc(ctx, diags, &params)
 			if diags.HasError() {
 				return
 			}
@@ -251,7 +248,7 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 		return
 	}
 
-	subActionsData := r.executeWriteSubActionsPre(ctx, diags, operationType, rawVal, "", thisIdAttributer)
+	subActionsData := r.executeWriteSubActionsPre(ctx, diags, operationType, "", thisIdAttributer, rawVal, requestState, requestPlan, responsePrivate)
 	if diags.HasError() {
 		return
 	}
@@ -260,7 +257,7 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	if updateExisting {
 		r.AccessParams.UpdateRaw(ctx, diags, baseUri, id, thisIdAttributer, rawVal, r.AccessParams.UsePutForUpdate)
 	} else {
-		id, createResultRaw = r.AccessParams.CreateRaw(ctx, diags, baseUri, parentIdAttributer, rawVal)
+		id, createResultRaw = r.AccessParams.CreateRaw(ctx, diags, baseUri, parentIdAttributer, rawVal, false)
 	}
 	if diags.HasError() {
 		return
@@ -316,20 +313,24 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	// But do not check for errors here yet as we want to ensure that populating runs even in case of errors here to get
 	// the state as complete as possible. Terraform will still bring up the errors as they will still be there after
 	// populating has run.
-	r.executeWriteSubActionPost(ctx, diags, operationType, id, thisIdAttributer, subActionsData, requestState, requestPlan)
+	r.executeWriteSubActionPost(ctx, diags, operationType, id, thisIdAttributer, subActionsData, requestState, requestPlan, responseState, responsePrivate)
 
 	// Produce a wholly-known new state by determining the final values for any attributes left unknown in the planned state.
+	diagsPopulateUnknowns := diag.Diagnostics{} // need separate diags here as diags might already contain error(s) from WriteSubActions
 	populateSource := tftypes.Value{}
 	if createResultRaw != nil {
-		populateSource = ConvertOdataRawToTerraform(ctx, diags, requestPlan.Schema, createResultRaw, "", r.AccessParams.GraphToTerraformMiddleware)
-		if diags.HasError() {
+		populateSource = ConvertOdataRawToTerraform(ctx, &diagsPopulateUnknowns, requestPlan.Schema, createResultRaw, "", r.AccessParams.GraphToTerraformMiddleware)
+		if diagsPopulateUnknowns.HasError() {
+			diags.Append(diagsPopulateUnknowns...)
 			return
 		}
 	}
-	diags.Append(r.populateUnknownValues(ctx, responseState, populateSource)...)
-	if diags.HasError() { // still check here since it looks nicer and cleaner
+	diagsPopulateUnknowns.Append(r.populateUnknownValues(ctx, responseState, populateSource)...)
+	if diagsPopulateUnknowns.HasError() { // still check here since it looks nicer and cleaner
+		diags.Append(diagsPopulateUnknowns...)
 		return
 	}
+
 }
 
 func (r *GenericResource) checkAndLockMutex() bool {
@@ -343,27 +344,51 @@ func (r *GenericResource) checkAndLockMutex() bool {
 }
 
 func (r *GenericResource) executeWriteSubActionsPre(ctx context.Context, diags *diag.Diagnostics, wsaOperation OperationType,
-	rawVal map[string]any, id string, idAttributer GetAttributer) map[string]any {
+	id string, idAttributer GetAttributer, rawVal map[string]any, reqState *tfsdk.State, reqPlan *tfsdk.Plan,
+	respPrivate PrivateDataGetSetter) map[string]any {
 
-	result := make(map[string]any)
+	subActionsData := make(map[string]any)
 	for _, a := range r.AccessParams.WriteSubActions {
 		if a.CheckRunAction(wsaOperation) {
-			a.ExecutePre(ctx, diags, r, wsaOperation, rawVal, result, id, idAttributer)
+			wsaRequest := WriteSubActionRequest{
+				GenRes:         r,
+				Operation:      wsaOperation,
+				Id:             id,
+				IdAttributer:   idAttributer,
+				RawVal:         rawVal,
+				SubActionsData: subActionsData,
+				ReqState:       reqState,
+				ReqPlan:        reqPlan,
+				RespPrivate:    respPrivate,
+			}
+			a.ExecutePre(ctx, diags, &wsaRequest)
 			if diags.HasError() {
-				return nil
+				return subActionsData
 			}
 		}
 	}
 
-	return result
+	return subActionsData
 }
 
 func (r *GenericResource) executeWriteSubActionPost(ctx context.Context, diags *diag.Diagnostics, wsaOperation OperationType,
-	id string, idAttributer GetAttributer, subActionsData map[string]any, reqState *tfsdk.State, reqPlan *tfsdk.Plan) {
+	id string, idAttributer GetAttributer, subActionsData map[string]any, reqState *tfsdk.State, reqPlan *tfsdk.Plan, respState *tfsdk.State,
+	respPrivate PrivateDataGetSetter) {
 
 	for _, a := range r.AccessParams.WriteSubActions {
 		if a.CheckRunAction(wsaOperation) {
-			a.ExecutePost(ctx, diags, r, wsaOperation, id, idAttributer, subActionsData, reqState, reqPlan)
+			wsaRequest := WriteSubActionRequest{
+				GenRes:         r,
+				Operation:      wsaOperation,
+				Id:             id,
+				IdAttributer:   idAttributer,
+				SubActionsData: subActionsData,
+				ReqState:       reqState,
+				ReqPlan:        reqPlan,
+				RespState:      respState,
+				RespPrivate:    respPrivate,
+			}
+			a.ExecutePost(ctx, diags, &wsaRequest)
 			if diags.HasError() {
 				return
 			}

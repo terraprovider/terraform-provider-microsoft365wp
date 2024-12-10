@@ -12,16 +12,17 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"os"
-	"time"
 
 	"terraform-provider-microsoft365wp/workplace/services"
+	mobileappfuncs "terraform-provider-microsoft365wp/workplace/services/mobile_app_funcs"
+	"terraform-provider-microsoft365wp/workplace/util/retryablehttputil"
 
 	"github.com/hashicorp/go-azure-sdk/sdk/auth"
 	"github.com/hashicorp/go-azure-sdk/sdk/claims"
 	"github.com/hashicorp/go-azure-sdk/sdk/environments"
-	"github.com/hashicorp/go-retryablehttp"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -33,7 +34,7 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces
 var (
-	_ provider.Provider = &workplaceProvider{}
+	_ provider.ProviderWithFunctions = &workplaceProvider{}
 )
 
 // Helper function to simplify provider server and testing implementation.
@@ -377,21 +378,7 @@ func (p *workplaceProvider) Configure(ctx context.Context, req provider.Configur
 	graphClient.Authorizer = authorizer
 	graphClient.RequestMiddlewares = &[]msgraph.RequestMiddleware{requestLogger}
 	graphClient.ResponseMiddlewares = &[]msgraph.ResponseMiddleware{responseLogger}
-
-	// set retries / adjust from default values to avoid problems due to throttling
-	graphClient.RetryableClient.RetryWaitMin = 3 * time.Second
-	graphClient.RetryableClient.RetryWaitMax = 60 * time.Second
-	graphClient.RetryableClient.RetryMax = 10
-	graphClient.RetryableClient.Backoff = func(min, max time.Duration, attemptNum int, resp *http.Response) time.Duration {
-		backoffTime := retryablehttp.DefaultBackoff(min, max, attemptNum, resp)
-		// MS Graph often returns `Retry-After: 0` but we want (and have) to delay a bit to become successful at some
-		// point. Therefore we ignore the value from `Retry-After` in case it's below our min and call DefaultBackoff
-		// again to get the calculated default delay instead.
-		if backoffTime < min {
-			backoffTime = retryablehttp.DefaultBackoff(min, max, attemptNum, nil)
-		}
-		return backoffTime
-	}
+	retryablehttputil.ConfigureClientRetryLimitsAndBackoff(graphClient.RetryableClient)
 
 	// Make the graphClient available during DataSource and Resource
 	// type Configure methods.
@@ -404,6 +391,8 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 	return []func() datasource.DataSource{
 		func() datasource.DataSource { return &services.AndroidManagedAppProtectionSingularDataSource },
 		func() datasource.DataSource { return &services.AndroidManagedAppProtectionPluralDataSource },
+		func() datasource.DataSource { return &services.AuthenticationContextClassReferenceSingularDataSource },
+		func() datasource.DataSource { return &services.AuthenticationContextClassReferencePluralDataSource },
 		func() datasource.DataSource { return &services.AuthenticationMethodsPolicySingularDataSource },
 		func() datasource.DataSource { return &services.AuthenticationStrengthPolicySingularDataSource },
 		func() datasource.DataSource { return &services.AuthenticationStrengthPolicyPluralDataSource },
@@ -455,10 +444,14 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 		func() datasource.DataSource { return &services.ManagedDeviceMobileAppConfigurationPluralDataSource },
 		func() datasource.DataSource { return &services.MobileAppSingularDataSource },
 		func() datasource.DataSource { return &services.MobileAppPluralDataSource },
+		func() datasource.DataSource { return &services.MobileAppCategorySingularDataSource },
+		func() datasource.DataSource { return &services.MobileAppCategoryPluralDataSource },
 		func() datasource.DataSource { return &services.NotificationMessageTemplateSingularDataSource },
 		func() datasource.DataSource { return &services.NotificationMessageTemplatePluralDataSource },
 		func() datasource.DataSource { return &services.TargetedManagedAppConfigurationSingularDataSource },
 		func() datasource.DataSource { return &services.TargetedManagedAppConfigurationPluralDataSource },
+		func() datasource.DataSource { return &services.WindowsDriverUpdateProfileSingularDataSource },
+		func() datasource.DataSource { return &services.WindowsDriverUpdateProfilePluralDataSource },
 		func() datasource.DataSource { return &services.WindowsFeatureUpdateProfileSingularDataSource },
 		func() datasource.DataSource { return &services.WindowsFeatureUpdateProfilePluralDataSource },
 	}
@@ -468,6 +461,7 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		func() resource.Resource { return &services.AndroidManagedAppProtectionResource },
+		func() resource.Resource { return &services.AuthenticationContextClassReferenceResource },
 		func() resource.Resource { return &services.AuthenticationMethodsPolicyResource },
 		func() resource.Resource { return &services.AuthenticationStrengthPolicyResource },
 		func() resource.Resource { return &services.AzureAdWindowsAutopilotDeploymentProfileResource },
@@ -487,8 +481,18 @@ func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resou
 		func() resource.Resource { return &services.DeviceShellScriptResource },
 		func() resource.Resource { return &services.IosManagedAppProtectionResource },
 		func() resource.Resource { return &services.ManagedDeviceMobileAppConfigurationResource },
+		func() resource.Resource { return &services.MobileAppResource },
+		func() resource.Resource { return &services.MobileAppCategoryResource },
 		func() resource.Resource { return &services.NotificationMessageTemplateResource },
 		func() resource.Resource { return &services.TargetedManagedAppConfigurationResource },
+		func() resource.Resource { return &services.WindowsDriverUpdateProfileResource },
 		func() resource.Resource { return &services.WindowsFeatureUpdateProfileResource },
+	}
+}
+
+func (p *workplaceProvider) Functions(_ context.Context) []func() function.Function {
+	return []func() function.Function{
+		func() function.Function { return &mobileappfuncs.ParseIntunewinMetadataFunction{} },
+		func() function.Function { return &mobileappfuncs.ParseAppxMsixMetadataFunction{} },
 	}
 }

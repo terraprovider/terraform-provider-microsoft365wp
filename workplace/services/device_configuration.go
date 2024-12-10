@@ -1,6 +1,8 @@
 package services
 
 import (
+	"context"
+	"strings"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
@@ -57,8 +59,9 @@ var deviceConfigurationWriteSubActions = []generic.WriteSubAction{
 var deviceConfigurationResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // deviceConfiguration
 		"id": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "Key of the entity.",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -89,7 +92,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					MarkdownDescription: "Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)",
 				},
 			},
-			MarkdownDescription: "The device mode applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleDeviceMode?view=graph-rest-beta",
+			MarkdownDescription: "The device mode applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruledevicemode?view=graph-rest-beta",
 		},
 		"device_management_applicability_rule_os_edition": schema.SingleNestedAttribute{
 			Optional: true,
@@ -114,7 +117,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					MarkdownDescription: "Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)",
 				},
 			},
-			MarkdownDescription: "The OS edition applicability for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleOsEdition?view=graph-rest-beta",
+			MarkdownDescription: "The OS edition applicability for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruleosedition?view=graph-rest-beta",
 		},
 		"device_management_applicability_rule_os_version": schema.SingleNestedAttribute{
 			Optional: true,
@@ -139,7 +142,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					MarkdownDescription: "Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)",
 				},
 			},
-			MarkdownDescription: "The OS version applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceManagementApplicabilityRuleOsVersion?view=graph-rest-beta",
+			MarkdownDescription: "The OS version applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruleosversion?view=graph-rest-beta",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -155,11 +158,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tags for this Entity instance.",
+			MarkdownDescription: "List of Scope Tags for this Entity instance. The _provider_ default value is `[\"0\"]`.",
 		},
 		"supports_scope_tags": schema.BoolAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
+			MarkdownDescription: "Indicates whether or not the underlying Device Configuration supports the assignment of scope tags. Assigning to the ScopeTags property is not allowed when this value is false and entities will not be visible to scoped users. This occurs for Legacy policies created in Silverlight and can be resolved by deleting and recreating the policy in the Azure Portal. This property is read-only.",
 		},
 		"version": schema.Int64Attribute{
 			Computed:            true,
@@ -185,7 +189,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Attributes:          deviceConfigurationAppListItemAttributes,
 									PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 									Computed:            true,
-									MarkdownDescription: "Information about the app like Name, AppStoreUrl, Publisher and AppId / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta",
+									MarkdownDescription: "Information about the app like Name, AppStoreUrl, Publisher and AppId / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta. The _provider_ default value is `{}`.",
 								},
 								"app_scopes": schema.SetAttribute{
 									ElementType: types.StringType,
@@ -197,13 +201,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									},
 									PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 									Computed:            true,
-									MarkdownDescription: "List of scopes an app has been assigned. / An enum representing possible values for delegated app scope; possible values are: `unspecified` (Unspecified; this value defaults to DELEGATED_SCOPE_UNSPECIFIED.), `certificateInstall` (Specifies that the admin has given app permission to install and manage certificates on device.), `captureNetworkActivityLog` (Specifies that the admin has given app permission to capture network activity logs on device. More info on Network activity logs: https://developer.android.com/work/dpc/logging ), `captureSecurityLog` (Specified that the admin has given permission to capture security logs on device. More info on Security logs: https://developer.android.com/work/dpc/security#log_enterprise_device_activity), `unknownFutureValue` (Unknown future value (reserved, not used right now))",
+									MarkdownDescription: "List of scopes an app has been assigned. / An enum representing possible values for delegated app scope; possible values are: `unspecified` (Unspecified; this value defaults to DELEGATED_SCOPE_UNSPECIFIED.), `certificateInstall` (Specifies that the admin has given app permission to install and manage certificates on device.), `captureNetworkActivityLog` (Specifies that the admin has given app permission to capture network activity logs on device. More info on Network activity logs: https://developer.android.com/work/dpc/logging), `captureSecurityLog` (Specified that the admin has given permission to capture security logs on device. More info on Security logs: https://developer.android.com/work/dpc/security#log_enterprise_device_activity), `unknownFutureValue` (Unknown future value (reserved, not used right now)). The _provider_ default value is `[]`.",
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Specifies the list of managed apps with app details and its associated delegated scope(s). This collection can contain a maximum of 500 elements. / Represents one item in the list of managed apps with app details and its associated delegated scope(s). / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerDelegatedScopeAppSetting?view=graph-rest-beta",
+						MarkdownDescription: "Specifies the list of managed apps with app details and its associated delegated scope(s). This collection can contain a maximum of 500 elements. / Represents one item in the list of managed apps with app details and its associated delegated scope(s). / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerdelegatedscopeappsetting?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"apps_allow_install_from_unknown_sources": schema.BoolAttribute{
 						Optional:            true,
@@ -234,7 +238,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of managed apps that will have their data cleared during a global sign-out in AAD shared device mode. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta",
+						MarkdownDescription: "A list of managed apps that will have their data cleared during a global sign-out in AAD shared device mode. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"bluetooth_block_configuration": schema.BoolAttribute{
 						Optional:            true,
@@ -268,7 +272,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether data from one profile (personal or work) can be shared with apps in the other profile. / An enum representing possible values for cross profile data sharing; possible values are: `notConfigured` (Not configured; this value defaults to CROSS_PROFILE_DATA_SHARING_UNSPECIFIED.), `crossProfileDataSharingBlocked` (Data cannot be shared from both the personal profile to work profile and the work profile to the personal profile.), `dataSharingFromWorkToPersonalBlocked` (Prevents users from sharing data from the work profile to apps in the personal profile. Personal data can be shared with work apps.), `crossProfileDataSharingAllowed` (Data from either profile can be shared with the other profile.), `unkownFutureValue` (Unknown future value (reserved, not used right now))",
+						MarkdownDescription: "Indicates whether data from one profile (personal or work) can be shared with apps in the other profile. / An enum representing possible values for cross profile data sharing; possible values are: `notConfigured` (Not configured; this value defaults to CROSS_PROFILE_DATA_SHARING_UNSPECIFIED.), `crossProfileDataSharingBlocked` (Data cannot be shared from both the personal profile to work profile and the work profile to the personal profile.), `dataSharingFromWorkToPersonalBlocked` (Prevents users from sharing data from the work profile to apps in the personal profile. Personal data can be shared with work apps.), `crossProfileDataSharingAllowed` (Data from either profile can be shared with the other profile.), `unkownFutureValue` (Unknown future value (reserved, not used right now)). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"cross_profile_policies_show_work_contacts_in_personal_profile": schema.BoolAttribute{
 						Optional:            true,
@@ -296,17 +300,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 								PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 								Computed:            true,
-								MarkdownDescription: "The list of <locale, message> pairs. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyValuePair?view=graph-rest-beta",
+								MarkdownDescription: "The list of <locale, message> pairs. This collection can contain a maximum of 500 elements. / Key value pair for storing custom settings / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`.",
 							},
 						},
-						MarkdownDescription: "Represents the customized detailed help text provided to users when they attempt to modify managed settings on their device. / Represents a user-facing message with locale information as well as a default message to be used if the user's locale doesn't match with any of the localized messages / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerUserFacingMessage?view=graph-rest-beta",
+						MarkdownDescription: "Represents the customized detailed help text provided to users when they attempt to modify managed settings on their device. / Represents a user-facing message with locale information as well as a default message to be used if the user's locale doesn't match with any of the localized messages / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceowneruserfacingmessage?view=graph-rest-beta",
 					},
 					"device_location_mode": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
 							stringvalidator.OneOf("notConfigured", "disabled", "unknownFutureValue"),
 						},
-						MarkdownDescription: "Indicates the location setting configuration for fully managed devices (COBO) and corporate owned devices with a work profile (COPE) / Android Device Owner Location Mode Type; possible values are: `notConfigured` (No restrictions on the location setting and no specific behavior is set or enforced. This is the default), `disabled` (Location setting is disabled on the device), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use)",
+						MarkdownDescription: "Indicates the location setting configuration for fully managed devices (COBO) and corporate owned devices with a work profile (COPE). / Android Device Owner Location Mode Type; possible values are: `notConfigured` (No restrictions on the location setting and no specific behavior is set or enforced. This is the default), `disabled` (Location setting is disabled on the device), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use)",
 					},
 					"device_owner_lock_screen_message": schema.SingleNestedAttribute{
 						Optional: true,
@@ -322,10 +326,10 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 								PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 								Computed:            true,
-								MarkdownDescription: "The list of <locale, message> pairs. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyValuePair?view=graph-rest-beta",
+								MarkdownDescription: "The list of <locale, message> pairs. This collection can contain a maximum of 500 elements. / Key value pair for storing custom settings / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`.",
 							},
 						},
-						MarkdownDescription: "Represents the customized lock screen message provided to users when they attempt to modify managed settings on their device. / Represents a user-facing message with locale information as well as a default message to be used if the user's locale doesn't match with any of the localized messages / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerUserFacingMessage?view=graph-rest-beta",
+						MarkdownDescription: "Represents the customized lock screen message provided to users when they attempt to modify managed settings on their device. / Represents a user-facing message with locale information as well as a default message to be used if the user's locale doesn't match with any of the localized messages / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceowneruserfacingmessage?view=graph-rest-beta",
 					},
 					"enrollment_profile": schema.StringAttribute{
 						Optional: true,
@@ -334,7 +338,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Indicates which enrollment profile you want to configure. / Android Device Owner Enrollment Profile types; possible values are: `notConfigured` (Not configured; this value is ignored.), `dedicatedDevice` (Dedicated device.), `fullyManaged` (Fully managed.)",
+						MarkdownDescription: "Indicates which enrollment profile you want to configure. / Android Device Owner Enrollment Profile types; possible values are: `notConfigured` (Not configured; this value is ignored.), `dedicatedDevice` (Dedicated device.), `fullyManaged` (Fully managed.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"factory_reset_blocked": schema.BoolAttribute{
 						Optional:            true,
@@ -345,13 +349,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "List of Google account emails that will be required to authenticate after a device is factory reset before it can be set up.",
+						MarkdownDescription: "List of Google account emails that will be required to authenticate after a device is factory reset before it can be set up. The _provider_ default value is `[]`.",
 					},
 					"global_proxy": schema.SingleNestedAttribute{
 						Optional:   true,
 						Attributes: map[string]schema.Attribute{ // androidDeviceOwnerGlobalProxy
 						},
-						MarkdownDescription: "Proxy is set up directly with host, port and excluded hosts. / Android Device Owner Global Proxy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerGlobalProxy?view=graph-rest-beta",
+						MarkdownDescription: "Proxy is set up directly with host, port and excluded hosts. / Android Device Owner Global Proxy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerglobalproxy?view=graph-rest-beta",
 					},
 					"google_accounts_blocked": schema.BoolAttribute{
 						Optional:            true,
@@ -372,7 +376,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether system info and notifications are disabled in Kiosk Mode. / An enum representing possible values for kiosk customization system navigation; possible values are: `notConfigured` (Not configured; this value defaults to STATUS_BAR_UNSPECIFIED.), `notificationsAndSystemInfoEnabled` (System info and notifications are shown on the status bar in kiosk mode.), `systemInfoOnly` (Only system info is shown on the status bar in kiosk mode.)",
+						MarkdownDescription: "Indicates whether system info and notifications are disabled in Kiosk Mode. / An enum representing possible values for kiosk customization system navigation; possible values are: `notConfigured` (Not configured; this value defaults to STATUS_BAR_UNSPECIFIED.), `notificationsAndSystemInfoEnabled` (System info and notifications are shown on the status bar in kiosk mode.), `systemInfoOnly` (Only system info is shown on the status bar in kiosk mode.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"kiosk_customization_system_error_warnings": schema.BoolAttribute{
 						Optional:            true,
@@ -385,7 +389,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Indicates which navigation features are enabled in Kiosk Mode. / An enum representing possible values for kiosk customization system navigation; possible values are: `notConfigured` (Not configured; this value defaults to NAVIGATION_DISABLED.), `navigationEnabled` (Home and overview buttons are enabled.), `homeButtonOnly` ( Only the home button is enabled.)",
+						MarkdownDescription: "Indicates which navigation features are enabled in Kiosk Mode. / An enum representing possible values for kiosk customization system navigation; possible values are: `notConfigured` (Not configured; this value defaults to NAVIGATION_DISABLED.), `navigationEnabled` (Home and overview buttons are enabled.), `homeButtonOnly` (Only the home button is enabled.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"kiosk_mode_app_order_enabled": schema.BoolAttribute{
 						Optional:            true,
@@ -401,19 +405,19 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									},
 									PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 									Computed:            true,
-									MarkdownDescription: "Item to be arranged / Represents an item on the Android Device Owner Managed Home Screen (application, weblink or folder / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerKioskModeHomeScreenItem?view=graph-rest-beta",
+									MarkdownDescription: "Item to be arranged / Represents an item on the Android Device Owner Managed Home Screen (application, weblink or folder / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodehomescreenitem?view=graph-rest-beta. The _provider_ default value is `{}`.",
 								},
 								"position": schema.Int64Attribute{
 									Optional:            true,
 									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
 									Computed:            true,
-									MarkdownDescription: "Position of the item on the grid. Valid values 0 to 9999999",
+									MarkdownDescription: "Position of the item on the grid. Valid values 0 to 9999999. The _provider_ default value is `0`.",
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "The ordering of items on Kiosk Mode Managed Home Screen. This collection can contain a maximum of 500 elements. / An item in the list of app positions that sets the order of items on the Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerKioskModeAppPositionItem?view=graph-rest-beta",
+						MarkdownDescription: "The ordering of items on Kiosk Mode Managed Home Screen. This collection can contain a maximum of 500 elements. / An item in the list of app positions that sets the order of items on the Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeapppositionitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"kiosk_mode_apps": schema.SetNestedAttribute{
 						Optional: true,
@@ -422,7 +426,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of managed apps that will be shown when the device is in Kiosk Mode. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta",
+						MarkdownDescription: "A list of managed apps that will be shown when the device is in Kiosk Mode. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"kiosk_mode_apps_in_folder_ordered_by_name": schema.BoolAttribute{
 						Optional:            true,
@@ -490,13 +494,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									},
 									PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 									Computed:            true,
-									MarkdownDescription: "Items to be added to managed folder. This collection can contain a maximum of 500 elements. / Represents an item that can be added to Android Device Owner folder (application or weblink) / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerKioskModeFolderItem?view=graph-rest-beta",
+									MarkdownDescription: "Items to be added to managed folder. This collection can contain a maximum of 500 elements. / Represents an item that can be added to Android Device Owner folder (application or weblink) / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodefolderitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of managed folders for a device in Kiosk Mode. This collection can contain a maximum of 500 elements. / A folder containing pages of apps and weblinks on the Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerKioskModeManagedFolder?view=graph-rest-beta",
+						MarkdownDescription: "A list of managed folders for a device in Kiosk Mode. This collection can contain a maximum of 500 elements. / A folder containing pages of apps and weblinks on the Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodemanagedfolder?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"kiosk_mode_managed_home_screen_auto_signout": schema.BoolAttribute{
 						Optional:            true,
@@ -587,7 +591,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Whether or not to use single app kiosk mode or multi-app kiosk mode. / Possible values of Android Kiosk Mode; possible values are: `notConfigured` (Not configured), `singleAppMode` (Run in single-app mode), `multiAppMode` (Run in multi-app mode)",
+						MarkdownDescription: "Whether or not to use single app kiosk mode or multi-app kiosk mode. / Possible values of Android Kiosk Mode; possible values are: `notConfigured` (Not configured), `singleAppMode` (Run in single-app mode), `multiAppMode` (Run in multi-app mode). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"kiosk_mode_virtual_home_button_enabled": schema.BoolAttribute{
 						Optional:            true,
@@ -609,7 +613,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "The restricted set of WIFI SSIDs available for the user to configure in Kiosk Mode. This collection can contain a maximum of 500 elements.",
+						MarkdownDescription: "The restricted set of WIFI SSIDs available for the user to configure in Kiosk Mode. This collection can contain a maximum of 500 elements. The _provider_ default value is `[]`.",
 					},
 					"kiosk_mode_wifi_configuration_enabled": schema.BoolAttribute{
 						Optional:            true,
@@ -692,7 +696,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "List of device keyguard features to block. This collection can contain a maximum of 11 elements. / Android keyguard feature; possible values are: `notConfigured` (Not configured; this value is ignored.), `camera` (Camera usage when on secure keyguard screens.), `notifications` (Showing notifications when on secure keyguard screens.), `unredactedNotifications` (Showing unredacted notifications when on secure keyguard screens.), `trustAgents` (Trust agent state when on secure keyguard screens.), `fingerprint` (Fingerprint sensor usage when on secure keyguard screens.), `remoteInput` (Notification text entry when on secure keyguard screens.), `allFeatures` (All keyguard features when on secure keyguard screens.), `face` (Face authentication on secure keyguard screens.), `iris` (Iris authentication on secure keyguard screens.), `biometrics` (All biometric authentication on secure keyguard screens.)",
+						MarkdownDescription: "List of device keyguard features to block. This collection can contain a maximum of 11 elements. / Android keyguard feature; possible values are: `notConfigured` (Not configured; this value is ignored.), `camera` (Camera usage when on secure keyguard screens.), `notifications` (Showing notifications when on secure keyguard screens.), `unredactedNotifications` (Showing unredacted notifications when on secure keyguard screens.), `trustAgents` (Trust agent state when on secure keyguard screens.), `fingerprint` (Fingerprint sensor usage when on secure keyguard screens.), `remoteInput` (Notification text entry when on secure keyguard screens.), `allFeatures` (All keyguard features when on secure keyguard screens.), `face` (Face authentication on secure keyguard screens.), `iris` (Iris authentication on secure keyguard screens.), `biometrics` (All biometric authentication on secure keyguard screens.). The _provider_ default value is `[]`.",
 					},
 					"password_expiration_days": schema.Int64Attribute{
 						Optional:            true,
@@ -741,7 +745,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
 						Computed:            true,
-						MarkdownDescription: "Indicates the minimum password quality required on the device. / Android Device Owner policy required password type; possible values are: `deviceDefault` (Device default value, no intent.), `required` (There must be a password set, but there are no restrictions on type.), `numeric` (At least numeric.), `numericComplex` (At least numeric with no repeating or ordered sequences.), `alphabetic` (At least alphabetic password.), `alphanumeric` (At least alphanumeric password), `alphanumericWithSymbols` (At least alphanumeric with symbols.), `lowSecurityBiometric` (Low security biometrics based password required.), `customPassword` (Custom password set by the admin.)",
+						MarkdownDescription: "Indicates the minimum password quality required on the device. / Android Device Owner policy required password type; possible values are: `deviceDefault` (Device default value, no intent.), `required` (There must be a password set, but there are no restrictions on type.), `numeric` (At least numeric.), `numericComplex` (At least numeric with no repeating or ordered sequences.), `alphabetic` (At least alphabetic password.), `alphanumeric` (At least alphanumeric password), `alphanumericWithSymbols` (At least alphanumeric with symbols.), `lowSecurityBiometric` (Low security biometrics based password required.), `customPassword` (Custom password set by the admin.). The _provider_ default value is `\"deviceDefault\"`.",
 					},
 					"password_require_unlock": schema.StringAttribute{
 						Optional: true,
@@ -750,7 +754,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
 						Computed:            true,
-						MarkdownDescription: "Indicates the timeout period after which a device must be unlocked using a form of strong authentication. / An enum representing possible values for required password unlock; possible values are: `deviceDefault` (Timeout period before strong authentication is required is set to the device's default.), `daily` (Timeout period before strong authentication is required is set to 24 hours.), `unkownFutureValue` (Unknown future value (reserved, not used right now))",
+						MarkdownDescription: "Indicates the timeout period after which a device must be unlocked using a form of strong authentication. / An enum representing possible values for required password unlock; possible values are: `deviceDefault` (Timeout period before strong authentication is required is set to the device's default.), `daily` (Timeout period before strong authentication is required is set to 24 hours.), `unkownFutureValue` (Unknown future value (reserved, not used right now)). The _provider_ default value is `\"deviceDefault\"`.",
 					},
 					"password_sign_in_failure_count_before_factory_reset": schema.Int64Attribute{
 						Optional:            true,
@@ -771,7 +775,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Policy applied to applications in the personal profile. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta",
+						MarkdownDescription: "Policy applied to applications in the personal profile. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"personal_profile_play_store_mode": schema.StringAttribute{
 						Optional: true,
@@ -780,7 +784,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Used together with PersonalProfilePersonalApplications to control how apps in the personal profile are allowed or blocked. / Used together with personalApplications to control how apps in the personal profile are allowed or blocked; possible values are: `notConfigured` (Not configured.), `blockedApps` (Blocked Apps.), `allowedApps` (Allowed Apps.)",
+						MarkdownDescription: "Used together with PersonalProfilePersonalApplications to control how apps in the personal profile are allowed or blocked. / Used together with personalApplications to control how apps in the personal profile are allowed or blocked; possible values are: `notConfigured` (Not configured.), `blockedApps` (Blocked Apps.), `allowedApps` (Allowed Apps.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"personal_profile_screen_capture_blocked": schema.BoolAttribute{
 						Optional:            true,
@@ -809,7 +813,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not verify apps is required.",
+						MarkdownDescription: "Indicates whether or not verify apps is required. The _provider_ default value is `true`.",
 					},
 					"share_device_location_disabled": schema.BoolAttribute{
 						Optional:            true,
@@ -829,10 +833,10 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 								PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 								Computed:            true,
-								MarkdownDescription: "The list of <locale, message> pairs. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyValuePair?view=graph-rest-beta",
+								MarkdownDescription: "The list of <locale, message> pairs. This collection can contain a maximum of 500 elements. / Key value pair for storing custom settings / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`.",
 							},
 						},
-						MarkdownDescription: "Represents the customized short help text provided to users when they attempt to modify managed settings on their device. / Represents a user-facing message with locale information as well as a default message to be used if the user's locale doesn't match with any of the localized messages / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerUserFacingMessage?view=graph-rest-beta",
+						MarkdownDescription: "Represents the customized short help text provided to users when they attempt to modify managed settings on their device. / Represents a user-facing message with locale information as well as a default message to be used if the user's locale doesn't match with any of the localized messages / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceowneruserfacingmessage?view=graph-rest-beta",
 					},
 					"status_bar_blocked": schema.BoolAttribute{
 						Optional:            true,
@@ -848,7 +852,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "List of modes in which the device's display will stay powered-on. This collection can contain a maximum of 4 elements. / Android Device Owner possible values for states of the device's plugged-in power modes; possible values are: `notConfigured` (Not configured; this value is ignored.), `ac` (Power source is an AC charger.), `usb` (Power source is a USB port.), `wireless` (Power source is wireless.)",
+						MarkdownDescription: "List of modes in which the device's display will stay powered-on. This collection can contain a maximum of 4 elements. / Android Device Owner possible values for states of the device's plugged-in power modes; possible values are: `notConfigured` (Not configured; this value is ignored.), `ac` (Power source is an AC charger.), `usb` (Power source is a USB port.), `wireless` (Power source is wireless.). The _provider_ default value is `[]`.",
 					},
 					"storage_allow_usb": schema.BoolAttribute{
 						Optional:            true,
@@ -870,31 +874,31 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Optional:            true,
 									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
 									Computed:            true,
-									MarkdownDescription: "The day of the end date of the freeze period. Valid values 1 to 31",
+									MarkdownDescription: "The day of the end date of the freeze period. Valid values 1 to 31. The _provider_ default value is `0`.",
 								},
 								"end_month": schema.Int64Attribute{
 									Optional:            true,
 									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
 									Computed:            true,
-									MarkdownDescription: "The month of the end date of the freeze period. Valid values 1 to 12",
+									MarkdownDescription: "The month of the end date of the freeze period. Valid values 1 to 12. The _provider_ default value is `0`.",
 								},
 								"start_day": schema.Int64Attribute{
 									Optional:            true,
 									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
 									Computed:            true,
-									MarkdownDescription: "The day of the start date of the freeze period. Valid values 1 to 31",
+									MarkdownDescription: "The day of the start date of the freeze period. Valid values 1 to 31. The _provider_ default value is `0`.",
 								},
 								"start_month": schema.Int64Attribute{
 									Optional:            true,
 									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
 									Computed:            true,
-									MarkdownDescription: "The month of the start date of the freeze period. Valid values 1 to 12",
+									MarkdownDescription: "The month of the start date of the freeze period. Valid values 1 to 12. The _provider_ default value is `0`.",
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Indicates the annually repeating time periods during which system updates are postponed. This collection can contain a maximum of 500 elements. / Represents one item in the list of freeze periods for Android Device Owner system updates / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerSystemUpdateFreezePeriod?view=graph-rest-beta",
+						MarkdownDescription: "Indicates the annually repeating time periods during which system updates are postponed. This collection can contain a maximum of 500 elements. / Represents one item in the list of freeze periods for Android Device Owner system updates / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownersystemupdatefreezeperiod?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"system_update_install_type": schema.StringAttribute{
 						Optional: true,
@@ -931,13 +935,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "If an always on VPN package name is specified, whether or not to lock network traffic when that VPN is disconnected.",
+						MarkdownDescription: "If an always on VPN package name is specified, whether or not to lock network traffic when that VPN is disconnected. The _provider_ default value is `false`.",
 					},
 					"vpn_always_on_package_identifier": schema.StringAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
 						Computed:            true,
-						MarkdownDescription: "Android app package name for app that will handle an always-on VPN connection.",
+						MarkdownDescription: "Android app package name for app that will handle an always-on VPN connection. The _provider_ default value is `\"\"`.",
 					},
 					"wifi_block_edit_configurations": schema.BoolAttribute{
 						Optional:            true,
@@ -990,7 +994,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
 						Computed:            true,
-						MarkdownDescription: "Indicates the minimum password quality required on the work profile password. / Android Device Owner policy required password type; possible values are: `deviceDefault` (Device default value, no intent.), `required` (There must be a password set, but there are no restrictions on type.), `numeric` (At least numeric.), `numericComplex` (At least numeric with no repeating or ordered sequences.), `alphabetic` (At least alphabetic password.), `alphanumeric` (At least alphanumeric password), `alphanumericWithSymbols` (At least alphanumeric with symbols.), `lowSecurityBiometric` (Low security biometrics based password required.), `customPassword` (Custom password set by the admin.)",
+						MarkdownDescription: "Indicates the minimum password quality required on the work profile password. / Android Device Owner policy required password type; possible values are: `deviceDefault` (Device default value, no intent.), `required` (There must be a password set, but there are no restrictions on type.), `numeric` (At least numeric.), `numericComplex` (At least numeric with no repeating or ordered sequences.), `alphabetic` (At least alphabetic password.), `alphanumeric` (At least alphanumeric password), `alphanumericWithSymbols` (At least alphanumeric with symbols.), `lowSecurityBiometric` (Low security biometrics based password required.), `customPassword` (Custom password set by the admin.). The _provider_ default value is `\"deviceDefault\"`.",
 					},
 					"work_profile_password_require_unlock": schema.StringAttribute{
 						Optional: true,
@@ -999,7 +1003,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
 						Computed:            true,
-						MarkdownDescription: "Indicates the timeout period after which a work profile must be unlocked using a form of strong authentication. / An enum representing possible values for required password unlock; possible values are: `deviceDefault` (Timeout period before strong authentication is required is set to the device's default.), `daily` (Timeout period before strong authentication is required is set to 24 hours.), `unkownFutureValue` (Unknown future value (reserved, not used right now))",
+						MarkdownDescription: "Indicates the timeout period after which a work profile must be unlocked using a form of strong authentication. / An enum representing possible values for required password unlock; possible values are: `deviceDefault` (Timeout period before strong authentication is required is set to the device's default.), `daily` (Timeout period before strong authentication is required is set to 24 hours.), `unkownFutureValue` (Unknown future value (reserved, not used right now)). The _provider_ default value is `\"deviceDefault\"`.",
 					},
 					"work_profile_password_sign_in_failure_count_before_factory_reset": schema.Int64Attribute{
 						Optional:            true,
@@ -1007,7 +1011,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the androidDeviceOwnerGeneralDeviceConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidDeviceOwnerGeneralDeviceConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the androidDeviceOwnerGeneralDeviceConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownergeneraldeviceconfiguration?view=graph-rest-beta",
 			},
 		},
 		"android_work_profile_general_device": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1020,37 +1024,37 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Determine domains allow-list for accounts that can be added to work profile.",
+						MarkdownDescription: "Determine domains allow-list for accounts that can be added to work profile. The _provider_ default value is `[]`.",
 					},
 					"block_unified_password_for_work_profile": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Prevent using unified password for unlocking device and work profile.",
+						MarkdownDescription: "Prevent using unified password for unlocking device and work profile. The _provider_ default value is `false`.",
 					},
 					"password_block_face_unlock": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block face unlock.",
+						MarkdownDescription: "Indicates whether or not to block face unlock. The _provider_ default value is `false`.",
 					},
 					"password_block_fingerprint_unlock": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block fingerprint unlock.",
+						MarkdownDescription: "Indicates whether or not to block fingerprint unlock. The _provider_ default value is `false`.",
 					},
 					"password_block_iris_unlock": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block iris unlock.",
+						MarkdownDescription: "Indicates whether or not to block iris unlock. The _provider_ default value is `false`.",
 					},
 					"password_block_trust_agents": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block Smart Lock and other trust agents.",
+						MarkdownDescription: "Indicates whether or not to block Smart Lock and other trust agents. The _provider_ default value is `false`.",
 					},
 					"password_expiration_days": schema.Int64Attribute{
 						Optional:            true,
@@ -1077,7 +1081,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 							wpdefaultvalue.StringDefaultValue("atLeastNumeric"),
 						},
 						Computed:            true,
-						MarkdownDescription: "Type of password that is required. / Android Work Profile required password type; possible values are: `deviceDefault` (Device default value, no intent.), `lowSecurityBiometric` (Low security biometrics based password required.), `required` (Required.), `atLeastNumeric` (At least numeric password required.), `numericComplex` (Numeric complex password required.), `atLeastAlphabetic` (At least alphabetic password required.), `atLeastAlphanumeric` (At least alphanumeric password required.), `alphanumericWithSymbols` (At least alphanumeric with symbols password required.)",
+						MarkdownDescription: "Type of password that is required. / Android Work Profile required password type; possible values are: `deviceDefault` (Device default value, no intent.), `lowSecurityBiometric` (Low security biometrics based password required.), `required` (Required.), `atLeastNumeric` (At least numeric password required.), `numericComplex` (Numeric complex password required.), `atLeastAlphabetic` (At least alphabetic password required.), `atLeastAlphanumeric` (At least alphanumeric password required.), `alphanumericWithSymbols` (At least alphanumeric with symbols password required.). The _provider_ default value is `\"atLeastNumeric\"`.",
 					},
 					"password_sign_in_failure_count_before_factory_reset": schema.Int64Attribute{
 						Optional:            true,
@@ -1090,13 +1094,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("none")},
 						Computed:            true,
-						MarkdownDescription: "Indicates the required device password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android 12+. / The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+; possible values are: `none` (Device default value, no password.), `low` (The required password complexity on the device is of type low as defined by the Android documentation.), `medium` (The required password complexity on the device is of type medium as defined by the Android documentation.), `high` (The required password complexity on the device is of type high as defined by the Android documentation.)",
+						MarkdownDescription: "Indicates the required device password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android 12+. / The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+; possible values are: `none` (Device default value, no password.), `low` (The required password complexity on the device is of type low as defined by the Android documentation.), `medium` (The required password complexity on the device is of type medium as defined by the Android documentation.), `high` (The required password complexity on the device is of type high as defined by the Android documentation.). The _provider_ default value is `\"none\"`.",
 					},
 					"security_require_verify_apps": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Require the Android Verify apps feature is turned on.",
+						MarkdownDescription: "Require the Android Verify apps feature is turned on. The _provider_ default value is `false`.",
 					},
 					"vpn_always_on_package_identifier": schema.StringAttribute{
 						Optional:            true,
@@ -1106,7 +1110,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Enable lockdown mode for always-on VPN.",
+						MarkdownDescription: "Enable lockdown mode for always-on VPN. The _provider_ default value is `false`.",
 					},
 					"work_profile_account_use": schema.StringAttribute{
 						Optional: true,
@@ -1117,73 +1121,73 @@ var deviceConfigurationResourceSchema = schema.Schema{
 							wpdefaultvalue.StringDefaultValue("allowAllExceptGoogleAccounts"),
 						},
 						Computed:            true,
-						MarkdownDescription: "Control user's ability to add accounts in work profile including Google accounts. / An enum representing possible values for account use in work profile; possible values are: `allowAllExceptGoogleAccounts` (Allow additon of all accounts except Google accounts in Android Work Profile.), `blockAll` (Block any account from being added in Android Work Profile. ), `allowAll` (Allow addition of all accounts (including Google accounts) in Android Work Profile.), `unknownFutureValue` (Unknown future value for evolvable enum patterns.)",
+						MarkdownDescription: "Control user's ability to add accounts in work profile including Google accounts. / An enum representing possible values for account use in work profile; possible values are: `allowAllExceptGoogleAccounts` (Allow additon of all accounts except Google accounts in Android Work Profile.), `blockAll` (Block any account from being added in Android Work Profile.), `allowAll` (Allow addition of all accounts (including Google accounts) in Android Work Profile.), `unknownFutureValue` (Unknown future value for evolvable enum patterns.). The _provider_ default value is `\"allowAllExceptGoogleAccounts\"`.",
 					},
 					"work_profile_allow_app_installs_from_unknown_sources": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether to allow installation of apps from unknown sources.",
+						MarkdownDescription: "Indicates whether to allow installation of apps from unknown sources. The _provider_ default value is `false`.",
 					},
 					"work_profile_allow_widgets": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Allow widgets from work profile apps.",
+						MarkdownDescription: "Allow widgets from work profile apps. The _provider_ default value is `false`.",
 					},
 					"work_profile_block_adding_accounts": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Block users from adding/removing accounts in work profile.",
+						MarkdownDescription: "Block users from adding/removing accounts in work profile. The _provider_ default value is `false`.",
 					},
 					"work_profile_block_camera": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Block work profile camera.",
+						MarkdownDescription: "Block work profile camera. The _provider_ default value is `false`.",
 					},
 					"work_profile_block_cross_profile_caller_id": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Block display work profile caller ID in personal profile.",
+						MarkdownDescription: "Block display work profile caller ID in personal profile. The _provider_ default value is `false`.",
 					},
 					"work_profile_block_cross_profile_contacts_search": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Block work profile contacts availability in personal profile.",
+						MarkdownDescription: "Block work profile contacts availability in personal profile. The _provider_ default value is `false`.",
 					},
 					"work_profile_block_cross_profile_copy_paste": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
 						Computed:            true,
-						MarkdownDescription: "Boolean that indicates if the setting disallow cross profile copy/paste is enabled.",
+						MarkdownDescription: "Boolean that indicates if the setting disallow cross profile copy/paste is enabled. The _provider_ default value is `true`.",
 					},
 					"work_profile_block_notifications_while_device_locked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block notifications while device locked.",
+						MarkdownDescription: "Indicates whether or not to block notifications while device locked. The _provider_ default value is `false`.",
 					},
 					"work_profile_block_personal_app_installs_from_unknown_sources": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Prevent app installations from unknown sources in the personal profile.",
+						MarkdownDescription: "Prevent app installations from unknown sources in the personal profile. The _provider_ default value is `false`.",
 					},
 					"work_profile_block_screen_capture": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Block screen capture in work profile.",
+						MarkdownDescription: "Block screen capture in work profile. The _provider_ default value is `false`.",
 					},
 					"work_profile_bluetooth_enable_contact_sharing": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Allow bluetooth devices to access enterprise contacts.",
+						MarkdownDescription: "Allow bluetooth devices to access enterprise contacts. The _provider_ default value is `false`.",
 					},
 					"work_profile_data_sharing_type": schema.StringAttribute{
 						Optional: true,
@@ -1192,7 +1196,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
 						Computed:            true,
-						MarkdownDescription: "Type of data sharing that is allowed. / Android Work Profile cross profile data sharing type; possible values are: `deviceDefault` (Device default value, no intent.), `preventAny` (Prevent any sharing.), `allowPersonalToWork` (Allow data sharing request from personal profile to work profile.), `noRestrictions` (No restrictions on sharing.)",
+						MarkdownDescription: "Type of data sharing that is allowed. / Android Work Profile cross profile data sharing type; possible values are: `deviceDefault` (Device default value, no intent.), `preventAny` (Prevent any sharing.), `allowPersonalToWork` (Allow data sharing request from personal profile to work profile.), `noRestrictions` (No restrictions on sharing.). The _provider_ default value is `\"deviceDefault\"`.",
 					},
 					"work_profile_default_app_permission_policy": schema.StringAttribute{
 						Optional: true,
@@ -1201,31 +1205,31 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
 						Computed:            true,
-						MarkdownDescription: "Type of password that is required. / Android Work Profile default app permission policy type; possible values are: `deviceDefault` (Device default value, no intent.), `prompt` (Prompt.), `autoGrant` (Auto grant.), `autoDeny` (Auto deny.)",
+						MarkdownDescription: "Type of password that is required. / Android Work Profile default app permission policy type; possible values are: `deviceDefault` (Device default value, no intent.), `prompt` (Prompt.), `autoGrant` (Auto grant.), `autoDeny` (Auto deny.). The _provider_ default value is `\"deviceDefault\"`.",
 					},
 					"work_profile_password_block_face_unlock": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block face unlock for work profile.",
+						MarkdownDescription: "Indicates whether or not to block face unlock for work profile. The _provider_ default value is `false`.",
 					},
 					"work_profile_password_block_fingerprint_unlock": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block fingerprint unlock for work profile.",
+						MarkdownDescription: "Indicates whether or not to block fingerprint unlock for work profile. The _provider_ default value is `false`.",
 					},
 					"work_profile_password_block_iris_unlock": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block iris unlock for work profile.",
+						MarkdownDescription: "Indicates whether or not to block iris unlock for work profile. The _provider_ default value is `false`.",
 					},
 					"work_profile_password_block_trust_agents": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block Smart Lock and other trust agents for work profile.",
+						MarkdownDescription: "Indicates whether or not to block Smart Lock and other trust agents for work profile. The _provider_ default value is `false`.",
 					},
 					"work_profile_password_expiration_days": schema.Int64Attribute{
 						Optional:            true,
@@ -1274,7 +1278,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
 						Computed:            true,
-						MarkdownDescription: "Type of work profile password that is required. / Android Work Profile required password type; possible values are: `deviceDefault` (Device default value, no intent.), `lowSecurityBiometric` (Low security biometrics based password required.), `required` (Required.), `atLeastNumeric` (At least numeric password required.), `numericComplex` (Numeric complex password required.), `atLeastAlphabetic` (At least alphabetic password required.), `atLeastAlphanumeric` (At least alphanumeric password required.), `alphanumericWithSymbols` (At least alphanumeric with symbols password required.)",
+						MarkdownDescription: "Type of work profile password that is required. / Android Work Profile required password type; possible values are: `deviceDefault` (Device default value, no intent.), `lowSecurityBiometric` (Low security biometrics based password required.), `required` (Required.), `atLeastNumeric` (At least numeric password required.), `numericComplex` (Numeric complex password required.), `atLeastAlphabetic` (At least alphabetic password required.), `atLeastAlphanumeric` (At least alphanumeric password required.), `alphanumericWithSymbols` (At least alphanumeric with symbols password required.). The _provider_ default value is `\"deviceDefault\"`.",
 					},
 					"work_profile_password_sign_in_failure_count_before_factory_reset": schema.Int64Attribute{
 						Optional:            true,
@@ -1287,17 +1291,69 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("none")},
 						Computed:            true,
-						MarkdownDescription: "Indicates the required work profile password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android 12+. / The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+; possible values are: `none` (Device default value, no password.), `low` (The required password complexity on the device is of type low as defined by the Android documentation.), `medium` (The required password complexity on the device is of type medium as defined by the Android documentation.), `high` (The required password complexity on the device is of type high as defined by the Android documentation.)",
+						MarkdownDescription: "Indicates the required work profile password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. This is a new API targeted to Android 12+. / The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+; possible values are: `none` (Device default value, no password.), `low` (The required password complexity on the device is of type low as defined by the Android documentation.), `medium` (The required password complexity on the device is of type medium as defined by the Android documentation.), `high` (The required password complexity on the device is of type high as defined by the Android documentation.). The _provider_ default value is `\"none\"`.",
 					},
 					"work_profile_require_password": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Password is required or not for work profile",
+						MarkdownDescription: "Password is required or not for work profile. The _provider_ default value is `false`.",
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "Android Work Profile general device configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidWorkProfileGeneralDeviceConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "Android Work Profile general device configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androidworkprofilegeneraldeviceconfiguration?view=graph-rest-beta",
+			},
+		},
+		"edition_upgrade": generic.OdataDerivedTypeNestedAttributeRs{
+			DerivedType: "#microsoft.graph.editionUpgradeConfiguration",
+			SingleNestedAttribute: schema.SingleNestedAttribute{
+				Optional: true,
+				Attributes: map[string]schema.Attribute{ // editionUpgradeConfiguration
+					"license": schema.StringAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+						Computed:            true,
+						MarkdownDescription: "Edition Upgrade License File Content. The _provider_ default value is `\"\"`.",
+					},
+					"license_type": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("productKey", "licenseFile", "notConfigured"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Edition Upgrade License Type. / Edition Upgrade License type; possible values are: `productKey` (Product Key Type), `licenseFile` (License File Type), `notConfigured` (NotConfigured). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"product_key": schema.StringAttribute{
+						Optional: true,
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvalue.StringDefaultValue(""),
+							deviceConfigurationEditionUpgradeProductKeyPlanModifier{},
+						},
+						Computed:            true,
+						MarkdownDescription: "Edition Upgrade Product Key. The _provider_ default value is `\"\"`.  \nProvider Note: MS Graph returns this attribute with most of the digits replaced by `#`. Therefore only the remaining visible digits will be compared to ensure that state matches plan, i.e. one of the visible digits must change for the entity to get updated in MS Graph.",
+					},
+					"target_edition": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("windows10Enterprise", "windows10EnterpriseN", "windows10Education", "windows10EducationN", "windows10MobileEnterprise", "windows10HolographicEnterprise", "windows10Professional", "windows10ProfessionalN", "windows10ProfessionalEducation", "windows10ProfessionalEducationN", "windows10ProfessionalWorkstation", "windows10ProfessionalWorkstationN", "notConfigured", "windows10Home", "windows10HomeChina", "windows10HomeN", "windows10HomeSingleLanguage", "windows10Mobile", "windows10IoTCore", "windows10IoTCoreCommercial"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Edition Upgrade Target Edition. / Windows 10 Edition type; possible values are: `windows10Enterprise` (Windows 10 Enterprise), `windows10EnterpriseN` (Windows 10 EnterpriseN), `windows10Education` (Windows 10 Education), `windows10EducationN` (Windows 10 EducationN), `windows10MobileEnterprise` (Windows 10 Mobile Enterprise), `windows10HolographicEnterprise` (Windows 10 Holographic Enterprise), `windows10Professional` (Windows 10 Professional), `windows10ProfessionalN` (Windows 10 ProfessionalN), `windows10ProfessionalEducation` (Windows 10 Professional Education), `windows10ProfessionalEducationN` (Windows 10 Professional EducationN), `windows10ProfessionalWorkstation` (Windows 10 Professional for Workstations), `windows10ProfessionalWorkstationN` (Windows 10 Professional for Workstations N), `notConfigured` (NotConfigured), `windows10Home` (Windows 10 Home), `windows10HomeChina` (Windows 10 Home China), `windows10HomeN` (Windows 10 Home N), `windows10HomeSingleLanguage` (Windows 10 Home Single Language), `windows10Mobile` (Windows 10 Mobile), `windows10IoTCore` (Windows 10 IoT Core), `windows10IoTCoreCommercial` (Windows 10 IoT Core Commercial). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"windows_s_mode": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("noRestriction", "block", "unlock"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("noRestriction")},
+						Computed:            true,
+						MarkdownDescription: "S mode configuration. / The possible options to configure S mode unlock; possible values are: `noRestriction` (This option will remove all restrictions to unlock S mode - default), `block` (This option will block the user to unlock the device from S mode), `unlock` (This option will unlock the device from S mode). The _provider_ default value is `\"noRestriction\"`.",
+					},
+				},
+				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
+				MarkdownDescription: "Windows 10 Edition Upgrade configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-editionupgradeconfiguration?view=graph-rest-beta  \nProvider Note: There have been reports that creating this type with an Entra Id application would fail even though it did have the permission `DeviceManagementConfiguration.ReadWrite.All`. Since this would be a limitation in MS Graph there is nothing that the provider could do about it.",
 			},
 		},
 		"ios_custom": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1313,7 +1369,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					"file_name": schema.StringAttribute{
 						Required:            true,
 						Description:         `payloadFileName`, // custom MS Graph attribute name
-						MarkdownDescription: "Payload file name (*.mobileconfig | *.xml).",
+						MarkdownDescription: "Payload file name (*.mobileconfig",
 					},
 					"name": schema.StringAttribute{
 						Required:            true,
@@ -1322,7 +1378,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the iosCustomConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosCustomConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the iosCustomConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioscustomconfiguration?view=graph-rest-beta",
 			},
 		},
 		"ios_device_features": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1338,7 +1394,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
 						Description:         `airPrintDestinations`, // custom MS Graph attribute name
-						MarkdownDescription: "An array of AirPrint printers that should always be shown. This collection can contain a maximum of 500 elements. / Represents an AirPrint destination. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-airPrintDestination?view=graph-rest-beta",
+						MarkdownDescription: "An array of AirPrint printers that should always be shown. This collection can contain a maximum of 500 elements. / Represents an AirPrint destination. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-airprintdestination?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"asset_tag_template": schema.StringAttribute{
 						Optional:            true,
@@ -1357,20 +1413,20 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											Optional:            true,
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "Additional URLs allowed for access",
+											MarkdownDescription: "Additional URLs allowed for access. The _provider_ default value is `[]`.",
 										},
 										"blocked_urls": schema.SetAttribute{
 											ElementType:         types.StringType,
 											Optional:            true,
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "Additional URLs blocked for access",
+											MarkdownDescription: "Additional URLs blocked for access. The _provider_ default value is `[]`.",
 										},
 									},
 									Validators: []validator.Object{
 										deviceConfigurationIosWebContentFilterBaseValidator,
 									},
-									MarkdownDescription: "Represents an iOS Web Content Filter setting type, which enables iOS automatic filter feature and allows for additional URL access control. When constructed with no property values, the iOS device will enable the automatic filter regardless. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosWebContentFilterAutoFilter?view=graph-rest-beta",
+									MarkdownDescription: "Represents an iOS Web Content Filter setting type, which enables iOS automatic filter feature and allows for additional URL access control. When constructed with no property values, the iOS device will enable the automatic filter regardless. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioswebcontentfilterautofilter?view=graph-rest-beta",
 								},
 							},
 							"specific_websites_access": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1385,7 +1441,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "URL bookmarks which will be installed into built-in browser and user is only allowed to access websites through bookmarks. This collection can contain a maximum of 500 elements. / iOS URL bookmark / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosBookmark?view=graph-rest-beta",
+											MarkdownDescription: "URL bookmarks which will be installed into built-in browser and user is only allowed to access websites through bookmarks. This collection can contain a maximum of 500 elements. / iOS URL bookmark / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosbookmark?view=graph-rest-beta. The _provider_ default value is `[]`.",
 										},
 										"website_list": schema.SetNestedAttribute{
 											Optional: true,
@@ -1394,17 +1450,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "URL bookmarks which will be installed into built-in browser and user is only allowed to access websites through bookmarks. This collection can contain a maximum of 500 elements. / iOS URL bookmark / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosBookmark?view=graph-rest-beta",
+											MarkdownDescription: "URL bookmarks which will be installed into built-in browser and user is only allowed to access websites through bookmarks. This collection can contain a maximum of 500 elements. / iOS URL bookmark / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosbookmark?view=graph-rest-beta. The _provider_ default value is `[]`.",
 										},
 									},
 									Validators: []validator.Object{
 										deviceConfigurationIosWebContentFilterBaseValidator,
 									},
-									MarkdownDescription: "Represents an iOS Web Content Filter setting type, which installs URL bookmarks into iOS built-in browser. An example scenario is in the classroom where teachers would like the students to navigate websites through browser bookmarks configured on their iOS devices, and no access to other sites. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosWebContentFilterSpecificWebsitesAccess?view=graph-rest-beta",
+									MarkdownDescription: "Represents an iOS Web Content Filter setting type, which installs URL bookmarks into iOS built-in browser. An example scenario is in the classroom where teachers would like the students to navigate websites through browser bookmarks configured on their iOS devices, and no access to other sites. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioswebcontentfilterspecificwebsitesaccess?view=graph-rest-beta",
 								},
 							},
 						},
-						MarkdownDescription: "Gets or sets iOS Web Content Filter settings, supervised mode only / Represents an iOS Web Content Filter setting base type. An empty and abstract base. Caller should use one of derived types for configurations. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosWebContentFilterBase?view=graph-rest-beta",
+						MarkdownDescription: "Gets or sets iOS Web Content Filter settings, supervised mode only / Represents an iOS Web Content Filter setting base type. An empty and abstract base. Caller should use one of derived types for configurations. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioswebcontentfilterbase?view=graph-rest-beta",
 					},
 					"home_screen_dock_icons": schema.SetNestedAttribute{
 						Optional: true,
@@ -1418,7 +1474,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of app and folders to appear on the Home Screen Dock. This collection can contain a maximum of 500 elements. / Represents an item on the iOS Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosHomeScreenItem?view=graph-rest-beta",
+						MarkdownDescription: "A list of app and folders to appear on the Home Screen Dock. This collection can contain a maximum of 500 elements. / Represents an item on the iOS Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"home_screen_grid_height": schema.Int64Attribute{
 						Optional:            true,
@@ -1448,13 +1504,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									},
 									PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 									Computed:            true,
-									MarkdownDescription: "A list of apps, folders, and web clips to appear on a page. This collection can contain a maximum of 500 elements. / Represents an item on the iOS Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosHomeScreenItem?view=graph-rest-beta",
+									MarkdownDescription: "A list of apps, folders, and web clips to appear on a page. This collection can contain a maximum of 500 elements. / Represents an item on the iOS Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of pages on the Home Screen. This collection can contain a maximum of 500 elements. / A page containing apps, folders, and web clips on the Home Screen. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosHomeScreenPage?view=graph-rest-beta",
+						MarkdownDescription: "A list of pages on the Home Screen. This collection can contain a maximum of 500 elements. / A page containing apps, folders, and web clips on the Home Screen. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenpage?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"ios_single_sign_on_extension": schema.SingleNestedAttribute{
 						Optional: true,
@@ -1469,7 +1525,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											Optional:            true,
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "An optional list of additional bundle IDs allowed to use the AAD extension for single sign-on.",
+											MarkdownDescription: "An optional list of additional bundle IDs allowed to use the AAD extension for single sign-on. The _provider_ default value is `[]`.",
 										},
 										"configurations": schema.SetNestedAttribute{
 											Optional: true,
@@ -1478,19 +1534,19 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyTypedValuePair?view=graph-rest-beta",
+											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`.",
 										},
 										"enable_shared_device_mode": schema.BoolAttribute{
 											Optional:            true,
 											PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 											Computed:            true,
-											MarkdownDescription: "Enables or disables shared device mode.",
+											MarkdownDescription: "Enables or disables shared device mode. The _provider_ default value is `false`.",
 										},
 									},
 									Validators: []validator.Object{
 										deviceConfigurationIosSingleSignOnExtensionValidator,
 									},
-									MarkdownDescription: "Represents an Azure AD-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosAzureAdSingleSignOnExtension?view=graph-rest-beta",
+									MarkdownDescription: "Represents an Azure AD-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosazureadsinglesignonextension?view=graph-rest-beta",
 								},
 							},
 							"credential": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1505,14 +1561,14 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyTypedValuePair?view=graph-rest-beta",
+											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`.",
 										},
 										"domains": schema.SetAttribute{
 											ElementType:         types.StringType,
 											Optional:            true,
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "Gets or sets a list of hosts or domain names for which the app extension performs SSO.",
+											MarkdownDescription: "Gets or sets a list of hosts or domain names for which the app extension performs SSO. The _provider_ default value is `[]`.",
 										},
 										"extension_identifier": schema.StringAttribute{
 											Required:            true,
@@ -1530,7 +1586,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										deviceConfigurationIosSingleSignOnExtensionValidator,
 									},
-									MarkdownDescription: "Represents a Credential-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosCredentialSingleSignOnExtension?view=graph-rest-beta",
+									MarkdownDescription: "Represents a Credential-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioscredentialsinglesignonextension?view=graph-rest-beta",
 								},
 							},
 							"kerberos": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1638,7 +1694,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										deviceConfigurationIosSingleSignOnExtensionValidator,
 									},
-									MarkdownDescription: "Represents a Kerberos-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosKerberosSingleSignOnExtension?view=graph-rest-beta",
+									MarkdownDescription: "Represents a Kerberos-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioskerberossinglesignonextension?view=graph-rest-beta",
 								},
 							},
 							"redirect": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1653,7 +1709,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyTypedValuePair?view=graph-rest-beta",
+											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`.",
 										},
 										"extension_identifier": schema.StringAttribute{
 											Required:            true,
@@ -1672,11 +1728,11 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										deviceConfigurationIosSingleSignOnExtensionValidator,
 									},
-									MarkdownDescription: "Represents a Redirect-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosRedirectSingleSignOnExtension?view=graph-rest-beta",
+									MarkdownDescription: "Represents a Redirect-type Single Sign-On extension profile for iOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosredirectsinglesignonextension?view=graph-rest-beta",
 								},
 							},
 						},
-						MarkdownDescription: "Gets or sets a single sign-on extension profile. / An abstract base class for all iOS-specific single sign-on extension types. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosSingleSignOnExtension?view=graph-rest-beta",
+						MarkdownDescription: "Gets or sets a single sign-on extension profile. / An abstract base class for all iOS-specific single sign-on extension types. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iossinglesignonextension?view=graph-rest-beta",
 					},
 					"lock_screen_footnote": schema.StringAttribute{
 						Optional:            true,
@@ -1693,7 +1749,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									},
 									PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
 									Computed:            true,
-									MarkdownDescription: "Indicates the type of alert for notifications for this app. / Notification Settings Alert Type; possible values are: `deviceDefault` (Device default value, no intent.), `banner` (Banner.), `modal` (Modal.), `none` (None.)",
+									MarkdownDescription: "Indicates the type of alert for notifications for this app. / Notification Settings Alert Type; possible values are: `deviceDefault` (Device default value, no intent.), `banner` (Banner.), `modal` (Modal.), `none` (None.). The _provider_ default value is `\"deviceDefault\"`.",
 								},
 								"app_name": schema.StringAttribute{
 									Optional:            true,
@@ -1708,7 +1764,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
 									Computed:            true,
 									Description:         `bundleID`, // custom MS Graph attribute name
-									MarkdownDescription: "Bundle id of app to which to apply these notification settings.",
+									MarkdownDescription: "Bundle id of app to which to apply these notification settings. The _provider_ default value is `\"\"`.",
 								},
 								"enabled": schema.BoolAttribute{
 									Optional:            true,
@@ -1721,7 +1777,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									},
 									PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 									Computed:            true,
-									MarkdownDescription: "Overrides the notification preview policy set by the user on an iOS device. / Determines when notification previews are visible on an iOS device. Previews can include things like text (from Messages and Mail) and invitation details (from Calendar). When configured, it will override the user's defined preview settings; possible values are: `notConfigured` (Notification preview settings will not be overwritten.), `alwaysShow` (Always show notification previews.), `hideWhenLocked` (Only show notification previews when the device is unlocked.), `neverShow` (Never show notification previews.)",
+									MarkdownDescription: "Overrides the notification preview policy set by the user on an iOS device. / Determines when notification previews are visible on an iOS device. Previews can include things like text (from Messages and Mail) and invitation details (from Calendar). When configured, it will override the user's defined preview settings; possible values are: `notConfigured` (Notification preview settings will not be overwritten.), `alwaysShow` (Always show notification previews.), `hideWhenLocked` (Only show notification previews when the device is unlocked.), `neverShow` (Never show notification previews.). The _provider_ default value is `\"notConfigured\"`.",
 								},
 								"publisher": schema.StringAttribute{
 									Optional:            true,
@@ -1743,7 +1799,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Notification settings for each bundle id. Applicable to devices in supervised mode only (iOS 9.3 and later). This collection can contain a maximum of 500 elements. / An item describing notification setting. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosNotificationSettings?view=graph-rest-beta",
+						MarkdownDescription: "Notification settings for each bundle id. Applicable to devices in supervised mode only (iOS 9.3 and later). This collection can contain a maximum of 500 elements. / An item describing notification setting. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosnotificationsettings?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"single_sign_on_settings": schema.SingleNestedAttribute{
 						Optional: true,
@@ -1755,14 +1811,14 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 								PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 								Computed:            true,
-								MarkdownDescription: "List of app identifiers that are allowed to use this login. If this field is omitted, the login applies to all applications on the device. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta",
+								MarkdownDescription: "List of app identifiers that are allowed to use this login. If this field is omitted, the login applies to all applications on the device. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 							},
 							"allowed_urls": schema.SetAttribute{
 								ElementType:         types.StringType,
 								Optional:            true,
 								PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 								Computed:            true,
-								MarkdownDescription: "List of HTTP URLs that must be matched in order to use this login. With iOS 9.0 or later, a wildcard characters may be used.",
+								MarkdownDescription: "List of HTTP URLs that must be matched in order to use this login. With iOS 9.0 or later, a wildcard characters may be used. The _provider_ default value is `[]`.",
 							},
 							"display_name": schema.StringAttribute{
 								Optional:            true,
@@ -1777,7 +1833,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								MarkdownDescription: "A Kerberos realm name. Case sensitive.",
 							},
 						},
-						MarkdownDescription: "The Kerberos login settings that enable apps on receiving devices to authenticate smoothly. / iOS Kerberos authentication settings for single sign-on / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosSingleSignOnSettings?view=graph-rest-beta",
+						MarkdownDescription: "The Kerberos login settings that enable apps on receiving devices to authenticate smoothly. / iOS Kerberos authentication settings for single sign-on / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iossinglesignonsettings?view=graph-rest-beta",
 					},
 					"wallpaper_display_location": schema.StringAttribute{
 						Optional: true,
@@ -1786,7 +1842,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "A wallpaper display location specifier. / An enum type for wallpaper display location specifier; possible values are: `notConfigured` (No location specified for wallpaper display.), `lockScreen` (A configured wallpaper image is displayed on Lock screen.), `homeScreen` (A configured wallpaper image is displayed on Home (icon list) screen.), `lockAndHomeScreens` (A configured wallpaper image is displayed on Lock screen and Home screen.)",
+						MarkdownDescription: "A wallpaper display location specifier. / An enum type for wallpaper display location specifier; possible values are: `notConfigured` (No location specified for wallpaper display.), `lockScreen` (A configured wallpaper image is displayed on Lock screen.), `homeScreen` (A configured wallpaper image is displayed on Home (icon list) screen.), `lockAndHomeScreens` (A configured wallpaper image is displayed on Lock screen and Home screen.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"wallpaper_image": schema.SingleNestedAttribute{
 						Optional: true,
@@ -1800,11 +1856,11 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								MarkdownDescription: "The byte array that contains the actual content.",
 							},
 						},
-						MarkdownDescription: "A wallpaper image must be in either PNG or JPEG format. It requires a supervised device with iOS 8 or later version. / Contains properties for a generic mime content. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimeContent?view=graph-rest-beta",
+						MarkdownDescription: "A wallpaper image must be in either PNG or JPEG format. It requires a supervised device with iOS 8 or later version. / Contains properties for a generic mime content. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta",
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "iOS Device Features Configuration Profile. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosDeviceFeaturesConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "iOS Device Features Configuration Profile. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosdevicefeaturesconfiguration?view=graph-rest-beta",
 			},
 		},
 		"ios_eas_email_profile": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1840,7 +1896,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 							wpdefaultvalue.StringDefaultValue("userPrincipalName"),
 						},
 						Computed:            true,
-						MarkdownDescription: "Username attribute that is picked from AAD and injected into this profile before installing on the device. / Possible values for username source or email source; possible values are: `userPrincipalName` (User principal name.), `primarySmtpAddress` (Primary SMTP address.)",
+						MarkdownDescription: "Username attribute that is picked from AAD and injected into this profile before installing on the device. / Possible values for username source or email source; possible values are: `userPrincipalName` (User principal name.), `primarySmtpAddress` (Primary SMTP address.). The _provider_ default value is `\"userPrincipalName\"`.",
 					},
 					"account_name": schema.StringAttribute{
 						Required:            true,
@@ -1872,7 +1928,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
 						Computed:            true,
-						MarkdownDescription: "Duration of time email should be synced back to.  / Possible values for email sync duration; possible values are: `userDefined` (User Defined, default value, no intent.), `oneDay` (Sync one day of email.), `threeDays` (Sync three days of email.), `oneWeek` (Sync one week of email.), `twoWeeks` (Sync two weeks of email.), `oneMonth` (Sync one month of email.), `unlimited` (Sync an unlimited duration of email.)",
+						MarkdownDescription: "Duration of time email should be synced back to. . / Possible values for email sync duration; possible values are: `userDefined` (User Defined, default value, no intent.), `oneDay` (Sync one day of email.), `threeDays` (Sync three days of email.), `oneWeek` (Sync one week of email.), `twoWeeks` (Sync two weeks of email.), `oneMonth` (Sync one month of email.), `unlimited` (Sync an unlimited duration of email.). The _provider_ default value is `\"userDefined\"`.",
 					},
 					"eas_services": schema.StringAttribute{
 						Optional: true,
@@ -1912,7 +1968,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to use SSL.",
+						MarkdownDescription: "Indicates whether or not to use SSL. The _provider_ default value is `true`.",
 					},
 					"signing_certificate_type": schema.StringAttribute{
 						Optional: true,
@@ -1928,7 +1984,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "By providing configurations in this profile you can instruct the native email client on iOS devices to communicate with an Exchange server and get email, contacts, calendar, reminders, and notes. Furthermore, you can also specify how much email to sync and how often the device should sync. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosEasEmailProfileConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "By providing configurations in this profile you can instruct the native email client on iOS devices to communicate with an Exchange server and get email, contacts, calendar, reminders, and notes. Furthermore, you can also specify how much email to sync and how often the device should sync. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioseasemailprofileconfiguration?view=graph-rest-beta",
 			},
 		},
 		"ios_general_device": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1940,98 +1996,98 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow account modification when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to allow account modification when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"activation_lock_allow_when_supervised": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow activation lock when the device is in the supervised mode.",
+						MarkdownDescription: "Indicates whether or not to allow activation lock when the device is in the supervised mode. The _provider_ default value is `false`.",
 					},
 					"airdrop_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `airDropBlocked`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to allow AirDrop when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to allow AirDrop when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"airdrop_force_unmanaged_drop_target": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `airDropForceUnmanagedDropTarget`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to cause AirDrop to be considered an unmanaged drop target (iOS 9.0 and later).",
+						MarkdownDescription: "Indicates whether or not to cause AirDrop to be considered an unmanaged drop target (iOS 9.0 and later). The _provider_ default value is `false`.",
 					},
 					"airplay_force_pairing_password_for_outgoing_requests": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `airPlayForcePairingPasswordForOutgoingRequests`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to enforce all devices receiving AirPlay requests from this device to use a pairing password.",
+						MarkdownDescription: "Indicates whether or not to enforce all devices receiving AirPlay requests from this device to use a pairing password. The _provider_ default value is `false`.",
 					},
 					"airprint_block_credentials_storage": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `airPrintBlockCredentialsStorage`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not keychain storage of username and password for Airprint is blocked (iOS 11.0 and later).",
+						MarkdownDescription: "Indicates whether or not keychain storage of username and password for Airprint is blocked (iOS 11.0 and later). The _provider_ default value is `false`.",
 					},
 					"airprint_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `airPrintBlocked`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not AirPrint is blocked (iOS 11.0 and later).",
+						MarkdownDescription: "Indicates whether or not AirPrint is blocked (iOS 11.0 and later). The _provider_ default value is `false`.",
 					},
 					"airprint_blocki_beacon_discovery": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `airPrintBlockiBeaconDiscovery`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not iBeacon discovery of AirPrint printers is blocked. This prevents spurious AirPrint Bluetooth beacons from phishing for network traffic (iOS 11.0 and later).",
+						MarkdownDescription: "Indicates whether or not iBeacon discovery of AirPrint printers is blocked. This prevents spurious AirPrint Bluetooth beacons from phishing for network traffic (iOS 11.0 and later). The _provider_ default value is `false`.",
 					},
 					"airprint_force_trusted_tls": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `airPrintForceTrustedTLS`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates if trusted certificates are required for TLS printing communication (iOS 11.0 and later).",
+						MarkdownDescription: "Indicates if trusted certificates are required for TLS printing communication (iOS 11.0 and later). The _provider_ default value is `false`.",
 					},
 					"app_clips_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Prevents a user from adding any App Clips and removes any existing App Clips on the device.",
+						MarkdownDescription: "Prevents a user from adding any App Clips and removes any existing App Clips on the device. The _provider_ default value is `false`.",
 					},
 					"apple_news_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using News when the device is in supervised mode (iOS 9.0 and later).",
+						MarkdownDescription: "Indicates whether or not to block the user from using News when the device is in supervised mode (iOS 9.0 and later). The _provider_ default value is `false`.",
 					},
 					"apple_personalized_ads_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Limits Apple personalized advertising when true. Available in iOS 14 and later.",
+						MarkdownDescription: "Limits Apple personalized advertising when true. Available in iOS 14 and later. The _provider_ default value is `false`.",
 					},
 					"apple_watch_block_pairing": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow Apple Watch pairing when the device is in supervised mode (iOS 9.0 and later).",
+						MarkdownDescription: "Indicates whether or not to allow Apple Watch pairing when the device is in supervised mode (iOS 9.0 and later). The _provider_ default value is `false`.",
 					},
 					"apple_watch_force_wrist_detection": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to force a paired Apple Watch to use Wrist Detection (iOS 8.2 and later).",
+						MarkdownDescription: "Indicates whether or not to force a paired Apple Watch to use Wrist Detection (iOS 8.2 and later). The _provider_ default value is `false`.",
 					},
 					"app_removal_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates if the removal of apps is allowed.",
+						MarkdownDescription: "Indicates if the removal of apps is allowed. The _provider_ default value is `false`.",
 					},
 					"apps_single_app_mode_list": schema.SetNestedAttribute{
 						Optional: true,
@@ -2040,38 +2096,38 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Gets or sets the list of iOS apps allowed to autonomously enter Single App Mode. Supervised only. iOS 7.0 and later. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta",
+						MarkdownDescription: "Gets or sets the list of iOS apps allowed to autonomously enter Single App Mode. Supervised only. iOS 7.0 and later. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"app_store_block_automatic_downloads": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the automatic downloading of apps purchased on other devices when the device is in supervised mode (iOS 9.0 and later).",
+						MarkdownDescription: "Indicates whether or not to block the automatic downloading of apps purchased on other devices when the device is in supervised mode (iOS 9.0 and later). The _provider_ default value is `false`.",
 					},
 					"app_store_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using the App Store. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block the user from using the App Store. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"app_store_block_in_app_purchases": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from making in app purchases.",
+						MarkdownDescription: "Indicates whether or not to block the user from making in app purchases. The _provider_ default value is `false`.",
 					},
 					"app_store_block_ui_app_installation": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `appStoreBlockUIAppInstallation`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block the App Store app, not restricting installation through Host apps. Applies to supervised mode only (iOS 9.0 and later).",
+						MarkdownDescription: "Indicates whether or not to block the App Store app, not restricting installation through Host apps. Applies to supervised mode only (iOS 9.0 and later). The _provider_ default value is `false`.",
 					},
 					"app_store_require_password": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to require a password when using the app store.",
+						MarkdownDescription: "Indicates whether or not to require a password when using the app store. The _provider_ default value is `false`.",
 					},
 					"apps_visibility_list": schema.SetNestedAttribute{
 						Optional: true,
@@ -2080,7 +2136,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "List of apps in the visibility list (either visible/launchable apps list or hidden/unlaunchable apps list, controlled by AppsVisibilityListType) (iOS 9.3 and later). This collection can contain a maximum of 10000 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta",
+						MarkdownDescription: "List of apps in the visibility list (either visible/launchable apps list or hidden/unlaunchable apps list, controlled by AppsVisibilityListType) (iOS 9.3 and later). This collection can contain a maximum of 10000 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"apps_visibility_list_type": schema.StringAttribute{
 						Optional: true,
@@ -2089,115 +2145,115 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("none")},
 						Computed:            true,
-						MarkdownDescription: "Type of list that is in the AppsVisibilityList. / Possible values of the compliance app list; possible values are: `none` (Default value, no intent.), `appsInListCompliant` (The list represents the apps that will be considered compliant (only apps on the list are compliant).), `appsNotInListCompliant` (The list represents the apps that will be considered non compliant (all apps are compliant except apps on the list).)",
+						MarkdownDescription: "Type of list that is in the AppsVisibilityList. / Possible values of the compliance app list; possible values are: `none` (Default value, no intent.), `appsInListCompliant` (The list represents the apps that will be considered compliant (only apps on the list are compliant).), `appsNotInListCompliant` (The list represents the apps that will be considered non compliant (all apps are compliant except apps on the list).). The _provider_ default value is `\"none\"`.",
 					},
 					"auto_fill_force_authentication": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to force user authentication before autofilling passwords and credit card information in Safari and other apps on supervised devices.",
+						MarkdownDescription: "Indicates whether or not to force user authentication before autofilling passwords and credit card information in Safari and other apps on supervised devices. The _provider_ default value is `false`.",
 					},
 					"auto_unlock_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Blocks users from unlocking their device with Apple Watch. Available for devices running iOS and iPadOS versions 14.5 and later.",
+						MarkdownDescription: "Blocks users from unlocking their device with Apple Watch. Available for devices running iOS and iPadOS versions 14.5 and later. The _provider_ default value is `false`.",
 					},
 					"block_system_app_removal": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not the removal of system apps from the device is blocked on a supervised device (iOS 11.0 and later).",
+						MarkdownDescription: "Indicates whether or not the removal of system apps from the device is blocked on a supervised device (iOS 11.0 and later). The _provider_ default value is `false`.",
 					},
 					"bluetooth_block_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow modification of Bluetooth settings when the device is in supervised mode (iOS 10.0 and later).",
+						MarkdownDescription: "Indicates whether or not to allow modification of Bluetooth settings when the device is in supervised mode (iOS 10.0 and later). The _provider_ default value is `false`.",
 					},
 					"camera_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from accessing the camera of the device. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block the user from accessing the camera of the device. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"cellular_block_data_roaming": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block data roaming.",
+						MarkdownDescription: "Indicates whether or not to block data roaming. The _provider_ default value is `false`.",
 					},
 					"cellular_block_global_background_fetch_while_roaming": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block global background fetch while roaming.",
+						MarkdownDescription: "Indicates whether or not to block global background fetch while roaming. The _provider_ default value is `false`.",
 					},
 					"cellular_block_per_app_data_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow changes to cellular app data usage settings when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to allow changes to cellular app data usage settings when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"cellular_block_personal_hotspot": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block Personal Hotspot.",
+						MarkdownDescription: "Indicates whether or not to block Personal Hotspot. The _provider_ default value is `false`.",
 					},
 					"cellular_block_personal_hotspot_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from modifying the personal hotspot setting (iOS 12.2 or later).",
+						MarkdownDescription: "Indicates whether or not to block the user from modifying the personal hotspot setting (iOS 12.2 or later). The _provider_ default value is `false`.",
 					},
 					"cellular_block_plan_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow users to change the settings of the cellular plan on a supervised device.",
+						MarkdownDescription: "Indicates whether or not to allow users to change the settings of the cellular plan on a supervised device. The _provider_ default value is `false`.",
 					},
 					"cellular_block_voice_roaming": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block voice roaming.",
+						MarkdownDescription: "Indicates whether or not to block voice roaming. The _provider_ default value is `false`.",
 					},
 					"certificates_block_untrusted_tls_certificates": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block untrusted TLS certificates.",
+						MarkdownDescription: "Indicates whether or not to block untrusted TLS certificates. The _provider_ default value is `false`.",
 					},
 					"classroom_app_block_remote_screen_observation": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow remote screen observation by Classroom app when the device is in supervised mode (iOS 9.3 and later).",
+						MarkdownDescription: "Indicates whether or not to allow remote screen observation by Classroom app when the device is in supervised mode (iOS 9.3 and later). The _provider_ default value is `false`.",
 					},
 					"classroom_app_force_unprompted_screen_observation": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to automatically give permission to the teacher of a managed course on the Classroom app to view a student's screen without prompting when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to automatically give permission to the teacher of a managed course on the Classroom app to view a student's screen without prompting when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"classroom_force_automatically_join_classes": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to automatically give permission to the teacher's requests, without prompting the student, when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to automatically give permission to the teacher's requests, without prompting the student, when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"classroom_force_request_permission_to_leave_classes": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether a student enrolled in an unmanaged course via Classroom will request permission from the teacher when attempting to leave the course (iOS 11.3 and later).",
+						MarkdownDescription: "Indicates whether a student enrolled in an unmanaged course via Classroom will request permission from the teacher when attempting to leave the course (iOS 11.3 and later). The _provider_ default value is `false`.",
 					},
 					"classroom_force_unprompted_app_and_device_lock": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow the teacher to lock apps or the device without prompting the student. Supervised only.",
+						MarkdownDescription: "Indicates whether or not to allow the teacher to lock apps or the device without prompting the student. Supervised only. The _provider_ default value is `false`.",
 					},
 					"compliant_app_list_type": schema.StringAttribute{
 						Optional: true,
@@ -2206,7 +2262,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("none")},
 						Computed:            true,
-						MarkdownDescription: "List that is in the AppComplianceList. / Possible values of the compliance app list; possible values are: `none` (Default value, no intent.), `appsInListCompliant` (The list represents the apps that will be considered compliant (only apps on the list are compliant).), `appsNotInListCompliant` (The list represents the apps that will be considered non compliant (all apps are compliant except apps on the list).)",
+						MarkdownDescription: "List that is in the AppComplianceList. / Possible values of the compliance app list; possible values are: `none` (Default value, no intent.), `appsInListCompliant` (The list represents the apps that will be considered compliant (only apps on the list are compliant).), `appsNotInListCompliant` (The list represents the apps that will be considered non compliant (all apps are compliant except apps on the list).). The _provider_ default value is `\"none\"`.",
 					},
 					"compliant_apps_list": schema.SetNestedAttribute{
 						Optional: true,
@@ -2215,354 +2271,354 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "List of apps in the compliance (either allow list or block list, controlled by CompliantAppListType). This collection can contain a maximum of 10000 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta",
+						MarkdownDescription: "List of apps in the compliance (either allow list or block list, controlled by CompliantAppListType). This collection can contain a maximum of 10000 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"configuration_profile_block_changes": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from installing configuration profiles and certificates interactively when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to block the user from installing configuration profiles and certificates interactively when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"contacts_allow_managed_to_unmanaged_write": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not managed apps can write contacts to unmanaged contacts accounts (iOS 12.0 and later).",
+						MarkdownDescription: "Indicates whether or not managed apps can write contacts to unmanaged contacts accounts (iOS 12.0 and later). The _provider_ default value is `false`.",
 					},
 					"contacts_allow_unmanaged_to_managed_read": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not unmanaged apps can read from managed contacts accounts (iOS 12.0 or later).",
+						MarkdownDescription: "Indicates whether or not unmanaged apps can read from managed contacts accounts (iOS 12.0 or later). The _provider_ default value is `false`.",
 					},
 					"continuous_path_keyboard_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the continuous path keyboard when the device is supervised (iOS 13 or later).",
+						MarkdownDescription: "Indicates whether or not to block the continuous path keyboard when the device is supervised (iOS 13 or later). The _provider_ default value is `false`.",
 					},
 					"date_and_time_force_set_automatically": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not the Date and Time \"Set Automatically\" feature is enabled and cannot be turned off by the user (iOS 12.0 and later).",
+						MarkdownDescription: "Indicates whether or not the Date and Time \"Set Automatically\" feature is enabled and cannot be turned off by the user (iOS 12.0 and later). The _provider_ default value is `false`.",
 					},
 					"definition_lookup_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block definition lookup when the device is in supervised mode (iOS 8.1.3 and later ).",
+						MarkdownDescription: "Indicates whether or not to block definition lookup when the device is in supervised mode (iOS 8.1.3 and later ). The _provider_ default value is `false`.",
 					},
 					"device_block_enable_restrictions": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow the user to enables restrictions in the device settings when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to allow the user to enables restrictions in the device settings when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"device_block_erase_content_and_settings": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow the use of the 'Erase all content and settings' option on the device when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to allow the use of the 'Erase all content and settings' option on the device when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"device_block_name_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow device name modification when the device is in supervised mode (iOS 9.0 and later).",
+						MarkdownDescription: "Indicates whether or not to allow device name modification when the device is in supervised mode (iOS 9.0 and later). The _provider_ default value is `false`.",
 					},
 					"diagnostic_data_block_submission": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block diagnostic data submission.",
+						MarkdownDescription: "Indicates whether or not to block diagnostic data submission. The _provider_ default value is `false`.",
 					},
 					"diagnostic_data_block_submission_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow diagnostics submission settings modification when the device is in supervised mode (iOS 9.3.2 and later).",
+						MarkdownDescription: "Indicates whether or not to allow diagnostics submission settings modification when the device is in supervised mode (iOS 9.3.2 and later). The _provider_ default value is `false`.",
 					},
 					"documents_block_managed_documents_in_unmanaged_apps": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from viewing managed documents in unmanaged apps.",
+						MarkdownDescription: "Indicates whether or not to block the user from viewing managed documents in unmanaged apps. The _provider_ default value is `false`.",
 					},
 					"documents_block_unmanaged_documents_in_managed_apps": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from viewing unmanaged documents in managed apps.",
+						MarkdownDescription: "Indicates whether or not to block the user from viewing unmanaged documents in managed apps. The _provider_ default value is `false`.",
 					},
 					"email_in_domain_suffixes": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "An email address lacking a suffix that matches any of these strings will be considered out-of-domain.",
+						MarkdownDescription: "An email address lacking a suffix that matches any of these strings will be considered out-of-domain. The _provider_ default value is `[]`.",
 					},
 					"enterprise_app_block_trust": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from trusting an enterprise app.",
+						MarkdownDescription: "Indicates whether or not to block the user from trusting an enterprise app. The _provider_ default value is `false`.",
 					},
 					"enterprise_book_block_backup": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not Enterprise book back up is blocked.",
+						MarkdownDescription: "Indicates whether or not Enterprise book back up is blocked. The _provider_ default value is `false`.",
 					},
 					"enterprise_book_block_metadata_sync": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not Enterprise book notes and highlights sync is blocked.",
+						MarkdownDescription: "Indicates whether or not Enterprise book notes and highlights sync is blocked. The _provider_ default value is `false`.",
 					},
 					"esim_block_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow the addition or removal of cellular plans on the eSIM of a supervised device.",
+						MarkdownDescription: "Indicates whether or not to allow the addition or removal of cellular plans on the eSIM of a supervised device. The _provider_ default value is `false`.",
 					},
 					"facetime_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `faceTimeBlocked`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block the user from using FaceTime. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block the user from using FaceTime. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"files_network_drive_access_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates if devices can access files or other resources on a network server using the Server Message Block (SMB) protocol. Available for devices running iOS and iPadOS, versions 13.0 and later.",
+						MarkdownDescription: "Indicates if devices can access files or other resources on a network server using the Server Message Block (SMB) protocol. Available for devices running iOS and iPadOS, versions 13.0 and later. The _provider_ default value is `false`.",
 					},
 					"files_usb_drive_access_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates if sevices with access can connect to and open files on a USB drive. Available for devices running iOS and iPadOS, versions 13.0 and later.",
+						MarkdownDescription: "Indicates if sevices with access can connect to and open files on a USB drive. Available for devices running iOS and iPadOS, versions 13.0 and later. The _provider_ default value is `false`.",
 					},
 					"find_my_device_in_find_my_app_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block Find My Device when the device is supervised (iOS 13 or later).",
+						MarkdownDescription: "Indicates whether or not to block Find My Device when the device is supervised (iOS 13 or later). The _provider_ default value is `false`.",
 					},
 					"find_my_friends_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block changes to Find My Friends when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to block changes to Find My Friends when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"find_my_friends_in_find_my_app_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block Find My Friends when the device is supervised (iOS 13 or later).",
+						MarkdownDescription: "Indicates whether or not to block Find My Friends when the device is supervised (iOS 13 or later). The _provider_ default value is `false`.",
 					},
 					"game_center_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using Game Center when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to block the user from using Game Center when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"gaming_block_game_center_friends": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from having friends in Game Center. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block the user from having friends in Game Center. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"gaming_block_multiplayer": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using multiplayer gaming. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block the user from using multiplayer gaming. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"host_pairing_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "indicates whether or not to allow host pairing to control the devices an iOS device can pair with when the iOS device is in supervised mode.",
+						MarkdownDescription: "indicates whether or not to allow host pairing to control the devices an iOS device can pair with when the iOS device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"ibooks_store_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iBooksStoreBlocked`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block the user from using the iBooks Store when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to block the user from using the iBooks Store when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"ibooks_store_block_erotica": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iBooksStoreBlockErotica`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block the user from downloading media from the iBookstore that has been tagged as erotica.",
+						MarkdownDescription: "Indicates whether or not to block the user from downloading media from the iBookstore that has been tagged as erotica. The _provider_ default value is `false`.",
 					},
 					"icloud_block_activity_continuation": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iCloudBlockActivityContinuation`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block the user from continuing work they started on iOS device to another iOS or macOS device.",
+						MarkdownDescription: "Indicates whether or not to block the user from continuing work they started on iOS device to another iOS or macOS device. The _provider_ default value is `false`.",
 					},
 					"icloud_block_backup": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iCloudBlockBackup`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block iCloud backup. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block iCloud backup. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"icloud_block_document_sync": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iCloudBlockDocumentSync`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block iCloud document sync. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block iCloud document sync. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"icloud_block_managed_apps_sync": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iCloudBlockManagedAppsSync`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block Managed Apps Cloud Sync.",
+						MarkdownDescription: "Indicates whether or not to block Managed Apps Cloud Sync. The _provider_ default value is `false`.",
 					},
 					"icloud_block_photo_library": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iCloudBlockPhotoLibrary`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block iCloud Photo Library.",
+						MarkdownDescription: "Indicates whether or not to block iCloud Photo Library. The _provider_ default value is `false`.",
 					},
 					"icloud_block_photo_stream_sync": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iCloudBlockPhotoStreamSync`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block iCloud Photo Stream Sync.",
+						MarkdownDescription: "Indicates whether or not to block iCloud Photo Stream Sync. The _provider_ default value is `false`.",
 					},
 					"icloud_block_shared_photo_stream": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iCloudBlockSharedPhotoStream`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block Shared Photo Stream.",
+						MarkdownDescription: "Indicates whether or not to block Shared Photo Stream. The _provider_ default value is `false`.",
 					},
 					"icloud_private_relay_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iCloudPrivateRelayBlocked`, // custom MS Graph attribute name
-						MarkdownDescription: "iCloud private relay is an iCloud+ service that prevents networks and servers from monitoring a person's activity across the internet. By blocking iCloud private relay, Apple will not encrypt the traffic leaving the device. Available for devices running iOS 15 and later.",
+						MarkdownDescription: "iCloud private relay is an iCloud+ service that prevents networks and servers from monitoring a person's activity across the internet. By blocking iCloud private relay, Apple will not encrypt the traffic leaving the device. Available for devices running iOS 15 and later. The _provider_ default value is `false`.",
 					},
 					"icloud_require_encrypted_backup": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iCloudRequireEncryptedBackup`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to require backups to iCloud be encrypted.",
+						MarkdownDescription: "Indicates whether or not to require backups to iCloud be encrypted. The _provider_ default value is `false`.",
 					},
 					"itunes_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iTunesBlocked`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block the iTunes app. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block the iTunes app. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"itunes_block_explicit_content": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iTunesBlockExplicitContent`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block the user from accessing explicit content in iTunes and the App Store. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block the user from accessing explicit content in iTunes and the App Store. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"itunes_block_music_service": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iTunesBlockMusicService`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block Music service and revert Music app to classic mode when the device is in supervised mode (iOS 9.3 and later and macOS 10.12 and later).",
+						MarkdownDescription: "Indicates whether or not to block Music service and revert Music app to classic mode when the device is in supervised mode (iOS 9.3 and later and macOS 10.12 and later). The _provider_ default value is `false`.",
 					},
 					"itunes_block_radio": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `iTunesBlockRadio`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block the user from using iTunes Radio when the device is in supervised mode (iOS 9.3 and later).",
+						MarkdownDescription: "Indicates whether or not to block the user from using iTunes Radio when the device is in supervised mode (iOS 9.3 and later). The _provider_ default value is `false`.",
 					},
 					"keyboard_block_auto_correct": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block keyboard auto-correction when the device is in supervised mode (iOS 8.1.3 and later).",
+						MarkdownDescription: "Indicates whether or not to block keyboard auto-correction when the device is in supervised mode (iOS 8.1.3 and later). The _provider_ default value is `false`.",
 					},
 					"keyboard_block_dictation": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using dictation input when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to block the user from using dictation input when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"keyboard_block_predictive": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block predictive keyboards when device is in supervised mode (iOS 8.1.3 and later).",
+						MarkdownDescription: "Indicates whether or not to block predictive keyboards when device is in supervised mode (iOS 8.1.3 and later). The _provider_ default value is `false`.",
 					},
 					"keyboard_block_shortcuts": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block keyboard shortcuts when the device is in supervised mode (iOS 9.0 and later).",
+						MarkdownDescription: "Indicates whether or not to block keyboard shortcuts when the device is in supervised mode (iOS 9.0 and later). The _provider_ default value is `false`.",
 					},
 					"keyboard_block_spell_check": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block keyboard spell-checking when the device is in supervised mode (iOS 8.1.3 and later).",
+						MarkdownDescription: "Indicates whether or not to block keyboard spell-checking when the device is in supervised mode (iOS 8.1.3 and later). The _provider_ default value is `false`.",
 					},
 					"keychain_block_cloud_sync": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not iCloud keychain synchronization is blocked. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not iCloud keychain synchronization is blocked. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_allow_assistive_speak": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow assistive speak while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to allow assistive speak while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_allow_assistive_touch_settings": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow access to the Assistive Touch Settings while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to allow access to the Assistive Touch Settings while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_allow_color_inversion_settings": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow access to the Color Inversion Settings while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to allow access to the Color Inversion Settings while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_allow_voice_control_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow the user to toggle voice control in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to allow the user to toggle voice control in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_allow_voice_over_settings": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow access to the voice over settings while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to allow access to the voice over settings while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_allow_zoom_settings": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow access to the zoom settings while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to allow access to the zoom settings while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_app_store_url": schema.StringAttribute{
 						Optional:            true,
@@ -2575,43 +2631,43 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Type of app to run in kiosk mode. / App source options for iOS kiosk mode; possible values are: `notConfigured` (Device default value, no intent.), `appStoreApp` (The app to be run comes from the app store.), `managedApp` (The app to be run is built into the device.), `builtInApp` (The app to be run is a managed app.)",
+						MarkdownDescription: "Type of app to run in kiosk mode. / App source options for iOS kiosk mode; possible values are: `notConfigured` (Device default value, no intent.), `appStoreApp` (The app to be run comes from the app store.), `managedApp` (The app to be run is built into the device.), `builtInApp` (The app to be run is a managed app.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"kiosk_mode_block_auto_lock": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block device auto lock while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to block device auto lock while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_block_ringer_switch": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block use of the ringer switch while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to block use of the ringer switch while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_block_screen_rotation": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block screen rotation while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to block screen rotation while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_block_sleep_button": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block use of the sleep button while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to block use of the sleep button while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_block_touchscreen": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block use of the touchscreen while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to block use of the touchscreen while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_block_volume_buttons": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the volume buttons while in Kiosk Mode.",
+						MarkdownDescription: "Indicates whether or not to block the volume buttons while in Kiosk Mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_built_in_app_id": schema.StringAttribute{
 						Optional:            true,
@@ -2621,7 +2677,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to enable voice control in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to enable voice control in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_managed_app_id": schema.StringAttribute{
 						Optional:            true,
@@ -2631,61 +2687,61 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to require assistive touch while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to require assistive touch while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_require_color_inversion": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to require color inversion while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to require color inversion while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_require_mono_audio": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to require mono audio while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to require mono audio while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_require_voice_over": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to require voice over while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to require voice over while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"kiosk_mode_require_zoom": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to require zoom while in kiosk mode.",
+						MarkdownDescription: "Indicates whether or not to require zoom while in kiosk mode. The _provider_ default value is `false`.",
 					},
 					"lock_screen_block_control_center": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using control center on the lock screen.",
+						MarkdownDescription: "Indicates whether or not to block the user from using control center on the lock screen. The _provider_ default value is `false`.",
 					},
 					"lock_screen_block_notification_view": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using the notification view on the lock screen.",
+						MarkdownDescription: "Indicates whether or not to block the user from using the notification view on the lock screen. The _provider_ default value is `false`.",
 					},
 					"lock_screen_block_passbook": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using passbook when the device is locked.",
+						MarkdownDescription: "Indicates whether or not to block the user from using passbook when the device is locked. The _provider_ default value is `false`.",
 					},
 					"lock_screen_block_today_view": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using the Today View on the lock screen.",
+						MarkdownDescription: "Indicates whether or not to block the user from using the Today View on the lock screen. The _provider_ default value is `false`.",
 					},
 					"managed_pasteboard_required": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Open-in management controls how people share data between unmanaged and managed apps. Setting this to true enforces copy/paste restrictions based on how you configured <b>Block viewing corporate documents in unmanaged apps </b> and <b> Block viewing non-corporate documents in corporate apps.</b>",
+						MarkdownDescription: "Open-in management controls how people share data between unmanaged and managed apps. Setting this to true enforces copy/paste restrictions based on how you configured <b>Block viewing corporate documents in unmanaged apps </b> and <b> Block viewing non-corporate documents in corporate apps.</b>. The _provider_ default value is `false`.",
 					},
 					"media_content_rating_apps": schema.StringAttribute{
 						Optional: true,
@@ -2694,7 +2750,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("allAllowed")},
 						Computed:            true,
-						MarkdownDescription: "Media content rating settings for Apps / Apps rating as in media content; possible values are: `allAllowed` (Default value, allow all apps content), `allBlocked` (Do not allow any apps content), `agesAbove4` (4+, age 4 and above), `agesAbove9` (9+, age 9 and above), `agesAbove12` (12+, age 12 and above ), `agesAbove17` (17+, age 17 and above)",
+						MarkdownDescription: "Media content rating settings for Apps. / Apps rating as in media content; possible values are: `allAllowed` (Default value, allow all apps content), `allBlocked` (Do not allow any apps content), `agesAbove4` (4+, age 4 and above), `agesAbove9` (9+, age 9 and above), `agesAbove12` (12+, age 12 and above), `agesAbove17` (17+, age 17 and above). The _provider_ default value is `\"allAllowed\"`.",
 					},
 					"media_content_rating_australia": schema.SingleNestedAttribute{
 						Optional: true,
@@ -2704,17 +2760,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "parentalGuidance", "mature", "agesAbove15", "agesAbove18"),
 								},
-								MarkdownDescription: "Movies rating selected for Australia / Movies rating labels in Australia; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (The G classification is suitable for everyone), `parentalGuidance` (The PG recommends viewers under 15 with guidance from parents or guardians), `mature` (The M classification is not recommended for viewers under 15), `agesAbove15` (The MA15+ classification is not suitable for viewers under 15), `agesAbove18` (The R18+ classification is not suitable for viewers under 18)",
+								MarkdownDescription: "Movies rating selected for Australia. / Movies rating labels in Australia; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (The G classification is suitable for everyone), `parentalGuidance` (The PG recommends viewers under 15 with guidance from parents or guardians), `mature` (The M classification is not recommended for viewers under 15), `agesAbove15` (The MA15+ classification is not suitable for viewers under 15), `agesAbove18` (The R18+ classification is not suitable for viewers under 18)",
 							},
 							"tv_rating": schema.StringAttribute{
 								Required: true,
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "preschoolers", "children", "general", "parentalGuidance", "mature", "agesAbove15", "agesAbove15AdultViolence"),
 								},
-								MarkdownDescription: "TV rating selected for Australia / TV content rating labels in Australia; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `preschoolers` (The P classification is intended for preschoolers), `children` (The C classification is intended for children under 14), `general` (The G classification is suitable for all ages), `parentalGuidance` (The PG classification is recommended for young viewers), `mature` (The M classification is recommended for viewers over 15), `agesAbove15` (The MA15+ classification is not suitable for viewers under 15), `agesAbove15AdultViolence` (The AV15+ classification is not suitable for viewers under 15, adult violence-specific)",
+								MarkdownDescription: "TV rating selected for Australia. / TV content rating labels in Australia; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `preschoolers` (The P classification is intended for preschoolers), `children` (The C classification is intended for children under 14), `general` (The G classification is suitable for all ages), `parentalGuidance` (The PG classification is recommended for young viewers), `mature` (The M classification is recommended for viewers over 15), `agesAbove15` (The MA15+ classification is not suitable for viewers under 15), `agesAbove15AdultViolence` (The AV15+ classification is not suitable for viewers under 15, adult violence-specific)",
 							},
 						},
-						MarkdownDescription: "Media content rating settings for Australia / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingAustralia?view=graph-rest-beta",
+						MarkdownDescription: "Media content rating settings for Australia / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediacontentratingaustralia?view=graph-rest-beta",
 					},
 					"media_content_rating_canada": schema.SingleNestedAttribute{
 						Optional: true,
@@ -2724,17 +2780,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "parentalGuidance", "agesAbove14", "agesAbove18", "restricted"),
 								},
-								MarkdownDescription: "Movies rating selected for Canada / Movies rating labels in Canada; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (The G classification is suitable for all ages), `parentalGuidance` (The PG classification advises parental guidance), `agesAbove14` (The 14A classification is suitable for viewers above 14 or older), `agesAbove18` (The 18A classification is suitable for viewers above 18 or older), `restricted` (The R classification is restricted to 18 years and older)",
+								MarkdownDescription: "Movies rating selected for Canada. / Movies rating labels in Canada; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (The G classification is suitable for all ages), `parentalGuidance` (The PG classification advises parental guidance), `agesAbove14` (The 14A classification is suitable for viewers above 14 or older), `agesAbove18` (The 18A classification is suitable for viewers above 18 or older), `restricted` (The R classification is restricted to 18 years and older)",
 							},
 							"tv_rating": schema.StringAttribute{
 								Required: true,
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "children", "childrenAbove8", "general", "parentalGuidance", "agesAbove14", "agesAbove18"),
 								},
-								MarkdownDescription: "TV rating selected for Canada / TV content rating labels in Canada; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `children` (The C classification is suitable for children ages of 2 to 7 years), `childrenAbove8` (The C8 classification is suitable for children ages 8+), `general` (The G classification is suitable for general audience), `parentalGuidance` (PG, Parental Guidance), `agesAbove14` (The 14+ classification is intended for viewers ages 14 and older), `agesAbove18` (The 18+ classification is intended for viewers ages 18 and older)",
+								MarkdownDescription: "TV rating selected for Canada. / TV content rating labels in Canada; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `children` (The C classification is suitable for children ages of 2 to 7 years), `childrenAbove8` (The C8 classification is suitable for children ages 8+), `general` (The G classification is suitable for general audience), `parentalGuidance` (PG, Parental Guidance), `agesAbove14` (The 14+ classification is intended for viewers ages 14 and older), `agesAbove18` (The 18+ classification is intended for viewers ages 18 and older)",
 							},
 						},
-						MarkdownDescription: "Media content rating settings for Canada / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingCanada?view=graph-rest-beta",
+						MarkdownDescription: "Media content rating settings for Canada / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediacontentratingcanada?view=graph-rest-beta",
 					},
 					"media_content_rating_france": schema.SingleNestedAttribute{
 						Optional: true,
@@ -2744,17 +2800,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "agesAbove10", "agesAbove12", "agesAbove16", "agesAbove18"),
 								},
-								MarkdownDescription: "Movies rating selected for France / Movies rating labels in France; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `agesAbove10` (The 10 classification prohibits the screening of the film to minors under 10), `agesAbove12` (The 12 classification prohibits the screening of the film to minors under 12), `agesAbove16` (The 16 classification prohibits the screening of the film to minors under 16), `agesAbove18` (The 18 classification prohibits the screening to minors under 18)",
+								MarkdownDescription: "Movies rating selected for France. / Movies rating labels in France; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `agesAbove10` (The 10 classification prohibits the screening of the film to minors under 10), `agesAbove12` (The 12 classification prohibits the screening of the film to minors under 12), `agesAbove16` (The 16 classification prohibits the screening of the film to minors under 16), `agesAbove18` (The 18 classification prohibits the screening to minors under 18)",
 							},
 							"tv_rating": schema.StringAttribute{
 								Required: true,
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "agesAbove10", "agesAbove12", "agesAbove16", "agesAbove18"),
 								},
-								MarkdownDescription: "TV rating selected for France / TV content rating labels in France; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `agesAbove10` (The -10 classification is not recommended for children under 10), `agesAbove12` (The -12 classification is not recommended for children under 12), `agesAbove16` (The -16 classification is not recommended for children under 16), `agesAbove18` (The -18 classification is not recommended for persons under 18)",
+								MarkdownDescription: "TV rating selected for France. / TV content rating labels in France; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `agesAbove10` (The -10 classification is not recommended for children under 10), `agesAbove12` (The -12 classification is not recommended for children under 12), `agesAbove16` (The -16 classification is not recommended for children under 16), `agesAbove18` (The -18 classification is not recommended for persons under 18)",
 							},
 						},
-						MarkdownDescription: "Media content rating settings for France / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingFrance?view=graph-rest-beta",
+						MarkdownDescription: "Media content rating settings for France / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediacontentratingfrance?view=graph-rest-beta",
 					},
 					"media_content_rating_germany": schema.SingleNestedAttribute{
 						Optional: true,
@@ -2764,17 +2820,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "agesAbove6", "agesAbove12", "agesAbove16", "adults"),
 								},
-								MarkdownDescription: "Movies rating selected for Germany / Movies rating labels in Germany; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Ab 0 Jahren, no age restrictions), `agesAbove6` (Ab 6 Jahren, ages 6 and older), `agesAbove12` (Ab 12 Jahren, ages 12 and older), `agesAbove16` (Ab 16 Jahren, ages 16 and older), `adults` (Ab 18 Jahren, adults only)",
+								MarkdownDescription: "Movies rating selected for Germany. / Movies rating labels in Germany; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Ab 0 Jahren, no age restrictions), `agesAbove6` (Ab 6 Jahren, ages 6 and older), `agesAbove12` (Ab 12 Jahren, ages 12 and older), `agesAbove16` (Ab 16 Jahren, ages 16 and older), `adults` (Ab 18 Jahren, adults only)",
 							},
 							"tv_rating": schema.StringAttribute{
 								Required: true,
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "agesAbove6", "agesAbove12", "agesAbove16", "adults"),
 								},
-								MarkdownDescription: "TV rating selected for Germany / TV content rating labels in Germany; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `general` (Ab 0 Jahren, no age restrictions), `agesAbove6` (Ab 6 Jahren, ages 6 and older), `agesAbove12` (Ab 12 Jahren, ages 12 and older), `agesAbove16` (Ab 16 Jahren, ages 16 and older), `adults` (Ab 18 Jahren, adults only)",
+								MarkdownDescription: "TV rating selected for Germany. / TV content rating labels in Germany; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `general` (Ab 0 Jahren, no age restrictions), `agesAbove6` (Ab 6 Jahren, ages 6 and older), `agesAbove12` (Ab 12 Jahren, ages 12 and older), `agesAbove16` (Ab 16 Jahren, ages 16 and older), `adults` (Ab 18 Jahren, adults only)",
 							},
 						},
-						MarkdownDescription: "Media content rating settings for Germany / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingGermany?view=graph-rest-beta",
+						MarkdownDescription: "Media content rating settings for Germany / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediacontentratinggermany?view=graph-rest-beta",
 					},
 					"media_content_rating_ireland": schema.SingleNestedAttribute{
 						Optional: true,
@@ -2784,17 +2840,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "parentalGuidance", "agesAbove12", "agesAbove15", "agesAbove16", "adults"),
 								},
-								MarkdownDescription: "Movies rating selected for Ireland / Movies rating labels in Ireland; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Suitable for children of school going age), `parentalGuidance` (The PG classification advises parental guidance), `agesAbove12` (The 12A classification is suitable for viewers of 12 or older), `agesAbove15` (The 15A classification is suitable for viewers of 15 or older), `agesAbove16` (The 16 classification is suitable for viewers of 16 or older), `adults` (The 18 classification, suitable only for adults)",
+								MarkdownDescription: "Movies rating selected for Ireland. / Movies rating labels in Ireland; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Suitable for children of school going age), `parentalGuidance` (The PG classification advises parental guidance), `agesAbove12` (The 12A classification is suitable for viewers of 12 or older), `agesAbove15` (The 15A classification is suitable for viewers of 15 or older), `agesAbove16` (The 16 classification is suitable for viewers of 16 or older), `adults` (The 18 classification, suitable only for adults)",
 							},
 							"tv_rating": schema.StringAttribute{
 								Required: true,
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "children", "youngAdults", "parentalSupervision", "mature"),
 								},
-								MarkdownDescription: "TV rating selected for Ireland / TV content rating labels in Ireland; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `general` (The GA classification is suitable for all audiences), `children` (The CH classification is suitable for children), `youngAdults` (The YA classification is suitable for teenage audience), `parentalSupervision` (The PS classification invites parents and guardians to consider restriction children’s access), `mature` (The MA classification is suitable for adults)",
+								MarkdownDescription: "TV rating selected for Ireland. / TV content rating labels in Ireland; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `general` (The GA classification is suitable for all audiences), `children` (The CH classification is suitable for children), `youngAdults` (The YA classification is suitable for teenage audience), `parentalSupervision` (The PS classification invites parents and guardians to consider restriction children’s access), `mature` (The MA classification is suitable for adults)",
 							},
 						},
-						MarkdownDescription: "Media content rating settings for Ireland / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingIreland?view=graph-rest-beta",
+						MarkdownDescription: "Media content rating settings for Ireland / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediacontentratingireland?view=graph-rest-beta",
 					},
 					"media_content_rating_japan": schema.SingleNestedAttribute{
 						Optional: true,
@@ -2804,17 +2860,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "parentalGuidance", "agesAbove15", "agesAbove18"),
 								},
-								MarkdownDescription: "Movies rating selected for Japan / Movies rating labels in Japan; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Suitable for all ages), `parentalGuidance` (The PG-12 classification requests parental guidance for young people under 12), `agesAbove15` (The R15+ classification is suitable for viewers of 15 or older), `agesAbove18` (The R18+ classification is suitable for viewers of 18 or older)",
+								MarkdownDescription: "Movies rating selected for Japan. / Movies rating labels in Japan; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Suitable for all ages), `parentalGuidance` (The PG-12 classification requests parental guidance for young people under 12), `agesAbove15` (The R15+ classification is suitable for viewers of 15 or older), `agesAbove18` (The R18+ classification is suitable for viewers of 18 or older)",
 							},
 							"tv_rating": schema.StringAttribute{
 								Required: true,
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "explicitAllowed"),
 								},
-								MarkdownDescription: "TV rating selected for Japan / TV content rating labels in Japan; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `explicitAllowed` (All TV content is explicitly allowed)",
+								MarkdownDescription: "TV rating selected for Japan. / TV content rating labels in Japan; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `explicitAllowed` (All TV content is explicitly allowed)",
 							},
 						},
-						MarkdownDescription: "Media content rating settings for Japan / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingJapan?view=graph-rest-beta",
+						MarkdownDescription: "Media content rating settings for Japan / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediacontentratingjapan?view=graph-rest-beta",
 					},
 					"media_content_rating_new_zealand": schema.SingleNestedAttribute{
 						Optional: true,
@@ -2824,17 +2880,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "parentalGuidance", "mature", "agesAbove13", "agesAbove15", "agesAbove16", "agesAbove18", "restricted", "agesAbove16Restricted"),
 								},
-								MarkdownDescription: "Movies rating selected for New Zealand / Movies rating labels in New Zealand; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Suitable for general audience), `parentalGuidance` (The PG classification recommends parental guidance), `mature` (The M classification is suitable for mature audience), `agesAbove13` (The R13 classification is restricted to persons 13 years and over), `agesAbove15` (The R15 classification is restricted to persons 15 years and over), `agesAbove16` (The R16 classification is restricted to persons 16 years and over), `agesAbove18` (The R18 classification is restricted to persons 18 years and over), `restricted` (The R classification is restricted to a certain audience), `agesAbove16Restricted` (The RP16 classification requires viewers under 16 accompanied by a parent or an adult)",
+								MarkdownDescription: "Movies rating selected for New Zealand. / Movies rating labels in New Zealand; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (Suitable for general audience), `parentalGuidance` (The PG classification recommends parental guidance), `mature` (The M classification is suitable for mature audience), `agesAbove13` (The R13 classification is restricted to persons 13 years and over), `agesAbove15` (The R15 classification is restricted to persons 15 years and over), `agesAbove16` (The R16 classification is restricted to persons 16 years and over), `agesAbove18` (The R18 classification is restricted to persons 18 years and over), `restricted` (The R classification is restricted to a certain audience), `agesAbove16Restricted` (The RP16 classification requires viewers under 16 accompanied by a parent or an adult)",
 							},
 							"tv_rating": schema.StringAttribute{
 								Required: true,
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "parentalGuidance", "adults"),
 								},
-								MarkdownDescription: "TV rating selected for New Zealand / TV content rating labels in New Zealand; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `general` (The G classification excludes materials likely to harm children under 14), `parentalGuidance` (The PGR classification encourages parents and guardians to supervise younger viewers), `adults` (The AO classification is not suitable for children)",
+								MarkdownDescription: "TV rating selected for New Zealand. / TV content rating labels in New Zealand; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `general` (The G classification excludes materials likely to harm children under 14), `parentalGuidance` (The PGR classification encourages parents and guardians to supervise younger viewers), `adults` (The AO classification is not suitable for children)",
 							},
 						},
-						MarkdownDescription: "Media content rating settings for New Zealand / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingNewZealand?view=graph-rest-beta",
+						MarkdownDescription: "Media content rating settings for New Zealand / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediacontentratingnewzealand?view=graph-rest-beta",
 					},
 					"media_content_rating_united_kingdom": schema.SingleNestedAttribute{
 						Optional: true,
@@ -2844,17 +2900,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "universalChildren", "parentalGuidance", "agesAbove12Video", "agesAbove12Cinema", "agesAbove15", "adults"),
 								},
-								MarkdownDescription: "Movies rating selected for United Kingdom / Movies rating labels in United Kingdom; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (The U classification is suitable for all ages), `universalChildren` (The UC classification is suitable for pre-school children, an old rating label), `parentalGuidance` (The PG classification is suitable for mature), `agesAbove12Video` (12, video release suitable for 12 years and over), `agesAbove12Cinema` (12A, cinema release suitable for 12 years and over), `agesAbove15` (15, suitable only for 15 years and older), `adults` (Suitable only for adults)",
+								MarkdownDescription: "Movies rating selected for United Kingdom. / Movies rating labels in United Kingdom; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (The U classification is suitable for all ages), `universalChildren` (The UC classification is suitable for pre-school children, an old rating label), `parentalGuidance` (The PG classification is suitable for mature), `agesAbove12Video` (12, video release suitable for 12 years and over), `agesAbove12Cinema` (12A, cinema release suitable for 12 years and over), `agesAbove15` (15, suitable only for 15 years and older), `adults` (Suitable only for adults)",
 							},
 							"tv_rating": schema.StringAttribute{
 								Required: true,
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "caution"),
 								},
-								MarkdownDescription: "TV rating selected for United Kingdom / TV content rating labels in United Kingdom; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `caution` (Allowing TV contents with a warning message)",
+								MarkdownDescription: "TV rating selected for United Kingdom. / TV content rating labels in United Kingdom; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `caution` (Allowing TV contents with a warning message)",
 							},
 						},
-						MarkdownDescription: "Media content rating settings for United Kingdom / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingUnitedKingdom?view=graph-rest-beta",
+						MarkdownDescription: "Media content rating settings for United Kingdom / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediacontentratingunitedkingdom?view=graph-rest-beta",
 					},
 					"media_content_rating_united_states": schema.SingleNestedAttribute{
 						Optional: true,
@@ -2864,23 +2920,23 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "general", "parentalGuidance", "parentalGuidance13", "restricted", "adults"),
 								},
-								MarkdownDescription: "Movies rating selected for United States / Movies rating labels in United States; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (G, all ages admitted), `parentalGuidance` (PG, some material may not be suitable for children), `parentalGuidance13` (PG13, some material may be inappropriate for children under 13), `restricted` (R, viewers under 17 require accompanying parent or adult guardian), `adults` (NC17, adults only)",
+								MarkdownDescription: "Movies rating selected for United States. / Movies rating labels in United States; possible values are: `allAllowed` (Default value, allow all movies content), `allBlocked` (Do not allow any movies content), `general` (G, all ages admitted), `parentalGuidance` (PG, some material may not be suitable for children), `parentalGuidance13` (PG13, some material may be inappropriate for children under 13), `restricted` (R, viewers under 17 require accompanying parent or adult guardian), `adults` (NC17, adults only)",
 							},
 							"tv_rating": schema.StringAttribute{
 								Required: true,
 								Validators: []validator.String{
 									stringvalidator.OneOf("allAllowed", "allBlocked", "childrenAll", "childrenAbove7", "general", "parentalGuidance", "childrenAbove14", "adults"),
 								},
-								MarkdownDescription: "TV rating selected for United States / TV content rating labels in United States; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `childrenAll` (TV-Y, all children), `childrenAbove7` (TV-Y7, children age 7 and above), `general` (TV-G, suitable for all ages), `parentalGuidance` (TV-PG, parental guidance), `childrenAbove14` (TV-14, children age 14 and above), `adults` (TV-MA, adults only)",
+								MarkdownDescription: "TV rating selected for United States. / TV content rating labels in United States; possible values are: `allAllowed` (Default value, allow all TV shows content), `allBlocked` (Do not allow any TV shows content), `childrenAll` (TV-Y, all children), `childrenAbove7` (TV-Y7, children age 7 and above), `general` (TV-G, suitable for all ages), `parentalGuidance` (TV-PG, parental guidance), `childrenAbove14` (TV-14, children age 14 and above), `adults` (TV-MA, adults only)",
 							},
 						},
-						MarkdownDescription: "Media content rating settings for United States / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediaContentRatingUnitedStates?view=graph-rest-beta",
+						MarkdownDescription: "Media content rating settings for United States / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-mediacontentratingunitedstates?view=graph-rest-beta",
 					},
 					"messages_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using the Messages app on the supervised device.",
+						MarkdownDescription: "Indicates whether or not to block the user from using the Messages app on the supervised device. The _provider_ default value is `false`.",
 					},
 					"network_usage_rules": schema.SetNestedAttribute{
 						Optional: true,
@@ -2899,61 +2955,61 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: deviceConfigurationAppListItemAttributes,
 									},
-									MarkdownDescription: "Information about the managed apps that this rule is going to apply to. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta",
+									MarkdownDescription: "Information about the managed apps that this rule is going to apply to. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta",
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "List of managed apps and the network rules that applies to them. This collection can contain a maximum of 1000 elements. / Network Usage Rules allow enterprises to specify how managed apps use networks, such as cellular data networks. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosNetworkUsageRule?view=graph-rest-beta",
+						MarkdownDescription: "List of managed apps and the network rules that applies to them. This collection can contain a maximum of 1000 elements. / Network Usage Rules allow enterprises to specify how managed apps use networks, such as cellular data networks. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosnetworkusagerule?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"nfc_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Disable NFC to prevent devices from pairing with other NFC-enabled devices. Available for iOS/iPadOS devices running 14.2 and later.",
+						MarkdownDescription: "Disable NFC to prevent devices from pairing with other NFC-enabled devices. Available for iOS/iPadOS devices running 14.2 and later. The _provider_ default value is `false`.",
 					},
 					"notifications_block_settings_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow notifications settings modification (iOS 9.3 and later).",
+						MarkdownDescription: "Indicates whether or not to allow notifications settings modification (iOS 9.3 and later). The _provider_ default value is `false`.",
 					},
 					"on_device_only_dictation_forced": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Disables connections to Siri servers so that users can’t use Siri to dictate text. Available for devices running iOS and iPadOS versions 14.5 and later.",
+						MarkdownDescription: "Disables connections to Siri servers so that users can’t use Siri to dictate text. Available for devices running iOS and iPadOS versions 14.5 and later. The _provider_ default value is `false`.",
 					},
 					"on_device_only_translation_forced": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "When set to TRUE, the setting disables connections to Siri servers so that users can’t use Siri to translate text. When set to FALSE, the setting allows connections to to Siri servers to users can use Siri to translate text. Available for devices running iOS and iPadOS versions 15.0 and later.",
+						MarkdownDescription: "When set to TRUE, the setting disables connections to Siri servers so that users can’t use Siri to translate text. When set to FALSE, the setting allows connections to to Siri servers to users can use Siri to translate text. Available for devices running iOS and iPadOS versions 15.0 and later. The _provider_ default value is `false`.",
 					},
 					"passcode_block_fingerprint_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Block modification of registered Touch ID fingerprints when in supervised mode.",
+						MarkdownDescription: "Block modification of registered Touch ID fingerprints when in supervised mode. The _provider_ default value is `false`.",
 					},
 					"passcode_block_fingerprint_unlock": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block fingerprint unlock.",
+						MarkdownDescription: "Indicates whether or not to block fingerprint unlock. The _provider_ default value is `false`.",
 					},
 					"passcode_block_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow passcode modification on the supervised device (iOS 9.0 and later).",
+						MarkdownDescription: "Indicates whether or not to allow passcode modification on the supervised device (iOS 9.0 and later). The _provider_ default value is `false`.",
 					},
 					"passcode_block_simple": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block simple passcodes.",
+						MarkdownDescription: "Indicates whether or not to block simple passcodes. The _provider_ default value is `false`.",
 					},
 					"passcode_expiration_days": schema.Int64Attribute{
 						Optional:            true,
@@ -2983,7 +3039,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to require a passcode.",
+						MarkdownDescription: "Indicates whether or not to require a passcode. The _provider_ default value is `false`.",
 					},
 					"passcode_required_type": schema.StringAttribute{
 						Optional: true,
@@ -2992,7 +3048,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
 						Computed:            true,
-						MarkdownDescription: "Type of passcode that is required. / Possible values of required passwords; possible values are: `deviceDefault` (Device default value, no intent.), `alphanumeric` (Alphanumeric password required.), `numeric` (Numeric password required.)",
+						MarkdownDescription: "Type of passcode that is required. / Possible values of required passwords; possible values are: `deviceDefault` (Device default value, no intent.), `alphanumeric` (Alphanumeric password required.), `numeric` (Numeric password required.). The _provider_ default value is `\"deviceDefault\"`.",
 					},
 					"passcode_sign_in_failure_count_before_wipe": schema.Int64Attribute{
 						Optional:            true,
@@ -3003,69 +3059,69 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `passwordBlockAirDropSharing`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block sharing passwords with the AirDrop passwords feature iOS 12.0 and later).",
+						MarkdownDescription: "Indicates whether or not to block sharing passwords with the AirDrop passwords feature iOS 12.0 and later). The _provider_ default value is `false`.",
 					},
 					"password_block_auto_fill": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates if the AutoFill passwords feature is allowed (iOS 12.0 and later).",
+						MarkdownDescription: "Indicates if the AutoFill passwords feature is allowed (iOS 12.0 and later). The _provider_ default value is `false`.",
 					},
 					"password_block_proximity_requests": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block requesting passwords from nearby devices (iOS 12.0 and later).",
+						MarkdownDescription: "Indicates whether or not to block requesting passwords from nearby devices (iOS 12.0 and later). The _provider_ default value is `false`.",
 					},
 					"pki_block_ota_updates": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `pkiBlockOTAUpdates`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not over-the-air PKI updates are blocked. Setting this restriction to false does not disable CRL and OCSP checks (iOS 7.0 and later).",
+						MarkdownDescription: "Indicates whether or not over-the-air PKI updates are blocked. Setting this restriction to false does not disable CRL and OCSP checks (iOS 7.0 and later). The _provider_ default value is `false`.",
 					},
 					"podcasts_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using podcasts on the supervised device (iOS 8.0 and later).",
+						MarkdownDescription: "Indicates whether or not to block the user from using podcasts on the supervised device (iOS 8.0 and later). The _provider_ default value is `false`.",
 					},
 					"privacy_force_limit_ad_tracking": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates if ad tracking is limited.(iOS 7.0 and later).",
+						MarkdownDescription: "Indicates if ad tracking is limited.(iOS 7.0 and later). The _provider_ default value is `false`.",
 					},
 					"proximity_block_setup_to_new_device": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to enable the prompt to setup nearby devices with a supervised device.",
+						MarkdownDescription: "Indicates whether or not to enable the prompt to setup nearby devices with a supervised device. The _provider_ default value is `false`.",
 					},
 					"safari_block_autofill": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using Auto fill in Safari. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block the user from using Auto fill in Safari. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"safari_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using Safari. Requires a supervised device for iOS 13 and later.",
+						MarkdownDescription: "Indicates whether or not to block the user from using Safari. Requires a supervised device for iOS 13 and later. The _provider_ default value is `false`.",
 					},
 					"safari_block_javascript": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `safariBlockJavaScript`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to block JavaScript in Safari.",
+						MarkdownDescription: "Indicates whether or not to block JavaScript in Safari. The _provider_ default value is `false`.",
 					},
 					"safari_block_popups": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block popups in Safari.",
+						MarkdownDescription: "Indicates whether or not to block popups in Safari. The _provider_ default value is `false`.",
 					},
 					"safari_cookie_settings": schema.StringAttribute{
 						Optional: true,
@@ -3076,63 +3132,63 @@ var deviceConfigurationResourceSchema = schema.Schema{
 							wpdefaultvalue.StringDefaultValue("browserDefault"),
 						},
 						Computed:            true,
-						MarkdownDescription: "Cookie settings for Safari. / Web Browser Cookie Settings; possible values are: `browserDefault` (Browser default value, no intent.), `blockAlways` (Always block cookies.), `allowCurrentWebSite` (Allow cookies from current Web site.), `allowFromWebsitesVisited` (Allow Cookies from websites visited.), `allowAlways` (Always allow cookies.)",
+						MarkdownDescription: "Cookie settings for Safari. / Web Browser Cookie Settings; possible values are: `browserDefault` (Browser default value, no intent.), `blockAlways` (Always block cookies.), `allowCurrentWebSite` (Allow cookies from current Web site.), `allowFromWebsitesVisited` (Allow Cookies from websites visited.), `allowAlways` (Always allow cookies.). The _provider_ default value is `\"browserDefault\"`.",
 					},
 					"safari_managed_domains": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "URLs matching the patterns listed here will be considered managed.",
+						MarkdownDescription: "URLs matching the patterns listed here will be considered managed. The _provider_ default value is `[]`.",
 					},
 					"safari_password_auto_fill_domains": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Users can save passwords in Safari only from URLs matching the patterns listed here. Applies to devices in supervised mode (iOS 9.3 and later).",
+						MarkdownDescription: "Users can save passwords in Safari only from URLs matching the patterns listed here. Applies to devices in supervised mode (iOS 9.3 and later). The _provider_ default value is `[]`.",
 					},
 					"safari_require_fraud_warning": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to require fraud warning in Safari.",
+						MarkdownDescription: "Indicates whether or not to require fraud warning in Safari. The _provider_ default value is `false`.",
 					},
 					"screen_capture_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from taking Screenshots.",
+						MarkdownDescription: "Indicates whether or not to block the user from taking Screenshots. The _provider_ default value is `false`.",
 					},
 					"shared_device_block_temporary_sessions": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block temporary sessions on Shared iPads (iOS 13.4 or later).",
+						MarkdownDescription: "Indicates whether or not to block temporary sessions on Shared iPads (iOS 13.4 or later). The _provider_ default value is `false`.",
 					},
 					"siri_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using Siri.",
+						MarkdownDescription: "Indicates whether or not to block the user from using Siri. The _provider_ default value is `false`.",
 					},
 					"siri_blocked_when_locked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block the user from using Siri when locked.",
+						MarkdownDescription: "Indicates whether or not to block the user from using Siri when locked. The _provider_ default value is `false`.",
 					},
 					"siri_block_user_generated_content": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block Siri from querying user-generated content when used on a supervised device.",
+						MarkdownDescription: "Indicates whether or not to block Siri from querying user-generated content when used on a supervised device. The _provider_ default value is `false`.",
 					},
 					"siri_require_profanity_filter": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to prevent Siri from dictating, or speaking profane language on supervised device.",
+						MarkdownDescription: "Indicates whether or not to prevent Siri from dictating, or speaking profane language on supervised device. The _provider_ default value is `false`.",
 					},
 					"software_updates_enforced_delay_in_days": schema.Int64Attribute{
 						Optional:            true,
@@ -3142,67 +3198,67 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to delay user visibility of software updates when the device is in supervised mode.",
+						MarkdownDescription: "Indicates whether or not to delay user visibility of software updates when the device is in supervised mode. The _provider_ default value is `false`.",
 					},
 					"spotlight_block_internet_results": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block Spotlight search from returning internet results on supervised device.",
+						MarkdownDescription: "Indicates whether or not to block Spotlight search from returning internet results on supervised device. The _provider_ default value is `false`.",
 					},
 					"unpaired_external_boot_to_recovery_allowed": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Allow users to boot devices into recovery mode with unpaired devices. Available for devices running iOS and iPadOS versions 14.5 and later.",
+						MarkdownDescription: "Allow users to boot devices into recovery mode with unpaired devices. Available for devices running iOS and iPadOS versions 14.5 and later. The _provider_ default value is `false`.",
 					},
 					"usb_restricted_mode_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates if connecting to USB accessories while the device is locked is allowed (iOS 11.4.1 and later).",
+						MarkdownDescription: "Indicates if connecting to USB accessories while the device is locked is allowed (iOS 11.4.1 and later). The _provider_ default value is `false`.",
 					},
 					"voice_dialing_blocked": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to block voice dialing.",
+						MarkdownDescription: "Indicates whether or not to block voice dialing. The _provider_ default value is `false`.",
 					},
 					"vpn_block_creation": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not the creation of VPN configurations is blocked (iOS 11.0 and later).",
+						MarkdownDescription: "Indicates whether or not the creation of VPN configurations is blocked (iOS 11.0 and later). The _provider_ default value is `false`.",
 					},
 					"wallpaper_block_modification": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not to allow wallpaper modification on supervised device (iOS 9.0 and later) .",
+						MarkdownDescription: "Indicates whether or not to allow wallpaper modification on supervised device (iOS 9.0 and later) . The _provider_ default value is `false`.",
 					},
 					"wifi_connect_only_to_configured_networks": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `wiFiConnectOnlyToConfiguredNetworks`, // custom MS Graph attribute name
-						MarkdownDescription: "Indicates whether or not to force the device to use only Wi-Fi networks from configuration profiles when the device is in supervised mode. Available for devices running iOS and iPadOS versions 14.4 and earlier. Devices running 14.5+ should use the setting, “WiFiConnectToAllowedNetworksOnlyForced.",
+						MarkdownDescription: "Indicates whether or not to force the device to use only Wi-Fi networks from configuration profiles when the device is in supervised mode. Available for devices running iOS and iPadOS versions 14.4 and earlier. Devices running 14.5+ should use the setting, “WiFiConnectToAllowedNetworksOnlyForced. The _provider_ default value is `false`.",
 					},
 					"wifi_connect_to_allowed_networks_only_forced": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `wiFiConnectToAllowedNetworksOnlyForced`, // custom MS Graph attribute name
-						MarkdownDescription: "Require devices to use Wi-Fi networks set up via configuration profiles. Available for devices running iOS and iPadOS versions 14.5 and later.",
+						MarkdownDescription: "Require devices to use Wi-Fi networks set up via configuration profiles. Available for devices running iOS and iPadOS versions 14.5 and later. The _provider_ default value is `false`.",
 					},
 					"wifi_power_on_forced": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether or not Wi-Fi remains on, even when device is in airplane mode. Available for devices running iOS and iPadOS, versions 13.0 and later.",
+						MarkdownDescription: "Indicates whether or not Wi-Fi remains on, even when device is in airplane mode. Available for devices running iOS and iPadOS, versions 13.0 and later. The _provider_ default value is `false`.",
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the iosGeneralDeviceConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosGeneralDeviceConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the iosGeneralDeviceConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosgeneraldeviceconfiguration?view=graph-rest-beta",
 			},
 		},
 		"ios_update": generic.OdataDerivedTypeNestedAttributeRs{
@@ -3216,7 +3272,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 							wpdefaultvalue.StringDefaultValue("00:00:00.0000000"),
 						},
 						Computed:            true,
-						MarkdownDescription: "Active Hours End (active hours mean the time window when updates install should not happen)",
+						MarkdownDescription: "Active Hours End (active hours mean the time window when updates install should not happen). The _provider_ default value is `\"00:00:00.0000000\"`.",
 					},
 					"active_hours_start": schema.StringAttribute{
 						Optional: true,
@@ -3224,7 +3280,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 							wpdefaultvalue.StringDefaultValue("00:00:00.0000000"),
 						},
 						Computed:            true,
-						MarkdownDescription: "Active Hours Start (active hours mean the time window when updates install should not happen)",
+						MarkdownDescription: "Active Hours Start (active hours mean the time window when updates install should not happen). The _provider_ default value is `\"00:00:00.0000000\"`.",
 					},
 					"custom_update_time_windows": schema.SetNestedAttribute{
 						Optional: true,
@@ -3235,7 +3291,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"),
 									},
-									MarkdownDescription: "End day of the time window / ; possible values are: `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`",
+									MarkdownDescription: "End day of the time window. / Possible values for a weekday; possible values are: `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.)",
 								},
 								"end_time": schema.StringAttribute{
 									Required:            true,
@@ -3246,7 +3302,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"),
 									},
-									MarkdownDescription: "Start day of the time window / ; possible values are: `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`",
+									MarkdownDescription: "Start day of the time window. / Possible values for a weekday; possible values are: `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.)",
 								},
 								"start_time": schema.StringAttribute{
 									Required:            true,
@@ -3256,7 +3312,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "If update schedule type is set to use time window scheduling, custom time windows when updates will be scheduled. This collection can contain a maximum of 20 elements. / Custom update time window / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-customUpdateTimeWindow?view=graph-rest-beta",
+						MarkdownDescription: "If update schedule type is set to use time window scheduling, custom time windows when updates will be scheduled. This collection can contain a maximum of 20 elements. / Custom update time window / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-customupdatetimewindow?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"desired_os_version": schema.StringAttribute{
 						Optional:            true,
@@ -3281,7 +3337,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Days in week for which active hours are configured. This collection can contain a maximum of 7 elements. / ; possible values are: `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`",
+						MarkdownDescription: "Days in week for which active hours are configured. This collection can contain a maximum of 7 elements. / Possible values for a weekday; possible values are: `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.). The _provider_ default value is `[]`.",
 					},
 					"update_schedule_type": schema.StringAttribute{
 						Optional: true,
@@ -3290,7 +3346,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("alwaysUpdate")},
 						Computed:            true,
-						MarkdownDescription: "Update schedule type / Update schedule type for iOS software updates; possible values are: `updateOutsideOfActiveHours` (Update outside of active hours.), `alwaysUpdate` (Always update.), `updateDuringTimeWindows` (Update during time windows.), `updateOutsideOfTimeWindows` (Update outside of time windows.)",
+						MarkdownDescription: "Update schedule type. / Update schedule type for iOS software updates; possible values are: `updateOutsideOfActiveHours` (Update outside of active hours.), `alwaysUpdate` (Always update.), `updateDuringTimeWindows` (Update during time windows.), `updateOutsideOfTimeWindows` (Update outside of time windows.). The _provider_ default value is `\"alwaysUpdate\"`.",
 					},
 					"utc_time_offset_in_minutes": schema.Int64Attribute{
 						Optional:            true,
@@ -3298,7 +3354,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "IOS Update Configuration, allows you to configure time window within week to install iOS updates / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosUpdateConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "IOS Update Configuration, allows you to configure time window within week to install iOS updates / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosupdateconfiguration?view=graph-rest-beta",
 			},
 		},
 		"ios_vpn": generic.OdataDerivedTypeNestedAttributeRs{
@@ -3311,7 +3367,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Associated Domains",
+						MarkdownDescription: "Associated Domains. The _provider_ default value is `[]`.",
 					},
 					"authentication_method": schema.StringAttribute{
 						Required: true,
@@ -3336,16 +3392,18 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // keyValue
 								"key": schema.StringAttribute{
-									Optional: true,
+									Optional:            true,
+									MarkdownDescription: "Key.",
 								},
 								"value": schema.StringAttribute{
-									Optional: true,
+									Optional:            true,
+									MarkdownDescription: "Value.",
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Custom data when connection type is set to Custom VPN. Use this field to enable functionality not supported by Intune, but available in your VPN solution. Contact your VPN vendor to learn how to add these key/value pairs. This collection can contain a maximum of 25 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyValue?view=graph-rest-beta",
+						MarkdownDescription: "Custom data when connection type is set to Custom VPN. Use this field to enable functionality not supported by Intune, but available in your VPN solution. Contact your VPN vendor to learn how to add these key/value pairs. This collection can contain a maximum of 25 elements. / Key Value definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvalue?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"disable_on_demand_user_override": schema.BoolAttribute{
 						Optional:            true,
@@ -3367,14 +3425,14 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Send all network traffic through VPN.",
+						MarkdownDescription: "Send all network traffic through VPN. The _provider_ default value is `false`.",
 					},
 					"excluded_domains": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Domains that are accessed through the public internet instead of through VPN, even when per-app VPN is activated",
+						MarkdownDescription: "Domains that are accessed through the public internet instead of through VPN, even when per-app VPN is activated. The _provider_ default value is `[]`.",
 					},
 					"identifier": schema.StringAttribute{
 						Optional:            true,
@@ -3400,14 +3458,14 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Optional:            true,
 									PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 									Computed:            true,
-									MarkdownDescription: "DNS Search Domains.",
+									MarkdownDescription: "DNS Search Domains. The _provider_ default value is `[]`.",
 								},
 								"dns_server_address_match": schema.SetAttribute{
 									ElementType:         types.StringType,
 									Optional:            true,
 									PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 									Computed:            true,
-									MarkdownDescription: "DNS Search Server Address.",
+									MarkdownDescription: "DNS Search Server Address. The _provider_ default value is `[]`.",
 								},
 								"domain_action": schema.StringAttribute{
 									Optional: true,
@@ -3418,14 +3476,14 @@ var deviceConfigurationResourceSchema = schema.Schema{
 										wpdefaultvalue.StringDefaultValue("connectIfNeeded"),
 									},
 									Computed:            true,
-									MarkdownDescription: "Domain Action (Only applicable when Action is evaluate connection). / VPN On-Demand Rule Connection Domain Action; possible values are: `connectIfNeeded` (Connect if needed.), `neverConnect` (Never connect.)",
+									MarkdownDescription: "Domain Action (Only applicable when Action is evaluate connection). / VPN On-Demand Rule Connection Domain Action; possible values are: `connectIfNeeded` (Connect if needed.), `neverConnect` (Never connect.). The _provider_ default value is `\"connectIfNeeded\"`.",
 								},
 								"domains": schema.SetAttribute{
 									ElementType:         types.StringType,
 									Optional:            true,
 									PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 									Computed:            true,
-									MarkdownDescription: "Domains (Only applicable when Action is evaluate connection).",
+									MarkdownDescription: "Domains (Only applicable when Action is evaluate connection). The _provider_ default value is `[]`.",
 								},
 								"interface_type_match": schema.StringAttribute{
 									Optional: true,
@@ -3434,7 +3492,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									},
 									PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 									Computed:            true,
-									MarkdownDescription: "Network interface to trigger VPN. / VPN On-Demand Rule Connection network interface type; possible values are: `notConfigured` (NotConfigured), `ethernet` (Ethernet.), `wiFi` (WiFi.), `cellular` (Cellular.)",
+									MarkdownDescription: "Network interface to trigger VPN. / VPN On-Demand Rule Connection network interface type; possible values are: `notConfigured` (NotConfigured), `ethernet` (Ethernet.), `wiFi` (WiFi.), `cellular` (Cellular.). The _provider_ default value is `\"notConfigured\"`.",
 								},
 								"probe_required_url": schema.StringAttribute{
 									Optional:            true,
@@ -3449,13 +3507,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Optional:            true,
 									PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 									Computed:            true,
-									MarkdownDescription: "Network Service Set Identifiers (SSIDs).",
+									MarkdownDescription: "Network Service Set Identifiers (SSIDs). The _provider_ default value is `[]`.",
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "On-Demand Rules. This collection can contain a maximum of 500 elements. / VPN On-Demand Rule definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnOnDemandRule?view=graph-rest-beta",
+						MarkdownDescription: "On-Demand Rules. This collection can contain a maximum of 500 elements. / VPN On-Demand Rule definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnondemandrule?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"opt_in_to_device_id_sharing": schema.BoolAttribute{
 						Optional:            true,
@@ -3484,7 +3542,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								MarkdownDescription: "Port. Valid values 0 to 65535",
 							},
 						},
-						MarkdownDescription: "Proxy Server. / VPN Proxy Server. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnProxyServer?view=graph-rest-beta",
+						MarkdownDescription: "Proxy Server. / VPN Proxy Server. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnproxyserver?view=graph-rest-beta",
 					},
 					"realm": schema.StringAttribute{
 						Optional:            true,
@@ -3499,7 +3557,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Safari domains when this VPN per App setting is enabled. In addition to the apps associated with this VPN, Safari domains specified here will also be able to trigger this VPN connection.",
+						MarkdownDescription: "Safari domains when this VPN per App setting is enabled. In addition to the apps associated with this VPN, Safari domains specified here will also be able to trigger this VPN connection. The _provider_ default value is `[]`.",
 					},
 					"server": schema.SingleNestedAttribute{
 						Required: true,
@@ -3516,10 +3574,10 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Optional:            true,
 								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
 								Computed:            true,
-								MarkdownDescription: "Default server.",
+								MarkdownDescription: "Default server. The _provider_ default value is `true`.",
 							},
 						},
-						MarkdownDescription: "VPN Server on the network. Make sure end users can access this network location. / VPN Server definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnServer?view=graph-rest-beta",
+						MarkdownDescription: "VPN Server on the network. Make sure end users can access this network location. / VPN Server definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnserver?view=graph-rest-beta",
 					},
 					"cloud_name": schema.StringAttribute{
 						Optional:            true,
@@ -3530,7 +3588,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Zscaler only. List of network addresses which are not sent through the Zscaler cloud.",
+						MarkdownDescription: "Zscaler only. List of network addresses which are not sent through the Zscaler cloud. The _provider_ default value is `[]`.",
 					},
 					"microsoft_tunnel_site_id": schema.StringAttribute{
 						Optional:            true,
@@ -3547,7 +3605,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Targeted mobile apps. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-appListItem?view=graph-rest-beta",
+						MarkdownDescription: "Targeted mobile apps. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"user_domain": schema.StringAttribute{
 						Optional:            true,
@@ -3555,7 +3613,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "By providing the configurations in this profile you can instruct the iOS device to connect to desired VPN endpoint. By specifying the authentication method and security types expected by VPN endpoint you can make the VPN connection seamless for end user. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosVpnConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "By providing the configurations in this profile you can instruct the iOS device to connect to desired VPN endpoint. By specifying the authentication method and security types expected by VPN endpoint you can make the VPN connection seamless for end user. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosvpnconfiguration?view=graph-rest-beta",
 			},
 		},
 		"macos_custom": generic.OdataDerivedTypeNestedAttributeRs{
@@ -3578,7 +3636,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					"file_name": schema.StringAttribute{
 						Required:            true,
 						Description:         `payloadFileName`, // custom MS Graph attribute name
-						MarkdownDescription: "Payload file name (*.mobileconfig | *.xml).",
+						MarkdownDescription: "Payload file name (*.mobileconfig",
 					},
 					"name": schema.StringAttribute{
 						Required:            true,
@@ -3587,7 +3645,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the macOSCustomConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSCustomConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the macOSCustomConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macoscustomconfiguration?view=graph-rest-beta",
 			},
 		},
 		"macos_custom_app": generic.OdataDerivedTypeNestedAttributeRs{
@@ -3606,11 +3664,11 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					},
 					"file_name": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: "Configuration file name (*.plist | *.xml).",
+						MarkdownDescription: "Configuration file name (*.plist",
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the macOSCustomAppConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSCustomAppConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the macOSCustomAppConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macoscustomappconfiguration?view=graph-rest-beta",
 			},
 		},
 		"macos_device_features": generic.OdataDerivedTypeNestedAttributeRs{
@@ -3626,13 +3684,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
 						Description:         `airPrintDestinations`, // custom MS Graph attribute name
-						MarkdownDescription: "An array of AirPrint printers that should always be shown. This collection can contain a maximum of 500 elements. / Represents an AirPrint destination. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-airPrintDestination?view=graph-rest-beta",
+						MarkdownDescription: "An array of AirPrint printers that should always be shown. This collection can contain a maximum of 500 elements. / Represents an AirPrint destination. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-airprintdestination?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"admin_show_host_info": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether to show admin host information on the login window.",
+						MarkdownDescription: "Whether to show admin host information on the login window. The _provider_ default value is `false`.",
 					},
 					"app_associated_domains": schema.SetNestedAttribute{
 						Optional: true,
@@ -3655,43 +3713,43 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Gets or sets a list that maps apps to their associated domains. Application identifiers must be unique. This collection can contain a maximum of 500 elements. / A mapping of application identifiers to associated domains. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSAssociatedDomainsItem?view=graph-rest-beta",
+						MarkdownDescription: "Gets or sets a list that maps apps to their associated domains. Application identifiers must be unique. This collection can contain a maximum of 500 elements. / A mapping of application identifiers to associated domains. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macosassociateddomainsitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"authorized_users_list_hidden": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether to show the name and password dialog or a list of users on the login window.",
+						MarkdownDescription: "Whether to show the name and password dialog or a list of users on the login window. The _provider_ default value is `false`.",
 					},
 					"authorized_users_list_hide_admin_users": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether to hide admin users in the authorized users list on the login window.",
+						MarkdownDescription: "Whether to hide admin users in the authorized users list on the login window. The _provider_ default value is `false`.",
 					},
 					"authorized_users_list_hide_local_users": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether to show only network and system users in the authorized users list on the login window.",
+						MarkdownDescription: "Whether to show only network and system users in the authorized users list on the login window. The _provider_ default value is `false`.",
 					},
 					"authorized_users_list_hide_mobile_accounts": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether to hide mobile users in the authorized users list on the login window.",
+						MarkdownDescription: "Whether to hide mobile users in the authorized users list on the login window. The _provider_ default value is `false`.",
 					},
 					"authorized_users_list_include_network_users": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether to show network users in the authorized users list on the login window.",
+						MarkdownDescription: "Whether to show network users in the authorized users list on the login window. The _provider_ default value is `false`.",
 					},
 					"authorized_users_list_show_other_managed_users": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether to show other users in the authorized users list on the login window.",
+						MarkdownDescription: "Whether to show other users in the authorized users list on the login window. The _provider_ default value is `false`.",
 					},
 					"auto_launch_items": schema.SetNestedAttribute{
 						Optional: true,
@@ -3709,19 +3767,19 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "List of applications, files, folders, and other items to launch when the user logs in. This collection can contain a maximum of 500 elements. / Represents an app in the list of macOS launch items / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSLaunchItem?view=graph-rest-beta",
+						MarkdownDescription: "List of applications, files, folders, and other items to launch when the user logs in. This collection can contain a maximum of 500 elements. / Represents an app in the list of macOS launch items / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macoslaunchitem?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"console_access_disabled": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether the Other user will disregard use of the '>console> special user name.",
+						MarkdownDescription: "Whether the Other user will disregard use of the `console` special user name. The _provider_ default value is `false`.",
 					},
 					"content_caching_block_deletion": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Prevents content caches from purging content to free up disk space for other apps.",
+						MarkdownDescription: "Prevents content caches from purging content to free up disk space for other apps. The _provider_ default value is `false`.",
 					},
 					"content_caching_client_listen_ranges": schema.SetNestedAttribute{
 						Optional: true,
@@ -3730,7 +3788,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of custom IP ranges content caches will use to listen for clients. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ipRange?view=graph-rest-beta",
+						MarkdownDescription: "A list of custom IP ranges content caches will use to listen for clients. This collection can contain a maximum of 500 elements. / IP range base class for representing IPV4, IPV6 address ranges / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iprange?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"content_caching_client_policy": schema.StringAttribute{
 						Optional: true,
@@ -3739,7 +3797,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Determines the method in which content caching servers will listen for clients. / Determines which clients a content cache will serve; possible values are: `notConfigured` (Defaults to clients in local network.), `clientsInLocalNetwork` (Content caches will provide content to devices only in their immediate local network.), `clientsWithSamePublicIpAddress` (Content caches will provide content to devices that share the same public IP address.), `clientsInCustomLocalNetworks` (Content caches will provide content to devices in contentCachingClientListenRanges.), `clientsInCustomLocalNetworksWithFallback` (Content caches will provide content to devices in contentCachingClientListenRanges, contentCachingPeerListenRanges, and contentCachingParents.)",
+						MarkdownDescription: "Determines the method in which content caching servers will listen for clients. / Determines which clients a content cache will serve; possible values are: `notConfigured` (Defaults to clients in local network.), `clientsInLocalNetwork` (Content caches will provide content to devices only in their immediate local network.), `clientsWithSamePublicIpAddress` (Content caches will provide content to devices that share the same public IP address.), `clientsInCustomLocalNetworks` (Content caches will provide content to devices in contentCachingClientListenRanges.), `clientsInCustomLocalNetworksWithFallback` (Content caches will provide content to devices in contentCachingClientListenRanges, contentCachingPeerListenRanges, and contentCachingParents.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"content_caching_data_path": schema.StringAttribute{
 						Optional:            true,
@@ -3749,42 +3807,42 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Disables internet connection sharing.",
+						MarkdownDescription: "Disables internet connection sharing. The _provider_ default value is `false`.",
 					},
 					"content_caching_enabled": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Enables content caching and prevents it from being disabled by the user.",
+						MarkdownDescription: "Enables content caching and prevents it from being disabled by the user. The _provider_ default value is `false`.",
 					},
 					"content_caching_force_connection_sharing": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Forces internet connection sharing. contentCachingDisableConnectionSharing overrides this setting.",
+						MarkdownDescription: "Forces internet connection sharing. contentCachingDisableConnectionSharing overrides this setting. The _provider_ default value is `false`.",
 					},
 					"content_caching_keep_awake": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Prevent the device from sleeping if content caching is enabled.",
+						MarkdownDescription: "Prevent the device from sleeping if content caching is enabled. The _provider_ default value is `false`.",
 					},
 					"content_caching_log_client_identities": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Enables logging of IP addresses and ports of clients that request cached content.",
+						MarkdownDescription: "Enables logging of IP addresses and ports of clients that request cached content. The _provider_ default value is `false`.",
 					},
 					"content_caching_max_size_bytes": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "The maximum number of bytes of disk space that will be used for the content cache. A value of 0 (default) indicates unlimited disk space. ",
+						MarkdownDescription: "The maximum number of bytes of disk space that will be used for the content cache. A value of 0 (default) indicates unlimited disk space.",
 					},
 					"content_caching_parents": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of IP addresses representing parent content caches.",
+						MarkdownDescription: "A list of IP addresses representing parent content caches. The _provider_ default value is `[]`.",
 					},
 					"content_caching_parent_selection_policy": schema.StringAttribute{
 						Optional: true,
@@ -3793,7 +3851,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Determines the method in which content caching servers will select parents if multiple are present. / Determines how content caches select a parent cache; possible values are: `notConfigured` (Defaults to round-robin strategy.), `roundRobin` (Rotate through the parents in order. Use this policy for load balancing.), `firstAvailable` (Always use the first available parent in the Parents list. Use this policy to designate permanent primary, secondary, and subsequent parents.), `urlPathHash` (Hash the path part of the requested URL so that the same parent is always used for the same URL. This is useful for maximizing the size of the combined caches of the parents.), `random` (Choose a parent at random. Use this policy for load balancing.), `stickyAvailable` (Use the first available parent that is available in the Parents list until it becomes unavailable, then advance to the next one. Use this policy for designating floating primary, secondary, and subsequent parents.)",
+						MarkdownDescription: "Determines the method in which content caching servers will select parents if multiple are present. / Determines how content caches select a parent cache; possible values are: `notConfigured` (Defaults to round-robin strategy.), `roundRobin` (Rotate through the parents in order. Use this policy for load balancing.), `firstAvailable` (Always use the first available parent in the Parents list. Use this policy to designate permanent primary, secondary, and subsequent parents.), `urlPathHash` (Hash the path part of the requested URL so that the same parent is always used for the same URL. This is useful for maximizing the size of the combined caches of the parents.), `random` (Choose a parent at random. Use this policy for load balancing.), `stickyAvailable` (Use the first available parent that is available in the Parents list until it becomes unavailable, then advance to the next one. Use this policy for designating floating primary, secondary, and subsequent parents.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"content_caching_peer_filter_ranges": schema.SetNestedAttribute{
 						Optional: true,
@@ -3802,7 +3860,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of custom IP ranges content caches will use to query for content from peers caches. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ipRange?view=graph-rest-beta",
+						MarkdownDescription: "A list of custom IP ranges content caches will use to query for content from peers caches. This collection can contain a maximum of 500 elements. / IP range base class for representing IPV4, IPV6 address ranges / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iprange?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"content_caching_peer_listen_ranges": schema.SetNestedAttribute{
 						Optional: true,
@@ -3811,7 +3869,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of custom IP ranges content caches will use to listen for peer caches. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ipRange?view=graph-rest-beta",
+						MarkdownDescription: "A list of custom IP ranges content caches will use to listen for peer caches. This collection can contain a maximum of 500 elements. / IP range base class for representing IPV4, IPV6 address ranges / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iprange?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"content_caching_peer_policy": schema.StringAttribute{
 						Optional: true,
@@ -3820,7 +3878,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Determines the method in which content caches peer with other caches. / Determines which content caches other content caches will peer with; possible values are: `notConfigured` (Defaults to peers in local network.), `peersInLocalNetwork` (Content caches will only peer with caches in their immediate local network.), `peersWithSamePublicIpAddress` (Content caches will only peer with caches that share the same public IP address.), `peersInCustomLocalNetworks` (Content caches will use contentCachingPeerFilterRanges and contentCachingPeerListenRanges to determine which caches to peer with.)",
+						MarkdownDescription: "Determines the method in which content caches peer with other caches. / Determines which content caches other content caches will peer with; possible values are: `notConfigured` (Defaults to peers in local network.), `peersInLocalNetwork` (Content caches will only peer with caches in their immediate local network.), `peersWithSamePublicIpAddress` (Content caches will only peer with caches that share the same public IP address.), `peersInCustomLocalNetworks` (Content caches will use contentCachingPeerFilterRanges and contentCachingPeerListenRanges to determine which caches to peer with.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"content_caching_port": schema.Int64Attribute{
 						Optional:            true,
@@ -3833,13 +3891,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of custom IP ranges that Apple's content caching service should use to match clients to content caches. This collection can contain a maximum of 500 elements. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ipRange?view=graph-rest-beta",
+						MarkdownDescription: "A list of custom IP ranges that Apple's content caching service should use to match clients to content caches. This collection can contain a maximum of 500 elements. / IP range base class for representing IPV4, IPV6 address ranges / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iprange?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"content_caching_show_alerts": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Display content caching alerts as system notifications.",
+						MarkdownDescription: "Display content caching alerts as system notifications. The _provider_ default value is `false`.",
 					},
 					"content_caching_type": schema.StringAttribute{
 						Optional: true,
@@ -3848,7 +3906,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Determines what type of content is allowed to be cached by Apple's content caching service. / Indicates the type of content allowed to be cached by Apple's content caching service; possible values are: `notConfigured` (Default. Both user iCloud data and non-iCloud data will be cached.), `userContentOnly` (Allow Apple's content caching service to cache user iCloud data.), `sharedContentOnly` (Allow Apple's content caching service to cache non-iCloud data (e.g. app and software updates).)",
+						MarkdownDescription: "Determines what type of content is allowed to be cached by Apple's content caching service. / Indicates the type of content allowed to be cached by Apple's content caching service; possible values are: `notConfigured` (Default. Both user iCloud data and non-iCloud data will be cached.), `userContentOnly` (Allow Apple's content caching service to cache user iCloud data.), `sharedContentOnly` (Allow Apple's content caching service to cache non-iCloud data (e.g. app and software updates).). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"login_window_text": schema.StringAttribute{
 						Optional: true,
@@ -3857,14 +3915,14 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
 						Computed:            true,
-						MarkdownDescription: "Custom text to be displayed on the login window.",
+						MarkdownDescription: "Custom text to be displayed on the login window. The _provider_ default value is `\"\"`.",
 					},
 					"logout_disabled_while_logged_in": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `logOutDisabledWhileLoggedIn`, // custom MS Graph attribute name
-						MarkdownDescription: "Whether the Log Out menu item on the login window will be disabled while the user is logged in.",
+						MarkdownDescription: "Whether the Log Out menu item on the login window will be disabled while the user is logged in. The _provider_ default value is `false`.",
 					},
 					"macos_single_sign_on_extension": schema.SingleNestedAttribute{
 						Optional: true,
@@ -3879,7 +3937,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											Optional:            true,
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "An optional list of additional bundle IDs allowed to use the AAD extension for single sign-on.",
+											MarkdownDescription: "An optional list of additional bundle IDs allowed to use the AAD extension for single sign-on. The _provider_ default value is `[]`.",
 										},
 										"configurations": schema.SetNestedAttribute{
 											Optional: true,
@@ -3888,19 +3946,19 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyTypedValuePair?view=graph-rest-beta",
+											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`.",
 										},
 										"enable_shared_device_mode": schema.BoolAttribute{
 											Optional:            true,
 											PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 											Computed:            true,
-											MarkdownDescription: "Enables or disables shared device mode.",
+											MarkdownDescription: "Enables or disables shared device mode. The _provider_ default value is `false`.",
 										},
 									},
 									Validators: []validator.Object{
 										deviceConfigurationMacOSSingleSignOnExtensionValidator,
 									},
-									MarkdownDescription: "Represents an Azure AD-type Single Sign-On extension profile for macOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSAzureAdSingleSignOnExtension?view=graph-rest-beta",
+									MarkdownDescription: "Represents an Azure AD-type Single Sign-On extension profile for macOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macosazureadsinglesignonextension?view=graph-rest-beta",
 								},
 							},
 							"credential": generic.OdataDerivedTypeNestedAttributeRs{
@@ -3915,14 +3973,14 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyTypedValuePair?view=graph-rest-beta",
+											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`.",
 										},
 										"domains": schema.SetAttribute{
 											ElementType:         types.StringType,
 											Optional:            true,
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "Gets or sets a list of hosts or domain names for which the app extension performs SSO.",
+											MarkdownDescription: "Gets or sets a list of hosts or domain names for which the app extension performs SSO. The _provider_ default value is `[]`.",
 										},
 										"extension_identifier": schema.StringAttribute{
 											Required:            true,
@@ -3940,7 +3998,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										deviceConfigurationMacOSSingleSignOnExtensionValidator,
 									},
-									MarkdownDescription: "Represents a Credential-type Single Sign-On extension profile for macOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSCredentialSingleSignOnExtension?view=graph-rest-beta",
+									MarkdownDescription: "Represents a Credential-type Single Sign-On extension profile for macOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macoscredentialsinglesignonextension?view=graph-rest-beta",
 								},
 							},
 							"kerberos": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4080,7 +4138,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										deviceConfigurationMacOSSingleSignOnExtensionValidator,
 									},
-									MarkdownDescription: "Represents a Kerberos-type Single Sign-On extension profile for macOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSKerberosSingleSignOnExtension?view=graph-rest-beta",
+									MarkdownDescription: "Represents a Kerberos-type Single Sign-On extension profile for macOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macoskerberossinglesignonextension?view=graph-rest-beta",
 								},
 							},
 							"redirect": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4095,7 +4153,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 											Computed:            true,
-											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyTypedValuePair?view=graph-rest-beta",
+											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`.",
 										},
 										"extension_identifier": schema.StringAttribute{
 											Required:            true,
@@ -4114,61 +4172,61 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										deviceConfigurationMacOSSingleSignOnExtensionValidator,
 									},
-									MarkdownDescription: "Represents a Redirect-type Single Sign-On extension profile for macOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSRedirectSingleSignOnExtension?view=graph-rest-beta",
+									MarkdownDescription: "Represents a Redirect-type Single Sign-On extension profile for macOS devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macosredirectsinglesignonextension?view=graph-rest-beta",
 								},
 							},
 						},
 						Description:         `macOSSingleSignOnExtension`, // custom MS Graph attribute name
-						MarkdownDescription: "Gets or sets a single sign-on extension profile. / An abstract base class for all macOS-specific single sign-on extension types. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSSingleSignOnExtension?view=graph-rest-beta",
+						MarkdownDescription: "Gets or sets a single sign-on extension profile. / An abstract base class for all macOS-specific single sign-on extension types. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macossinglesignonextension?view=graph-rest-beta",
 					},
 					"poweroff_disabled_while_logged_in": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `powerOffDisabledWhileLoggedIn`, // custom MS Graph attribute name
-						MarkdownDescription: "Whether the Power Off menu item on the login window will be disabled while the user is logged in.",
+						MarkdownDescription: "Whether the Power Off menu item on the login window will be disabled while the user is logged in. The _provider_ default value is `false`.",
 					},
 					"restart_disabled": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether to hide the Restart button item on the login window.",
+						MarkdownDescription: "Whether to hide the Restart button item on the login window. The _provider_ default value is `false`.",
 					},
 					"restart_disabled_while_logged_in": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether the Restart menu item on the login window will be disabled while the user is logged in.",
+						MarkdownDescription: "Whether the Restart menu item on the login window will be disabled while the user is logged in. The _provider_ default value is `false`.",
 					},
 					"screen_lock_disable_immediate": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether to disable the immediate screen lock functions.",
+						MarkdownDescription: "Whether to disable the immediate screen lock functions. The _provider_ default value is `false`.",
 					},
 					"shutdown_disabled": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `shutDownDisabled`, // custom MS Graph attribute name
-						MarkdownDescription: "Whether to hide the Shut Down button item on the login window.",
+						MarkdownDescription: "Whether to hide the Shut Down button item on the login window. The _provider_ default value is `false`.",
 					},
 					"shutdown_disabled_while_logged_in": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `shutDownDisabledWhileLoggedIn`, // custom MS Graph attribute name
-						MarkdownDescription: "Whether the Shut Down menu item on the login window will be disabled while the user is logged in.",
+						MarkdownDescription: "Whether the Shut Down menu item on the login window will be disabled while the user is logged in. The _provider_ default value is `false`.",
 					},
 					"sleep_disabled": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether to hide the Sleep menu item on the login window.",
+						MarkdownDescription: "Whether to hide the Sleep menu item on the login window. The _provider_ default value is `false`.",
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "MacOS device features configuration profile. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSDeviceFeaturesConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "MacOS device features configuration profile. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macosdevicefeaturesconfiguration?view=graph-rest-beta",
 			},
 		},
 		"macos_extensions": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4181,13 +4239,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "All kernel extensions validly signed by the team identifiers in this list will be allowed to load.",
+						MarkdownDescription: "All kernel extensions validly signed by the team identifiers in this list will be allowed to load. The _provider_ default value is `[]`.",
 					},
 					"kernel_extension_overrides_allowed": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "If set to true, users can approve additional kernel extensions not explicitly allowed by configurations profiles.",
+						MarkdownDescription: "If set to true, users can approve additional kernel extensions not explicitly allowed by configurations profiles. The _provider_ default value is `false`.",
 					},
 					"kernel_extensions_allowed": schema.SetNestedAttribute{
 						Optional: true,
@@ -4205,7 +4263,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of kernel extensions that will be allowed to load. . This collection can contain a maximum of 500 elements. / Represents a specific macOS kernel extension. A macOS kernel extension can be described by its team identifier plus its bundle identifier. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSKernelExtension?view=graph-rest-beta",
+						MarkdownDescription: "A list of kernel extensions that will be allowed to load. . This collection can contain a maximum of 500 elements. / Represents a specific macOS kernel extension. A macOS kernel extension can be described by its team identifier plus its bundle identifier. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macoskernelextension?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"system_extensions_allowed": schema.SetNestedAttribute{
 						Optional: true,
@@ -4223,14 +4281,14 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Gets or sets a list of allowed macOS system extensions. This collection can contain a maximum of 500 elements. / Represents a specific macOS system extension. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSSystemExtension?view=graph-rest-beta",
+						MarkdownDescription: "Gets or sets a list of allowed macOS system extensions. This collection can contain a maximum of 500 elements. / Represents a specific macOS system extension. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macossystemextension?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"system_extensions_allowed_team_identifiers": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Gets or sets a list of allowed team identifiers. Any system extension signed with any of the specified team identifiers will be approved.",
+						MarkdownDescription: "Gets or sets a list of allowed team identifiers. Any system extension signed with any of the specified team identifiers will be approved. The _provider_ default value is `[]`.",
 					},
 					"system_extensions_allowed_types": schema.SetNestedAttribute{
 						Optional: true,
@@ -4251,17 +4309,17 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Gets or sets a list of allowed macOS system extension types. This collection can contain a maximum of 500 elements. / Represents a mapping between team identifiers for macOS system extensions and system extension types. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSSystemExtensionTypeMapping?view=graph-rest-beta",
+						MarkdownDescription: "Gets or sets a list of allowed macOS system extension types. This collection can contain a maximum of 500 elements. / Represents a mapping between team identifiers for macOS system extensions and system extension types. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macossystemextensiontypemapping?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"system_extensions_block_override": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Gets or sets whether to allow the user to approve additional system extensions not explicitly allowed by configuration profiles.",
+						MarkdownDescription: "Gets or sets whether to allow the user to approve additional system extensions not explicitly allowed by configuration profiles. The _provider_ default value is `false`.",
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "MacOS extensions configuration profile. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSExtensionsConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "MacOS extensions configuration profile. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macosextensionsconfiguration?view=graph-rest-beta",
 			},
 		},
 		"macos_software_update": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4276,7 +4334,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Update behavior for all other updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.)",
+						MarkdownDescription: "Update behavior for all other updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"config_data_update_behavior": schema.StringAttribute{
 						Optional: true,
@@ -4285,7 +4343,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Update behavior for configuration data file updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.)",
+						MarkdownDescription: "Update behavior for configuration data file updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"critical_update_behavior": schema.StringAttribute{
 						Optional: true,
@@ -4294,7 +4352,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Update behavior for critical updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.)",
+						MarkdownDescription: "Update behavior for critical updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"custom_update_time_windows": schema.SetNestedAttribute{
 						Optional: true,
@@ -4305,7 +4363,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"),
 									},
-									MarkdownDescription: "End day of the time window / ; possible values are: `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`",
+									MarkdownDescription: "End day of the time window. / Possible values for a weekday; possible values are: `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.)",
 								},
 								"end_time": schema.StringAttribute{
 									Required:            true,
@@ -4316,7 +4374,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"),
 									},
-									MarkdownDescription: "Start day of the time window / ; possible values are: `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`",
+									MarkdownDescription: "Start day of the time window. / Possible values for a weekday; possible values are: `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.)",
 								},
 								"start_time": schema.StringAttribute{
 									Required:            true,
@@ -4326,7 +4384,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Custom Time windows when updates will be allowed or blocked. This collection can contain a maximum of 20 elements. / Custom update time window / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-customUpdateTimeWindow?view=graph-rest-beta",
+						MarkdownDescription: "Custom Time windows when updates will be allowed or blocked. This collection can contain a maximum of 20 elements. / Custom update time window / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-customupdatetimewindow?view=graph-rest-beta. The _provider_ default value is `[]`.",
 					},
 					"firmware_update_behavior": schema.StringAttribute{
 						Optional: true,
@@ -4335,7 +4393,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Update behavior for firmware updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.)",
+						MarkdownDescription: "Update behavior for firmware updates. / Update behavior options for macOS software updates; possible values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"max_user_deferrals_count": schema.Int64Attribute{
 						Optional:            true,
@@ -4346,7 +4404,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Validators: []validator.String{
 							stringvalidator.OneOf("low", "high", "unknownFutureValue"),
 						},
-						MarkdownDescription: "The scheduling priority for downloading and preparing the requested update. Default: Low. Possible values: Null, Low, High / The scheduling priority options for downloading and preparing the requested mac OS update; possible values are: `low` (Indicates low scheduling priority for downloading and preparing the requested update), `high` (Indicates high scheduling priority for downloading and preparing the requested update), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)",
+						MarkdownDescription: "The scheduling priority for downloading and preparing the requested update. Default: Low. Possible values: Null, Low, High. / The scheduling priority options for downloading and preparing the requested mac OS update; possible values are: `low` (Indicates low scheduling priority for downloading and preparing the requested update), `high` (Indicates high scheduling priority for downloading and preparing the requested update), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)",
 					},
 					"update_schedule_type": schema.StringAttribute{
 						Optional: true,
@@ -4355,7 +4413,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("alwaysUpdate")},
 						Computed:            true,
-						MarkdownDescription: "Update schedule type / Update schedule type for macOS software updates; possible values are: `alwaysUpdate` (Always update.), `updateDuringTimeWindows` (Update during time windows.), `updateOutsideOfTimeWindows` (Update outside of time windows.)",
+						MarkdownDescription: "Update schedule type. / Update schedule type for macOS software updates; possible values are: `alwaysUpdate` (Always update.), `updateDuringTimeWindows` (Update during time windows.), `updateOutsideOfTimeWindows` (Update outside of time windows.). The _provider_ default value is `\"alwaysUpdate\"`.",
 					},
 					"update_time_window_utc_offset_in_minutes": schema.Int64Attribute{
 						Optional:            true,
@@ -4363,7 +4421,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "MacOS Software Update Configuration / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macOSSoftwareUpdateConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "MacOS Software Update Configuration / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macossoftwareupdateconfiguration?view=graph-rest-beta",
 			},
 		},
 		"windows_health_monitoring": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4379,7 +4437,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
 						Description:         `allowDeviceHealthMonitoring`, // custom MS Graph attribute name
-						MarkdownDescription: "Enables device health monitoring on the device / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.)",
+						MarkdownDescription: "Enables device health monitoring on the device. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"custom_scope": schema.StringAttribute{
 						Optional:            true,
@@ -4394,11 +4452,11 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("undefined")},
 						Computed:            true,
 						Description:         `configDeviceHealthMonitoringScope`, // custom MS Graph attribute name
-						MarkdownDescription: "Specifies set of events collected from the device where health monitoring is enabled / Device health monitoring scope; possible values are: `undefined` (Undefined), `healthMonitoring` (Basic events for windows device health monitoring), `bootPerformance` (Boot performance events), `windowsUpdates` (Windows updates events), `privilegeManagement` (PrivilegeManagement)",
+						MarkdownDescription: "Specifies set of events collected from the device where health monitoring is enabled. / Device health monitoring scope; possible values are: `undefined` (Undefined), `healthMonitoring` (Basic events for windows device health monitoring), `bootPerformance` (Boot performance events), `windowsUpdates` (Windows updates events), `privilegeManagement` (PrivilegeManagement). The _provider_ default value is `\"undefined\"`.",
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "Windows device health monitoring configuration / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsHealthMonitoringConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "Windows device health monitoring configuration / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowshealthmonitoringconfiguration?view=graph-rest-beta",
 			},
 		},
 		"windows_update_for_business": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4411,7 +4469,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
 						Description:         `allowWindows11Upgrade`, // custom MS Graph attribute name
-						MarkdownDescription: "When TRUE, allows eligible Windows 10 devices to upgrade to Windows 11. When FALSE, implies the device stays on the existing operating system. Returned by default. Query parameters are not supported.",
+						MarkdownDescription: "When TRUE, allows eligible Windows 10 devices to upgrade to Windows 11. When FALSE, implies the device stays on the existing operating system. Returned by default. Query parameters are not supported. The _provider_ default value is `false`.",
 					},
 					"automatic_update_mode": schema.StringAttribute{
 						Optional: true,
@@ -4422,7 +4480,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 							wpdefaultvalue.StringDefaultValue("autoInstallAtMaintenanceTime"),
 						},
 						Computed:            true,
-						MarkdownDescription: "The Automatic Update Mode. Possible values are: UserDefined, NotifyDownload, AutoInstallAtMaintenanceTime, AutoInstallAndRebootAtMaintenanceTime, AutoInstallAndRebootAtScheduledTime, AutoInstallAndRebootWithoutEndUserControl, WindowsDefault. UserDefined is the default value, no intent. Returned by default. Query parameters are not supported. / Possible values for automatic update mode; possible values are: `userDefined` (User Defined, default value, no intent.), `notifyDownload` (Notify on download.), `autoInstallAtMaintenanceTime` (Auto-install at maintenance time.), `autoInstallAndRebootAtMaintenanceTime` (Auto-install and reboot at maintenance time.), `autoInstallAndRebootAtScheduledTime` (Auto-install and reboot at scheduled time.), `autoInstallAndRebootWithoutEndUserControl` (Auto-install and restart without end-user control), `windowsDefault` (Reset to Windows default value.)",
+						MarkdownDescription: "The Automatic Update Mode. Possible values are: UserDefined, NotifyDownload, AutoInstallAtMaintenanceTime, AutoInstallAndRebootAtMaintenanceTime, AutoInstallAndRebootAtScheduledTime, AutoInstallAndRebootWithoutEndUserControl, WindowsDefault. UserDefined is the default value, no intent. Returned by default. Query parameters are not supported. / Possible values for automatic update mode; possible values are: `userDefined` (User Defined, default value, no intent.), `notifyDownload` (Notify on download.), `autoInstallAtMaintenanceTime` (Auto-install at maintenance time.), `autoInstallAndRebootAtMaintenanceTime` (Auto-install and reboot at maintenance time.), `autoInstallAndRebootAtScheduledTime` (Auto-install and reboot at scheduled time.), `autoInstallAndRebootWithoutEndUserControl` (Auto-install and restart without end-user control), `windowsDefault` (Reset to Windows default value.). The _provider_ default value is `\"autoInstallAtMaintenanceTime\"`.",
 					},
 					"auto_restart_notification_dismissal": schema.StringAttribute{
 						Optional: true,
@@ -4431,7 +4489,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 						Computed:            true,
-						MarkdownDescription: "Specify the method by which the auto-restart required notification is dismissed. Possible values are: NotConfigured, Automatic, User. Returned by default. Query parameters are not supported. / Auto restart required notification dismissal method; possible values are: `notConfigured` (Not configured), `automatic` (Auto dismissal Indicates that the notification is automatically dismissed without user intervention), `user` (User dismissal. Allows the user to dismiss the notification), `unknownFutureValue` (Evolvable enum member)",
+						MarkdownDescription: "Specify the method by which the auto-restart required notification is dismissed. Possible values are: NotConfigured, Automatic, User. Returned by default. Query parameters are not supported. / Auto restart required notification dismissal method; possible values are: `notConfigured` (Not configured), `automatic` (Auto dismissal Indicates that the notification is automatically dismissed without user intervention), `user` (User dismissal. Allows the user to dismiss the notification), `unknownFutureValue` (Evolvable enum member). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"business_ready_updates_only": schema.StringAttribute{
 						Optional: true,
@@ -4440,7 +4498,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
 						Computed:            true,
-						MarkdownDescription: "Determines which branch devices will receive their updates from. Possible values are: UserDefined, All, BusinessReadyOnly, WindowsInsiderBuildFast, WindowsInsiderBuildSlow, WindowsInsiderBuildRelease. Returned by default. Query parameters are not supported. / Which branch devices will receive their updates from; possible values are: `userDefined` (Allow the user to set.), `all` (Semi-annual Channel (Targeted). Device gets all applicable feature updates from Semi-annual Channel (Targeted).), `businessReadyOnly` (Semi-annual Channel. Device gets feature updates from Semi-annual Channel.), `windowsInsiderBuildFast` (Windows Insider build - Fast), `windowsInsiderBuildSlow` (Windows Insider build - Slow), `windowsInsiderBuildRelease` (Release Windows Insider build)",
+						MarkdownDescription: "Determines which branch devices will receive their updates from. Possible values are: UserDefined, All, BusinessReadyOnly, WindowsInsiderBuildFast, WindowsInsiderBuildSlow, WindowsInsiderBuildRelease. Returned by default. Query parameters are not supported. / Which branch devices will receive their updates from; possible values are: `userDefined` (Allow the user to set.), `all` (Semi-annual Channel (Targeted). Device gets all applicable feature updates from Semi-annual Channel (Targeted).), `businessReadyOnly` (Semi-annual Channel. Device gets feature updates from Semi-annual Channel.), `windowsInsiderBuildFast` (Windows Insider build - Fast), `windowsInsiderBuildSlow` (Windows Insider build - Slow), `windowsInsiderBuildRelease` (Release Windows Insider build). The _provider_ default value is `\"userDefined\"`.",
 					},
 					"deadline_for_feature_updates_in_days": schema.Int64Attribute{
 						Optional:            true,
@@ -4461,13 +4519,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
 						Computed:            true,
-						MarkdownDescription: "The Delivery Optimization Mode. Possible values are: UserDefined, HttpOnly, HttpWithPeeringNat, HttpWithPeeringPrivateGroup, HttpWithInternetPeering, SimpleDownload, BypassMode. UserDefined allows the user to set. Returned by default. Query parameters are not supported. / Delivery optimization mode for peer distribution; possible values are: `userDefined` (Allow the user to set.), `httpOnly` (HTTP only, no peering), `httpWithPeeringNat` (OS default – Http blended with peering behind the same network address translator), `httpWithPeeringPrivateGroup` (HTTP blended with peering across a private group), `httpWithInternetPeering` (HTTP blended with Internet peering), `simpleDownload` (Simple download mode with no peering), `bypassMode` (Bypass mode. Do not use Delivery Optimization and use BITS instead)",
+						MarkdownDescription: "The Delivery Optimization Mode. Possible values are: UserDefined, HttpOnly, HttpWithPeeringNat, HttpWithPeeringPrivateGroup, HttpWithInternetPeering, SimpleDownload, BypassMode. UserDefined allows the user to set. Returned by default. Query parameters are not supported. / Delivery optimization mode for peer distribution; possible values are: `userDefined` (Allow the user to set.), `httpOnly` (HTTP only, no peering), `httpWithPeeringNat` (OS default – Http blended with peering behind the same network address translator), `httpWithPeeringPrivateGroup` (HTTP blended with peering across a private group), `httpWithInternetPeering` (HTTP blended with Internet peering), `simpleDownload` (Simple download mode with no peering), `bypassMode` (Bypass mode. Do not use Delivery Optimization and use BITS instead). The _provider_ default value is `\"userDefined\"`.",
 					},
 					"drivers_excluded": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "When TRUE, excludes Windows update Drivers. When FALSE, does not exclude Windows update Drivers. Returned by default. Query parameters are not supported.",
+						MarkdownDescription: "When TRUE, excludes Windows update Drivers. When FALSE, does not exclude Windows update Drivers. Returned by default. Query parameters are not supported. The _provider_ default value is `false`.",
 					},
 					"engaged_restart_deadline_in_days": schema.Int64Attribute{
 						Optional:            true,
@@ -4485,19 +4543,19 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
 						Computed:            true,
-						MarkdownDescription: "Defer Feature Updates by these many days with valid range from 0 to 30 days. Returned by default. Query parameters are not supported.",
+						MarkdownDescription: "Defer Feature Updates by these many days with valid range from 0 to 30 days. Returned by default. Query parameters are not supported. The _provider_ default value is `0`.",
 					},
 					"feature_updates_paused": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "When TRUE, assigned devices are paused from receiving feature updates for up to 35 days from the time you pause the ring. When FALSE, does not pause Feature Updates. Returned by default. Query parameters are not supported.s",
+						MarkdownDescription: "When TRUE, assigned devices are paused from receiving feature updates for up to 35 days from the time you pause the ring. When FALSE, does not pause Feature Updates. Returned by default. Query parameters are not supported.s. The _provider_ default value is `false`.",
 					},
 					"feature_updates_rollback_window_in_days": schema.Int64Attribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(10)},
 						Computed:            true,
-						MarkdownDescription: "The number of days after a Feature Update for which a rollback is valid with valid range from 2 to 60 days. Returned by default. Query parameters are not supported.",
+						MarkdownDescription: "The number of days after a Feature Update for which a rollback is valid with valid range from 2 to 60 days. Returned by default. Query parameters are not supported. The _provider_ default value is `10`.",
 					},
 					"installation_schedule": schema.SingleNestedAttribute{
 						Optional: true,
@@ -4514,7 +4572,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											Computed:            true,
 											Description:         `activeHoursEnd`, // custom MS Graph attribute name
-											MarkdownDescription: "Active Hours End",
+											MarkdownDescription: "Active Hours End. The _provider_ default value is `\"17:00:00.0000000\"`.",
 										},
 										"start": schema.StringAttribute{
 											Optional: true,
@@ -4523,13 +4581,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											Computed:            true,
 											Description:         `activeHoursStart`, // custom MS Graph attribute name
-											MarkdownDescription: "Active Hours Start",
+											MarkdownDescription: "Active Hours Start. The _provider_ default value is `\"08:00:00.0000000\"`.",
 										},
 									},
 									Validators: []validator.Object{
 										deviceConfigurationWindowsUpdateInstallScheduleTypeValidator,
 									},
-									MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsUpdateActiveHoursInstall?view=graph-rest-beta",
+									MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsupdateactivehoursinstall?view=graph-rest-beta",
 								},
 							},
 							"scheduled": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4545,7 +4603,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("everyday")},
 											Computed:            true,
 											Description:         `scheduledInstallDay`, // custom MS Graph attribute name
-											MarkdownDescription: "Scheduled Install Day in week / Possible values for a weekly schedule; possible values are: `userDefined` (User Defined, default value, no intent.), `everyday` (Everyday.), `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.), `noScheduledScan` (No Scheduled Scan)",
+											MarkdownDescription: "Scheduled Install Day in week. / Possible values for a weekly schedule; possible values are: `userDefined` (User Defined, default value, no intent.), `everyday` (Everyday.), `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.), `noScheduledScan` (No Scheduled Scan). The _provider_ default value is `\"everyday\"`.",
 										},
 										"time": schema.StringAttribute{
 											Optional: true,
@@ -4554,23 +4612,23 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 											Computed:            true,
 											Description:         `scheduledInstallTime`, // custom MS Graph attribute name
-											MarkdownDescription: "Scheduled Install Time during day",
+											MarkdownDescription: "Scheduled Install Time during day. The _provider_ default value is `\"03:00:00.0000000\"`.",
 										},
 									},
 									Validators: []validator.Object{
 										deviceConfigurationWindowsUpdateInstallScheduleTypeValidator,
 									},
-									MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsUpdateScheduledInstall?view=graph-rest-beta",
+									MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsupdatescheduledinstall?view=graph-rest-beta",
 								},
 							},
 						},
-						MarkdownDescription: "The Installation Schedule. Possible values are: ActiveHoursStart, ActiveHoursEnd, ScheduledInstallDay, ScheduledInstallTime. Returned by default. Query parameters are not supported. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsUpdateInstallScheduleType?view=graph-rest-beta",
+						MarkdownDescription: "The Installation Schedule. Possible values are: ActiveHoursStart, ActiveHoursEnd, ScheduledInstallDay, ScheduledInstallTime. Returned by default. Query parameters are not supported. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsupdateinstallscheduletype?view=graph-rest-beta",
 					},
 					"microsoft_update_service_allowed": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
 						Computed:            true,
-						MarkdownDescription: "When TRUE, allows Microsoft Update Service. When FALSE, does not allow Microsoft Update Service. Returned by default. Query parameters are not supported.",
+						MarkdownDescription: "When TRUE, allows Microsoft Update Service. When FALSE, does not allow Microsoft Update Service. Returned by default. Query parameters are not supported. The _provider_ default value is `true`.",
 					},
 					"postpone_reboot_until_after_deadline": schema.BoolAttribute{
 						Optional:            true,
@@ -4583,19 +4641,19 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
 						Computed:            true,
-						MarkdownDescription: "The Pre-Release Features. Possible values are: UserDefined, SettingsOnly, SettingsAndExperimentations, NotAllowed. UserDefined is the default value, no intent. Returned by default. Query parameters are not supported. / Possible values for pre-release features; possible values are: `userDefined` (User Defined, default value, no intent.), `settingsOnly` (Settings only pre-release features.), `settingsAndExperimentations` (Settings and experimentations pre-release features.), `notAllowed` (Pre-release features not allowed.)",
+						MarkdownDescription: "The Pre-Release Features. Possible values are: UserDefined, SettingsOnly, SettingsAndExperimentations, NotAllowed. UserDefined is the default value, no intent. Returned by default. Query parameters are not supported. / Possible values for pre-release features; possible values are: `userDefined` (User Defined, default value, no intent.), `settingsOnly` (Settings only pre-release features.), `settingsAndExperimentations` (Settings and experimentations pre-release features.), `notAllowed` (Pre-release features not allowed.). The _provider_ default value is `\"userDefined\"`.",
 					},
 					"quality_updates_deferral_period_in_days": schema.Int64Attribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
 						Computed:            true,
-						MarkdownDescription: "Defer Quality Updates by these many days with valid range from 0 to 30 days. Returned by default. Query parameters are not supported.",
+						MarkdownDescription: "Defer Quality Updates by these many days with valid range from 0 to 30 days. Returned by default. Query parameters are not supported. The _provider_ default value is `0`.",
 					},
 					"quality_updates_paused": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "When TRUE, assigned devices are paused from receiving quality updates for up to 35 days from the time you pause the ring. When FALSE, does not pause Quality Updates. Returned by default. Query parameters are not supported.",
+						MarkdownDescription: "When TRUE, assigned devices are paused from receiving quality updates for up to 35 days from the time you pause the ring. When FALSE, does not pause Quality Updates. Returned by default. Query parameters are not supported. The _provider_ default value is `false`.",
 					},
 					"schedule_imminent_restart_warning_in_minutes": schema.Int64Attribute{
 						Optional:            true,
@@ -4609,7 +4667,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "When TRUE, skips all checks before restart: Battery level = 40%, User presence, Display Needed, Presentation mode, Full screen mode, phone call state, game mode etc. When FALSE, does not skip all checks before restart. Returned by default. Query parameters are not supported.",
+						MarkdownDescription: "When TRUE, skips all checks before restart: Battery level = 40%, User presence, Display Needed, Presentation mode, Full screen mode, phone call state, game mode etc. When FALSE, does not skip all checks before restart. Returned by default. Query parameters are not supported. The _provider_ default value is `false`.",
 					},
 					"update_notification_level": schema.StringAttribute{
 						Optional: true,
@@ -4620,7 +4678,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 							wpdefaultvalue.StringDefaultValue("defaultNotifications"),
 						},
 						Computed:            true,
-						MarkdownDescription: "Specifies what Windows Update notifications users see. Possible values are: NotConfigured, DefaultNotifications, RestartWarningsOnly, DisableAllNotifications. Returned by default. Query parameters are not supported. / Windows Update Notification Display Options; possible values are: `notConfigured` (Not configured), `defaultNotifications` (Use the default Windows Update notifications.), `restartWarningsOnly` (Turn off all notifications, excluding restart warnings.), `disableAllNotifications` (Turn off all notifications, including restart warnings.), `unknownFutureValue` (Evolvable enum member)",
+						MarkdownDescription: "Specifies what Windows Update notifications users see. Possible values are: NotConfigured, DefaultNotifications, RestartWarningsOnly, DisableAllNotifications. Returned by default. Query parameters are not supported. / Windows Update Notification Display Options; possible values are: `notConfigured` (Not configured), `defaultNotifications` (Use the default Windows Update notifications.), `restartWarningsOnly` (Turn off all notifications, excluding restart warnings.), `disableAllNotifications` (Turn off all notifications, including restart warnings.), `unknownFutureValue` (Evolvable enum member). The _provider_ default value is `\"defaultNotifications\"`.",
 					},
 					"update_weeks": schema.StringAttribute{
 						Optional: true,
@@ -4636,7 +4694,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("enabled")},
 						Computed:            true,
-						MarkdownDescription: "Specifies whether to enable end user’s access to pause software updates. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.)",
+						MarkdownDescription: "Specifies whether to enable end user’s access to pause software updates. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"enabled\"`.",
 					},
 					"user_windows_update_scan_access": schema.StringAttribute{
 						Optional: true,
@@ -4645,20 +4703,21 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("enabled")},
 						Computed:            true,
-						MarkdownDescription: "Specifies whether to disable user’s access to scan Windows Update. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.)",
+						MarkdownDescription: "Specifies whether to disable user’s access to scan Windows Update. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"enabled\"`.",
 					},
 				},
 				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
-				MarkdownDescription: "Windows Update for business configuration, allows you to specify how and when Windows as a Service updates your Windows 10/11 devices with feature and quality updates. Supports ODATA clauses that DeviceConfiguration entity supports: $filter by types of DeviceConfiguration, $top, $select only DeviceConfiguration base properties, $orderby only DeviceConfiguration base properties, and $skip. The query parameter '$search' is not supported. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsUpdateForBusinessConfiguration?view=graph-rest-beta",
+				MarkdownDescription: "Windows Update for business configuration, allows you to specify how and when Windows as a Service updates your Windows 10/11 devices with feature and quality updates. Supports ODATA clauses that DeviceConfiguration entity supports: $filter by types of DeviceConfiguration, $top, $select only DeviceConfiguration base properties, $orderby only DeviceConfiguration base properties, and $skip. The query parameter '$search' is not supported. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsupdateforbusinessconfiguration?view=graph-rest-beta",
 			},
 		},
 	},
-	MarkdownDescription: "Device Configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceConfiguration?view=graph-rest-beta",
+	MarkdownDescription: "Device Configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta ||| MS Graph: Device configuration",
 }
 
 var deviceConfigurationDeviceConfigurationValidator = objectvalidator.ExactlyOneOf(
 	path.MatchRelative().AtParent().AtName("android_device_owner_general_device"),
 	path.MatchRelative().AtParent().AtName("android_work_profile_general_device"),
+	path.MatchRelative().AtParent().AtName("edition_upgrade"),
 	path.MatchRelative().AtParent().AtName("ios_custom"),
 	path.MatchRelative().AtParent().AtName("ios_device_features"),
 	path.MatchRelative().AtParent().AtName("ios_eas_email_profile"),
@@ -4695,10 +4754,12 @@ var deviceConfigurationAppListItemAttributes = map[string]schema.Attribute{ // a
 
 var deviceConfigurationKeyValuePairAttributes = map[string]schema.Attribute{ // keyValuePair
 	"name": schema.StringAttribute{
-		Required: true,
+		Required:            true,
+		MarkdownDescription: "Name for this key-value pair",
 	},
 	"value": schema.StringAttribute{
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: "Value for this key-value pair",
 	},
 }
 
@@ -4716,7 +4777,8 @@ var deviceConfigurationAirPrintDestinationAttributes = map[string]schema.Attribu
 		MarkdownDescription: "The listening port of the AirPrint destination. If this key is not specified AirPrint will use the default port. Available in iOS 11.0 and later.",
 	},
 	"resource_path": schema.StringAttribute{
-		Required: true,
+		Required:            true,
+		MarkdownDescription: "The Resource Path associated with the printer. This corresponds to the rp parameter of the _ipps.tcp Bonjour record. For example: printers/Canon_MG5300_series, printers/Xerox_Phaser_7600, ipp/print, Epson_IPP_Printer.",
 	},
 }
 
@@ -4734,13 +4796,13 @@ var deviceConfigurationIosBookmarkAttributes = map[string]schema.Attribute{ // i
 		Optional:            true,
 		PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
 		Computed:            true,
-		MarkdownDescription: "The display name of the bookmark",
+		MarkdownDescription: "The display name of the bookmark. The _provider_ default value is `\"\"`.",
 	},
 	"url": schema.StringAttribute{
 		Optional:            true,
 		PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
 		Computed:            true,
-		MarkdownDescription: "URL allowed to access",
+		MarkdownDescription: "URL allowed to access. The _provider_ default value is `\"\"`.",
 	},
 }
 
@@ -4767,7 +4829,7 @@ var deviceConfigurationKeyTypedValuePairAttributes = map[string]schema.Attribute
 				},
 			},
 			Validators:          []validator.Object{deviceConfigurationKeyTypedValuePairValidator},
-			MarkdownDescription: "A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyBooleanValuePair?view=graph-rest-beta",
+			MarkdownDescription: "A key-value pair with a string key and a Boolean value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keybooleanvaluepair?view=graph-rest-beta",
 		},
 	},
 	"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4781,7 +4843,7 @@ var deviceConfigurationKeyTypedValuePairAttributes = map[string]schema.Attribute
 				},
 			},
 			Validators:          []validator.Object{deviceConfigurationKeyTypedValuePairValidator},
-			MarkdownDescription: "A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyIntegerValuePair?view=graph-rest-beta",
+			MarkdownDescription: "A key-value pair with a string key and an integer value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyintegervaluepair?view=graph-rest-beta",
 		},
 	},
 	"real": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4795,7 +4857,7 @@ var deviceConfigurationKeyTypedValuePairAttributes = map[string]schema.Attribute
 				},
 			},
 			Validators:          []validator.Object{deviceConfigurationKeyTypedValuePairValidator},
-			MarkdownDescription: "A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyRealValuePair?view=graph-rest-beta",
+			MarkdownDescription: "A key-value pair with a string key and a real (floating-point) value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyrealvaluepair?view=graph-rest-beta",
 		},
 	},
 	"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4809,7 +4871,7 @@ var deviceConfigurationKeyTypedValuePairAttributes = map[string]schema.Attribute
 				},
 			},
 			Validators:          []validator.Object{deviceConfigurationKeyTypedValuePairValidator},
-			MarkdownDescription: "A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyStringValuePair?view=graph-rest-beta",
+			MarkdownDescription: "A key-value pair with a string key and a string value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keystringvaluepair?view=graph-rest-beta",
 		},
 	},
 }
@@ -4837,7 +4899,7 @@ var deviceConfigurationIpRangeAttributes = map[string]schema.Attribute{ // ipRan
 				},
 			},
 			Validators:          []validator.Object{deviceConfigurationIpRangeValidator},
-			MarkdownDescription: "IPv4 Range definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iPv4Range?view=graph-rest-beta",
+			MarkdownDescription: "IPv4 Range definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ipv4range?view=graph-rest-beta",
 		},
 	},
 	"v4_cidr": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4846,11 +4908,12 @@ var deviceConfigurationIpRangeAttributes = map[string]schema.Attribute{ // ipRan
 			Optional: true,
 			Attributes: map[string]schema.Attribute{ // iPv4CidrRange
 				"cidr_address": schema.StringAttribute{
-					Required: true,
+					Required:            true,
+					MarkdownDescription: "IPv4 address in CIDR notation. Not nullable.",
 				},
 			},
 			Validators:          []validator.Object{deviceConfigurationIpRangeValidator},
-			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/iPv4CidrRange?view=graph-rest-beta",
+			MarkdownDescription: "Represents an IPv4 range using the Classless Inter-Domain Routing (CIDR) notation. / https://learn.microsoft.com/en-us/graph/api/resources/ipv4cidrrange?view=graph-rest-beta",
 		},
 	},
 	"v6": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4868,7 +4931,7 @@ var deviceConfigurationIpRangeAttributes = map[string]schema.Attribute{ // ipRan
 				},
 			},
 			Validators:          []validator.Object{deviceConfigurationIpRangeValidator},
-			MarkdownDescription: "IPv6 Range definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iPv6Range?view=graph-rest-beta",
+			MarkdownDescription: "IPv6 Range definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ipv6range?view=graph-rest-beta",
 		},
 	},
 	"v6_cidr": generic.OdataDerivedTypeNestedAttributeRs{
@@ -4877,11 +4940,12 @@ var deviceConfigurationIpRangeAttributes = map[string]schema.Attribute{ // ipRan
 			Optional: true,
 			Attributes: map[string]schema.Attribute{ // iPv6CidrRange
 				"cidr_address": schema.StringAttribute{
-					Required: true,
+					Required:            true,
+					MarkdownDescription: "IPv6 address in CIDR notation. Not nullable.",
 				},
 			},
 			Validators:          []validator.Object{deviceConfigurationIpRangeValidator},
-			MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/iPv6CidrRange?view=graph-rest-beta",
+			MarkdownDescription: "Represents an IPv6 range using the Classless Inter-Domain Routing (CIDR) notation. / https://learn.microsoft.com/en-us/graph/api/resources/ipv6cidrrange?view=graph-rest-beta",
 		},
 	},
 }
@@ -4904,3 +4968,22 @@ var deviceConfigurationWindowsUpdateInstallScheduleTypeValidator = objectvalidat
 	path.MatchRelative().AtParent().AtName("active_hours"),
 	path.MatchRelative().AtParent().AtName("scheduled"),
 )
+
+type deviceConfigurationEditionUpgradeProductKeyPlanModifier struct{ generic.EmptyDescriber }
+
+var _ planmodifier.String = deviceConfigurationEditionUpgradeProductKeyPlanModifier{}
+
+func (apm deviceConfigurationEditionUpgradeProductKeyPlanModifier) PlanModifyString(ctx context.Context, req planmodifier.StringRequest, res *planmodifier.StringResponse) {
+	// do nothing on create or on destroy
+	if req.StateValue.IsNull() || req.PlanValue.IsNull() {
+		return
+	}
+
+	stateValue := req.StateValue.ValueString()
+	planValue := req.PlanValue.ValueString()
+	stateValueShort := strings.TrimLeft(stateValue, "#-")
+	planValueShort := planValue[len(planValue)-len(stateValueShort):]
+	if planValueShort == stateValueShort {
+		res.PlanValue = req.StateValue
+	}
+}

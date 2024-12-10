@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/manicminer/hamilton/msgraph"
 )
 
@@ -18,12 +19,12 @@ type AccessParams struct {
 	IsSingleton   bool
 
 	ReadOptions                ReadOptions
-	GraphToTerraformMiddleware func(GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns
+	GraphToTerraformMiddleware func(context.Context, GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns
 
-	TerraformToGraphMiddleware func(TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns
-	CreateModifyFunc           func(*CreateModifyFuncParams) // pass pointer to allow modifications
-	UpdateModifyFunc           func(*UpdateModifyFuncParams)
-	DeleteModifyFunc           func(*DeleteModifyFuncParams)
+	TerraformToGraphMiddleware func(context.Context, TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns
+	CreateModifyFunc           func(context.Context, *diag.Diagnostics, *CreateModifyFuncParams) // pass pointer to allow modifications
+	UpdateModifyFunc           func(context.Context, *diag.Diagnostics, *UpdateModifyFuncParams)
+	DeleteModifyFunc           func(context.Context, *diag.Diagnostics, *DeleteModifyFuncParams)
 	WriteSubActions            []WriteSubAction
 	UsePutForUpdate            bool
 	SerializeWrites            bool
@@ -43,9 +44,11 @@ type ReadOptions struct {
 	ODataExpand              string
 	ODataFilter              string // GenericDataSourcePlural and SingleItemUseODataFilter only, not allowed otherwise
 	SingleItemUseODataFilter bool
+	ValidStatusCodesExtra    []int
 	ExtraRequests            []ReadExtraRequest
 	ExtraRequestsCustom      []ReadExtraRequestCustom
 	PluralNoFilterSupport    bool
+	PluralNoSelectSupport    bool
 }
 
 type ReadExtraRequest struct {
@@ -54,24 +57,22 @@ type ReadExtraRequest struct {
 	ODataExpand     string
 }
 
-type ReadExtraRequestCustomFuncParams struct {
-	Ctx              context.Context
-	Diags            *diag.Diagnostics
+type ReadExtraRequestCustomParams struct {
 	Client           *msgraph.Client
 	Uri              msgraph.Uri
 	TolerateNotFound bool
+	ReqState         *tfsdk.State
+	RespPrivate      PrivateDataGetSetter
 	RawVal           map[string]any
 }
-type ReadExtraRequestCustom func(ReadExtraRequestCustomFuncParams)
+type ReadExtraRequestCustom func(context.Context, *diag.Diagnostics, ReadExtraRequestCustomParams)
 
 type GraphToTerraformMiddlewareParams struct {
-	Ctx    context.Context
 	RawVal map[string]any
 }
 type GraphToTerraformMiddlewareReturns error
 
 type TerraformToGraphMiddlewareParams struct {
-	Ctx      context.Context
 	RawVal   map[string]any
 	IsUpdate bool
 }
@@ -79,8 +80,6 @@ type TerraformToGraphMiddlewareReturns error
 
 type CreateModifyFuncParams struct {
 	R              *GenericResource
-	Ctx            context.Context
-	Diags          *diag.Diagnostics
 	Req            resource.CreateRequest
 	Resp           *resource.CreateResponse
 	BaseUri        string
@@ -90,8 +89,6 @@ type CreateModifyFuncParams struct {
 
 type UpdateModifyFuncParams struct {
 	R       *GenericResource
-	Ctx     context.Context
-	Diags   *diag.Diagnostics
 	Req     resource.UpdateRequest
 	Resp    *resource.UpdateResponse
 	BaseUri string
@@ -100,13 +97,17 @@ type UpdateModifyFuncParams struct {
 
 type DeleteModifyFuncParams struct {
 	R          *GenericResource
-	Ctx        context.Context
-	Diags      *diag.Diagnostics
 	Req        resource.DeleteRequest
 	Resp       *resource.DeleteResponse
 	BaseUri    string
 	Id         string
 	SkipDelete bool
+}
+
+// lifted from github.com/hashicorp/terraform-plugin-framework/internal/privatestate
+type PrivateDataGetSetter interface {
+	GetKey(context.Context, string) ([]byte, diag.Diagnostics)
+	SetKey(context.Context, string, []byte) diag.Diagnostics
 }
 
 func (ap *AccessParams) InitializeGuarded(providerData any) {
@@ -126,7 +127,7 @@ func (ap *AccessParams) InitializeGuarded(providerData any) {
 
 		if !ap.HasParentItem.ParentIdField.Equal(path.Path{}) && ap.TerraformToGraphMiddleware == nil {
 			parentIdFieldCamel := strcase.ToLowerCamel(ap.HasParentItem.ParentIdField.String())
-			ap.TerraformToGraphMiddleware = func(params TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns {
+			ap.TerraformToGraphMiddleware = func(_ context.Context, params TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns {
 				delete(params.RawVal, parentIdFieldCamel)
 				return nil
 			}

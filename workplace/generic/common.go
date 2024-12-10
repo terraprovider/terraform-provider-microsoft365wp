@@ -36,6 +36,10 @@ const (
 func (aps *AccessParams) GetId(ctx context.Context, diags *diag.Diagnostics, id string, idAttributer GetAttributer) string {
 
 	if id == "" {
+		if idAttributer == nil {
+			diags.AddError("GetId failed", "id is empty and idAttributer is nil")
+			return ""
+		}
 		diags.Append(idAttributer.GetAttribute(ctx, path.Root("id"), &id)...)
 		if diags.HasError() {
 			return ""

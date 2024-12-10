@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
@@ -44,7 +45,7 @@ var windowsFeatureUpdateProfileWriteSubActions = []generic.WriteSubAction{
 	},
 }
 
-func windowsFeatureUpdateProfileTerraformToGraphMiddleware(params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func windowsFeatureUpdateProfileTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {
 		// installLatestWindows10OnWindows11IneligibleDevice cannot be updated and may not even be written again after creation
 		delete(params.RawVal, "installLatestWindows10OnWindows11IneligibleDevice")
@@ -55,8 +56,9 @@ func windowsFeatureUpdateProfileTerraformToGraphMiddleware(params generic.Terraf
 var windowsFeatureUpdateProfileResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // windowsFeatureUpdateProfile
 		"id": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "The Identifier of the entity.",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -84,7 +86,7 @@ var windowsFeatureUpdateProfileResourceSchema = schema.Schema{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 			Computed:            true,
-			MarkdownDescription: "If true, the Windows 11 update will become optional",
+			MarkdownDescription: "If true, the Windows 11 update will become optional. The _provider_ default value is `false`.",
 		},
 		"install_latest_windows10_on_windows11_ineligible_device": schema.BoolAttribute{
 			Optional: true,
@@ -94,7 +96,7 @@ var windowsFeatureUpdateProfileResourceSchema = schema.Schema{
 			},
 			Computed:            true,
 			Description:         `installLatestWindows10OnWindows11IneligibleDevice`, // custom MS Graph attribute name
-			MarkdownDescription: "If true, the latest Microsoft Windows 10 update will be installed on devices ineligible for Microsoft Windows 11",
+			MarkdownDescription: "If true, the latest Microsoft Windows 10 update will be installed on devices ineligible for Microsoft Windows 11. The _provider_ default value is `false`.",
 		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -106,7 +108,7 @@ var windowsFeatureUpdateProfileResourceSchema = schema.Schema{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tags for this Feature Update entity.",
+			MarkdownDescription: "List of Scope Tags for this Feature Update entity. The _provider_ default value is `[\"0\"]`.",
 		},
 		"rollout_settings": schema.SingleNestedAttribute{
 			Required: true,
@@ -126,9 +128,9 @@ var windowsFeatureUpdateProfileResourceSchema = schema.Schema{
 					MarkdownDescription: "The feature update's starting date and time to be set, update, and displayed for a feature Update profile for example: 2020-06-09T10:00:00Z.",
 				},
 			},
-			MarkdownDescription: "The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. / A complex type to store the windows update rollout settings including offer start date time, offer end date time, and days between each set of offers.",
+			MarkdownDescription: "The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. / A complex type to store the windows update rollout settings including offer start date time, offer end date time, and days between each set of offers. / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsupdaterolloutsettings?view=graph-rest-beta",
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: "Windows Feature Update Profile",
+	MarkdownDescription: "Windows Feature Update Profile / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsfeatureupdateprofile?view=graph-rest-beta ||| MS Graph: Software updates",
 }

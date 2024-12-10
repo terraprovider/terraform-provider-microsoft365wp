@@ -10,7 +10,8 @@ import (
 )
 
 func (aps *AccessParams) CreateRaw(ctx context.Context, diags *diag.Diagnostics,
-	baseUri string, parentIdAttributer GetAttributer, rawVal map[string]any) (id string, rawResult map[string]any) {
+	baseUri string, parentIdAttributer GetAttributer, rawVal map[string]any,
+	allowEmptyResponse bool) (id string, rawResult map[string]any) {
 
 	uri := aps.GetBaseUri(ctx, diags, baseUri, parentIdAttributer)
 	if diags.HasError() {
@@ -22,10 +23,15 @@ func (aps *AccessParams) CreateRaw(ctx context.Context, diags *diag.Diagnostics,
 		return
 	}
 
+	validStatusCodes := []int{http.StatusOK, http.StatusCreated}
+	if allowEmptyResponse {
+		validStatusCodes = append(validStatusCodes, http.StatusNoContent)
+	}
+
 	graphResp, _, odata, err := aps.graphClient.Post(ctx, msgraph.PostHttpRequestInput{
 		Uri:              uri,
 		Body:             jsonVal,
-		ValidStatusCodes: []int{http.StatusOK, http.StatusCreated},
+		ValidStatusCodes: validStatusCodes,
 	})
 	if err != nil {
 		diags.AddError("Unable to create with MS Graph", err.Error())
@@ -40,6 +46,11 @@ func (aps *AccessParams) CreateRaw(ctx context.Context, diags *diag.Diagnostics,
 	respBody, err := io.ReadAll(graphResp.Body)
 	if err != nil {
 		diags.AddError("io.ReadAll()", err.Error())
+		return
+	}
+
+	// if response is completely empty, just return
+	if allowEmptyResponse && len(respBody) == 0 {
 		return
 	}
 

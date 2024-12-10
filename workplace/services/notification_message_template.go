@@ -50,7 +50,7 @@ var notificationMessageTemplateWriteSubActions = []generic.WriteSubAction{
 		IdGetterFunc: func(ctx context.Context, diags *diag.Diagnostics, vRaw map[string]any, parentId string) string {
 			return fmt.Sprintf("%s_%s", parentId, vRaw["locale"].(string))
 		},
-		TerraformToGraphMiddleware: func(p generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+		TerraformToGraphMiddleware: func(_ context.Context, p generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 			if p.IsUpdate {
 				// locale cannot be updated
 				delete(p.RawVal, "locale")
@@ -68,8 +68,9 @@ var notificationMessageTemplateWriteSubActions = []generic.WriteSubAction{
 var notificationMessageTemplateResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // notificationMessageTemplate
 		"id": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "Key of the entity.",
 		},
 		"branding_options": schema.StringAttribute{
 			Optional: true,
@@ -80,7 +81,7 @@ var notificationMessageTemplateResourceSchema = schema.Schema{
 				wpdefaultvalue.StringDefaultValue("includeCompanyLogo,includeCompanyName,includeContactInformation"),
 			},
 			Computed:            true,
-			MarkdownDescription: "The Message Template Branding Options. Branding is defined in the Intune Admin Console. / Branding Options for the Message Template. Branding is defined in the Intune Admin Console; possible values are: `none` (Indicates that no branding options are set in the message template.), `includeCompanyLogo` (Indicates to include company logo in the message template.), `includeCompanyName` (Indicates to include company name in the message template.), `includeContactInformation` (Indicates to include contact information in the message template.), `includeCompanyPortalLink` (Indicates to include company portal website link in the message template.), `includeDeviceDetails` (Indicates to include device details in the message template.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)",
+			MarkdownDescription: "The Message Template Branding Options. Branding is defined in the Intune Admin Console. / Branding Options for the Message Template. Branding is defined in the Intune Admin Console; possible values are: `none` (Indicates that no branding options are set in the message template.), `includeCompanyLogo` (Indicates to include company logo in the message template.), `includeCompanyName` (Indicates to include company name in the message template.), `includeContactInformation` (Indicates to include contact information in the message template.), `includeCompanyPortalLink` (Indicates to include company portal website link in the message template.), `includeDeviceDetails` (Indicates to include device details in the message template.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `\"includeCompanyLogo,includeCompanyName,includeContactInformation\"`.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -96,7 +97,7 @@ var notificationMessageTemplateResourceSchema = schema.Schema{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tags for this Entity instance.",
+			MarkdownDescription: "List of Scope Tags for this Entity instance. The _provider_ default value is `[\"0\"]`.",
 		},
 		"localized_notification_messages": schema.SetNestedAttribute{
 			Optional: true,
@@ -124,8 +125,8 @@ var notificationMessageTemplateResourceSchema = schema.Schema{
 			},
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "The list of localized messages for this Notification Message Template. / The text content of a Notification Message Template for the specified locale.",
+			MarkdownDescription: "The list of localized messages for this Notification Message Template. / The text content of a Notification Message Template for the specified locale. / https://learn.microsoft.com/en-us/graph/api/resources/intune-notification-localizednotificationmessage?view=graph-rest-beta. The _provider_ default value is `[]`.",
 		},
 	},
-	MarkdownDescription: "Notification messages are messages that are sent to end users who are determined to be not-compliant with the compliance policies defined by the administrator. Administrators choose notifications and configure them in the Intune Admin Console using the compliance policy creation page under the “Actions for non-compliance” section. Use the notificationMessageTemplate object to create your own custom notifications for administrators to choose while configuring actions for non-compliance.",
+	MarkdownDescription: "Notification messages are messages that are sent to end users who are determined to be not-compliant with the compliance policies defined by the administrator. Administrators choose notifications and configure them in the Intune Admin Console using the compliance policy creation page under the “Actions for non-compliance” section. Use the notificationMessageTemplate object to create your own custom notifications for administrators to choose while configuring actions for non-compliance. / https://learn.microsoft.com/en-us/graph/api/resources/intune-notification-notificationmessagetemplate?view=graph-rest-beta ||| MS Graph: Device management",
 }

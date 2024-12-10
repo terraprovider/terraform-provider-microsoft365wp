@@ -15,7 +15,7 @@ export ARM_CLIENT_SECRET='...'
 
 
 data "microsoft365wp_cloud_pc_user_setting" "one" {
-  id = "10a90ae9-4d43-45ca-9ba1-14047121178c"
+  id = "226856e0-b728-44d8-8144-74f4e790a5e8"
 }
 
 output "microsoft365wp_cloud_pc_user_setting" {

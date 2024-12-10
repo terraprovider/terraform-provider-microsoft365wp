@@ -15,7 +15,7 @@ export ARM_CLIENT_SECRET='...'
 
 
 data "microsoft365wp_cloud_pc_provisioning_policy" "one" {
-  id = "3bc67ec2-2d41-4c12-a155-dee78e3f0174"
+  id = "65253455-13c4-4d7f-80f9-ca35deb8439e"
 }
 
 output "microsoft365wp_cloud_pc_provisioning_policy" {

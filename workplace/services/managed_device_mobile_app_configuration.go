@@ -4,6 +4,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -49,8 +50,9 @@ var managedDeviceMobileAppConfigurationWriteSubActions = []generic.WriteSubActio
 var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // managedDeviceMobileAppConfiguration
 		"id": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "Key of the entity.",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -61,7 +63,7 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: "Admin provided description of the Device Configuration.",
+			MarkdownDescription: "Admin provided description of the Device Configuration. The _provider_ default value is `\"\"`.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -77,7 +79,7 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tags for this App configuration entity.",
+			MarkdownDescription: "List of Scope Tags for this App configuration entity. The _provider_ default value is `[\"0\"]`.",
 		},
 		"targeted_mobile_apps": schema.SetAttribute{
 			ElementType:         types.StringType,
@@ -96,23 +98,23 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 				Optional: true,
 				Attributes: map[string]schema.Attribute{ // androidManagedStoreAppConfiguration
 					"app_supports_oem_config": schema.BoolAttribute{
-						Optional:      true,
-						PlanModifiers: []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
-						Computed:      true,
+						Computed:            true,
+						PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
+						MarkdownDescription: "Whether or not this AppConfig is an OEMConfig policy. This property is read-only.",
 					},
 					"connected_apps_enabled": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Setting to specify whether to allow ConnectedApps experience for this app.",
+						MarkdownDescription: "Setting to specify whether to allow ConnectedApps experience for this app. The _provider_ default value is `false`.",
 					},
 					"package_id": schema.StringAttribute{
 						Required:            true,
 						MarkdownDescription: "Android Enterprise app configuration package id.",
 					},
-					"payload_json_base64": schema.StringAttribute{
+					"payload_json": schema.StringAttribute{
 						Optional:            true,
-						Description:         `payloadJson`, // custom MS Graph attribute name
+						Validators:          []validator.String{wpvalidator.TranslateValueEncodeBase64()},
 						MarkdownDescription: "Android Enterprise app configuration JSON payload.",
 					},
 					"permission_actions": schema.SetNestedAttribute{
@@ -132,7 +134,7 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						MarkdownDescription: "List of Android app permissions and corresponding permission actions. / Mapping between an Android app permission and the action Android should take when that permission is requested.",
+						MarkdownDescription: "List of Android app permissions and corresponding permission actions. / Mapping between an Android app permission and the action Android should take when that permission is requested. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidpermissionaction?view=graph-rest-beta",
 					},
 					"profile_applicability": schema.StringAttribute{
 						Required: true,
@@ -145,7 +147,7 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 				Validators: []validator.Object{
 					managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator,
 				},
-				MarkdownDescription: "Contains properties, inherited properties and actions for Android Enterprise mobile app configurations.",
+				MarkdownDescription: "Contains properties, inherited properties and actions for Android Enterprise mobile app configurations. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidmanagedstoreappconfiguration?view=graph-rest-beta",
 			},
 		},
 		"ios": generic.OdataDerivedTypeNestedAttributeRs{
@@ -153,9 +155,9 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 			SingleNestedAttribute: schema.SingleNestedAttribute{
 				Optional: true,
 				Attributes: map[string]schema.Attribute{ // iosMobileAppConfiguration
-					"encoded_setting_xml_base64": schema.StringAttribute{
+					"encoded_setting_xml": schema.StringAttribute{
 						Optional:            true,
-						Description:         `encodedSettingXml`, // custom MS Graph attribute name
+						Validators:          []validator.String{wpvalidator.TranslateValueEncodeBase64()},
 						MarkdownDescription: "mdm app configuration Base64 binary.",
 					},
 					"settings": schema.SetNestedAttribute{
@@ -179,17 +181,17 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						MarkdownDescription: "app configuration setting items. / Contains properties for App configuration setting item.",
+						MarkdownDescription: "app configuration setting items. / Contains properties for App configuration setting item. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-appconfigurationsettingitem?view=graph-rest-beta",
 					},
 				},
 				Validators: []validator.Object{
 					managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator,
 				},
-				MarkdownDescription: "Contains properties, inherited properties and actions for iOS mobile app configurations.",
+				MarkdownDescription: "Contains properties, inherited properties and actions for iOS mobile app configurations. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosmobileappconfiguration?view=graph-rest-beta",
 			},
 		},
 	},
-	MarkdownDescription: "An abstract class for Mobile app configuration for enrolled devices.",
+	MarkdownDescription: "An abstract class for Mobile app configuration for enrolled devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-manageddevicemobileappconfiguration?view=graph-rest-beta ||| MS Graph: App management",
 }
 
 var managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator = objectvalidator.ExactlyOneOf(

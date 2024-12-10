@@ -10,7 +10,7 @@ import (
 )
 
 func ConvertTerraformToOdataJson(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper, includeNullObjects bool, val tftypes.Value,
-	isUpdate bool, middlewareFunc func(TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns, valSource string) []byte {
+	isUpdate bool, middlewareFunc func(context.Context, TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns, valSource string) []byte {
 
 	rawVal := ConvertTerraformToOdataRaw(ctx, diags, schema, includeNullObjects, val, isUpdate, middlewareFunc, valSource)
 	if diags.HasError() {
@@ -26,7 +26,7 @@ func ConvertTerraformToOdataJson(ctx context.Context, diags *diag.Diagnostics, s
 }
 
 func ConvertTerraformToOdataRaw(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper, includeNullObjects bool, val tftypes.Value,
-	isUpdate bool, middlewareFunc func(TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns, valSource string) map[string]any {
+	isUpdate bool, middlewareFunc func(context.Context, TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns, valSource string) map[string]any {
 
 	translator := NewToFromGraphTranslator(schema, includeNullObjects)
 	rawVal, err := translator.TerraformAsRaw(ctx, val)
@@ -41,11 +41,10 @@ func ConvertTerraformToOdataRaw(ctx context.Context, diags *diag.Diagnostics, sc
 
 	if middlewareFunc != nil {
 		params := TerraformToGraphMiddlewareParams{
-			Ctx:      ctx,
 			RawVal:   rawVal,
 			IsUpdate: isUpdate,
 		}
-		if err := middlewareFunc(params); err != nil {
+		if err := middlewareFunc(ctx, params); err != nil {
 			diags.AddError(
 				"Creation Of OData Raw Unsuccessful",
 				fmt.Sprintf("TerraformToGraphMiddleware returned an error: %s", err.Error()),

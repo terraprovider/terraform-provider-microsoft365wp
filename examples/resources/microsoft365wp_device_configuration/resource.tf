@@ -28,6 +28,15 @@ resource "microsoft365wp_device_configuration" "android_work_profile_general_dev
   }
 }
 
+resource "microsoft365wp_device_configuration" "edition_upgrade" {
+  display_name = "TF Test Edition Upgrade"
+  edition_upgrade = {
+    target_edition = "windows10Enterprise"
+    license_type   = "productKey"
+    product_key    = "12345-22345-32345-42345-52345"
+  }
+}
+
 resource "microsoft365wp_device_configuration" "ios_custom" {
   display_name = "TF Test iOS Custom"
   ios_custom = {

@@ -166,11 +166,11 @@ func (t ToFromGraphTranslator) rawFromTerraformValue(ctx context.Context, path *
 					vs["@odata.type"] = odataType
 				}
 			} else if typ.Is(tftypes.Object{}) {
-				propertyName, ok := t.GraphAttributeNameFromTerraformName(ctx, parentSchemaAttribute, name)
+				propertyName, attributeIsWritable, ok := t.GraphAttributeNameFromTerraformName(ctx, parentSchemaAttribute, name)
 				if !ok {
 					return nil, fmt.Errorf("attribute name mapping not found: %s", name)
 				}
-				if propertyName != "" { // some attributes are ok but still not supposed to be included in JSON (e.g. read-only)
+				if attributeIsWritable { // some attributes are ok but still not supposed to be included in JSON (e.g. read-only)
 					vs[propertyName] = v
 				}
 			} else {

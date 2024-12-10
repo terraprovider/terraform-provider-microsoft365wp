@@ -49,7 +49,7 @@ func (d *GenericDataSourceSingular) Schema(_ context.Context, _ datasource.Schem
 func (d *GenericDataSourceSingular) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 
 	val := d.AccessParams.ReadSingleRaw(ctx, &resp.Diagnostics, req.Config.Schema,
-		d.AccessParams.ReadOptions, "", req.Config, false)
+		d.AccessParams.ReadOptions, "", req.Config, false, nil, nil)
 	if resp.Diagnostics.HasError() {
 		return
 	}

@@ -82,20 +82,22 @@ func (d *GenericDataSourcePlural) Schema(ctx context.Context, _ datasource.Schem
 	resp.Schema = d.SpecificSchema
 
 	d.odataSelect = nil // clear in case of duplicate invocation
-	resultSetNestedAttribute := d.SpecificSchema.Attributes[d.ResultAttributeName].(schema.SetNestedAttribute)
-	translator := NewToFromGraphTranslator(d.SpecificSchema, false)
-	for k, v := range resultSetNestedAttribute.NestedObject.Attributes {
-		if _, ok := v.(DerivedTypeNestedAttribute); ok {
-			// It's a virtual attribute only that signals a derived OData type. Do not add this to OData select (as MS
-			// Graph itself does not know about it and would complain).
-			continue
-		}
+	if !d.AccessParams.ReadOptions.PluralNoSelectSupport {
+		resultSetNestedAttribute := d.SpecificSchema.Attributes[d.ResultAttributeName].(schema.SetNestedAttribute)
+		translator := NewToFromGraphTranslator(d.SpecificSchema, false)
+		for k, v := range resultSetNestedAttribute.NestedObject.Attributes {
+			if _, ok := v.(DerivedTypeNestedAttribute); ok {
+				// It's a virtual attribute only that signals a derived OData type. Do not add this to OData select (as MS
+				// Graph itself does not know about it and would complain).
+				continue
+			}
 
-		graphAttributeName, ok := translator.GraphAttributeNameFromTerraformName(ctx, resultSetNestedAttribute, k)
-		if !ok {
-			panic(fmt.Errorf("ToFromGraphTranslator.GraphAttributeNameFromTerraformName not ok for %s", k))
+			graphAttributeName, _, ok := translator.GraphAttributeNameFromTerraformName(ctx, resultSetNestedAttribute, k)
+			if !ok {
+				panic(fmt.Errorf("ToFromGraphTranslator.GraphAttributeNameFromTerraformName not ok for %s", k))
+			}
+			d.odataSelect = append(d.odataSelect, graphAttributeName)
 		}
-		d.odataSelect = append(d.odataSelect, graphAttributeName)
 	}
 }
 

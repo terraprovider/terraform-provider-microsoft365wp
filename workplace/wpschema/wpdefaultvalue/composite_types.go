@@ -3,6 +3,7 @@ package wpdefaultvalue
 import (
 	"context"
 
+	rsschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 )
 
@@ -15,6 +16,8 @@ type objectDefaultValueAttributePlanModifier struct {
 	defaultValueRaw map[string]any
 }
 
+// ATTENTION: Plan modifiers on the nested object's attributes will overwrite any attribute set here!
+// For background see note at top of commong.go.
 func ObjectDefaultValue(defaultValueRaw map[string]any) planmodifier.Object {
 	return objectDefaultValueAttributePlanModifier{defaultValueRaw: defaultValueRaw}
 }
@@ -24,7 +27,7 @@ func ObjectDefaultValueEmpty() planmodifier.Object {
 }
 
 func (attributePlanModifier objectDefaultValueAttributePlanModifier) PlanModifyObject(ctx context.Context, request planmodifier.ObjectRequest, response *planmodifier.ObjectResponse) {
-	defaultValuePlanModify(ctx, request.ConfigValue, &response.PlanValue, &response.Diagnostics, attributePlanModifier.defaultValueRaw)
+	defaultValuePlanModify(ctx, &response.Diagnostics, request.Config.Schema.(rsschema.Schema), request.Path, request.ConfigValue, attributePlanModifier.defaultValueRaw, &response.PlanValue)
 }
 
 //
@@ -45,7 +48,7 @@ func ListDefaultValueEmpty() planmodifier.List {
 }
 
 func (attributePlanModifier listDefaultValueAttributePlanModifier) PlanModifyList(ctx context.Context, request planmodifier.ListRequest, response *planmodifier.ListResponse) {
-	defaultValuePlanModify(ctx, request.ConfigValue, &response.PlanValue, &response.Diagnostics, attributePlanModifier.defaultValueRaw)
+	defaultValuePlanModify(ctx, &response.Diagnostics, request.Config.Schema.(rsschema.Schema), request.Path, request.ConfigValue, attributePlanModifier.defaultValueRaw, &response.PlanValue)
 }
 
 //
@@ -66,5 +69,5 @@ func SetDefaultValueEmpty() planmodifier.Set {
 }
 
 func (attributePlanModifier setDefaultValueAttributePlanModifier) PlanModifySet(ctx context.Context, request planmodifier.SetRequest, response *planmodifier.SetResponse) {
-	defaultValuePlanModify(ctx, request.ConfigValue, &response.PlanValue, &response.Diagnostics, attributePlanModifier.defaultValueRaw)
+	defaultValuePlanModify(ctx, &response.Diagnostics, request.Config.Schema.(rsschema.Schema), request.Path, request.ConfigValue, attributePlanModifier.defaultValueRaw, &response.PlanValue)
 }

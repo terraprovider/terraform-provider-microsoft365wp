@@ -1,12 +1,14 @@
 package services
 
 import (
+	"context"
 	"fmt"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -53,7 +55,7 @@ var deviceManagementIntentWriteSubActions = []generic.WriteSubAction{
 	},
 }
 
-func deviceManagementIntentTerraformToGraphMiddleware(params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func deviceManagementIntentTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {
 		// templateId cannot be updated and may not even be written again after creation
 		delete(params.RawVal, "templateId")
@@ -61,13 +63,13 @@ func deviceManagementIntentTerraformToGraphMiddleware(params generic.TerraformTo
 	return nil
 }
 
-func deviceManagementIntentCreateModifyFunc(params *generic.CreateModifyFuncParams) {
+func deviceManagementIntentCreateModifyFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.CreateModifyFuncParams) {
 	// entity needs to be created using `createInstance` action on template
 	// https://learn.microsoft.com/en-us/graph/api/intune-deviceintent-devicemanagementtemplate-createinstance?view=graph-rest-beta
 	// it does not seem to be required to rename `settings` to `settingsDelta` though
 	var templateId string
-	params.Diags.Append(params.Req.Plan.GetAttribute(params.Ctx, path.Root("template_id"), &templateId)...)
-	if params.Diags.HasError() {
+	diags.Append(params.Req.Plan.GetAttribute(ctx, path.Root("template_id"), &templateId)...)
+	if diags.HasError() {
 		return
 	}
 	params.BaseUri = fmt.Sprintf("/deviceManagement/templates/%s/createInstance", templateId)
@@ -76,8 +78,9 @@ func deviceManagementIntentCreateModifyFunc(params *generic.CreateModifyFuncPara
 var deviceManagementIntentResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // deviceManagementIntent
 		"id": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "The intent ID",
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
@@ -107,7 +110,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tags for this Entity instance.",
+			MarkdownDescription: "List of Scope Tags for this Entity instance. The _provider_ default value is `[\"0\"]`.",
 		},
 		"template_id": schema.StringAttribute{
 			Required:            true,
@@ -169,7 +172,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing a boolean value",
+																			MarkdownDescription: "A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																	"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -185,7 +188,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing an integer value",
+																			MarkdownDescription: "A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																	"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -201,7 +204,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing a string value",
+																			MarkdownDescription: "A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																},
@@ -212,7 +215,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing a complex value for an abstract setting",
+													MarkdownDescription: "A setting instance representing a complex value for an abstract setting / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementabstractcomplexsettinginstance?view=graph-rest-beta",
 												},
 											},
 											"boolean": generic.OdataDerivedTypeNestedAttributeRs{
@@ -228,7 +231,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing a boolean value",
+													MarkdownDescription: "A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta",
 												},
 											},
 											"collection": generic.OdataDerivedTypeNestedAttributeRs{
@@ -244,7 +247,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing a collection of values",
+													MarkdownDescription: "A setting instance representing a collection of values / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcollectionsettinginstance?view=graph-rest-beta",
 												},
 											},
 											"complex": generic.OdataDerivedTypeNestedAttributeRs{
@@ -273,7 +276,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing a boolean value",
+																			MarkdownDescription: "A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																	"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -289,7 +292,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing an integer value",
+																			MarkdownDescription: "A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																	"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -305,7 +308,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing a string value",
+																			MarkdownDescription: "A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																},
@@ -316,7 +319,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing a complex value",
+													MarkdownDescription: "A setting instance representing a complex value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcomplexsettinginstance?view=graph-rest-beta",
 												},
 											},
 											"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -332,7 +335,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing an integer value",
+													MarkdownDescription: "A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta",
 												},
 											},
 											"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -348,7 +351,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing a string value",
+													MarkdownDescription: "A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta",
 												},
 											},
 										},
@@ -359,7 +362,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: "A setting instance representing a complex value for an abstract setting",
+							MarkdownDescription: "A setting instance representing a complex value for an abstract setting / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementabstractcomplexsettinginstance?view=graph-rest-beta",
 						},
 					},
 					"boolean": generic.OdataDerivedTypeNestedAttributeRs{
@@ -375,7 +378,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: "A setting instance representing a boolean value",
+							MarkdownDescription: "A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta",
 						},
 					},
 					"collection": generic.OdataDerivedTypeNestedAttributeRs{
@@ -391,7 +394,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: "A setting instance representing a collection of values",
+							MarkdownDescription: "A setting instance representing a collection of values / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcollectionsettinginstance?view=graph-rest-beta",
 						},
 					},
 					"complex": generic.OdataDerivedTypeNestedAttributeRs{
@@ -437,7 +440,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing a boolean value",
+																			MarkdownDescription: "A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																	"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -453,7 +456,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing an integer value",
+																			MarkdownDescription: "A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																	"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -469,7 +472,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing a string value",
+																			MarkdownDescription: "A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																},
@@ -480,7 +483,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing a complex value for an abstract setting",
+													MarkdownDescription: "A setting instance representing a complex value for an abstract setting / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementabstractcomplexsettinginstance?view=graph-rest-beta",
 												},
 											},
 											"boolean": generic.OdataDerivedTypeNestedAttributeRs{
@@ -496,7 +499,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing a boolean value",
+													MarkdownDescription: "A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta",
 												},
 											},
 											"collection": generic.OdataDerivedTypeNestedAttributeRs{
@@ -512,7 +515,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing a collection of values",
+													MarkdownDescription: "A setting instance representing a collection of values / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcollectionsettinginstance?view=graph-rest-beta",
 												},
 											},
 											"complex": generic.OdataDerivedTypeNestedAttributeRs{
@@ -541,7 +544,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing a boolean value",
+																			MarkdownDescription: "A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																	"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -557,7 +560,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing an integer value",
+																			MarkdownDescription: "A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																	"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -573,7 +576,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 																			Validators: []validator.Object{
 																				deviceManagementIntentDeviceManagementSettingInstanceValidator,
 																			},
-																			MarkdownDescription: "A setting instance representing a string value",
+																			MarkdownDescription: "A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta",
 																		},
 																	},
 																},
@@ -584,7 +587,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing a complex value",
+													MarkdownDescription: "A setting instance representing a complex value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcomplexsettinginstance?view=graph-rest-beta",
 												},
 											},
 											"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -600,7 +603,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing an integer value",
+													MarkdownDescription: "A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta",
 												},
 											},
 											"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -616,7 +619,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 													Validators: []validator.Object{
 														deviceManagementIntentDeviceManagementSettingInstanceValidator,
 													},
-													MarkdownDescription: "A setting instance representing a string value",
+													MarkdownDescription: "A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta",
 												},
 											},
 										},
@@ -627,7 +630,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: "A setting instance representing a complex value",
+							MarkdownDescription: "A setting instance representing a complex value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcomplexsettinginstance?view=graph-rest-beta",
 						},
 					},
 					"integer": generic.OdataDerivedTypeNestedAttributeRs{
@@ -643,7 +646,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: "A setting instance representing an integer value",
+							MarkdownDescription: "A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta",
 						},
 					},
 					"string": generic.OdataDerivedTypeNestedAttributeRs{
@@ -659,15 +662,15 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 							Validators: []validator.Object{
 								deviceManagementIntentDeviceManagementSettingInstanceValidator,
 							},
-							MarkdownDescription: "A setting instance representing a string value",
+							MarkdownDescription: "A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta",
 						},
 					},
 				},
 			},
-			MarkdownDescription: "Collection of all settings to be applied / Base type for a setting instance",
+			MarkdownDescription: "Collection of all settings to be applied / Base type for a setting instance / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementsettinginstance?view=graph-rest-beta",
 		},
 	},
-	MarkdownDescription: "Entity that represents an intent to apply settings to a device",
+	MarkdownDescription: "Entity that represents an intent to apply settings to a device / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintent?view=graph-rest-beta ||| MS Graph: Device management",
 }
 
 var deviceManagementIntentDeviceManagementSettingInstanceValidator = objectvalidator.ExactlyOneOf(

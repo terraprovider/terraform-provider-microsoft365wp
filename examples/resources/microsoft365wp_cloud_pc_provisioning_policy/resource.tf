@@ -24,7 +24,10 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_dedicated" {
     locale = "en-US"
   }
 
-  domain_join_configurations = [{ region_group = "europeUnion" }]
+  domain_join_configurations = [{
+    region_group = "europeUnion"
+    region_name  = "automatic"
+  }]
 
   assignments = [
     for x in [
@@ -46,7 +49,10 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_shared" {
     locale = "en-US"
   }
 
-  domain_join_configurations = [{ region_group = "europeUnion" }]
+  domain_join_configurations = [{
+    region_group = "europeUnion"
+    region_name  = "automatic"
+  }]
 
   assignments = [
     for x in [

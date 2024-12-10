@@ -96,6 +96,32 @@ func (pm int64UseStateForUnknown) PlanModifyInt64(ctx context.Context, req planm
 }
 
 //
+// Object
+//
+
+func ObjectUseStateForUnknown() planmodifier.Object {
+	return objectUseStateForUnknown{}
+}
+
+var _ planmodifier.Object = (*objectUseStateForUnknown)(nil)
+
+type objectUseStateForUnknown struct {
+	useStateForUnknownModifierBase
+}
+
+func (pm objectUseStateForUnknown) PlanModifyObject(ctx context.Context, req planmodifier.ObjectRequest, res *planmodifier.ObjectResponse) {
+	// do nothing on create or on destroy
+	if req.State.Raw.IsNull() || req.Plan.Raw.IsNull() {
+		return
+	}
+
+	// Do nothing if there is an unknown configuration value, otherwise interpolation gets messed up.
+	if req.PlanValue.IsUnknown() && !req.ConfigValue.IsUnknown() {
+		res.PlanValue = req.StateValue
+	}
+}
+
+//
 // Set
 //
 

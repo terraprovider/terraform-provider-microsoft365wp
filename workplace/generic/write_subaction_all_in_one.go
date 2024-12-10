@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/manicminer/hamilton/msgraph"
 )
 
@@ -27,25 +26,22 @@ func (a *WriteSubActionAllInOne) CheckRunAction(wsaOperation OperationType) bool
 	return a.WriteSubActionBase.CheckRunAction(wsaOperation)
 }
 
-func (a *WriteSubActionAllInOne) ExecutePre(ctx context.Context, diags *diag.Diagnostics, r *GenericResource, wsaOperation OperationType,
-	rawVal map[string]any, subActionsData map[string]any, id string, idAttributer GetAttributer) {
-	a.WriteSubActionBase.ExecutePre(ctx, diags, r, wsaOperation, rawVal, subActionsData, id, idAttributer, a.executeRequest)
+func (a *WriteSubActionAllInOne) ExecutePre(ctx context.Context, diags *diag.Diagnostics, wsaReq *WriteSubActionRequest) {
+	a.WriteSubActionBase.ExecutePre(ctx, diags, wsaReq, a.executeRequest)
 }
 
-func (a *WriteSubActionAllInOne) ExecutePost(ctx context.Context, diags *diag.Diagnostics, r *GenericResource, wsaOperation OperationType,
-	id string, idAttributer GetAttributer, subActionsData map[string]any, _ *tfsdk.State, _ *tfsdk.Plan) {
+func (a *WriteSubActionAllInOne) ExecutePost(ctx context.Context, diags *diag.Diagnostics, wsaReq *WriteSubActionRequest) {
 	// for deletes this is a no-op (for now) since we already emptied before delete
-	if wsaOperation != OperationDelete {
-		a.executeRequest(ctx, diags, r, id, idAttributer, subActionsData)
+	if wsaReq.Operation != OperationDelete {
+		a.executeRequest(ctx, diags, wsaReq)
 	}
 }
 
-func (a *WriteSubActionAllInOne) executeRequest(ctx context.Context, diags *diag.Diagnostics, r *GenericResource,
-	id string, idAttributer GetAttributer, subActionsData map[string]any) {
+func (a *WriteSubActionAllInOne) executeRequest(ctx context.Context, diags *diag.Diagnostics, wsaReq *WriteSubActionRequest) {
 
 	rawBody := make(map[string]any)
 	for source_key, target_key := range a.AttributesMap {
-		if v, ok := subActionsData[source_key]; ok {
+		if v, ok := wsaReq.SubActionsData[source_key]; ok {
 			rawBody[target_key] = v
 		}
 	}
@@ -63,12 +59,12 @@ func (a *WriteSubActionAllInOne) executeRequest(ctx context.Context, diags *diag
 		return
 	}
 
-	parentUri := r.AccessParams.GetUriWithIdForUD(ctx, diags, "", id, idAttributer)
+	parentUri := wsaReq.GenRes.AccessParams.GetUriWithIdForUD(ctx, diags, "", wsaReq.Id, wsaReq.IdAttributer)
 	if diags.HasError() {
 		return
 	}
 
-	_, _, _, err = r.AccessParams.graphClient.Post(ctx, msgraph.PostHttpRequestInput{
+	_, _, _, err = wsaReq.GenRes.AccessParams.graphClient.Post(ctx, msgraph.PostHttpRequestInput{
 		Body:             []byte(jsonBody),
 		ValidStatusCodes: []int{http.StatusOK, http.StatusCreated, http.StatusNoContent},
 		Uri: msgraph.Uri{

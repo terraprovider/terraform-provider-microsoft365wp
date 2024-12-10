@@ -121,3 +121,17 @@ To  get started with your TerraProvider subscription, follow below steps:
 * This triggers us to create a license for your organization. We will inform you via email with all relevant information on the next steps once this is completed. This won't take any longer than one business day.
 
 -> You will only be charged by Microsoft, once you have completed the enrolment on our platform and received our welcome email.
+
+### Why is my Azure Marketplace purchase not working?
+
+You may encounter problems when purchasing through Azure Marketplace. Here is a list of reasons, why buying through Azure Marketplace may fail:
+
+1. You do not have permissions in your Azure tenant to purchase through Azure Marketplace. You must be assigned the role of Owner or Contributor in the Azure subscription you want to pay with.
+2. The subscription belongs to an Enterprise Agreement (EA) and the EA admin disabled Azure Marketplace purchases. Or the EA admin has enabled purchases only for free offers and the offer is a paid offer. Please see [here](https://learn.microsoft.com/en-us/marketplace/purchase-control-options) for details.
+3.  The subscription you're using belongs to a billing account in a region where the offer isn't available.\
+    Our Marketplace offers are available in the following countries/regions:
+
+    Armenia, Australia, Austria, Bulgaria, Belgium, Canada, Chile, Colombia, Croatia, Cyprus, Czechia, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Iceland, India, Indonesia, Ireland, Italy, Kenya, Latvia, Liechtenstein, Lithuania, Luxembourg, Malaysia, Malta, Monaco, Netherlands, New Zealand, Nigeria, Norway, Poland, Portugal, Puerto Rico, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Africa, South Korea, Spain, Sweden, Switzerland, Taiwan, Thailand, Türkiye, United Arab Emirates, United Kingdom, United States, Vietnam
+4. The subscription/billing account isn't associated with a valid payment instrument (such as a valid credit card).
+5. Private Marketplace is enabled for the subscription and the offer isn't in the list of allowed offers.
+6. Purchases are not permitted for subscriptions with a spending cap, including Free subscriptions, Sponsorships, and similar types.

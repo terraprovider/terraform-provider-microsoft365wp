@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
@@ -46,7 +47,7 @@ var deviceCustomAttributeShellScriptWriteSubActions = []generic.WriteSubAction{
 	},
 }
 
-func deviceCustomAttributeShellScriptTerraformToGraphMiddleware(params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func deviceCustomAttributeShellScriptTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {
 		// displayName, customAttributeType cannot be updated and may not even be written again after creation
 		delete(params.RawVal, "displayName")
@@ -58,12 +59,14 @@ func deviceCustomAttributeShellScriptTerraformToGraphMiddleware(params generic.T
 var deviceCustomAttributeShellScriptResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // deviceCustomAttributeShellScript
 		"id": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "Unique Identifier for the custom attribute entity.",
 		},
 		"created_date_time": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "The date and time the device management script was created. This property is read-only.",
 		},
 		"custom_attribute_type": schema.StringAttribute{
 			Required: true,
@@ -77,7 +80,7 @@ var deviceCustomAttributeShellScriptResourceSchema = schema.Schema{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: "Optional description for the device management script.",
+			MarkdownDescription: "Optional description for the device management script. The _provider_ default value is `\"\"`.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -89,22 +92,23 @@ var deviceCustomAttributeShellScriptResourceSchema = schema.Schema{
 			MarkdownDescription: "Script file name.",
 		},
 		"last_modified_date_time": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "The date and time the device management script was last modified. This property is read-only.",
 		},
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tag IDs for this PowerShellScript instance.",
+			MarkdownDescription: "List of Scope Tag IDs for this PowerShellScript instance. The _provider_ default value is `[\"0\"]`.",
 		},
 		"run_as_account": schema.StringAttribute{
 			Optional:            true,
 			Validators:          []validator.String{stringvalidator.OneOf("system", "user")},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("system")},
 			Computed:            true,
-			MarkdownDescription: "Indicates the type of execution context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context)",
+			MarkdownDescription: "Indicates the type of execution context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context). The _provider_ default value is `\"system\"`.",
 		},
 		"script_content": schema.StringAttribute{
 			Required:            true,
@@ -113,5 +117,5 @@ var deviceCustomAttributeShellScriptResourceSchema = schema.Schema{
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: "Represents a custom attribute script for macOS.",
+	MarkdownDescription: "Represents a custom attribute script for macOS. / https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecustomattributeshellscript?view=graph-rest-beta ||| MS Graph: Device management",
 }

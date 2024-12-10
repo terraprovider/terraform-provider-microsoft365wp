@@ -57,8 +57,9 @@ var authenticationStrengthPolicyWriteSubActions = []generic.WriteSubAction{
 var authenticationStrengthPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // authenticationStrengthPolicy
 		"id": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "The system-generated identifier for this mode.",
 		},
 		"allowed_combinations": schema.SetAttribute{
 			ElementType: types.StringType,
@@ -68,23 +69,27 @@ var authenticationStrengthPolicyResourceSchema = schema.Schema{
 					wpvalidator.FlagEnumValues("password", "voice", "hardwareOath", "softwareOath", "sms", "fido2", "windowsHelloForBusiness", "microsoftAuthenticatorPush", "deviceBasedPush", "temporaryAccessPassOneTime", "temporaryAccessPassMultiUse", "email", "x509CertificateSingleFactor", "x509CertificateMultiFactor", "federatedSingleFactor", "federatedMultiFactor", "unknownFutureValue"),
 				),
 			},
-			MarkdownDescription: "; possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`",
+			MarkdownDescription: "A collection of authentication method modes that are required be used to satify this authentication strength. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`",
 		},
 		"created_date_time": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "The datetime when this policy was created.",
 		},
 		"description": schema.StringAttribute{
-			Optional:      true,
-			PlanModifiers: []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
-			Computed:      true,
+			Optional:            true,
+			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+			Computed:            true,
+			MarkdownDescription: "The human-readable description of this policy. The _provider_ default value is `\"\"`.",
 		},
 		"display_name": schema.StringAttribute{
-			Required: true,
+			Required:            true,
+			MarkdownDescription: "The human-readable display name of this policy. <br><br>Supports `$filter` (`eq`, `ne`, `not` , and `in`).",
 		},
 		"modified_date_time": schema.StringAttribute{
-			Computed:      true,
-			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "The datetime when this policy was last modified.",
 		},
 		"policy_type": schema.StringAttribute{
 			Computed: true,
@@ -92,7 +97,7 @@ var authenticationStrengthPolicyResourceSchema = schema.Schema{
 				stringvalidator.OneOf("builtIn", "custom", "unknownFutureValue"),
 			},
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "; possible values are: `builtIn`, `custom`, `unknownFutureValue`",
+			MarkdownDescription: "A descriptor of whether this policy is built into Microsoft Entra Conditional Access or created by an admin for the tenant. The <br><br>Supports `$filter` (`eq`, `ne`, `not` , and `in`). / Possible values are: `builtIn`, `custom`, `unknownFutureValue`",
 		},
 		"requirements_satisfied": schema.StringAttribute{
 			Computed: true,
@@ -100,8 +105,8 @@ var authenticationStrengthPolicyResourceSchema = schema.Schema{
 				wpvalidator.FlagEnumValues("none", "mfa", "unknownFutureValue"),
 			},
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "; possible values are: `none`, `mfa`, `unknownFutureValue`",
+			MarkdownDescription: "A descriptor of whether this authentication strength grants the MFA claim upon successful satisfaction. The / Possible values are: `none`, `mfa`, `unknownFutureValue`",
 		},
 	},
-	MarkdownDescription: "https://learn.microsoft.com/en-us/graph/api/resources/authenticationStrengthPolicy?view=graph-rest-beta",
+	MarkdownDescription: "A collection of settings that define specific combinations of authentication methods and metadata. The authentication strength policy, when applied to a given scenario using Microsoft Entra Conditional Access, defines which authentication methods must be used to authenticate in that scenario. An authentication strength may be built-in or custom (defined by the tenant) and may or may not fulfill the requirements to grant an MFA claim. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta ||| MS Graph: Authentication",
 }

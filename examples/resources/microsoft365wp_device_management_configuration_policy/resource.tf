@@ -314,8 +314,7 @@ resource "microsoft365wp_device_management_configuration_policy" "test_atp" {
     } },
   ]
 
-  # MS Graph will return some a guid for value and a state of "encryptedValueToken", but it is not known how to translate
-  # that guid back to the original unencrypted value. Therefore ignorance is the only way to deal with this for now.
+  # see note in docs about secret values
   lifecycle {
     ignore_changes = [
       settings[0].instance.choice.value.children[0].simple.value.secret
