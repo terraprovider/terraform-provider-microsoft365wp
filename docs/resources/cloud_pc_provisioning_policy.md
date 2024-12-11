@@ -61,7 +61,7 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_shared" {
   display_name = "TF Test - shared"
 
   image_id          = "microsoftwindowsdesktop_windows-ent-cpc_win11-23h2-ent-cpc-m365"
-  provisioning_type = "shared"
+  provisioning_type = "sharedByUser"
 
   windows_setting = {
     locale = "en-US"

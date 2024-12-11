@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
@@ -19,14 +20,34 @@ var (
 		TypeNameSuffix: "authentication_methods_policy",
 		SpecificSchema: authenticationMethodsPolicyResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:     "/policies/authenticationmethodspolicy",
-			IsSingleton: true,
+			BaseUri:                    "/policies/authenticationmethodspolicy",
+			IsSingleton:                true,
+			GraphToTerraformMiddleware: authenticationMethodsPolicyGraphToTerraformMiddleware,
 		},
 	}
 
 	AuthenticationMethodsPolicySingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&AuthenticationMethodsPolicyResource)
 )
+
+func authenticationMethodsPolicyGraphToTerraformMiddleware(ctx context.Context, params generic.GraphToTerraformMiddlewareParams) generic.GraphToTerraformMiddlewareReturns {
+	amConfigsOrg, amConfigsOk := params.RawVal["authenticationMethodConfigurations"].([]any)
+	if amConfigsOk {
+		// remove entry of type federatedIdentityCredentialAuthenticationMethodConfiguration for now as the type has not yet been documented anywhere
+		amConfigsNew := make([]any, 0)
+		for _, configAny := range amConfigsOrg {
+			if configMap, configMapOk := configAny.(map[string]any); configMapOk {
+				if odataType, odataTypeOk := configMap["@odata.type"].(string); odataTypeOk && odataType == "#microsoft.graph.federatedIdentityCredentialAuthenticationMethodConfiguration" {
+					// skip appending to new slice
+					continue
+				}
+			}
+			amConfigsNew = append(amConfigsNew, configAny)
+		}
+		params.RawVal["authenticationMethodConfigurations"] = amConfigsNew
+	}
+	return nil
+}
 
 var authenticationMethodsPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // authenticationMethodsPolicy

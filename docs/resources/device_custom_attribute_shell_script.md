@@ -34,6 +34,7 @@ export ARM_CLIENT_SECRET='...'
 
 resource "microsoft365wp_device_custom_attribute_shell_script" "test" {
   display_name          = "TF Test"
+  description           = ""
   custom_attribute_type = "string"
   file_name             = "getProcessorType.sh"
   script_content        = <<EOT

@@ -1,6 +1,17 @@
 # `microsoft365wp` Terraform Provider Changelog
 
 
+## 0.15.1 (2024-12-11)
+
+### changed (1 change)
+
+- Update dependencies
+
+### fixed (1 change)
+
+- Fix authentication_methods_policy
+
+
 ## 0.15.0 (2024-12-10)
 
 ### added (9 changes)
