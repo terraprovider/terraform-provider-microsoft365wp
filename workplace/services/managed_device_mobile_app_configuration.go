@@ -29,8 +29,8 @@ var (
 	ManagedDeviceMobileAppConfigurationSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&ManagedDeviceMobileAppConfigurationResource)
 
-	ManagedDeviceMobileAppConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&ManagedDeviceMobileAppConfigurationSingularDataSource, "")
+	ManagedDeviceMobileAppConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&ManagedDeviceMobileAppConfigurationResource, "")
 )
 
 var managedDeviceMobileAppConfigurationReadOptions = generic.ReadOptions{

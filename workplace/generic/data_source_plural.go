@@ -6,12 +6,10 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
+	dsschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	rsschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/manicminer/hamilton/msgraph"
+	"golang.org/x/exp/slices"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -23,30 +21,119 @@ var (
 // GenericDataSourcePlural is the data source implementation.
 type GenericDataSourcePlural struct {
 	TypeNameSuffix      string
-	SpecificSchema      schema.Schema
+	SpecificSchema      dsschema.Schema
 	AccessParams        AccessParams
 	ResultAttributeName string
 
-	odataSelect []string
+	odataFilterAttrsWithGraphNames map[string]string
+	odataSelectGraphNames          []string
 }
 
-func CreateGenericDataSourcePluralFromSingular(genericSingular *GenericDataSourceSingular, typeNameSuffix string) GenericDataSourcePlural {
-	if genericSingular.AccessParams.IsSingleton {
-		panic(fmt.Sprintf("Cannot create plural data source from Singleton (%s)", genericSingular.TypeNameSuffix))
+func CreateGenericDataSourcePluralFromResource(genericResource *GenericResource, typeNameSuffix string) GenericDataSourcePlural {
+
+	// Dev Note: Try to keep contents similar to CreateGenericDataSourceSingularFromResource
+
+	//
+	// IMPORTANT for the whole function: ConvertResourceAttributesToDataSourceSingular does not convert simple type attributes
+	// to data source attributes but leaves them as reasource attributes (as their required interface is identical).
+	// Therefore additional attributes will also be added from the resource schema.
+	//
+
+	//
+	// Preparations
+
+	accessParams := &genericResource.AccessParams
+	accessParams.InitializeGuarded(nil)
+
+	if accessParams.SingularEntity.NoPluralDataSource {
+		panic(fmt.Sprintf("Cannot create plural data source for %s", genericResource.TypeNameSuffix))
 	}
 
 	if typeNameSuffix == "" {
-		typeNameSuffix = genericSingular.TypeNameSuffix + "s"
+		typeNameSuffix = genericResource.TypeNameSuffix + "s"
 		if strings.HasSuffix(typeNameSuffix, "ys") {
 			typeNameSuffix = strings.TrimSuffix(typeNameSuffix, "ys") + "ies"
 		}
 	}
-	return GenericDataSourcePlural{
-		TypeNameSuffix:      typeNameSuffix,
-		SpecificSchema:      ConvertDataSourceSingularSchemaToPlural(&genericSingular.SpecificSchema, typeNameSuffix, &genericSingular.AccessParams.HasParentItem),
-		AccessParams:        genericSingular.AccessParams, // copylocks is fine here (but VSCode would only allow to disable it globally)
-		ResultAttributeName: typeNameSuffix,
+
+	result := GenericDataSourcePlural{
+		TypeNameSuffix:                 typeNameSuffix,
+		AccessParams:                   *accessParams, // copylocks is fine here (but VSCode would only allow to disable it globally)
+		ResultAttributeName:            typeNameSuffix,
+		odataFilterAttrsWithGraphNames: map[string]string{},
 	}
+
+	//
+	// Select and convert attributes (for schema root as well as for nested list)
+	// Also collect list of Graph prop names to be passed as OData $select on queries later
+
+	odataSelectGraphNames := make([]string, 0)
+
+	isRootAndRequiredAttrFunc := func(attrName string) bool {
+		// For ExtraFilterAttributes, .Required will be reset in ODataPrepareFilterAttributes
+		return accessParams.ParentEntities.ContainsFieldName(attrName) ||
+			(!accessParams.ReadOptions.DataSource.NoFilterSupport && slices.Contains(accessParams.ReadOptions.DataSource.ExtraFilterAttributes, attrName))
+	}
+
+	nestedListCandidatesAttrNames := []string{
+		accessParams.IdNameTf,
+		"display_name",
+		"name",
+		"role_scope_tag_ids",
+		"role_scope_tags",
+		"version",
+		"created_date_time",
+		"last_modified_date_time",
+		"modified_date_time",
+		"deleted_date_time",
+	}
+	nestedListCandidatesAttrNames = append(nestedListCandidatesAttrNames, accessParams.ReadOptions.DataSource.Plural.ExtraAttributes...)
+
+	isNestedListAttrFunc := func(attrName string, rsAttribute rsschema.Attribute) (bool, dsschema.Attribute) {
+		if slices.Contains(nestedListCandidatesAttrNames, attrName) {
+			graphPropName := (*ToFromGraphTranslator).GraphAttributeNameFromTerraformNameImpl(nil, attrName, rsAttribute)
+			odataSelectGraphNames = append(odataSelectGraphNames, graphPropName)
+			return true, nil
+		} else if nestedDerivedOld, ok := rsAttribute.(OdataDerivedTypeNestedAttributeRs); ok {
+			// Also include virtual attributes that signal a derived OData type. They will not have any child attributes or content
+			// at all, but it might still be helpful to be able to check for a derived type by comparing with null in Terraform.
+			return true, OdataDerivedTypeNestedAttributeDs{
+				SingleNestedAttribute: dsschema.SingleNestedAttribute{
+					CustomType:  nestedDerivedOld.CustomType,
+					Required:    false,
+					Optional:    false,
+					Computed:    true,
+					Sensitive:   nestedDerivedOld.Sensitive,
+					Description: nestedDerivedOld.Description,
+					MarkdownDescription: fmt.Sprintf("Please note that this nested object does not have any attributes "+
+						"but only exists to be able to test if the parent object is of derived OData type `%s` "+
+						"(using e.g. `if x.%s != null`).", nestedDerivedOld.DerivedType, attrName),
+					DeprecationMessage: nestedDerivedOld.DeprecationMessage,
+				},
+				DerivedType: nestedDerivedOld.DerivedType,
+			}
+		}
+		return false, nil
+	}
+
+	dsAttributes := ConvertResourceAttributesToDataSourcePlural(genericResource.SpecificSchema.Attributes, typeNameSuffix,
+		isRootAndRequiredAttrFunc, isNestedListAttrFunc)
+	if !accessParams.ReadOptions.DataSource.Plural.NoSelectSupport {
+		result.odataSelectGraphNames = odataSelectGraphNames
+	}
+
+	ODataPrepareFilterAttributes(accessParams, dsAttributes, result.odataFilterAttrsWithGraphNames, false, true)
+
+	//
+	// Create schema and return
+
+	result.SpecificSchema = dsschema.Schema{
+		Attributes:          dsAttributes,
+		Description:         genericResource.SpecificSchema.Description,
+		MarkdownDescription: genericResource.SpecificSchema.MarkdownDescription,
+	}
+
+	return result // copylocks is fine here (but VSCode would only allow to disable it globally)
 }
 
 // Metadata returns the data source type name.
@@ -56,49 +143,12 @@ func (d *GenericDataSourcePlural) Metadata(_ context.Context, req datasource.Met
 
 // Configure adds the provider configured MSGraph client to the data source.
 func (d *GenericDataSourcePlural) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
-	if req.ProviderData != nil {
-		d.AccessParams.graphClient = req.ProviderData.(*msgraph.Client)
-	}
+	d.AccessParams.InitializeGuarded(req.ProviderData)
 }
 
 // Schema defines the schema for the data source.
 func (d *GenericDataSourcePlural) Schema(ctx context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	if !d.AccessParams.ReadOptions.PluralNoFilterSupport {
-		d.SpecificSchema.Attributes["odata_filter"] = schema.StringAttribute{
-			Optional:            true,
-			MarkdownDescription: `Raw OData $filter string to pass to MS Graph.`,
-		}
-		d.SpecificSchema.Attributes["include_ids"] = schema.SetAttribute{
-			ElementType:         types.StringType,
-			Optional:            true,
-			MarkdownDescription: `Filter query to only return objects with these ids.`,
-		}
-		d.SpecificSchema.Attributes["exclude_ids"] = schema.SetAttribute{
-			ElementType:         types.StringType,
-			Optional:            true,
-			MarkdownDescription: `Filter query to exclude objects with these ids.`,
-		}
-	}
 	resp.Schema = d.SpecificSchema
-
-	d.odataSelect = nil // clear in case of duplicate invocation
-	if !d.AccessParams.ReadOptions.PluralNoSelectSupport {
-		resultSetNestedAttribute := d.SpecificSchema.Attributes[d.ResultAttributeName].(schema.SetNestedAttribute)
-		translator := NewToFromGraphTranslator(d.SpecificSchema, false)
-		for k, v := range resultSetNestedAttribute.NestedObject.Attributes {
-			if _, ok := v.(DerivedTypeNestedAttribute); ok {
-				// It's a virtual attribute only that signals a derived OData type. Do not add this to OData select (as MS
-				// Graph itself does not know about it and would complain).
-				continue
-			}
-
-			graphAttributeName, _, ok := translator.GraphAttributeNameFromTerraformName(ctx, resultSetNestedAttribute, k)
-			if !ok {
-				panic(fmt.Errorf("ToFromGraphTranslator.GraphAttributeNameFromTerraformName not ok for %s", k))
-			}
-			d.odataSelect = append(d.odataSelect, graphAttributeName)
-		}
-	}
 }
 
 // Read refreshes the Terraform state with the latest data.
@@ -109,29 +159,18 @@ func (d *GenericDataSourcePlural) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	odataFilter := d.AccessParams.ReadOptions.ODataFilter
-	if !d.AccessParams.ReadOptions.PluralNoFilterSupport {
-
-		var configOdataFilter *string
-		resp.Diagnostics.Append(req.Config.GetAttribute(ctx, path.Root("odata_filter"), &configOdataFilter)...)
-		if resp.Diagnostics.HasError() {
-			return
-		}
-		if configOdataFilter != nil {
-			appendODataFilter(&odataFilter, *configOdataFilter, false)
-		}
-
-		appendODataFilter(&odataFilter, buildIdFilterInner(ctx, &resp.Diagnostics, &req.Config, path.Root("include_ids")), false)
-		appendODataFilter(&odataFilter, buildIdFilterInner(ctx, &resp.Diagnostics, &req.Config, path.Root("exclude_ids")), true)
-	}
-
-	// do not consider ODataExpand here as it would automatically include the attribute(s) in the result
-	rawVal := d.AccessParams.ReadRaw(ctx, &resp.Diagnostics, uri, "", odataFilter, d.odataSelect, false)
+	odataFilter, odataOrderby, odataTop := ODataGetFilterFromConfig(ctx, &resp.Diagnostics, &req.Config, &d.AccessParams, d.odataFilterAttrsWithGraphNames)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	val := ConvertOdataRawToTerraform(ctx, &resp.Diagnostics, req.Config.Schema.(schema.Schema),
+	// do not consider ODataExpand here as it would automatically include the attribute(s) in the result
+	rawVal := d.AccessParams.ReadRaw3(ctx, &resp.Diagnostics, uri, "", odataFilter, d.odataSelectGraphNames, odataOrderby, odataTop, false)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	val := ConvertOdataRawToTerraform(ctx, &resp.Diagnostics, req.Config.Schema.(dsschema.Schema),
 		rawVal, d.ResultAttributeName, d.AccessParams.GraphToTerraformMiddleware)
 	if resp.Diagnostics.HasError() {
 		return
@@ -140,36 +179,5 @@ func (d *GenericDataSourcePlural) Read(ctx context.Context, req datasource.ReadR
 		Schema: req.Config.Schema,
 		Raw:    val,
 	}
-}
-
-func appendODataFilter(baseFilter *string, appendFilter string, useNot bool) {
-	if appendFilter == "" {
-		return
-	}
-
-	if useNot {
-		appendFilter = fmt.Sprintf("not(%s)", appendFilter)
-	}
-	if *baseFilter == "" {
-		*baseFilter = appendFilter
-	} else {
-		*baseFilter = fmt.Sprintf("(%s) and (%s)", *baseFilter, appendFilter)
-	}
-}
-
-func buildIdFilterInner(ctx context.Context, diags *diag.Diagnostics, filterAttributer GetAttributer, filterAttributPath path.Path) string {
-	var ids []string
-	diags.Append(filterAttributer.GetAttribute(ctx, filterAttributPath, &ids)...)
-	if diags.HasError() || ids == nil {
-		return ""
-	}
-
-	idFilter := ""
-	for _, id := range ids {
-		if idFilter != "" {
-			idFilter += " or "
-		}
-		idFilter += fmt.Sprintf("id eq '%s'", id)
-	}
-	return idFilter
+	d.AccessParams.PopulateStateParentIdsFromRequest(ctx, &resp.Diagnostics, &resp.State, req.Config)
 }

@@ -30,8 +30,8 @@ var (
 	TargetedManagedAppConfigurationSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&TargetedManagedAppConfigurationResource)
 
-	TargetedManagedAppConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&TargetedManagedAppConfigurationSingularDataSource, "")
+	TargetedManagedAppConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&TargetedManagedAppConfigurationResource, "")
 )
 
 var targetedManagedAppConfigurationReadOptions = generic.ReadOptions{

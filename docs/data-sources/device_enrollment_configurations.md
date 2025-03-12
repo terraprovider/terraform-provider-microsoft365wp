@@ -45,6 +45,23 @@ Please note that almost all information on this page has been sourced literally 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
 
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
+
 ## Example Usage
 
 ```terraform
@@ -77,23 +94,20 @@ output "microsoft365wp_device_enrollment_configurations" {
 
 ### Read-Only
 
-- `device_enrollment_configurations` (Attributes Set) (see [below for nested schema](#nestedatt--device_enrollment_configurations))
+- `device_enrollment_configurations` (Attributes List) (see [below for nested schema](#nestedatt--device_enrollment_configurations))
 
 <a id="nestedatt--device_enrollment_configurations"></a>
 ### Nested Schema for `device_enrollment_configurations`
-
-Required:
-
-- `id` (String) Unique Identifier for the account
 
 Read-Only:
 
 - `created_date_time` (String) Created date time in UTC of the device enrollment configuration
 - `device_enrollment_limit` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.deviceEnrollmentLimitConfiguration` (using e.g. `if x.device_enrollment_limit != null`). (see [below for nested schema](#nestedatt--device_enrollment_configurations--device_enrollment_limit))
 - `display_name` (String) The display name of the device enrollment configuration
+- `id` (String) Unique Identifier for the account
 - `last_modified_date_time` (String) Last modified date time in UTC of the device enrollment configuration
 - `platform_restrictions` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration` (using e.g. `if x.platform_restrictions != null`). (see [below for nested schema](#nestedatt--device_enrollment_configurations--platform_restrictions))
-- `role_scope_tag_ids` (Set of String) . The _provider_ default value is `["0"]`.
+- `role_scope_tag_ids` (Set of String) .
 - `single_platform_restriction` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration` (using e.g. `if x.single_platform_restriction != null`). (see [below for nested schema](#nestedatt--device_enrollment_configurations--single_platform_restriction))
 - `version` (Number) The version of the device enrollment configuration
 - `windows10_esp` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windows10EnrollmentCompletionPageConfiguration` (using e.g. `if x.windows10_esp != null`). (see [below for nested schema](#nestedatt--device_enrollment_configurations--windows10_esp))

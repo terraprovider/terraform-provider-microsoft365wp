@@ -391,11 +391,17 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 	return []func() datasource.DataSource{
 		func() datasource.DataSource { return &services.AndroidManagedAppProtectionSingularDataSource },
 		func() datasource.DataSource { return &services.AndroidManagedAppProtectionPluralDataSource },
+		func() datasource.DataSource {
+			return &services.AuthenticationCombinationConfigurationSingularDataSource
+		},
+		func() datasource.DataSource { return &services.AuthenticationCombinationConfigurationPluralDataSource },
 		func() datasource.DataSource { return &services.AuthenticationContextClassReferenceSingularDataSource },
 		func() datasource.DataSource { return &services.AuthenticationContextClassReferencePluralDataSource },
+		func() datasource.DataSource { return &services.AuthenticationFlowsPolicySingularDataSource },
 		func() datasource.DataSource { return &services.AuthenticationMethodsPolicySingularDataSource },
 		func() datasource.DataSource { return &services.AuthenticationStrengthPolicySingularDataSource },
 		func() datasource.DataSource { return &services.AuthenticationStrengthPolicyPluralDataSource },
+		func() datasource.DataSource { return &services.AuthorizationPolicySingularDataSource },
 		func() datasource.DataSource {
 			return &services.AzureAdWindowsAutopilotDeploymentProfileSingularDataSource
 		},
@@ -408,22 +414,38 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 		func() datasource.DataSource {
 			return &services.AzureAdWindowsAutopilotDeploymentProfileAssignmentPluralDataSource
 		},
+		func() datasource.DataSource { return &services.CloudPcDeviceImageSingularDataSource },
+		func() datasource.DataSource { return &services.CloudPcDeviceImagePluralDataSource },
+		func() datasource.DataSource { return &services.CloudPcGalleryImageSingularDataSource },
+		func() datasource.DataSource { return &services.CloudPcGalleryImagePluralDataSource },
 		func() datasource.DataSource { return &services.CloudPcProvisioningPolicySingularDataSource },
 		func() datasource.DataSource { return &services.CloudPcProvisioningPolicyPluralDataSource },
 		func() datasource.DataSource { return &services.CloudPcUserSettingSingularDataSource },
 		func() datasource.DataSource { return &services.CloudPcUserSettingPluralDataSource },
 		func() datasource.DataSource { return &services.ConditionalAccessPolicySingularDataSource },
 		func() datasource.DataSource { return &services.ConditionalAccessPolicyPluralDataSource },
+		func() datasource.DataSource { return &services.ConnectedOrganizationSingularDataSource },
+		func() datasource.DataSource { return &services.ConnectedOrganizationPluralDataSource },
+		func() datasource.DataSource { return &services.CrossTenantAccessPolicySingularDataSource },
+		func() datasource.DataSource {
+			return &services.CrossTenantAccessPolicyConfigurationDefaultSingularDataSource
+		},
+		func() datasource.DataSource {
+			return &services.CrossTenantAccessPolicyConfigurationPartnerSingularDataSource
+		},
+		func() datasource.DataSource {
+			return &services.CrossTenantAccessPolicyConfigurationPartnerPluralDataSource
+		},
 		func() datasource.DataSource {
 			return &services.DeviceAndAppManagementAssignmentFilterSingularDataSource
 		},
 		func() datasource.DataSource { return &services.DeviceAndAppManagementAssignmentFilterPluralDataSource },
 		func() datasource.DataSource { return &services.DeviceCompliancePolicySingularDataSource },
 		func() datasource.DataSource { return &services.DeviceCompliancePolicyPluralDataSource },
-		func() datasource.DataSource { return &services.DeviceConfigurationCustomSingularDataSource },
-		func() datasource.DataSource { return &services.DeviceConfigurationCustomPluralDataSource },
 		func() datasource.DataSource { return &services.DeviceConfigurationSingularDataSource },
 		func() datasource.DataSource { return &services.DeviceConfigurationPluralDataSource },
+		func() datasource.DataSource { return &services.DeviceConfigurationCustomSingularDataSource },
+		func() datasource.DataSource { return &services.DeviceConfigurationCustomPluralDataSource },
 		func() datasource.DataSource { return &services.DeviceCustomAttributeShellScriptSingularDataSource },
 		func() datasource.DataSource { return &services.DeviceCustomAttributeShellScriptPluralDataSource },
 		func() datasource.DataSource { return &services.DeviceEnrollmentConfigurationSingularDataSource },
@@ -433,11 +455,28 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 		func() datasource.DataSource {
 			return &services.DeviceManagementConfigurationPolicyJsonSingularDataSource
 		},
+		func() datasource.DataSource { return &services.DeviceManagementConfigurationPolicyJsonPluralDataSource },
 		func() datasource.DataSource { return &services.DeviceManagementIntentSingularDataSource },
 		func() datasource.DataSource { return &services.DeviceManagementIntentPluralDataSource },
-		func() datasource.DataSource { return &services.DeviceManagementConfigurationPolicyJsonPluralDataSource },
+		func() datasource.DataSource { return &services.DeviceManagementScriptSingularDataSource },
+		func() datasource.DataSource { return &services.DeviceManagementScriptPluralDataSource },
+		func() datasource.DataSource { return &services.DeviceRegistrationPolicySingularDataSource },
 		func() datasource.DataSource { return &services.DeviceShellScriptSingularDataSource },
 		func() datasource.DataSource { return &services.DeviceShellScriptPluralDataSource },
+		func() datasource.DataSource { return &services.IdentityGovernanceCustomTaskExtensionSingularDataSource },
+		func() datasource.DataSource { return &services.IdentityGovernanceCustomTaskExtensionPluralDataSource },
+		func() datasource.DataSource {
+			return &services.IdentityGovernanceLifecycleManagementSettingsSingularDataSource
+		},
+		func() datasource.DataSource { return &services.IdentityGovernanceTaskDefinitionSingularDataSource },
+		func() datasource.DataSource { return &services.IdentityGovernanceTaskDefinitionPluralDataSource },
+		func() datasource.DataSource { return &services.IdentityGovernanceWorkflowSingularDataSource },
+		func() datasource.DataSource { return &services.IdentityGovernanceWorkflowPluralDataSource },
+		func() datasource.DataSource { return &services.IdentityGovernanceWorkflowVersionSingularDataSource },
+		func() datasource.DataSource { return &services.IdentityGovernanceWorkflowVersionPluralDataSource },
+		func() datasource.DataSource {
+			return &services.IdentitySecurityDefaultsEnforcementPolicySingularDataSource
+		},
 		func() datasource.DataSource { return &services.IosManagedAppProtectionSingularDataSource },
 		func() datasource.DataSource { return &services.IosManagedAppProtectionPluralDataSource },
 		func() datasource.DataSource { return &services.ManagedDeviceMobileAppConfigurationSingularDataSource },
@@ -446,14 +485,25 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 		func() datasource.DataSource { return &services.MobileAppPluralDataSource },
 		func() datasource.DataSource { return &services.MobileAppCategorySingularDataSource },
 		func() datasource.DataSource { return &services.MobileAppCategoryPluralDataSource },
+		func() datasource.DataSource { return &services.MobilityManagementPolicySingularDataSource },
+		func() datasource.DataSource { return &services.MobilityManagementPolicyPluralDataSource },
 		func() datasource.DataSource { return &services.NotificationMessageTemplateSingularDataSource },
 		func() datasource.DataSource { return &services.NotificationMessageTemplatePluralDataSource },
+		func() datasource.DataSource { return &services.SharepointSettingsSingularDataSource },
+		func() datasource.DataSource { return &services.SynchronizationSchemaJsonSingularDataSource },
 		func() datasource.DataSource { return &services.TargetedManagedAppConfigurationSingularDataSource },
 		func() datasource.DataSource { return &services.TargetedManagedAppConfigurationPluralDataSource },
+		func() datasource.DataSource { return &services.UnifiedRoleDefinitionSingularDataSource },
+		func() datasource.DataSource { return &services.UnifiedRoleDefinitionPluralDataSource },
+		func() datasource.DataSource { return &services.UnifiedRoleManagementPolicySingularDataSource },
+		func() datasource.DataSource { return &services.UnifiedRoleManagementPolicyPluralDataSource },
+		func() datasource.DataSource { return &services.UnifiedRoleManagementPolicyAssignmentSingularDataSource },
+		func() datasource.DataSource { return &services.UnifiedRoleManagementPolicyAssignmentPluralDataSource },
 		func() datasource.DataSource { return &services.WindowsDriverUpdateProfileSingularDataSource },
 		func() datasource.DataSource { return &services.WindowsDriverUpdateProfilePluralDataSource },
 		func() datasource.DataSource { return &services.WindowsFeatureUpdateProfileSingularDataSource },
 		func() datasource.DataSource { return &services.WindowsFeatureUpdateProfilePluralDataSource },
+		func() datasource.DataSource { return &services.WindowsManagementAppSingularDataSource },
 	}
 }
 
@@ -461,32 +511,51 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		func() resource.Resource { return &services.AndroidManagedAppProtectionResource },
+		func() resource.Resource { return &services.AuthenticationCombinationConfigurationResource },
 		func() resource.Resource { return &services.AuthenticationContextClassReferenceResource },
+		func() resource.Resource { return &services.AuthenticationFlowsPolicyResource },
 		func() resource.Resource { return &services.AuthenticationMethodsPolicyResource },
 		func() resource.Resource { return &services.AuthenticationStrengthPolicyResource },
+		func() resource.Resource { return &services.AuthorizationPolicyResource },
 		func() resource.Resource { return &services.AzureAdWindowsAutopilotDeploymentProfileResource },
 		func() resource.Resource { return &services.AzureAdWindowsAutopilotDeploymentProfileAssignmentResource },
 		func() resource.Resource { return &services.CloudPcProvisioningPolicyResource },
 		func() resource.Resource { return &services.CloudPcUserSettingResource },
 		func() resource.Resource { return &services.ConditionalAccessPolicyResource },
+		func() resource.Resource { return &services.ConnectedOrganizationResource },
+		func() resource.Resource { return &services.CrossTenantAccessPolicyResource },
+		func() resource.Resource { return &services.CrossTenantAccessPolicyConfigurationDefaultResource },
+		func() resource.Resource { return &services.CrossTenantAccessPolicyConfigurationPartnerResource },
 		func() resource.Resource { return &services.DeviceAndAppManagementAssignmentFilterResource },
 		func() resource.Resource { return &services.DeviceCompliancePolicyResource },
-		func() resource.Resource { return &services.DeviceConfigurationCustomResource },
 		func() resource.Resource { return &services.DeviceConfigurationResource },
+		func() resource.Resource { return &services.DeviceConfigurationCustomResource },
 		func() resource.Resource { return &services.DeviceCustomAttributeShellScriptResource },
 		func() resource.Resource { return &services.DeviceEnrollmentConfigurationResource },
 		func() resource.Resource { return &services.DeviceManagementConfigurationPolicyResource },
 		func() resource.Resource { return &services.DeviceManagementConfigurationPolicyJsonResource },
 		func() resource.Resource { return &services.DeviceManagementIntentResource },
+		func() resource.Resource { return &services.DeviceManagementScriptResource },
+		func() resource.Resource { return &services.DeviceRegistrationPolicyResource },
 		func() resource.Resource { return &services.DeviceShellScriptResource },
+		func() resource.Resource { return &services.IdentityGovernanceCustomTaskExtensionResource },
+		func() resource.Resource { return &services.IdentityGovernanceLifecycleManagementSettingsResource },
+		func() resource.Resource { return &services.IdentityGovernanceWorkflowResource },
+		func() resource.Resource { return &services.IdentitySecurityDefaultsEnforcementPolicyResource },
 		func() resource.Resource { return &services.IosManagedAppProtectionResource },
 		func() resource.Resource { return &services.ManagedDeviceMobileAppConfigurationResource },
 		func() resource.Resource { return &services.MobileAppResource },
 		func() resource.Resource { return &services.MobileAppCategoryResource },
+		func() resource.Resource { return &services.MobilityManagementPolicyResource },
 		func() resource.Resource { return &services.NotificationMessageTemplateResource },
+		func() resource.Resource { return &services.SharepointSettingsResource },
+		func() resource.Resource { return &services.SynchronizationSchemaJsonResource },
 		func() resource.Resource { return &services.TargetedManagedAppConfigurationResource },
+		func() resource.Resource { return &services.UnifiedRoleDefinitionResource },
+		func() resource.Resource { return &services.UnifiedRoleManagementPolicyResource },
 		func() resource.Resource { return &services.WindowsDriverUpdateProfileResource },
 		func() resource.Resource { return &services.WindowsFeatureUpdateProfileResource },
+		func() resource.Resource { return &services.WindowsManagementAppResource },
 	}
 }
 

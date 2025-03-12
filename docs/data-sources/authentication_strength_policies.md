@@ -7,11 +7,30 @@ subcategory: "MS Graph: Authentication"
 
 A collection of settings that define specific combinations of authentication methods and metadata. The authentication strength policy, when applied to a given scenario using Microsoft Entra Conditional Access, defines which authentication methods must be used to authenticate in that scenario. An authentication strength may be built-in or custom (defined by the tenant) and may or may not fulfill the requirements to grant an MFA claim. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta
 
+Provider Note: Use the separate resource `microsoft365wp_authentication_combination_configuration` to create combination configurations for an authentication strength policy.
+
 ## Documentation Disclaimer
 
 Please note that almost all information on this page has been sourced literally from the official Microsoft Graph API 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
+
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
 
 ## Example Usage
 
@@ -36,8 +55,17 @@ data "microsoft365wp_authentication_strength_policies" "all" {
   exclude_ids = ["01234567-89ab-cdef-0123-456789abcdee", "01234567-89ab-cdef-0123-456789abcdef"]
 }
 
+data "microsoft365wp_authentication_combination_configurations" "all" {
+  for_each = toset(data.microsoft365wp_authentication_strength_policies.all.authentication_strength_policies[*].id)
+
+  authentication_strength_policy_id = each.key
+}
+
 output "microsoft365wp_authentication_strength_policies" {
-  value = { for x in data.microsoft365wp_authentication_strength_policies.all.authentication_strength_policies : x.id => x }
+  value = {
+    for x in data.microsoft365wp_authentication_strength_policies.all.authentication_strength_policies :
+    x.id => merge(x, { combination_configurations = data.microsoft365wp_authentication_combination_configurations.all[x.id].authentication_combination_configurations })
+  }
 }
 ```
 
@@ -46,22 +74,22 @@ output "microsoft365wp_authentication_strength_policies" {
 
 ### Optional
 
-- `exclude_ids` (Set of String) Filter query to exclude objects with these ids.
-- `include_ids` (Set of String) Filter query to only return objects with these ids.
-- `odata_filter` (String) Raw OData $filter string to pass to MS Graph.
+- `exclude_ids` (Set of String) Exclude entities with these ids (using OData `$filter`).
+- `include_ids` (Set of String) Only return entities with these ids (using OData `$filter`).
+- `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
+- `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
+- `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
 
 ### Read-Only
 
-- `authentication_strength_policies` (Attributes Set) (see [below for nested schema](#nestedatt--authentication_strength_policies))
+- `authentication_strength_policies` (Attributes List) (see [below for nested schema](#nestedatt--authentication_strength_policies))
 
 <a id="nestedatt--authentication_strength_policies"></a>
 ### Nested Schema for `authentication_strength_policies`
-
-Required:
-
-- `id` (String) The system-generated identifier for this mode.
 
 Read-Only:
 
 - `created_date_time` (String) The datetime when this policy was created.
 - `display_name` (String) The human-readable display name of this policy. <br><br>Supports `$filter` (`eq`, `ne`, `not` , and `in`).
+- `id` (String) The system-generated identifier for this mode.
+- `modified_date_time` (String) The datetime when this policy was last modified.

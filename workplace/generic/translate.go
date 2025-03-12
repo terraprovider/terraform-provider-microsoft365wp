@@ -1,7 +1,6 @@
 package generic
 
 import (
-	"context"
 	"fmt"
 	"terraform-provider-microsoft365wp/workplace/strcase"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
@@ -64,7 +63,7 @@ func NewToFromGraphTranslator(schema tftypes.AttributePathStepper, includeNullOb
 	return result
 }
 
-func (t ToFromGraphTranslator) GraphAttributeNameFromTerraformName(ctx context.Context, parentAttribute rsschema.Attribute, terraformAttributeName string) (string, bool, bool) {
+func (t *ToFromGraphTranslator) GraphAttributeNameFromTerraformName(parentAttribute rsschema.Attribute, terraformAttributeName string) (string, bool, bool) {
 
 	// cannot really extract this since GetAttributes() returns internal fwschema type :-(
 	parentNested, ok := parentAttribute.(rsschema.NestedAttribute)
@@ -73,19 +72,24 @@ func (t ToFromGraphTranslator) GraphAttributeNameFromTerraformName(ctx context.C
 	}
 
 	if attribute, ok := parentNested.GetNestedObject().GetAttributes()[terraformAttributeName]; ok {
+		graphAttributeName := t.GraphAttributeNameFromTerraformNameImpl(terraformAttributeName, attribute)
 		attributeIsWritable := attribute.IsRequired() || attribute.IsOptional()
-		description := attribute.GetDescription()
-		if description != "" {
-			// custom mapping
-			return description, attributeIsWritable, true
-		}
-		return strcase.ToLowerCamel(terraformAttributeName), attributeIsWritable, true
+		return graphAttributeName, attributeIsWritable, true
 	}
 
 	return "", false, false
 }
 
-func (ToFromGraphTranslator) TerraformAttributeNameFromGraphName(ctx context.Context, parentAttribute rsschema.Attribute, graphAttributeName string) (string, bool) {
+func (*ToFromGraphTranslator) GraphAttributeNameFromTerraformNameImpl(terraformAttributeName string, attribute GetDescriptioner) string {
+
+	if description := attribute.GetDescription(); description != "" {
+		// custom mapping
+		return description
+	}
+	return strcase.ToLowerCamel(terraformAttributeName)
+}
+
+func (*ToFromGraphTranslator) TerraformAttributeNameFromGraphName(parentAttribute rsschema.Attribute, graphAttributeName string) (string, bool) {
 
 	// cannot really extract this since GetAttributes() returns internal fwschema type :-(
 	parentNested, ok := parentAttribute.(rsschema.NestedAttribute)
@@ -117,7 +121,7 @@ func (ToFromGraphTranslator) TerraformAttributeNameFromGraphName(ctx context.Con
 	return "", false
 }
 
-func (t ToFromGraphTranslator) OdataTypeByTerraformAttributeName(ctx context.Context, parentAttribute rsschema.Attribute, terraformAttributeName string) (string, bool) {
+func (*ToFromGraphTranslator) OdataTypeByTerraformAttributeName(parentAttribute rsschema.Attribute, terraformAttributeName string) (string, bool) {
 
 	// cannot really extract this since GetAttributes() returns internal fwschema type :-(
 	parentNested, ok := parentAttribute.(rsschema.NestedAttribute)
@@ -134,7 +138,7 @@ func (t ToFromGraphTranslator) OdataTypeByTerraformAttributeName(ctx context.Con
 	return "", false
 }
 
-func (t ToFromGraphTranslator) NestedObjectAttributesByOdataType(ctx context.Context, parentAttribute rsschema.Attribute, odataTypeName string) ([]string, bool) {
+func (t *ToFromGraphTranslator) NestedObjectAttributesByOdataType(parentAttribute rsschema.Attribute, odataTypeName string) ([]string, bool) {
 
 	// cannot really extract this since GetAttributes() returns internal fwschema type :-(
 	parentNested, ok := parentAttribute.(rsschema.NestedAttribute)
@@ -147,7 +151,7 @@ func (t ToFromGraphTranslator) NestedObjectAttributesByOdataType(ctx context.Con
 			if derivedTypeNested.GetDerivedType() == odataTypeName {
 				nestedAttributeNames := make([]string, 0)
 				for k := range derivedTypeNested.GetNestedObject().GetAttributes() {
-					graphAttributeName, _, ok := t.GraphAttributeNameFromTerraformName(ctx, derivedTypeNested, k)
+					graphAttributeName, _, ok := t.GraphAttributeNameFromTerraformName(derivedTypeNested, k)
 					if ok {
 						nestedAttributeNames = append(nestedAttributeNames, graphAttributeName)
 					}
@@ -160,8 +164,8 @@ func (t ToFromGraphTranslator) NestedObjectAttributesByOdataType(ctx context.Con
 	return nil, false
 }
 
-func (t ToFromGraphTranslator) getAllValidatorsForPath(ctx context.Context, p *tftypes.AttributePath) ([]interface{}, error) {
-	attr, err := t.SchemaAttributeAtTerraformPath(ctx, p)
+func (t *ToFromGraphTranslator) getAllValidatorsForPath(p *tftypes.AttributePath) ([]interface{}, error) {
+	attr, err := t.SchemaAttributeAtTerraformPath(p)
 	if err != nil {
 		return nil, err
 	}
@@ -211,10 +215,10 @@ func (t ToFromGraphTranslator) getAllValidatorsForPath(ctx context.Context, p *t
 // See wpvalidator.AttributeValueTranslator for more details.
 //
 
-func (t ToFromGraphTranslator) GraphToTerraformDefaultValue(ctx context.Context, p *tftypes.AttributePath, attributeIsMissing bool, typ tftypes.Type) (tftypes.Value, error) {
+func (t *ToFromGraphTranslator) GraphToTerraformDefaultValue(p *tftypes.AttributePath, attributeIsMissing bool, typ tftypes.Type) (tftypes.Value, error) {
 
 	if attributeIsMissing {
-		tfValue, ok, err := t.GraphToTerraformTranslateValue(ctx, p, wpvalidator.AttributeMising)
+		tfValue, ok, err := t.GraphToTerraformTranslateValue(p, wpvalidator.AttributeMising)
 		if err != nil || ok {
 			return tfValue, err
 		}
@@ -223,9 +227,9 @@ func (t ToFromGraphTranslator) GraphToTerraformDefaultValue(ctx context.Context,
 	return tftypes.NewValue(typ, nil), nil
 }
 
-func (t ToFromGraphTranslator) GraphToTerraformTranslateValue(ctx context.Context, p *tftypes.AttributePath, graphValue any) (tftypes.Value, bool, error) {
+func (t *ToFromGraphTranslator) GraphToTerraformTranslateValue(p *tftypes.AttributePath, graphValue any) (tftypes.Value, bool, error) {
 
-	validators, err := t.getAllValidatorsForPath(ctx, p)
+	validators, err := t.getAllValidatorsForPath(p)
 	if err != nil {
 		return tftypes.Value{}, false, err
 	}
@@ -245,9 +249,9 @@ func (t ToFromGraphTranslator) GraphToTerraformTranslateValue(ctx context.Contex
 	return tftypes.Value{}, false, nil
 }
 
-func (t ToFromGraphTranslator) TerraformToGraphTranslateValue(ctx context.Context, p *tftypes.AttributePath, tfValue tftypes.Value) (any, bool, error) {
+func (t *ToFromGraphTranslator) TerraformToGraphTranslateValue(p *tftypes.AttributePath, tfValue tftypes.Value) (any, bool, error) {
 
-	validators, err := t.getAllValidatorsForPath(ctx, p)
+	validators, err := t.getAllValidatorsForPath(p)
 	if err != nil {
 		return nil, false, err
 	}

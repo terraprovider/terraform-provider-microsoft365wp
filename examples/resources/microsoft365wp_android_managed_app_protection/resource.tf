@@ -19,6 +19,9 @@ resource "microsoft365wp_android_managed_app_protection" "test1" {
 
   app_group_type = "allCoreMicrosoftApps"
 
+  fingerprint_and_biometric_enabled         = true
+  pin_required_instead_of_biometric_timeout = "PT30M"
+
   assignments = [
     { target = { group = { group_id = "298fded6-b252-4166-a473-f405e935f58d" } } },
   ]

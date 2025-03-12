@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -30,14 +31,17 @@ var (
 		&AuthenticationMethodsPolicyResource)
 )
 
-func authenticationMethodsPolicyGraphToTerraformMiddleware(ctx context.Context, params generic.GraphToTerraformMiddlewareParams) generic.GraphToTerraformMiddlewareReturns {
+func authenticationMethodsPolicyGraphToTerraformMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.GraphToTerraformMiddlewareParams) generic.GraphToTerraformMiddlewareReturns {
 	amConfigsOrg, amConfigsOk := params.RawVal["authenticationMethodConfigurations"].([]any)
 	if amConfigsOk {
-		// remove entry of type federatedIdentityCredentialAuthenticationMethodConfiguration for now as the type has not yet been documented anywhere
+		// remove entries of types federatedIdentityCredentialAuthenticationMethodConfiguration, qrCodePinAuthenticationMethodConfiguration
+		// for now as the types have not yet been documented anywhere
 		amConfigsNew := make([]any, 0)
 		for _, configAny := range amConfigsOrg {
 			if configMap, configMapOk := configAny.(map[string]any); configMapOk {
-				if odataType, odataTypeOk := configMap["@odata.type"].(string); odataTypeOk && odataType == "#microsoft.graph.federatedIdentityCredentialAuthenticationMethodConfiguration" {
+				if odataType, odataTypeOk := configMap["@odata.type"].(string); odataTypeOk &&
+					(odataType == "#microsoft.graph.federatedIdentityCredentialAuthenticationMethodConfiguration" ||
+						odataType == "#microsoft.graph.qrCodePinAuthenticationMethodConfiguration") {
 					// skip appending to new slice
 					continue
 				}
@@ -72,15 +76,11 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 			MarkdownDescription: "The date and time of the last update to the policy.",
 		},
 		"policy_migration_state": schema.StringAttribute{
-			Optional: true,
+			Required: true,
 			Validators: []validator.String{
 				stringvalidator.OneOf("preMigration", "migrationInProgress", "migrationComplete", "unknownFutureValue"),
 			},
-			PlanModifiers: []planmodifier.String{
-				wpdefaultvalue.StringDefaultValue("migrationInProgress"),
-			},
-			Computed:            true,
-			MarkdownDescription: "The state of migration of the authentication methods policy from the legacy multifactor authentication and self-service password reset (SSPR) policies. The possible values are: <br/><li>`premigration` - means the authentication methods policy is used for authentication only, legacy policies are respected. <li>`migrationInProgress` - means the authentication methods policy is used for both authentication and SSPR, legacy policies are respected. <li>`migrationComplete` - means the authentication methods policy is used for authentication and SSPR, legacy policies are ignored. <li>`unknownFutureValue` - Evolvable enumeration sentinel value. Don't use. / Possible values are: `preMigration`, `migrationInProgress`, `migrationComplete`, `unknownFutureValue`. The _provider_ default value is `\"migrationInProgress\"`.",
+			MarkdownDescription: "The state of migration of the authentication methods policy from the legacy multifactor authentication and self-service password reset (SSPR) policies. The possible values are: <br/><li>`premigration` - means the authentication methods policy is used for authentication only, legacy policies are respected. <li>`migrationInProgress` - means the authentication methods policy is used for both authentication and SSPR, legacy policies are respected. <li>`migrationComplete` - means the authentication methods policy is used for authentication and SSPR, legacy policies are ignored. <li>`unknownFutureValue` - Evolvable enumeration sentinel value. Don't use. / Possible values are: `preMigration`, `migrationInProgress`, `migrationComplete`, `unknownFutureValue`",
 		},
 		"policy_version": schema.StringAttribute{
 			Computed:            true,
@@ -268,9 +268,9 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: authenticationMethodsPolicyAuthenticationMethodTargetAttributes,
 									},
-									PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+									PlanModifiers:       []planmodifier.Set{authenticationMethodsPolicyTargetsDefaultAllUsers},
 									Computed:            true,
-									MarkdownDescription: "A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID.\n\nThe following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `[]`.",
+									MarkdownDescription: "A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID.\n\nThe following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`.",
 								},
 							},
 							Validators: []validator.Object{
@@ -654,7 +654,7 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 															stringvalidator.OneOf("issuerSubject", "policyOID", "unknownFutureValue", "issuerSubjectAndPolicyOID"),
 														},
 														Description:         `x509CertificateRuleType`, // custom MS Graph attribute name
-														MarkdownDescription: "The type of the X.509 certificate mode configuration rule. The Note that you must use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `issuerSubjectAndPolicyOID`. Required. / Possible values are: `issuerSubject`, `policyOID`, `unknownFutureValue`, `issuerSubjectAndPolicyOID`",
+														MarkdownDescription: "The type of the X.509 certificate mode configuration rule. The Use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `issuerSubjectAndPolicyOID`. Required. / Possible values are: `issuerSubject`, `policyOID`, `unknownFutureValue`, `issuerSubjectAndPolicyOID`",
 													},
 												},
 											},

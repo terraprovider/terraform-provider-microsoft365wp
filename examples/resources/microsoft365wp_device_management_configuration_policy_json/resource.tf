@@ -17,7 +17,7 @@ export ARM_CLIENT_SECRET='...'
 resource "microsoft365wp_device_management_configuration_policy_json" "test1" {
   name = "TF Test JSON 1"
 
-  settings_json = [for x in [
+  settings = [for x in [
     {
       "@odata.type"       = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
       settingDefinitionId = "device_vendor_msft_bitlocker_requiredeviceencryption",
@@ -41,7 +41,7 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test1" {
         ]
       }
     },
-  ] : jsonencode(x)]
+  ] : { instance_json = jsonencode(x) }]
 
   assignments = [
     for x in [
@@ -55,7 +55,7 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test1" {
 resource "microsoft365wp_device_management_configuration_policy_json" "test2" {
   name = "TF Test JSON 2"
 
-  settings_json = [for x in [
+  settings = [for x in [
     {
       "@odata.type"       = "#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance"
       settingDefinitionId = "device_vendor_msft_policy_config_defender_excludedpaths"
@@ -70,7 +70,7 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test2" {
         }
       ]
     }
-  ] : jsonencode(x)]
+  ] : { instance_json = jsonencode(x) }]
 
   assignments = [
     { target = { all_devices = {} } },
@@ -86,7 +86,7 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test_fire
     template_id = "6078910e-d808-4a9f-a51d-1b8a7bacb7c0_1"
   }
 
-  settings_json = [for x in [
+  settings = [for x in [
     {
       "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
       settingInstanceTemplateReference = {
@@ -101,5 +101,5 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test_fire
         value = "vendor_msft_firewall_mdmstore_global_disablestatefulftp_true"
       }
     }
-  ] : jsonencode(x)]
+  ] : { instance_json = jsonencode(x) }]
 }

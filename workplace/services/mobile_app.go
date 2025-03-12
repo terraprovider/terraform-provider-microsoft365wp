@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
@@ -37,8 +38,8 @@ var (
 	MobileAppSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&MobileAppResource)
 
-	MobileAppPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&MobileAppSingularDataSource, "")
+	MobileAppPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&MobileAppResource, "")
 )
 
 var mobileAppReadOptions = generic.ReadOptions{
@@ -65,17 +66,14 @@ var mobileAppWriteSubActions = []generic.WriteSubAction{
 		},
 		ComparisonKeyAttribute: "id",
 		SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("categories"),
-		UriAddRef:              true,
-		TerraformToGraphMiddleware: func(_ context.Context, p generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
-			// needs full OData id of target (instead of id)
-			p.RawVal["@odata.id"] = "https://graph.microsoft.com/beta/deviceAppManagement/mobileAppCategories/" + p.RawVal["id"].(string)
-			delete(p.RawVal, "id")
-			return nil
+		IsOdataReference:       true,
+		OdataRefMapTypeToUriPrefix: map[string]string{
+			"": "https://graph.microsoft.com/beta/deviceAppManagement/mobileAppCategories/",
 		},
 	},
 }
 
-func mobileAppTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func mobileAppTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {
 		// remove unchangeable attributes from PATCH
 		delete(params.RawVal, "appIdentifier")
@@ -601,6 +599,9 @@ var mobileAppResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "The Apple Id associated with the given Apple Volume Purchase Program Token.",
 					},
+					"vpp_token_display_name": schema.StringAttribute{
+						Computed: true,
+					},
 					"vpp_token_id": schema.StringAttribute{
 						Computed:            true,
 						MarkdownDescription: "Identifier of the VPP token associated with this app.",
@@ -1037,6 +1038,9 @@ var mobileAppResourceSchema = schema.Schema{
 					"vpp_token_apple_id": schema.StringAttribute{
 						Computed:            true,
 						MarkdownDescription: "The Apple Id associated with the given Apple Volume Purchase Program Token.",
+					},
+					"vpp_token_display_name": schema.StringAttribute{
+						Computed: true,
 					},
 					"vpp_token_id": schema.StringAttribute{
 						Computed:            true,

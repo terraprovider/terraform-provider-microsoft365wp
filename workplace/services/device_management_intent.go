@@ -32,8 +32,8 @@ var (
 	DeviceManagementIntentSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&DeviceManagementIntentResource)
 
-	DeviceManagementIntentPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&DeviceManagementIntentSingularDataSource, "")
+	DeviceManagementIntentPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&DeviceManagementIntentResource, "")
 )
 
 var deviceManagementIntentReadOptions = generic.ReadOptions{
@@ -55,7 +55,7 @@ var deviceManagementIntentWriteSubActions = []generic.WriteSubAction{
 	},
 }
 
-func deviceManagementIntentTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func deviceManagementIntentTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {
 		// templateId cannot be updated and may not even be written again after creation
 		delete(params.RawVal, "templateId")

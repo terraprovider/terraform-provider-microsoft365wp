@@ -17,7 +17,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/manicminer/hamilton/msgraph"
 )
 
 var (
@@ -35,8 +34,8 @@ var (
 	DeviceConfigurationCustomSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&DeviceConfigurationCustomResource)
 
-	DeviceConfigurationCustomPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&DeviceConfigurationCustomSingularDataSource, "device_configurations_custom")
+	DeviceConfigurationCustomPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&DeviceConfigurationCustomResource, "device_configurations_custom")
 )
 
 var deviceConfigurationCustomReadOptions = generic.ReadOptions{
@@ -61,7 +60,7 @@ var deviceConfigurationCustomWriteSubActions = []generic.WriteSubAction{
 	},
 }
 
-func deviceConfigurationCustomTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func deviceConfigurationCustomTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 
 	omaSettings := params.RawVal["omaSettings"].([]any)
 	if omaSettings == nil {
@@ -116,10 +115,8 @@ func deviceConfigurationCustomExtraRequestCustomReadSecretValue(ctx context.Cont
 				continue
 			}
 
-			getSecretUri := msgraph.Uri{
-				Entity: fmt.Sprintf("%s/getOmaSettingPlainTextValue(secretReferenceValueId='%s')", params.Uri.Entity, secretReferenceValueId),
-			}
-			plainValueResponse := generic.ReadRaw(ctx, diags, params.Client, getSecretUri, "", "", nil, nil, params.TolerateNotFound)
+			getSecretUri := fmt.Sprintf("%s/getOmaSettingPlainTextValue(secretReferenceValueId='%s')", params.Uri.Entity, secretReferenceValueId)
+			plainValueResponse := generic.ReadRaw(ctx, diags, params.Client, getSecretUri, params.TolerateNotFound)
 			if diags.HasError() {
 				return
 			}

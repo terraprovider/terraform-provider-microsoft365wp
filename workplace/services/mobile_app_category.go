@@ -20,8 +20,8 @@ var (
 	MobileAppCategorySingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&MobileAppCategoryResource)
 
-	MobileAppCategoryPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&MobileAppCategorySingularDataSource, "")
+	MobileAppCategoryPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&MobileAppCategoryResource, "")
 )
 
 var mobileAppCategoryResourceSchema = schema.Schema{

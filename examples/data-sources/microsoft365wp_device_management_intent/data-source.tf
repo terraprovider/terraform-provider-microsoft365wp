@@ -15,7 +15,7 @@ export ARM_CLIENT_SECRET='...'
 
 
 data "microsoft365wp_device_management_intent" "one" {
-  id = "29e75170-56c9-4653-8c6b-c9cc06df33d0"
+  id = "9dacf1e4-5297-442d-8a7d-a11ab847becf"
 }
 
 output "microsoft365wp_device_management_intent" {

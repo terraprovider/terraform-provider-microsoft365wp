@@ -1,0 +1,35 @@
+name: Issue status management
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  triage-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@v9
+        with:
+          # Applies to issue with this label
+          only-issue-labels: "waiting-for-requester"
+
+          # Label to add when issue is stale
+          stale-issue-label: "stale"
+          # Label to remove when issue is stale
+          labels-to-remove-when-unstale: "waiting-for-requester"
+
+          # Time to wait before action
+          days-before-issue-stale: 14
+          stale-issue-message: "This issue is waiting for user feedback and has been open for 14 days with no activity."
+          days-before-issue-close: 30
+          close-issue-message: "This issue was closed because it has been inactive for 30 days."
+
+          # Ignore PRs
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+
+          # Token
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

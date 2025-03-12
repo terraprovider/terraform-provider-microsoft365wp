@@ -17,7 +17,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"github.com/manicminer/hamilton/msgraph"
 )
 
 const kErrSummCntW = "Error uploading mobile_app content"
@@ -308,7 +307,7 @@ func (*WriteContentWsa) ensureContentFileUploadStateSuccess(ctx context.Context,
 	fileUri string, statePrefix string, returnAttributeName string) (returnValue string) {
 
 	for {
-		fileBody := r.AccessParams.ReadRaw(ctx, diags, msgraph.Uri{Entity: fileUri}, "", "", nil, false)
+		fileBody := r.AccessParams.ReadRaw(ctx, diags, fileUri, false)
 		if diags.HasError() {
 			return
 		}

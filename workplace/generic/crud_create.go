@@ -2,6 +2,7 @@ package generic
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -59,9 +60,9 @@ func (aps *AccessParams) CreateRaw(ctx context.Context, diags *diag.Diagnostics,
 		return
 	}
 
-	id, ok := rawResult["id"].(string)
+	id, ok := rawResult[aps.IdNameGraph].(string)
 	if !ok {
-		diags.AddError("Unable to parse MS Graph result", "property `id` not found or not of type string")
+		diags.AddError("Unable to parse MS Graph result", fmt.Sprintf("property `%s` not found or not of type string", aps.IdNameGraph))
 		return
 	}
 

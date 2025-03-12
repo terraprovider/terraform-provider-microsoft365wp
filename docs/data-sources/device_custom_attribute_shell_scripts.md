@@ -13,6 +13,23 @@ Please note that almost all information on this page has been sourced literally 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
 
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
+
 ## Example Usage
 
 ```terraform
@@ -46,24 +63,23 @@ output "microsoft365wp_device_custom_attribute_shell_scripts" {
 
 ### Optional
 
-- `exclude_ids` (Set of String) Filter query to exclude objects with these ids.
-- `include_ids` (Set of String) Filter query to only return objects with these ids.
-- `odata_filter` (String) Raw OData $filter string to pass to MS Graph.
+- `exclude_ids` (Set of String) Exclude entities with these ids (using OData `$filter`).
+- `include_ids` (Set of String) Only return entities with these ids (using OData `$filter`).
+- `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
+- `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
+- `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
 
 ### Read-Only
 
-- `device_custom_attribute_shell_scripts` (Attributes Set) (see [below for nested schema](#nestedatt--device_custom_attribute_shell_scripts))
+- `device_custom_attribute_shell_scripts` (Attributes List) (see [below for nested schema](#nestedatt--device_custom_attribute_shell_scripts))
 
 <a id="nestedatt--device_custom_attribute_shell_scripts"></a>
 ### Nested Schema for `device_custom_attribute_shell_scripts`
 
-Required:
-
-- `id` (String) Unique Identifier for the custom attribute entity.
-
 Read-Only:
 
-- `created_date_time` (String) The date and time the device management script was created. This property is read-only.
+- `created_date_time` (String) The date and time the device management script was created. This property is
 - `display_name` (String) Name of the device management script.
-- `last_modified_date_time` (String) The date and time the device management script was last modified. This property is read-only.
-- `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for this PowerShellScript instance. The _provider_ default value is `["0"]`.
+- `id` (String) Unique Identifier for the custom attribute entity.
+- `last_modified_date_time` (String) The date and time the device management script was last modified. This property is
+- `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for this PowerShellScript instance.

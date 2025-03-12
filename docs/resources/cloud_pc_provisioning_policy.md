@@ -31,12 +31,24 @@ export ARM_CLIENT_ID='...'
 export ARM_CLIENT_SECRET='...'
 */
 
+data "microsoft365wp_cloud_pc_gallery_image" "dedicated" {
+  # Win11 with M365 latest
+  publisher_name = "microsoftwindowsdesktop"
+  offer_name     = "windows-ent-cpc"
+  sku_name       = "win11-*-m365"
+  status         = "supported"
+  odata_orderby  = "startDate desc"
+  odata_top      = 1
+}
 
 resource "microsoft365wp_cloud_pc_provisioning_policy" "test_dedicated" {
   display_name = "TF Test - dedicated"
 
-  image_id          = "microsoftwindowsdesktop_windows-ent-cpc_win11-23h2-ent-cpc-m365"
   provisioning_type = "dedicated"
+
+  image_id           = data.microsoft365wp_cloud_pc_gallery_image.dedicated.id
+  image_display_name = data.microsoft365wp_cloud_pc_gallery_image.dedicated.display_name
+  # for custom images, use microsoft365wp_cloud_pc_device_image to lookup details
 
   windows_setting = {
     locale = "en-US"
@@ -57,11 +69,18 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_dedicated" {
 }
 
 
+data "microsoft365wp_cloud_pc_gallery_image" "shared" {
+  id = "microsoftwindowsdesktop_windows-ent-cpc_win11-23h2-ent-cpc-m365"
+}
+
 resource "microsoft365wp_cloud_pc_provisioning_policy" "test_shared" {
   display_name = "TF Test - shared"
 
-  image_id          = "microsoftwindowsdesktop_windows-ent-cpc_win11-23h2-ent-cpc-m365"
   provisioning_type = "sharedByUser"
+
+  image_id           = data.microsoft365wp_cloud_pc_gallery_image.shared.id
+  image_display_name = data.microsoft365wp_cloud_pc_gallery_image.shared.display_name
+  # for custom images, use microsoft365wp_cloud_pc_device_image to lookup details
 
   windows_setting = {
     locale = "en-US"
@@ -91,6 +110,7 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_shared" {
 ### Required
 
 - `display_name` (String) The display name for the provisioning policy.
+- `image_display_name` (String) The display name of the operating system image that is used for provisioning. For example, `Windows 11 Preview + Microsoft 365 Apps 23H2 23H2`. Supports `$filter`, `$select`, and `$orderBy`.
 - `image_id` (String) The unique identifier that represents an operating system image that is used for provisioning new Cloud PCs. The format for a gallery type image is: {publisherName_offerName_skuName}. Supported values for each of the parameters are:<ul><li>publisher: `Microsoftwindowsdesktop`</li> <li>offer: `windows-ent-cpc`</li> <li>sku: `21h1-ent-cpc-m365`, `21h1-ent-cpc-os`, `20h2-ent-cpc-m365`, `20h2-ent-cpc-os`, `20h1-ent-cpc-m365`, `20h1-ent-cpc-os`, `19h2-ent-cpc-m365`, and `19h2-ent-cpc-os`</li></ul> Supports `$filter`, `$select`, and `$orderBy`.
 
 ### Optional
@@ -107,9 +127,9 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_shared" {
 - `grace_period_in_hours` (Number) The number of hours to wait before reprovisioning/deprovisioning happens. Read-only.
 - `image_type` (String) The type of operating system image (custom or gallery) that is used for provisioning on Cloud PCs. The default value is `gallery`. Supports $filter, $select, and $orderBy. / Possible values are: `gallery`, `custom`, `unknownFutureValue`. The _provider_ default value is `"gallery"`.
 - `local_admin_enabled` (Boolean) When `true`, the local admin is enabled for Cloud PCs; `false` indicates that the local admin isn't enabled for Cloud PCs. The default value is `false`. Supports `$filter`, `$select`, and `$orderBy`.
-- `managed_by` (String) Indicates the service that manages the provisioning policy. The default value is `windows365`. You must use the `Prefer: include-unknown-enum-members` request header to get the following value in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `rpaBox`. Supports `$filter`, `$select`, and `$orderBy`. / Possible values are: `windows365`, `devBox`, `unknownFutureValue`, `rpaBox`. The _provider_ default value is `"windows365"`.
+- `managed_by` (String) Indicates the service that manages the provisioning policy. The default value is `windows365`. Use the `Prefer: include-unknown-enum-members` request header to get the following value in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `rpaBox`. Supports `$filter`, `$select`, and `$orderBy`. / Possible values are: `windows365`, `devBox`, `unknownFutureValue`, `rpaBox`. The _provider_ default value is `"windows365"`.
 - `microsoft_managed_desktop` (Attributes) The specific settings to **microsoftManagedDesktop** that enables Microsoft Managed Desktop customers to get device managed experience for Cloud PC. To enable **microsoftManagedDesktop** to provide more value, an admin needs to specify certain settings in it. Supports `$filter`, `$select`, and `$orderBy`. / Represents specific settings for the Microsoft Managed Desktop that enables customers to get a managed device experience for a Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/microsoftmanageddesktop?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--microsoft_managed_desktop))
-- `provisioning_type` (String) Specifies the type of licenses to be used when provisioning Cloud PCs using this policy. The possible values are `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`. You must use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `sharedByUser`, `sharedByEntraGroup`. The `shared` member is deprecated and will stop returning on April 30, 2027; going forward, use the `sharedByUser` member. For example, a `dedicated` service plan can be assigned to only one user and provision only one Cloud PC. The `shared` and `sharedByUser` plans require customers to purchase a shared service plan. Each shared license purchased can enable up to three Cloud PCs, with only one user signed in at a time. The `sharedByEntraGroup` plan also requires the purchase of a shared service plan. Each shared license under this plan can enable one Cloud PC, which is shared for the group according to the assignments of this policy. By default, the license type is `dedicated` if the **provisioningType** isn't specified when you create the **cloudPcProvisioningPolicy**. You can't change this property after the **cloudPcProvisioningPolicy** is created. / Possible values are: `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`
+- `provisioning_type` (String) Specifies the type of licenses to be used when provisioning Cloud PCs using this policy. The possible values are `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`. Use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `sharedByUser`, `sharedByEntraGroup`. The `shared` member is deprecated and will stop returning on April 30, 2027; going forward, use the `sharedByUser` member. For example, a `dedicated` service plan can be assigned to only one user and provision only one Cloud PC. The `shared` and `sharedByUser` plans require customers to purchase a shared service plan. Each shared license purchased can enable up to three Cloud PCs, with only one user signed in at a time. The `sharedByEntraGroup` plan also requires the purchase of a shared service plan. Each shared license under this plan can enable one Cloud PC, which is shared for the group according to the assignments of this policy. By default, the license type is `dedicated` if the **provisioningType** isn't specified when you create the **cloudPcProvisioningPolicy**. You can't change this property after the **cloudPcProvisioningPolicy** is created. / Possible values are: `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`
 - `scope_ids` (Set of String) . The _provider_ default value is `["0"]`.
 - `windows_setting` (Attributes) Indicates a specific Windows setting to configure during the creation of Cloud PCs for this provisioning policy. Supports `$select`. / Represents a specific Windows setting to configure during the creation of Cloud PCs for a provisioning policy. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcwindowssetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows_setting))
 
@@ -174,7 +194,7 @@ Optional:
 
 - `domain_join_type` (String) Specifies the method by which the provisioned Cloud PC joins Microsoft Entra ID. If you choose the `hybridAzureADJoin` type, only provide a value for the **onPremisesConnectionId** property and leave the **regionName** property empty. If you choose the `azureADJoin` type, provide a value for either the **onPremisesConnectionId** or the **regionName** property. / Possible values are: `azureADJoin`, `hybridAzureADJoin`, `unknownFutureValue`. The _provider_ default value is `"azureADJoin"`.
 - `on_premises_connection_id` (String) The Azure network connection ID that matches the virtual network IT admins want the provisioning policy to use when they create Cloud PCs. You can use this property in both domain join types: _Azure AD joined_ or _Hybrid Microsoft Entra joined_. If you enter an **onPremisesConnectionId**, leave the **regionName** property empty.
-- `region_group` (String) The logical geographic group this region belongs to. Multiple regions can belong to one region group. A customer can select a **regionGroup** when they provision a Cloud PC, and the Cloud PC is put in one of the regions in the group based on resource status. For example, the Europe region group contains the Northern Europe and Western Europe regions.and `southKorea`. Read-only. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`
+- `region_group` (String) The logical geographic group this region belongs to. Multiple regions can belong to one region group. A customer can select a **regionGroup** when they provision a Cloud PC, and the Cloud PC is put in one of the regions in the group based on resource status. For example, the Europe region group contains the Northern Europe and Western Europe regions.and `southKorea`. Read-only. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`
 - `region_name` (String) The supported Azure region where the IT admin wants the provisioning policy to create Cloud PCs. The underlying virtual network is created and managed by the Windows 365 service. This can only be entered if the IT admin chooses Microsoft Entra joined as the domain join type. If you enter a **regionName**, leave the **onPremisesConnectionId** property empty.
 - `type` (String) Possible values are: `azureADJoin`, `hybridAzureADJoin`, `unknownFutureValue`. The _provider_ default value is `"azureADJoin"`.
 

@@ -5,13 +5,30 @@ subcategory: "MS Graph: Corporate enrollment"
 
 # microsoft365wp_azure_ad_windows_autopilot_deployment_profile_assignment (Data Source)
 
-**Note**: Due to technical difficulties trying to import this resource from MS Graph will result in an error, i.e. importing of this resource is not possible.
+Provider Note: To import this resource, an ID consisting of `azure_ad_windows_autopilot_deployment_profile_id` and `id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 
 Please note that almost all information on this page has been sourced literally from the official Microsoft Graph API 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
+
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
 
 
 
@@ -21,12 +38,18 @@ All supplements authored by the publishers of this provider have been explicitly
 ### Required
 
 - `azure_ad_windows_autopilot_deployment_profile_id` (String)
+
+### Optional
+
 - `id` (String) The key of the assignment.
+- `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
+- `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
+- `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
 
 ### Read-Only
 
-- `source` (String) The source of the assignment. This property is read-only. / Represents source of assignment; possible values are: `direct` (Direct indicates a direct assignment.), `policySets` (PolicySets indicates assignment was made via PolicySet assignment.)
-- `source_id` (String) The identifier of the source of the assignment. This property is read-only.
+- `source` (String) The source of the assignment. This property is / Represents source of assignment; possible values are: `direct` (Direct indicates a direct assignment.), `policySets` (PolicySets indicates assignment was made via PolicySet assignment.)
+- `source_id` (String) The identifier of the source of the assignment. This property is
 - `target` (Attributes) Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--target))
 
 <a id="nestedatt--target"></a>
@@ -38,7 +61,7 @@ Read-Only:
 - `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--target--all_licensed_users))
 - `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--target--exclusion_group))
 - `filter_id` (String) The ID of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.).
 - `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--target--group))
 
 <a id="nestedatt--target--all_devices"></a>

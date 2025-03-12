@@ -4,7 +4,6 @@
 package generic
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -14,7 +13,7 @@ import (
 )
 
 // based on https://github.com/hashicorp/terraform-plugin-framework/blob/v1.1.1/internal/fwschema/schema.go
-func (t ToFromGraphTranslator) SchemaTypeAtTerraformPath(ctx context.Context, p *tftypes.AttributePath) (attr.Type, error) {
+func (t *ToFromGraphTranslator) SchemaTypeAtTerraformPath(p *tftypes.AttributePath) (attr.Type, error) {
 	rawType, remaining, err := tftypes.WalkAttributePath(t.SchemaRoot, p)
 
 	if err != nil {
@@ -51,7 +50,7 @@ func (t ToFromGraphTranslator) SchemaTypeAtTerraformPath(ctx context.Context, p 
 }
 
 // based on https://github.com/hashicorp/terraform-plugin-framework/blob/v1.1.1/internal/fwschema/schema.go
-func (t ToFromGraphTranslator) SchemaAttributeAtTerraformPath(ctx context.Context, p *tftypes.AttributePath) (rsschema.Attribute, error) {
+func (t *ToFromGraphTranslator) SchemaAttributeAtTerraformPath(p *tftypes.AttributePath) (rsschema.Attribute, error) {
 
 	// ensure for WalkAttributePath to get the attribute itself, not some contained NestedObject
 	switch p.LastStep().(type) {

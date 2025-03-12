@@ -29,13 +29,18 @@ var (
 	CloudPcProvisioningPolicySingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&CloudPcProvisioningPolicyResource)
 
-	CloudPcProvisioningPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&CloudPcProvisioningPolicySingularDataSource, "")
+	CloudPcProvisioningPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&CloudPcProvisioningPolicyResource, "")
 )
 
 var cloudPcProvisioningPolicyReadOptions = generic.ReadOptions{
-	ODataExpand:           "assignments",
-	PluralNoFilterSupport: true,
+	ODataExpand: "assignments",
+	DataSource: generic.DataSourceOptions{
+		NoFilterSupport: true,
+		Plural: generic.PluralOptions{
+			ExtraAttributes: []string{"image_id", "image_type", "managed_by", "provisioning_type"},
+		},
+	},
 }
 
 var cloudPcProvisioningPolicyWriteSubActions = []generic.WriteSubAction{
@@ -125,9 +130,9 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					"region_group": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
-							stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico"),
+							stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico", "australasia", "europe"),
 						},
-						MarkdownDescription: "The logical geographic group this region belongs to. Multiple regions can belong to one region group. A customer can select a **regionGroup** when they provision a Cloud PC, and the Cloud PC is put in one of the regions in the group based on resource status. For example, the Europe region group contains the Northern Europe and Western Europe regions.and `southKorea`. Read-only. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`",
+						MarkdownDescription: "The logical geographic group this region belongs to. Multiple regions can belong to one region group. A customer can select a **regionGroup** when they provision a Cloud PC, and the Cloud PC is put in one of the regions in the group based on resource status. For example, the Europe region group contains the Northern Europe and Western Europe regions.and `southKorea`. Read-only. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`",
 					},
 					"region_name": schema.StringAttribute{
 						Optional:            true,
@@ -156,6 +161,10 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 			Optional:            true,
 			MarkdownDescription: "The number of hours to wait before reprovisioning/deprovisioning happens. Read-only.",
 		},
+		"image_display_name": schema.StringAttribute{
+			Required:            true,
+			MarkdownDescription: "The display name of the operating system image that is used for provisioning. For example, `Windows 11 Preview + Microsoft 365 Apps 23H2 23H2`. Supports `$filter`, `$select`, and `$orderBy`.",
+		},
 		"image_id": schema.StringAttribute{
 			Required:            true,
 			MarkdownDescription: "The unique identifier that represents an operating system image that is used for provisioning new Cloud PCs. The format for a gallery type image is: {publisherName_offerName_skuName}. Supported values for each of the parameters are:<ul><li>publisher: `Microsoftwindowsdesktop`</li> <li>offer: `windows-ent-cpc`</li> <li>sku: `21h1-ent-cpc-m365`, `21h1-ent-cpc-os`, `20h2-ent-cpc-m365`, `20h2-ent-cpc-os`, `20h1-ent-cpc-m365`, `20h1-ent-cpc-os`, `19h2-ent-cpc-m365`, and `19h2-ent-cpc-os`</li></ul> Supports `$filter`, `$select`, and `$orderBy`.",
@@ -180,7 +189,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("windows365")},
 			Computed:            true,
-			MarkdownDescription: "Indicates the service that manages the provisioning policy. The default value is `windows365`. You must use the `Prefer: include-unknown-enum-members` request header to get the following value in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `rpaBox`. Supports `$filter`, `$select`, and `$orderBy`. / Possible values are: `windows365`, `devBox`, `unknownFutureValue`, `rpaBox`. The _provider_ default value is `\"windows365\"`.",
+			MarkdownDescription: "Indicates the service that manages the provisioning policy. The default value is `windows365`. Use the `Prefer: include-unknown-enum-members` request header to get the following value in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `rpaBox`. Supports `$filter`, `$select`, and `$orderBy`. / Possible values are: `windows365`, `devBox`, `unknownFutureValue`, `rpaBox`. The _provider_ default value is `\"windows365\"`.",
 		},
 		"microsoft_managed_desktop": schema.SingleNestedAttribute{
 			Optional: true,
@@ -219,7 +228,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				stringvalidator.OneOf("dedicated", "shared", "unknownFutureValue", "sharedByUser", "sharedByEntraGroup"),
 			},
-			MarkdownDescription: "Specifies the type of licenses to be used when provisioning Cloud PCs using this policy. The possible values are `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`. You must use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `sharedByUser`, `sharedByEntraGroup`. The `shared` member is deprecated and will stop returning on April 30, 2027; going forward, use the `sharedByUser` member. For example, a `dedicated` service plan can be assigned to only one user and provision only one Cloud PC. The `shared` and `sharedByUser` plans require customers to purchase a shared service plan. Each shared license purchased can enable up to three Cloud PCs, with only one user signed in at a time. The `sharedByEntraGroup` plan also requires the purchase of a shared service plan. Each shared license under this plan can enable one Cloud PC, which is shared for the group according to the assignments of this policy. By default, the license type is `dedicated` if the **provisioningType** isn't specified when you create the **cloudPcProvisioningPolicy**. You can't change this property after the **cloudPcProvisioningPolicy** is created. / Possible values are: `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`",
+			MarkdownDescription: "Specifies the type of licenses to be used when provisioning Cloud PCs using this policy. The possible values are `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`. Use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `sharedByUser`, `sharedByEntraGroup`. The `shared` member is deprecated and will stop returning on April 30, 2027; going forward, use the `sharedByUser` member. For example, a `dedicated` service plan can be assigned to only one user and provision only one Cloud PC. The `shared` and `sharedByUser` plans require customers to purchase a shared service plan. Each shared license purchased can enable up to three Cloud PCs, with only one user signed in at a time. The `sharedByEntraGroup` plan also requires the purchase of a shared service plan. Each shared license under this plan can enable one Cloud PC, which is shared for the group according to the assignments of this policy. By default, the license type is `dedicated` if the **provisioningType** isn't specified when you create the **cloudPcProvisioningPolicy**. You can't change this property after the **cloudPcProvisioningPolicy** is created. / Possible values are: `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`",
 		},
 		"scope_ids": schema.SetAttribute{
 			ElementType:         types.StringType,

@@ -13,6 +13,23 @@ Please note that almost all information on this page has been sourced literally 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
 
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
+
 ## Example Usage
 
 ```terraform
@@ -45,15 +62,16 @@ output "microsoft365wp_cloud_pc_provisioning_policies" {
 
 ### Read-Only
 
-- `cloud_pc_provisioning_policies` (Attributes Set) (see [below for nested schema](#nestedatt--cloud_pc_provisioning_policies))
+- `cloud_pc_provisioning_policies` (Attributes List) (see [below for nested schema](#nestedatt--cloud_pc_provisioning_policies))
 
 <a id="nestedatt--cloud_pc_provisioning_policies"></a>
 ### Nested Schema for `cloud_pc_provisioning_policies`
 
-Required:
-
-- `id` (String) The unique identifier associated with the provisioning policy. This ID is auto populated during the creation of a new provisioning policy. Read-only. Supports `$filter`, `$select`, and `$orderBy`.
-
 Read-Only:
 
 - `display_name` (String) The display name for the provisioning policy.
+- `id` (String) The unique identifier associated with the provisioning policy. This ID is auto populated during the creation of a new provisioning policy. Supports `$filter`, `$select`, and `$orderBy`.
+- `image_id` (String) The unique identifier that represents an operating system image that is used for provisioning new Cloud PCs. The format for a gallery type image is: {publisherName_offerName_skuName}. Supported values for each of the parameters are:<ul><li>publisher: `Microsoftwindowsdesktop`</li> <li>offer: `windows-ent-cpc`</li> <li>sku: `21h1-ent-cpc-m365`, `21h1-ent-cpc-os`, `20h2-ent-cpc-m365`, `20h2-ent-cpc-os`, `20h1-ent-cpc-m365`, `20h1-ent-cpc-os`, `19h2-ent-cpc-m365`, and `19h2-ent-cpc-os`</li></ul> Supports `$filter`, `$select`, and `$orderBy`.
+- `image_type` (String) The type of operating system image (custom or gallery) that is used for provisioning on Cloud PCs. Supports $filter, $select, and $orderBy. / Possible values are: `gallery`, `custom`, `unknownFutureValue`.
+- `managed_by` (String) Indicates the service that manages the provisioning policy. Use the `Prefer: include-unknown-enum-members` request header to get the following value in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `rpaBox`. Supports `$filter`, `$select`, and `$orderBy`. / Possible values are: `windows365`, `devBox`, `unknownFutureValue`, `rpaBox`.
+- `provisioning_type` (String) Specifies the type of licenses to be used when provisioning Cloud PCs using this policy. The possible values are `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`. Use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `sharedByUser`, `sharedByEntraGroup`. The `shared` member is deprecated and will stop returning on April 30, 2027; going forward, use the `sharedByUser` member. For example, a `dedicated` service plan can be assigned to only one user and provision only one Cloud PC. The `shared` and `sharedByUser` plans require customers to purchase a shared service plan. Each shared license purchased can enable up to three Cloud PCs, with only one user signed in at a time. The `sharedByEntraGroup` plan also requires the purchase of a shared service plan. Each shared license under this plan can enable one Cloud PC, which is shared for the group according to the assignments of this policy. By default, the license type is `dedicated` if the **provisioningType** isn't specified when you create the **cloudPcProvisioningPolicy**. You can't change this property after the **cloudPcProvisioningPolicy** is created. / Possible values are: `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`

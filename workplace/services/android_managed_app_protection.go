@@ -31,8 +31,8 @@ var (
 	AndroidManagedAppProtectionSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&AndroidManagedAppProtectionResource)
 
-	AndroidManagedAppProtectionPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&AndroidManagedAppProtectionSingularDataSource, "")
+	AndroidManagedAppProtectionPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&AndroidManagedAppProtectionResource, "")
 )
 
 var androidManagedAppProtectionReadOptions = generic.ReadOptions{
@@ -374,9 +374,7 @@ var androidManagedAppProtectionResourceSchema = schema.Schema{
 		},
 		"pin_required_instead_of_biometric_timeout": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("PT30M")},
-			Computed:            true,
-			MarkdownDescription: "Timeout in minutes for an app pin instead of non biometrics passcode. The _provider_ default value is `\"PT30M\"`.",
+			MarkdownDescription: "Timeout in minutes for an app pin instead of non biometrics passcode",
 		},
 		"previous_pin_block_count": schema.Int64Attribute{
 			Optional:            true,
@@ -622,9 +620,7 @@ var androidManagedAppProtectionResourceSchema = schema.Schema{
 		},
 		"fingerprint_and_biometric_enabled": schema.BoolAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
-			Computed:            true,
-			MarkdownDescription: "If null, this setting will be ignored. If false both fingerprints and biometrics will not be enabled. If true, both fingerprints and biometrics will be enabled. The _provider_ default value is `true`.",
+			MarkdownDescription: "If null, this setting will be ignored. If false both fingerprints and biometrics will not be enabled. If true, both fingerprints and biometrics will be enabled.",
 		},
 		"keyboards_restricted": schema.BoolAttribute{
 			Optional:            true,

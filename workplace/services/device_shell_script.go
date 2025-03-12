@@ -27,8 +27,8 @@ var (
 	DeviceShellScriptSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&DeviceShellScriptResource)
 
-	DeviceShellScriptPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&DeviceShellScriptSingularDataSource, "")
+	DeviceShellScriptPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&DeviceShellScriptResource, "")
 )
 
 var deviceShellScriptReadOptions = generic.ReadOptions{

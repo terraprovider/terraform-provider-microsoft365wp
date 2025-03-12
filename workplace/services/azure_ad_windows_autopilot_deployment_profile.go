@@ -7,6 +7,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -26,11 +27,11 @@ var (
 	AzureAdWindowsAutopilotDeploymentProfileSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&AzureAdWindowsAutopilotDeploymentProfileResource)
 
-	AzureAdWindowsAutopilotDeploymentProfilePluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&AzureAdWindowsAutopilotDeploymentProfileSingularDataSource, "")
+	AzureAdWindowsAutopilotDeploymentProfilePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&AzureAdWindowsAutopilotDeploymentProfileResource, "")
 )
 
-func azureAdWindowsAutopilotDeploymentProfileTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func azureAdWindowsAutopilotDeploymentProfileTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	params.RawVal["@odata.type"] = "#microsoft.graph.azureADWindowsAutopilotDeploymentProfile"
 	return nil
 }
@@ -38,7 +39,7 @@ func azureAdWindowsAutopilotDeploymentProfileTerraformToGraphMiddleware(ctx cont
 var (
 	AzureAdWindowsAutopilotDeploymentProfileAssignmentResource           = GetAssignmentChildResource(&AzureAdWindowsAutopilotDeploymentProfileResource, true)
 	AzureAdWindowsAutopilotDeploymentProfileAssignmentSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(&AzureAdWindowsAutopilotDeploymentProfileAssignmentResource)
-	AzureAdWindowsAutopilotDeploymentProfileAssignmentPluralDataSource   = generic.CreateGenericDataSourcePluralFromSingular(&AzureAdWindowsAutopilotDeploymentProfileAssignmentSingularDataSource, "")
+	AzureAdWindowsAutopilotDeploymentProfileAssignmentPluralDataSource   = generic.CreateGenericDataSourcePluralFromResource(&AzureAdWindowsAutopilotDeploymentProfileAssignmentResource, "")
 )
 
 var azureAdWindowsAutopilotDeploymentProfileResourceSchema = schema.Schema{

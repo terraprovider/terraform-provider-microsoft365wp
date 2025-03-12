@@ -1,0 +1,61 @@
+name: Bug Report
+description: File a bug report.
+title: "Bug: "
+labels: ["triage"]
+type: Bug
+body:
+
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: input
+    id: provider-version
+    attributes:
+      label: Provider Version
+      description: Please specify the version of the provider you are using.
+      placeholder: "e.g., .15.1"
+
+  - type: textarea
+    id: terraform-configuration
+    attributes:
+      label: Terraform Configuration
+      description: Please provide the relevant (reproducible) Terraform configuration in HCL format.
+      placeholder: |
+        ```hcl
+        resource "microsoft365wp_device_compliance_policy" "android" {
+          display_name               = "TF Test Android"
+          scheduled_actions_for_rule = [{ scheduled_action_configurations = [{}] }]
+          android = {
+            password_required = true
+          }
+        }
+        ```
+
+  - type: textarea
+    id: error-output
+    attributes:
+      label: Error Output
+      description: Please provide any error messages or logs that are relevant to this issue.
+      placeholder: |
+        ```
+        Paste your error output here
+        ```
+
+  - type: textarea
+    id: additional-details
+    attributes:
+      label: Additional Details
+      description: Please provide any additional details that may be relevant to this issue.
+      placeholder: |
+        Add any additional details here
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Duplicate Search
+      description: Please confirm that you have searched all existing issues to ensure this is not a duplicate.
+      options:
+        - label: I agree
+          required: true

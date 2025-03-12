@@ -21,10 +21,10 @@ locals {
 }
 
 resource "microsoft365wp_device_management_configuration_policy_json" "main" {
-  for_each      = local.policies
-  name          = each.value.name
-  description   = each.value.description
-  platforms     = each.value.platforms
-  technologies  = each.value.technologies
-  settings_json = [for x in each.value.settings : jsonencode(x.settingInstance)]
+  for_each     = local.policies
+  name         = each.value.name
+  description  = each.value.description
+  platforms    = each.value.platforms
+  technologies = each.value.technologies
+  settings     = [for x in each.value.settings : { instance_json = jsonencode(x.settingInstance) }]
 }

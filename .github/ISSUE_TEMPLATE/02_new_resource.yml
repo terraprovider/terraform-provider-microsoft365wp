@@ -1,0 +1,42 @@
+name: New TerraProvider Resource
+description: Request a new resource.
+title: "New Resource: "
+labels: ["triage"]
+type: Feature
+body:
+
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for submitting a new resource request!
+
+  - type: textarea
+    id: msgraph-reference
+    attributes:
+      label: Microsoft Graph Reference
+      description: Please provide a link to the Microsoft Graph reference for the resource you are requesting.
+      placeholder: "e.g., https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicecompliancepolicy?view=graph-rest-beta"
+
+  - type: textarea
+    id: additional-details
+    attributes:
+      label: Additional Details
+      description: Please provide screenshots describing configuration of the resource, or any other relevant information.
+      placeholder: |
+        Add any additional details here
+
+  - type: input
+    id: provider-version
+    attributes:
+      label: Provider Version
+      description: Please specify the version of the provider you are using.
+      placeholder: "e.g., .15.1"
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Duplicate Search
+      description: Please confirm that you have searched all existing issues to ensure this is not a duplicate.
+      options:
+        - label: I agree
+          required: true

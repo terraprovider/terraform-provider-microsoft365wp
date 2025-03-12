@@ -13,6 +13,23 @@ Please note that almost all information on this page has been sourced literally 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
 
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
+
 ## Example Usage
 
 ```terraform
@@ -46,20 +63,18 @@ output "microsoft365wp_device_configurations" {
 
 ### Optional
 
-- `exclude_ids` (Set of String) Filter query to exclude objects with these ids.
-- `include_ids` (Set of String) Filter query to only return objects with these ids.
-- `odata_filter` (String) Raw OData $filter string to pass to MS Graph.
+- `exclude_ids` (Set of String) Exclude entities with these ids (using OData `$filter`).
+- `include_ids` (Set of String) Only return entities with these ids (using OData `$filter`).
+- `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
+- `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
+- `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
 
 ### Read-Only
 
-- `device_configurations` (Attributes Set) (see [below for nested schema](#nestedatt--device_configurations))
+- `device_configurations` (Attributes List) (see [below for nested schema](#nestedatt--device_configurations))
 
 <a id="nestedatt--device_configurations"></a>
 ### Nested Schema for `device_configurations`
-
-Required:
-
-- `id` (String) Key of the entity.
 
 Read-Only:
 
@@ -68,6 +83,7 @@ Read-Only:
 - `created_date_time` (String) DateTime the object was created.
 - `display_name` (String) Admin provided name of the device configuration.
 - `edition_upgrade` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.editionUpgradeConfiguration` (using e.g. `if x.edition_upgrade != null`). (see [below for nested schema](#nestedatt--device_configurations--edition_upgrade))
+- `id` (String) Key of the entity.
 - `ios_custom` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.iosCustomConfiguration` (using e.g. `if x.ios_custom != null`). (see [below for nested schema](#nestedatt--device_configurations--ios_custom))
 - `ios_device_features` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.iosDeviceFeaturesConfiguration` (using e.g. `if x.ios_device_features != null`). (see [below for nested schema](#nestedatt--device_configurations--ios_device_features))
 - `ios_eas_email_profile` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.iosEasEmailProfileConfiguration` (using e.g. `if x.ios_eas_email_profile != null`). (see [below for nested schema](#nestedatt--device_configurations--ios_eas_email_profile))
@@ -80,8 +96,9 @@ Read-Only:
 - `macos_device_features` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.macOSDeviceFeaturesConfiguration` (using e.g. `if x.macos_device_features != null`). (see [below for nested schema](#nestedatt--device_configurations--macos_device_features))
 - `macos_extensions` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.macOSExtensionsConfiguration` (using e.g. `if x.macos_extensions != null`). (see [below for nested schema](#nestedatt--device_configurations--macos_extensions))
 - `macos_software_update` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.macOSSoftwareUpdateConfiguration` (using e.g. `if x.macos_software_update != null`). (see [below for nested schema](#nestedatt--device_configurations--macos_software_update))
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. The _provider_ default value is `["0"]`.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
 - `version` (Number) Version of the device configuration.
+- `windows10_general` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windows10GeneralConfiguration` (using e.g. `if x.windows10_general != null`). (see [below for nested schema](#nestedatt--device_configurations--windows10_general))
 - `windows_health_monitoring` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windowsHealthMonitoringConfiguration` (using e.g. `if x.windows_health_monitoring != null`). (see [below for nested schema](#nestedatt--device_configurations--windows_health_monitoring))
 - `windows_update_for_business` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windowsUpdateForBusinessConfiguration` (using e.g. `if x.windows_update_for_business != null`). (see [below for nested schema](#nestedatt--device_configurations--windows_update_for_business))
 
@@ -139,6 +156,10 @@ Read-Only:
 
 <a id="nestedatt--device_configurations--macos_software_update"></a>
 ### Nested Schema for `device_configurations.macos_software_update`
+
+
+<a id="nestedatt--device_configurations--windows10_general"></a>
+### Nested Schema for `device_configurations.windows10_general`
 
 
 <a id="nestedatt--device_configurations--windows_health_monitoring"></a>

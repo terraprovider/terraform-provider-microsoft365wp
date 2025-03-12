@@ -13,6 +13,23 @@ Please note that almost all information on this page has been sourced literally 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
 
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
+
 ## Example Usage
 
 ```terraform
@@ -52,11 +69,11 @@ The following authentication methods are derived from the **authenticationMethod
 - `display_name` (String) The name of the policy.
 - `id` (String) The identifier of the policy.
 - `last_modified_date_time` (String) The date and time of the last update to the policy.
-- `policy_migration_state` (String) The state of migration of the authentication methods policy from the legacy multifactor authentication and self-service password reset (SSPR) policies. The possible values are: <br/><li>`premigration` - means the authentication methods policy is used for authentication only, legacy policies are respected. <li>`migrationInProgress` - means the authentication methods policy is used for both authentication and SSPR, legacy policies are respected. <li>`migrationComplete` - means the authentication methods policy is used for authentication and SSPR, legacy policies are ignored. <li>`unknownFutureValue` - Evolvable enumeration sentinel value. Don't use. / Possible values are: `preMigration`, `migrationInProgress`, `migrationComplete`, `unknownFutureValue`. The _provider_ default value is `"migrationInProgress"`.
+- `policy_migration_state` (String) The state of migration of the authentication methods policy from the legacy multifactor authentication and self-service password reset (SSPR) policies. The possible values are: <br/><li>`premigration` - means the authentication methods policy is used for authentication only, legacy policies are respected. <li>`migrationInProgress` - means the authentication methods policy is used for both authentication and SSPR, legacy policies are respected. <li>`migrationComplete` - means the authentication methods policy is used for authentication and SSPR, legacy policies are ignored. <li>`unknownFutureValue` - Evolvable enumeration sentinel value. Don't use. / Possible values are: `preMigration`, `migrationInProgress`, `migrationComplete`, `unknownFutureValue`
 - `policy_version` (String) The version of the policy in use.
-- `registration_enforcement` (Attributes) Enforce registration at sign-in time. This property can be used to remind users to set up targeted authentication methods. / Enforce registration at sign-in time. This can currently only be used to remind users to set up targeted authentication methods (Microsoft Authenticator) using the 'authenticationMethodsRegistrationCampaign`. / https://learn.microsoft.com/en-us/graph/api/resources/registrationenforcement?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--registration_enforcement))
-- `report_suspicious_activity_settings` (Attributes) Enable users to report unexpected voice call or phone app notification multi-factor authentication prompts as suspicious. / Defines the report suspicious activity settings for the tenant, whether it's enabled and which group of users is enabled for use. Report suspicious activity enables users to report a suspicious voice or phone app notification multifactor authentication prompt as suspicious. These users have their user risk set to `high`, and a [risk detection](riskdetection.md) **riskEventType** of `userReportedSuspiciousActivity` is emitted. / https://learn.microsoft.com/en-us/graph/api/resources/reportsuspiciousactivitysettings?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--report_suspicious_activity_settings))
-- `system_credential_preferences` (Attributes) Prompt users with their most-preferred credential for multifactor authentication. / Dynamically detects and prompts users with their preferred multifactor authentication method from the registered methods. / https://learn.microsoft.com/en-us/graph/api/resources/systemcredentialpreferences?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--system_credential_preferences))
+- `registration_enforcement` (Attributes) Enforce registration at sign-in time. This property can be used to remind users to set up targeted authentication methods. / Enforce registration at sign-in time. This can currently only be used to remind users to set up targeted authentication methods (Microsoft Authenticator) using the 'authenticationMethodsRegistrationCampaign`. / https://learn.microsoft.com/en-us/graph/api/resources/registrationenforcement?view=graph-rest-beta. (see [below for nested schema](#nestedatt--registration_enforcement))
+- `report_suspicious_activity_settings` (Attributes) Enable users to report unexpected voice call or phone app notification multi-factor authentication prompts as suspicious. / Defines the report suspicious activity settings for the tenant, whether it's enabled and which group of users is enabled for use. Report suspicious activity enables users to report a suspicious voice or phone app notification multifactor authentication prompt as suspicious. These users have their user risk set to `high`, and a [risk detection](riskdetection.md) **riskEventType** of `userReportedSuspiciousActivity` is emitted. / https://learn.microsoft.com/en-us/graph/api/resources/reportsuspiciousactivitysettings?view=graph-rest-beta. (see [below for nested schema](#nestedatt--report_suspicious_activity_settings))
+- `system_credential_preferences` (Attributes) Prompt users with their most-preferred credential for multifactor authentication. / Dynamically detects and prompts users with their preferred multifactor authentication method from the registered methods. / https://learn.microsoft.com/en-us/graph/api/resources/systemcredentialpreferences?view=graph-rest-beta. (see [below for nested schema](#nestedatt--system_credential_preferences))
 
 <a id="nestedatt--authentication_method_configurations"></a>
 ### Nested Schema for `authentication_method_configurations`
@@ -64,7 +81,7 @@ The following authentication methods are derived from the **authenticationMethod
 Read-Only:
 
 - `email` (Attributes) Represents this tenant's email one-time passcode (OTP) authentication methods policy. Authentication methods policies define configuration settings and users or groups who are enabled to use the authentication method. The tenant's cloud-native users may use email OTP for self-service password reset. External users can use email OTP for authentication during invitation redemption and self-service sign-up for specific apps in user flows. / https://learn.microsoft.com/en-us/graph/api/resources/emailauthenticationmethodconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--email))
-- `exclude_targets` (Attributes Set) Groups of users that are excluded from a policy. / Represents the users or groups of users that are excluded from a policy. / https://learn.microsoft.com/en-us/graph/api/resources/excludetarget?view=graph-rest-beta. The _provider_ default value is `[]`. (see [below for nested schema](#nestedatt--authentication_method_configurations--exclude_targets))
+- `exclude_targets` (Attributes Set) Groups of users that are excluded from a policy. / Represents the users or groups of users that are excluded from a policy. / https://learn.microsoft.com/en-us/graph/api/resources/excludetarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--exclude_targets))
 - `fido2` (Attributes) Represents a FIDO2 authentication methods policy. Authentication methods policies define configuration settings and users or groups who are enabled to use the authentication method. / https://learn.microsoft.com/en-us/graph/api/resources/fido2authenticationmethodconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--fido2))
 - `hardware_oath` (Attributes) Represents a Hardware OATH authentication method policy. Authentication method policies define configuration settings and users or groups that are enabled to use the authentication method. / https://learn.microsoft.com/en-us/graph/api/resources/hardwareoathauthenticationmethodconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--hardware_oath))
 - `id` (String) The policy name.
@@ -81,10 +98,10 @@ Read-Only:
 
 Read-Only:
 
-- `allow_external_id_to_use_email_otp` (String) Determines whether email OTP is usable by external users for authentication. Tenants in the `default` state who didn't use the *beta* API automatically have email OTP enabled beginning in October 2021. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`. The _provider_ default value is `"default"`.
+- `allow_external_id_to_use_email_otp` (String) Determines whether email OTP is usable by external users for authentication. Tenants in the `default` state who didn't use the *beta* API automatically have email OTP enabled beginning in October 2021. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`.
 - `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID.
 
-The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `[]`. (see [below for nested schema](#nestedatt--authentication_method_configurations--email--include_targets))
+The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--email--include_targets))
 
 <a id="nestedatt--authentication_method_configurations--email--include_targets"></a>
 ### Nested Schema for `authentication_method_configurations.email.include_targets`
@@ -92,7 +109,7 @@ The following types are derived from this resource type: / https://learn.microso
 Read-Only:
 
 - `id` (String) Object identifier of a Microsoft Entra user or group.
-- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method. The _provider_ default value is `false`.
+- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method.
 - `target_type` (String) and `unknownFutureValue`. From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. / Possible values are: `user`, `group`, `unknownFutureValue`
 
 
@@ -111,10 +128,10 @@ Read-Only:
 
 Read-Only:
 
-- `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use a passkey (FIDO2) authentication method as part of a passkey (FIDO2) authentication method policy in Microsoft Entra ID. / https://learn.microsoft.com/en-us/graph/api/resources/passkeyauthenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--fido2--include_targets))
-- `is_attestation_enforced` (Boolean) Determines whether attestation must be enforced for FIDO2 security key registration. The _provider_ default value is `false`.
-- `is_self_service_registration_allowed` (Boolean) Determines if users can register new FIDO2 security keys. The _provider_ default value is `true`.
-- `key_restrictions` (Attributes) Controls whether key restrictions are enforced on FIDO2 security keys, either allowing or disallowing certain key types as defined by Authenticator Attestation GUID (AAGUID), an identifier that indicates the type (e.g. make and model) of the authenticator. / Represents the key restrictions that are enforced as part of the [FIDO2 security keys authentication methods policy](../resources/fido2authenticationmethodconfiguration.md). / https://learn.microsoft.com/en-us/graph/api/resources/fido2keyrestrictions?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--authentication_method_configurations--fido2--key_restrictions))
+- `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use a passkey (FIDO2) authentication method as part of a passkey (FIDO2) authentication method policy in Microsoft Entra ID. / https://learn.microsoft.com/en-us/graph/api/resources/passkeyauthenticationmethodtarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--fido2--include_targets))
+- `is_attestation_enforced` (Boolean) Determines whether attestation must be enforced for FIDO2 security key registration.
+- `is_self_service_registration_allowed` (Boolean) Determines if users can register new FIDO2 security keys.
+- `key_restrictions` (Attributes) Controls whether key restrictions are enforced on FIDO2 security keys, either allowing or disallowing certain key types as defined by Authenticator Attestation GUID (AAGUID), an identifier that indicates the type (e.g. make and model) of the authenticator. / Represents the key restrictions that are enforced as part of the [FIDO2 security keys authentication methods policy](../resources/fido2authenticationmethodconfiguration.md). / https://learn.microsoft.com/en-us/graph/api/resources/fido2keyrestrictions?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--fido2--key_restrictions))
 
 <a id="nestedatt--authentication_method_configurations--fido2--include_targets"></a>
 ### Nested Schema for `authentication_method_configurations.fido2.include_targets`
@@ -122,7 +139,7 @@ Read-Only:
 Read-Only:
 
 - `id` (String) Object identifier of a Microsoft Entra user or group.
-- `is_registration_required` (Boolean) Indicates whether the user is required to register the authentication method. The _provider_ default value is `false`.
+- `is_registration_required` (Boolean) Indicates whether the user is required to register the authentication method.
 - `target_type` (String) The authentication method type. Theand `unknownFutureValue`. Effective December 2022, the `user` target value is no longer recommended. We recommend moving individual users to a targeted group. / Possible values are: `user`, `group`, `unknownFutureValue`
 
 
@@ -131,9 +148,9 @@ Read-Only:
 
 Read-Only:
 
-- `aa_guids` (Set of String) A collection of Authenticator Attestation GUIDs. AADGUIDs define key types and manufacturers. The _provider_ default value is `[]`.
-- `enforcement_type` (String) Enforcement type. / Possible values are: `allow`, `block`, `unknownFutureValue`. The _provider_ default value is `"block"`.
-- `is_enforced` (Boolean) Determines if the configured key enforcement is enabled. The _provider_ default value is `false`.
+- `aa_guids` (Set of String) A collection of Authenticator Attestation GUIDs. AADGUIDs define key types and manufacturers.
+- `enforcement_type` (String) Enforcement type. / Possible values are: `allow`, `block`, `unknownFutureValue`.
+- `is_enforced` (Boolean) Determines if the configured key enforcement is enabled.
 
 
 
@@ -144,7 +161,7 @@ Read-Only:
 
 - `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. Expanded by default. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID.
 
-The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--hardware_oath--include_targets))
+The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--hardware_oath--include_targets))
 
 <a id="nestedatt--authentication_method_configurations--hardware_oath--include_targets"></a>
 ### Nested Schema for `authentication_method_configurations.hardware_oath.include_targets`
@@ -152,7 +169,7 @@ The following types are derived from this resource type: / https://learn.microso
 Read-Only:
 
 - `id` (String) Object identifier of a Microsoft Entra user or group.
-- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method. The _provider_ default value is `false`.
+- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method.
 - `target_type` (String) and `unknownFutureValue`. From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. / Possible values are: `user`, `group`, `unknownFutureValue`
 
 
@@ -162,27 +179,27 @@ Read-Only:
 
 Read-Only:
 
-- `feature_settings` (Attributes) A collection of Microsoft Authenticator settings such as number matching and location context, and whether they are enabled for all users or specific users only. / Represents Microsoft Authenticator settings such as number matching and location context, and whether they're enabled for all users or specific users only. / https://learn.microsoft.com/en-us/graph/api/resources/microsoftauthenticatorfeaturesettings?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings))
-- `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. Expanded by default. / A collection of groups enabled to use [Microsoft Authenticator authentication methods policy](../resources/microsoftAuthenticatorAuthenticationMethodConfiguration.md) in Microsoft Entra ID. / https://learn.microsoft.com/en-us/graph/api/resources/microsoftauthenticatorauthenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--include_targets))
-- `is_software_oath_enabled` (Boolean) `true` if users can use the OTP code generated by the Microsoft Authenticator app, `false` otherwise. The _provider_ default value is `false`.
+- `feature_settings` (Attributes) A collection of Microsoft Authenticator settings such as number matching and location context, and whether they are enabled for all users or specific users only. / Represents Microsoft Authenticator settings such as number matching and location context, and whether they're enabled for all users or specific users only. / https://learn.microsoft.com/en-us/graph/api/resources/microsoftauthenticatorfeaturesettings?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings))
+- `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. Expanded by default. / A collection of groups enabled to use [Microsoft Authenticator authentication methods policy](../resources/microsoftAuthenticatorAuthenticationMethodConfiguration.md) in Microsoft Entra ID. / https://learn.microsoft.com/en-us/graph/api/resources/microsoftauthenticatorauthenticationmethodtarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--include_targets))
+- `is_software_oath_enabled` (Boolean) `true` if users can use the OTP code generated by the Microsoft Authenticator app, `false` otherwise.
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings"></a>
 ### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings`
 
 Read-Only:
 
-- `companion_app_allowed_state` (Attributes) Determines whether users are able to approve push notifications on other Microsoft applications such as Outlook Mobile. / Defines the features that are allowed for different authentication methods. For each authentication method, defines the users who are enabled to use or excluded from using the feature. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodfeatureconfiguration?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state))
-- `display_app_information_required_state` (Attributes) Determines whether the user's Authenticator app shows them the client app they're signing into. / Defines the features that are allowed for different authentication methods. For each authentication method, defines the users who are enabled to use or excluded from using the feature. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodfeatureconfiguration?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state))
-- `display_location_information_required_state` (Attributes) Determines whether the user's Authenticator app shows them the geographic location of where the authentication request originated from. / Defines the features that are allowed for different authentication methods. For each authentication method, defines the users who are enabled to use or excluded from using the feature. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodfeatureconfiguration?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state))
+- `companion_app_allowed_state` (Attributes) Determines whether users are able to approve push notifications on other Microsoft applications such as Outlook Mobile. / Defines the features that are allowed for different authentication methods. For each authentication method, defines the users who are enabled to use or excluded from using the feature. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodfeatureconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state))
+- `display_app_information_required_state` (Attributes) Determines whether the user's Authenticator app shows them the client app they're signing into. / Defines the features that are allowed for different authentication methods. For each authentication method, defines the users who are enabled to use or excluded from using the feature. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodfeatureconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state))
+- `display_location_information_required_state` (Attributes) Determines whether the user's Authenticator app shows them the geographic location of where the authentication request originated from. / Defines the features that are allowed for different authentication methods. For each authentication method, defines the users who are enabled to use or excluded from using the feature. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodfeatureconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state))
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state"></a>
 ### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.companion_app_allowed_state`
 
 Read-Only:
 
-- `exclude_target` (Attributes) A single entity that's excluded from using this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetDefaultNoGroup`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state--exclude_target))
-- `include_target` (Attributes) A single entity that's allowed to use this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state--include_target))
-- `state` (String) Enable or disable the feature. The `default` value is used when the configuration hasn't been explicitly set and uses the default behavior of Microsoft Entra ID for the setting. The default value is `disabled`. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`. The _provider_ default value is `"default"`.
+- `exclude_target` (Attributes) A single entity that's excluded from using this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state--exclude_target))
+- `include_target` (Attributes) A single entity that's allowed to use this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state--include_target))
+- `state` (String) Enable or disable the feature. The `default` value is used when the configuration hasn't been explicitly set and uses the default behavior of Microsoft Entra ID for the setting. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`.
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--companion_app_allowed_state--exclude_target"></a>
 ### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.companion_app_allowed_state.exclude_target`
@@ -208,9 +225,9 @@ Read-Only:
 
 Read-Only:
 
-- `exclude_target` (Attributes) A single entity that's excluded from using this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetDefaultNoGroup`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state--exclude_target))
-- `include_target` (Attributes) A single entity that's allowed to use this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state--include_target))
-- `state` (String) Enable or disable the feature. The `default` value is used when the configuration hasn't been explicitly set and uses the default behavior of Microsoft Entra ID for the setting. The default value is `disabled`. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`. The _provider_ default value is `"default"`.
+- `exclude_target` (Attributes) A single entity that's excluded from using this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state--exclude_target))
+- `include_target` (Attributes) A single entity that's allowed to use this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state--include_target))
+- `state` (String) Enable or disable the feature. The `default` value is used when the configuration hasn't been explicitly set and uses the default behavior of Microsoft Entra ID for the setting. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`.
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_app_information_required_state--exclude_target"></a>
 ### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_app_information_required_state.exclude_target`
@@ -236,9 +253,9 @@ Read-Only:
 
 Read-Only:
 
-- `exclude_target` (Attributes) A single entity that's excluded from using this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetDefaultNoGroup`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target))
-- `include_target` (Attributes) A single entity that's allowed to use this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target))
-- `state` (String) Enable or disable the feature. The `default` value is used when the configuration hasn't been explicitly set and uses the default behavior of Microsoft Entra ID for the setting. The default value is `disabled`. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`. The _provider_ default value is `"default"`.
+- `exclude_target` (Attributes) A single entity that's excluded from using this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target))
+- `include_target` (Attributes) A single entity that's allowed to use this feature. / Defines a single group, Microsoft Entra role, or administrative unit that is included or excluded in the settings specified in the [authenticationMethodFeatureConfiguration](authenticationmethodfeatureconfiguration.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/featuretarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--include_target))
+- `state` (String) Enable or disable the feature. The `default` value is used when the configuration hasn't been explicitly set and uses the default behavior of Microsoft Entra ID for the setting. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`.
 
 <a id="nestedatt--authentication_method_configurations--microsoft_authenticator--feature_settings--display_location_information_required_state--exclude_target"></a>
 ### Nested Schema for `authentication_method_configurations.microsoft_authenticator.feature_settings.display_location_information_required_state.exclude_target`
@@ -265,9 +282,9 @@ Read-Only:
 
 Read-Only:
 
-- `authentication_mode` (String) Determines which types of notifications can be used for sign-in. The(passwordless only), `push`, and `any`. / Possible values are: `deviceBasedPush`, `push`, `any`. The _provider_ default value is `"any"`.
+- `authentication_mode` (String) Determines which types of notifications can be used for sign-in. The(passwordless only), `push`, and `any`. / Possible values are: `deviceBasedPush`, `push`, `any`.
 - `id` (String) Object identifier of a Microsoft Entra user or group.
-- `is_registration_required` (Boolean) Determines whether the user is enforced to register the authentication method. **Not supported**. The _provider_ default value is `false`.
+- `is_registration_required` (Boolean) Determines whether the user is enforced to register the authentication method. **Not supported**.
 - `target_type` (String) and `unknownFutureValue`. From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. / Possible values are: `user`, `group`, `unknownFutureValue`
 
 
@@ -277,7 +294,7 @@ Read-Only:
 
 Read-Only:
 
-- `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups enabled to use [text message authentication methods policy](../resources/smsAuthenticationMethodConfiguration.md) in Microsoft Entra ID. / https://learn.microsoft.com/en-us/graph/api/resources/smsauthenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--sms--include_targets))
+- `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups enabled to use [text message authentication methods policy](../resources/smsAuthenticationMethodConfiguration.md) in Microsoft Entra ID. / https://learn.microsoft.com/en-us/graph/api/resources/smsauthenticationmethodtarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--sms--include_targets))
 
 <a id="nestedatt--authentication_method_configurations--sms--include_targets"></a>
 ### Nested Schema for `authentication_method_configurations.sms.include_targets`
@@ -285,8 +302,8 @@ Read-Only:
 Read-Only:
 
 - `id` (String) Object ID of a Microsoft Entra user or group.
-- `is_registration_required` (Boolean) Determines whether the user is enforced to register the authentication method. **Not supported**. The _provider_ default value is `false`.
-- `is_usable_for_sign_in` (Boolean) Determines if users can use this authentication method to sign in to Microsoft Entra ID. `true` if users can use this method for primary authentication, otherwise `false`. The _provider_ default value is `true`.
+- `is_registration_required` (Boolean) Determines whether the user is enforced to register the authentication method. **Not supported**.
+- `is_usable_for_sign_in` (Boolean) Determines if users can use this authentication method to sign in to Microsoft Entra ID. `true` if users can use this method for primary authentication, otherwise `false`.
 - `target_type` (String) and `unknownFutureValue`. From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. / Possible values are: `user`, `group`, `unknownFutureValue`
 
 
@@ -298,7 +315,7 @@ Read-Only:
 
 - `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. Expanded by default. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID.
 
-The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--software_oath--include_targets))
+The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--software_oath--include_targets))
 
 <a id="nestedatt--authentication_method_configurations--software_oath--include_targets"></a>
 ### Nested Schema for `authentication_method_configurations.software_oath.include_targets`
@@ -306,7 +323,7 @@ The following types are derived from this resource type: / https://learn.microso
 Read-Only:
 
 - `id` (String) Object identifier of a Microsoft Entra user or group.
-- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method. The _provider_ default value is `false`.
+- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method.
 - `target_type` (String) and `unknownFutureValue`. From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. / Possible values are: `user`, `group`, `unknownFutureValue`
 
 
@@ -316,14 +333,14 @@ Read-Only:
 
 Read-Only:
 
-- `default_length` (Number) Default length in characters of a Temporary Access Pass object. Must be between 8 and 48 characters. The _provider_ default value is `8`.
-- `default_lifetime_in_minutes` (Number) Default lifetime in minutes for a Temporary Access Pass. Value can be any integer between the **minimumLifetimeInMinutes** and **maximumLifetimeInMinutes**. The _provider_ default value is `60`.
+- `default_length` (Number) Default length in characters of a Temporary Access Pass object. Must be between 8 and 48 characters.
+- `default_lifetime_in_minutes` (Number) Default lifetime in minutes for a Temporary Access Pass. Value can be any integer between the **minimumLifetimeInMinutes** and **maximumLifetimeInMinutes**.
 - `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID.
 
-The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--temporary_access_pass--include_targets))
-- `is_usable_once` (Boolean) If `true`, all the passes in the tenant will be restricted to one-time use. If `false`, passes in the tenant can be created to be either one-time use or reusable. The _provider_ default value is `false`.
-- `maximum_lifetime_in_minutes` (Number) Maximum lifetime in minutes for any Temporary Access Pass created in the tenant. Value can be between 10 and 43200 minutes (equivalent to 30 days). The _provider_ default value is `480`.
-- `minimum_lifetime_in_minutes` (Number) Minimum lifetime in minutes for any Temporary Access Pass created in the tenant. Value can be between 10 and 43200 minutes (equivalent to 30 days). The _provider_ default value is `60`.
+The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--temporary_access_pass--include_targets))
+- `is_usable_once` (Boolean) If `true`, all the passes in the tenant will be restricted to one-time use. If `false`, passes in the tenant can be created to be either one-time use or reusable.
+- `maximum_lifetime_in_minutes` (Number) Maximum lifetime in minutes for any Temporary Access Pass created in the tenant. Value can be between 10 and 43200 minutes (equivalent to 30 days).
+- `minimum_lifetime_in_minutes` (Number) Minimum lifetime in minutes for any Temporary Access Pass created in the tenant. Value can be between 10 and 43200 minutes (equivalent to 30 days).
 
 <a id="nestedatt--authentication_method_configurations--temporary_access_pass--include_targets"></a>
 ### Nested Schema for `authentication_method_configurations.temporary_access_pass.include_targets`
@@ -331,7 +348,7 @@ The following types are derived from this resource type: / https://learn.microso
 Read-Only:
 
 - `id` (String) Object identifier of a Microsoft Entra user or group.
-- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method. The _provider_ default value is `false`.
+- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method.
 - `target_type` (String) and `unknownFutureValue`. From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. / Possible values are: `user`, `group`, `unknownFutureValue`
 
 
@@ -341,8 +358,8 @@ Read-Only:
 
 Read-Only:
 
-- `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. Expanded by default. / A collection of groups enabled to use voice call authentication via the [voice call authentication methods policy](../resources/voiceAuthenticationMethodConfiguration.md) in Microsoft Entra ID. / https://learn.microsoft.com/en-us/graph/api/resources/voiceauthenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--voice--include_targets))
-- `is_office_phone_allowed` (Boolean) `true` if users can register office phones, otherwise, `false`. The _provider_ default value is `false`.
+- `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. Expanded by default. / A collection of groups enabled to use voice call authentication via the [voice call authentication methods policy](../resources/voiceAuthenticationMethodConfiguration.md) in Microsoft Entra ID. / https://learn.microsoft.com/en-us/graph/api/resources/voiceauthenticationmethodtarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--voice--include_targets))
+- `is_office_phone_allowed` (Boolean) `true` if users can register office phones, otherwise, `false`.
 
 <a id="nestedatt--authentication_method_configurations--voice--include_targets"></a>
 ### Nested Schema for `authentication_method_configurations.voice.include_targets`
@@ -350,7 +367,7 @@ Read-Only:
 Read-Only:
 
 - `id` (String) Object ID of a Microsoft Entra group.
-- `is_registration_required` (Boolean) Determines whether the user is enforced to register the authentication method. **Not supported**. The _provider_ default value is `false`.
+- `is_registration_required` (Boolean) Determines whether the user is enforced to register the authentication method. **Not supported**.
 - `target_type` (String) and `unknownFutureValue`. From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. / Possible values are: `user`, `group`, `unknownFutureValue`
 
 
@@ -360,21 +377,21 @@ Read-Only:
 
 Read-Only:
 
-- `authentication_mode_configuration` (Attributes) Defines strong authentication configurations. This configuration includes the default authentication mode and the different rules for strong authentication bindings. / Defines the strong authentication configurations for the X.509 certificate. This configuration includes the default authentication mode and the different rules of strong authentication bindings. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateauthenticationmodeconfiguration?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration))
-- `certificate_user_bindings` (Attributes Set) Defines fields in the X.509 certificate that map to attributes of the Microsoft Entra user object in order to bind the certificate to the user. The **priority** of the object determines the order in which the binding is carried out. The first binding that matches will be used and the rest ignored. / Defines the fields in the X.509 certificate that map to attributes of the Microsoft Entra user object in order to bind the certificate to the user account. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateuserbinding?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyX509CertificateUserBindingsDefault`. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--certificate_user_bindings))
+- `authentication_mode_configuration` (Attributes) Defines strong authentication configurations. This configuration includes the default authentication mode and the different rules for strong authentication bindings. / Defines the strong authentication configurations for the X.509 certificate. This configuration includes the default authentication mode and the different rules of strong authentication bindings. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateauthenticationmodeconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration))
+- `certificate_user_bindings` (Attributes Set) Defines fields in the X.509 certificate that map to attributes of the Microsoft Entra user object in order to bind the certificate to the user. The **priority** of the object determines the order in which the binding is carried out. The first binding that matches will be used and the rest ignored. / Defines the fields in the X.509 certificate that map to attributes of the Microsoft Entra user object in order to bind the certificate to the user account. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateuserbinding?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--certificate_user_bindings))
 - `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID.
 
-The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--include_targets))
-- `issuer_hints_configuration` (Attributes) Determines whether issuer(CA) hints are sent back to the client side to filter the certificates shown in certificate picker. / Determines whether issuer(CA) hints are sent back to the client side to filter the certificates shown in certificate picker. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateissuerhintsconfiguration?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--issuer_hints_configuration))
+The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--include_targets))
+- `issuer_hints_configuration` (Attributes) Determines whether issuer(CA) hints are sent back to the client side to filter the certificates shown in certificate picker. / Determines whether issuer(CA) hints are sent back to the client side to filter the certificates shown in certificate picker. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateissuerhintsconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--issuer_hints_configuration))
 
 <a id="nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration"></a>
 ### Nested Schema for `authentication_method_configurations.x509_certificate.authentication_mode_configuration`
 
 Read-Only:
 
-- `rules` (Attributes Set) Rules are configured in addition to the authentication mode to bind a specific **x509CertificateRuleType** to an **x509CertificateAuthenticationMode**. For example, bind the `policyOID` with identifier `1.32.132.343` to `x509CertificateMultiFactor` authentication mode. / Defines the strong authentication configuration rules for the X.509 certificate. Rules are configured in addition to the authentication mode. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificaterule?view=graph-rest-beta. The _provider_ default value is `[]`. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration--rules))
-- `x509_certificate_authentication_default_mode` (String) The type of strong authentication mode. The / Possible values are: `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `unknownFutureValue`. The _provider_ default value is `"x509CertificateSingleFactor"`.
-- `x509_certificate_default_required_affinity_level` (String) Determines the default value for the tenant affinity binding level. The / Possible values are: `low`, `high`, `unknownFutureValue`. The _provider_ default value is `"low"`.
+- `rules` (Attributes Set) Rules are configured in addition to the authentication mode to bind a specific **x509CertificateRuleType** to an **x509CertificateAuthenticationMode**. For example, bind the `policyOID` with identifier `1.32.132.343` to `x509CertificateMultiFactor` authentication mode. / Defines the strong authentication configuration rules for the X.509 certificate. Rules are configured in addition to the authentication mode. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificaterule?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration--rules))
+- `x509_certificate_authentication_default_mode` (String) The type of strong authentication mode. The / Possible values are: `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `unknownFutureValue`.
+- `x509_certificate_default_required_affinity_level` (String) Determines the default value for the tenant affinity binding level. The / Possible values are: `low`, `high`, `unknownFutureValue`.
 
 <a id="nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration--rules"></a>
 ### Nested Schema for `authentication_method_configurations.x509_certificate.authentication_mode_configuration.rules`
@@ -386,7 +403,7 @@ Read-Only:
 - `policy_oid_identifier` (String) The identifier of the X.509 certificate policyOID.
 - `x509_certificate_authentication_mode` (String) The type of strong authentication mode. The Required. / Possible values are: `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `unknownFutureValue`
 - `x509_certificate_required_affinity_level` (String) The / Possible values are: `low`, `high`, `unknownFutureValue`
-- `x509_certificate_rule_type` (String) The type of the X.509 certificate mode configuration rule. The Note that you must use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `issuerSubjectAndPolicyOID`. Required. / Possible values are: `issuerSubject`, `policyOID`, `unknownFutureValue`, `issuerSubjectAndPolicyOID`
+- `x509_certificate_rule_type` (String) The type of the X.509 certificate mode configuration rule. The Use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `issuerSubjectAndPolicyOID`. Required. / Possible values are: `issuerSubject`, `policyOID`, `unknownFutureValue`, `issuerSubjectAndPolicyOID`
 
 
 
@@ -407,7 +424,7 @@ Read-Only:
 Read-Only:
 
 - `id` (String) Object identifier of a Microsoft Entra user or group.
-- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method. The _provider_ default value is `false`.
+- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method.
 - `target_type` (String) and `unknownFutureValue`. From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. / Possible values are: `user`, `group`, `unknownFutureValue`
 
 
@@ -416,7 +433,7 @@ Read-Only:
 
 Read-Only:
 
-- `state` (String) The / Possible values are: `disabled`, `enabled`, `unknownFutureValue`. The _provider_ default value is `"disabled"`.
+- `state` (String) The / Possible values are: `disabled`, `enabled`, `unknownFutureValue`.
 
 
 
@@ -426,18 +443,18 @@ Read-Only:
 
 Read-Only:
 
-- `authentication_methods_registration_campaign` (Attributes) Run campaigns to remind users to set up targeted authentication methods. / Represents the settings used to run campaigns to push users to set up targeted authentication methods. Users are prompted to set up the authentication method after they successfully complete a MFA challenge. Only available for the Microsoft Authenticator app for MFA. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodsregistrationcampaign?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--registration_enforcement--authentication_methods_registration_campaign))
+- `authentication_methods_registration_campaign` (Attributes) Run campaigns to remind users to set up targeted authentication methods. / Represents the settings used to run campaigns to push users to set up targeted authentication methods. Users are prompted to set up the authentication method after they successfully complete a MFA challenge. Only available for the Microsoft Authenticator app for MFA. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodsregistrationcampaign?view=graph-rest-beta. (see [below for nested schema](#nestedatt--registration_enforcement--authentication_methods_registration_campaign))
 
 <a id="nestedatt--registration_enforcement--authentication_methods_registration_campaign"></a>
 ### Nested Schema for `registration_enforcement.authentication_methods_registration_campaign`
 
 Read-Only:
 
-- `enforce_registration_after_allowed_snoozes` (Boolean) Specifies whether a user is required to perform registration after snoozing 3 times. If `true`, the user is required to register after 3 snoozes. If `false`, the user can snooze indefinitely. The default value is `true`. The _provider_ default value is `true`.
-- `exclude_targets` (Attributes Set) Users and groups of users that are excluded from being prompted to set up the authentication method. / Represents the users or groups of users that are excluded from a policy. / https://learn.microsoft.com/en-us/graph/api/resources/excludetarget?view=graph-rest-beta. The _provider_ default value is `[]`. (see [below for nested schema](#nestedatt--registration_enforcement--authentication_methods_registration_campaign--exclude_targets))
-- `include_targets` (Attributes Set) Users and groups of users that are prompted to set up the authentication method. / Represents the users and groups that are targeted for authentication method registration campaigns. Only users and groups that are enabled by the policy to set up the authentication method are targeted. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodsregistrationcampaignincludetarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. (see [below for nested schema](#nestedatt--registration_enforcement--authentication_methods_registration_campaign--include_targets))
-- `snooze_duration_in_days` (Number) Specifies the number of days that the user sees a prompt again if they select "Not now" and snoozes the prompt. Minimum 0 days. Maximum: 14 days. If the value is `0` – The user is prompted during every MFA attempt. The _provider_ default value is `1`.
-- `state` (String) Enable or disable the feature. The `default` value is used when the configuration hasn't been explicitly set and uses the default behavior of Microsoft Entra ID for the setting. The default value is `disabled`. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`. The _provider_ default value is `"default"`.
+- `enforce_registration_after_allowed_snoozes` (Boolean) Specifies whether a user is required to perform registration after snoozing 3 times. If `true`, the user is required to register after 3 snoozes. If `false`, the user can snooze indefinitely.
+- `exclude_targets` (Attributes Set) Users and groups of users that are excluded from being prompted to set up the authentication method. / Represents the users or groups of users that are excluded from a policy. / https://learn.microsoft.com/en-us/graph/api/resources/excludetarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--registration_enforcement--authentication_methods_registration_campaign--exclude_targets))
+- `include_targets` (Attributes Set) Users and groups of users that are prompted to set up the authentication method. / Represents the users and groups that are targeted for authentication method registration campaigns. Only users and groups that are enabled by the policy to set up the authentication method are targeted. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodsregistrationcampaignincludetarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--registration_enforcement--authentication_methods_registration_campaign--include_targets))
+- `snooze_duration_in_days` (Number) Specifies the number of days that the user sees a prompt again if they select "Not now" and snoozes the prompt. Minimum 0 days. Maximum: 14 days. If the value is `0` – The user is prompted during every MFA attempt.
+- `state` (String) Enable or disable the feature. The `default` value is used when the configuration hasn't been explicitly set and uses the default behavior of Microsoft Entra ID for the setting. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`.
 
 <a id="nestedatt--registration_enforcement--authentication_methods_registration_campaign--exclude_targets"></a>
 ### Nested Schema for `registration_enforcement.authentication_methods_registration_campaign.exclude_targets`
@@ -455,7 +472,7 @@ Read-Only:
 
 - `id` (String) The object identifier of a Microsoft Entra user or group.
 - `target_type` (String) The type of the authentication method target. / Possible values are: `user`, `group`, `unknownFutureValue`
-- `targeted_authentication_method` (String) The authentication method that the user is prompted to register. The value must be `microsoftAuthenticator`. The _provider_ default value is `"microsoftAuthenticator"`.
+- `targeted_authentication_method` (String) The authentication method that the user is prompted to register. The value must be `microsoftAuthenticator`.
 
 
 
@@ -465,9 +482,9 @@ Read-Only:
 
 Read-Only:
 
-- `include_target` (Attributes) Group IDs in scope for report suspicious activity. / Defines the users and groups that are included in a set of changes. / https://learn.microsoft.com/en-us/graph/api/resources/includetarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetDefaultAllUsers`. (see [below for nested schema](#nestedatt--report_suspicious_activity_settings--include_target))
-- `state` (String) Specifies the state of the reportSuspiciousActivitySettings object. The Setting to `default` results in a disabled state. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`. The _provider_ default value is `"default"`.
-- `voice_reporting_code` (Number) Specifies the number the user enters on their phone to report the MFA prompt as suspicious. The _provider_ default value is `0`.
+- `include_target` (Attributes) Group IDs in scope for report suspicious activity. / Defines the users and groups that are included in a set of changes. / https://learn.microsoft.com/en-us/graph/api/resources/includetarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--report_suspicious_activity_settings--include_target))
+- `state` (String) Specifies the state of the reportSuspiciousActivitySettings object. The Setting to `default` results in a disabled state. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`.
+- `voice_reporting_code` (Number) Specifies the number the user enters on their phone to report the MFA prompt as suspicious.
 
 <a id="nestedatt--report_suspicious_activity_settings--include_target"></a>
 ### Nested Schema for `report_suspicious_activity_settings.include_target`
@@ -484,9 +501,9 @@ Read-Only:
 
 Read-Only:
 
-- `exclude_targets` (Attributes Set) Users and groups excluded from the preferred authentication method experience of the system. / Represents the users or groups of users that are excluded from a policy. / https://learn.microsoft.com/en-us/graph/api/resources/excludetarget?view=graph-rest-beta. The _provider_ default value is `[]`. (see [below for nested schema](#nestedatt--system_credential_preferences--exclude_targets))
-- `include_targets` (Attributes Set) Users and groups included in the preferred authentication method experience of the system. / Defines the users and groups that are included in a set of changes. / https://learn.microsoft.com/en-us/graph/api/resources/includetarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. (see [below for nested schema](#nestedatt--system_credential_preferences--include_targets))
-- `state` (String) Indicates whether the feature is enabled or disabled. The `default` value is used when the configuration hasn't been explicitly set, and uses the default behavior of Microsoft Entra ID for the setting. The default value is `disabled`. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`. The _provider_ default value is `"default"`.
+- `exclude_targets` (Attributes Set) Users and groups excluded from the preferred authentication method experience of the system. / Represents the users or groups of users that are excluded from a policy. / https://learn.microsoft.com/en-us/graph/api/resources/excludetarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--system_credential_preferences--exclude_targets))
+- `include_targets` (Attributes Set) Users and groups included in the preferred authentication method experience of the system. / Defines the users and groups that are included in a set of changes. / https://learn.microsoft.com/en-us/graph/api/resources/includetarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--system_credential_preferences--include_targets))
+- `state` (String) Indicates whether the feature is enabled or disabled. The `default` value is used when the configuration hasn't been explicitly set, and uses the default behavior of Microsoft Entra ID for the setting. / Possible values are: `default`, `enabled`, `disabled`, `unknownFutureValue`.
 
 <a id="nestedatt--system_credential_preferences--exclude_targets"></a>
 ### Nested Schema for `system_credential_preferences.exclude_targets`

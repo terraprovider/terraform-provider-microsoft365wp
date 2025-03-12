@@ -1,0 +1,3075 @@
+[
+  {
+    "id": "66e4a8cc-1b7b-435e-95f8-f06cea133828",
+    "discoveryDateTime": null,
+    "discoverabilities": "AttributeNames,AttributeDataTypes",
+    "name": "Microsoft Entra ID",
+    "readOnly": true,
+    "version": "v1.2",
+    "objects": [
+      {
+        "name": "User",
+        "supportedApis": [
+          "User"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "objectId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "IsSoftDeleted",
+            "required": true,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "accountEnabled",
+            "required": true,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "streetAddress",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "city",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "state",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "postalCode",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "country",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "companyName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "department",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeHireDate",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeLeaveDateTime",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeType",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeOrgData.costCenter",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeOrgData.division",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "dirSyncEnabled",
+            "required": false,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "displayName",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "immutableId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appRoleAssignments",
+            "required": false,
+            "type": "Reference",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "ComplexObjectDefinition",
+                "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"objectId\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[{\"key\":\"ComplexObjectDefinition\",\"value\":\"{\\\"definition\\\":{\\\"attributes\\\":[{\\\"anchor\\\":true,\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"id\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"multivalued\\\":true,\\\"name\\\":\\\"allowedMemberTypes\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"description\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"displayName\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"isEnabled\\\",\\\"required\\\":true,\\\"type\\\":\\\"Boolean\\\"},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"origin\\\"},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"value\\\"}],\\\"metadata\\\":[{\\\"key\\\":\\\"IsSoftDeletionSupported\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"IsHardDeletionSupported\\\",\\\"value\\\":\\\"true\\\"},{\\\"key\\\":\\\"ConnectorDataStorageRequired\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"IsSynchronizeAllSupported\\\",\\\"value\\\":\\\"false\\\"}],\\\"name\\\":\\\"AppRole\\\",\\\"supportedApis\\\":[\\\"AppRole\\\"]},\\\"mapping\\\":{\\\"attributeMappings\\\":[{\\\"defaultValue\\\":\\\"User\\\",\\\"targetAttributeName\\\":\\\"allowedMemberTypes\\\"},{\\\"defaultValue\\\":\\\".\\\",\\\"targetAttributeName\\\":\\\"description\\\"},{\\\"matchingPriority\\\":1,\\\"targetAttributeName\\\":\\\"displayName\\\"},{\\\"defaultValue\\\":\\\"True\\\",\\\"targetAttributeName\\\":\\\"isEnabled\\\"}],\\\"flowTypes\\\":\\\"Add, Update, Delete\\\",\\\"metadata\\\":[{\\\"key\\\":\\\"IsCustomerDefined\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"DisableMonitoringForChanges\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"Disposition\\\",\\\"value\\\":\\\"\\\\\\\"Normal\\\\\\\"\\\"},{\\\"key\\\":\\\"ExcludeFromReporting\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"EscrowBehavior\\\",\\\"value\\\":\\\"\\\\\\\"Default\\\\\\\"\\\"},{\\\"key\\\":\\\"Unsynchronized\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"OriginalJoiningProperty\\\",\\\"value\\\":\\\"displayName\\\"}],\\\"sourceObjectName\\\":\\\"\\\",\\\"targetObjectName\\\":\\\"AppRole\\\"}}\"}],\"name\":\"entitlement\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"principalId\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"principalType\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"resourceId\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"resourceDisplayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"servicePrincipalApplicationIdentifier\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"true\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"},{\"key\":\"PropertyNameSoftDeleted\",\"value\":\"IsSoftDeleted\"}],\"name\":\"AppRoleAssignment\",\"supportedApis\":[\"AppRoleAssignment\"]},\"mapping\":{\"attributeMappings\":[{\"matchingPriority\":1,\"targetAttributeName\":\"id\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"id\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRoleAssignment\"}}"
+              }
+            ],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute1",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute2",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute3",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute4",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute5",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute6",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute7",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute8",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute9",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute10",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute11",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute12",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute13",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute14",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute15",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "facsimileTelephoneNumber",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "givenName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "jobTitle",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "mailNickname",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "manager",
+            "required": false,
+            "type": "Reference",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": [
+              {
+                "referencedObjectName": "User",
+                "referencedProperty": null
+              }
+            ]
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "mobile",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "onPremisesSecurityIdentifier",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "originalUserPrincipalName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "otherMails",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "physicalDeliveryOfficeName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "preferredLanguage",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "proxyAddresses",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "surname",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "telephoneNumber",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "usageLocation",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "userPrincipalName",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "netId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "alternativeSecurityIds",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": true,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "showInAddressList",
+            "required": false,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "mail",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "userState",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "userType",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "true"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "true"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "true"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "true"
+          },
+          {
+            "key": "PropertyNameAccountEnabled",
+            "value": "accountEnabled"
+          },
+          {
+            "key": "PropertyNameSoftDeleted",
+            "value": "IsSoftDeleted"
+          }
+        ]
+      },
+      {
+        "name": "Group",
+        "supportedApis": [
+          "Group"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "objectId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appRoleAssignments",
+            "required": false,
+            "type": "Reference",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "ComplexObjectDefinition",
+                "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"objectId\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[{\"key\":\"ComplexObjectDefinition\",\"value\":\"{\\\"definition\\\":{\\\"attributes\\\":[{\\\"anchor\\\":true,\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"id\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"multivalued\\\":true,\\\"name\\\":\\\"allowedMemberTypes\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"description\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"displayName\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"isEnabled\\\",\\\"required\\\":true,\\\"type\\\":\\\"Boolean\\\"},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"origin\\\"},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"value\\\"}],\\\"metadata\\\":[{\\\"key\\\":\\\"IsSoftDeletionSupported\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"IsHardDeletionSupported\\\",\\\"value\\\":\\\"true\\\"},{\\\"key\\\":\\\"ConnectorDataStorageRequired\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"IsSynchronizeAllSupported\\\",\\\"value\\\":\\\"false\\\"}],\\\"name\\\":\\\"AppRole\\\",\\\"supportedApis\\\":[\\\"AppRole\\\"]},\\\"mapping\\\":{\\\"attributeMappings\\\":[{\\\"defaultValue\\\":\\\"User\\\",\\\"targetAttributeName\\\":\\\"allowedMemberTypes\\\"},{\\\"defaultValue\\\":\\\".\\\",\\\"targetAttributeName\\\":\\\"description\\\"},{\\\"matchingPriority\\\":1,\\\"targetAttributeName\\\":\\\"displayName\\\"},{\\\"defaultValue\\\":\\\"True\\\",\\\"targetAttributeName\\\":\\\"isEnabled\\\"}],\\\"flowTypes\\\":\\\"Add, Update, Delete\\\",\\\"metadata\\\":[{\\\"key\\\":\\\"IsCustomerDefined\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"DisableMonitoringForChanges\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"Disposition\\\",\\\"value\\\":\\\"\\\\\\\"Normal\\\\\\\"\\\"},{\\\"key\\\":\\\"ExcludeFromReporting\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"EscrowBehavior\\\",\\\"value\\\":\\\"\\\\\\\"Default\\\\\\\"\\\"},{\\\"key\\\":\\\"Unsynchronized\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"OriginalJoiningProperty\\\",\\\"value\\\":\\\"displayName\\\"}],\\\"sourceObjectName\\\":\\\"\\\",\\\"targetObjectName\\\":\\\"AppRole\\\"}}\"}],\"name\":\"entitlement\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"principalId\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"principalType\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"resourceId\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"resourceDisplayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"servicePrincipalApplicationIdentifier\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"true\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"},{\"key\":\"PropertyNameSoftDeleted\",\"value\":\"IsSoftDeleted\"}],\"name\":\"AppRoleAssignment\",\"supportedApis\":[\"AppRoleAssignment\"]},\"mapping\":{\"attributeMappings\":[{\"matchingPriority\":1,\"targetAttributeName\":\"id\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"id\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRoleAssignment\"}}"
+              }
+            ],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "members",
+            "required": false,
+            "type": "Reference",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "IsContainer",
+                "value": "true"
+              }
+            ],
+            "referencedObjects": [
+              {
+                "referencedObjectName": "Group",
+                "referencedProperty": null
+              },
+              {
+                "referencedObjectName": "User",
+                "referencedProperty": null
+              }
+            ]
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "false"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "false"
+          },
+          {
+            "key": "PropertyNameSoftDeleted",
+            "value": "IsSoftDeleted"
+          }
+        ]
+      },
+      {
+        "name": "Application",
+        "supportedApis": [
+          "Application"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "objectId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadOnly",
+            "name": "appMetadata",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "displayName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appRoles",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "ComplexObjectDefinition",
+                "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"multivalued\":true,\"name\":\"allowedMemberTypes\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"description\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"isEnabled\",\"required\":true,\"type\":\"Boolean\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"origin\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"false\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"}],\"name\":\"AppRole\",\"supportedApis\":[\"AppRole\"]},\"mapping\":{\"attributeMappings\":[{\"defaultValue\":\"User\",\"targetAttributeName\":\"allowedMemberTypes\"},{\"defaultValue\":\".\",\"targetAttributeName\":\"description\"},{\"matchingPriority\":1,\"targetAttributeName\":\"displayName\"},{\"defaultValue\":\"True\",\"targetAttributeName\":\"isEnabled\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"displayName\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRole\"}}"
+              }
+            ],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "homepage",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "identifierUris",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "replyUrls",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "false"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "name": "AppRole",
+        "supportedApis": [
+          "AppRole"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "id",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "allowedMemberTypes",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "description",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "displayName",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "isEnabled",
+            "required": true,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "origin",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "value",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "true"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "false"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "name": "AppRoleAssignment",
+        "supportedApis": [
+          "AppRoleAssignment"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "objectId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "id",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "entitlement",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "ComplexObjectDefinition",
+                "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"multivalued\":true,\"name\":\"allowedMemberTypes\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"description\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"isEnabled\",\"required\":true,\"type\":\"Boolean\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"origin\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"false\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"}],\"name\":\"AppRole\",\"supportedApis\":[\"AppRole\"]},\"mapping\":{\"attributeMappings\":[{\"defaultValue\":\"User\",\"targetAttributeName\":\"allowedMemberTypes\"},{\"defaultValue\":\".\",\"targetAttributeName\":\"description\"},{\"matchingPriority\":1,\"targetAttributeName\":\"displayName\"},{\"defaultValue\":\"True\",\"targetAttributeName\":\"isEnabled\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"displayName\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRole\"}}"
+              }
+            ],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "principalId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "principalType",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "resourceId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "resourceDisplayName",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "servicePrincipalApplicationIdentifier",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "displayName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "value",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "true"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "true"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "false"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "false"
+          },
+          {
+            "key": "PropertyNameSoftDeleted",
+            "value": "IsSoftDeleted"
+          }
+        ]
+      },
+      {
+        "name": "ServicePrincipal",
+        "supportedApis": [
+          "ServicePrincipal"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "objectId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "displayName",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appRoles",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "ComplexObjectDefinition",
+                "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"multivalued\":true,\"name\":\"allowedMemberTypes\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"description\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"isEnabled\",\"required\":true,\"type\":\"Boolean\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"origin\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"false\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"}],\"name\":\"AppRole\",\"supportedApis\":[\"AppRole\"]},\"mapping\":{\"attributeMappings\":[{\"defaultValue\":\"User\",\"targetAttributeName\":\"allowedMemberTypes\"},{\"defaultValue\":\".\",\"targetAttributeName\":\"description\"},{\"matchingPriority\":1,\"targetAttributeName\":\"displayName\"},{\"defaultValue\":\"True\",\"targetAttributeName\":\"isEnabled\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"displayName\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRole\"}}"
+              }
+            ],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "microsoftFirstParty",
+            "required": false,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "homepage",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadOnly",
+            "name": "appMetadata",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "tags",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "applicationTemplateId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "false"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "false"
+          },
+          {
+            "key": "PropertyNameSoftDeleted",
+            "value": "IsSoftDeleted"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "69b25323-f16d-4d8f-99e9-2722c9582d30",
+    "discoveryDateTime": null,
+    "discoverabilities": "AttributeNames,AttributeDataTypes",
+    "name": "Microsoft Entra ID (target tenant)",
+    "readOnly": true,
+    "version": "v1.2",
+    "objects": [
+      {
+        "name": "User",
+        "supportedApis": [
+          "User"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "objectId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "IsSoftDeleted",
+            "required": true,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "accountEnabled",
+            "required": true,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "streetAddress",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "city",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "state",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "postalCode",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "country",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "companyName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "department",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeHireDate",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeLeaveDateTime",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeType",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeOrgData.costCenter",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "employeeOrgData.division",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "dirSyncEnabled",
+            "required": false,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "displayName",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "immutableId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute1",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute2",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute3",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute4",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute5",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute6",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute7",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute8",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute9",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute10",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute11",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute12",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute13",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute14",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "extensionAttribute15",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "facsimileTelephoneNumber",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "givenName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "jobTitle",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "mailNickname",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "manager",
+            "required": false,
+            "type": "Reference",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": [
+              {
+                "referencedObjectName": "User",
+                "referencedProperty": null
+              }
+            ]
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "mobile",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "onPremisesSecurityIdentifier",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "originalUserPrincipalName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "otherMails",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "physicalDeliveryOfficeName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "preferredLanguage",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "proxyAddresses",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "surname",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "telephoneNumber",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "usageLocation",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "userPrincipalName",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "netId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "alternativeSecurityIds",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": true,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "showInAddressList",
+            "required": false,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "mail",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "userType",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "source",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "true"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "true"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "true"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "true"
+          },
+          {
+            "key": "PropertyNameAccountEnabled",
+            "value": "accountEnabled"
+          },
+          {
+            "key": "PropertyNameSoftDeleted",
+            "value": "IsSoftDeleted"
+          }
+        ]
+      },
+      {
+        "name": "Group",
+        "supportedApis": [
+          "Group"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "objectId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appRoleAssignments",
+            "required": false,
+            "type": "Reference",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "ComplexObjectDefinition",
+                "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"objectId\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[{\"key\":\"ComplexObjectDefinition\",\"value\":\"{\\\"definition\\\":{\\\"attributes\\\":[{\\\"anchor\\\":true,\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"id\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"multivalued\\\":true,\\\"name\\\":\\\"allowedMemberTypes\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"description\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"displayName\\\",\\\"required\\\":true},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"isEnabled\\\",\\\"required\\\":true,\\\"type\\\":\\\"Boolean\\\"},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"origin\\\"},{\\\"apiExpressions\\\":[],\\\"metadata\\\":[],\\\"name\\\":\\\"value\\\"}],\\\"metadata\\\":[{\\\"key\\\":\\\"IsSoftDeletionSupported\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"IsHardDeletionSupported\\\",\\\"value\\\":\\\"true\\\"},{\\\"key\\\":\\\"ConnectorDataStorageRequired\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"IsSynchronizeAllSupported\\\",\\\"value\\\":\\\"false\\\"}],\\\"name\\\":\\\"AppRole\\\",\\\"supportedApis\\\":[\\\"AppRole\\\"]},\\\"mapping\\\":{\\\"attributeMappings\\\":[{\\\"defaultValue\\\":\\\"User\\\",\\\"targetAttributeName\\\":\\\"allowedMemberTypes\\\"},{\\\"defaultValue\\\":\\\".\\\",\\\"targetAttributeName\\\":\\\"description\\\"},{\\\"matchingPriority\\\":1,\\\"targetAttributeName\\\":\\\"displayName\\\"},{\\\"defaultValue\\\":\\\"True\\\",\\\"targetAttributeName\\\":\\\"isEnabled\\\"}],\\\"flowTypes\\\":\\\"Add, Update, Delete\\\",\\\"metadata\\\":[{\\\"key\\\":\\\"IsCustomerDefined\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"DisableMonitoringForChanges\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"Disposition\\\",\\\"value\\\":\\\"\\\\\\\"Normal\\\\\\\"\\\"},{\\\"key\\\":\\\"ExcludeFromReporting\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"EscrowBehavior\\\",\\\"value\\\":\\\"\\\\\\\"Default\\\\\\\"\\\"},{\\\"key\\\":\\\"Unsynchronized\\\",\\\"value\\\":\\\"false\\\"},{\\\"key\\\":\\\"OriginalJoiningProperty\\\",\\\"value\\\":\\\"displayName\\\"}],\\\"sourceObjectName\\\":\\\"\\\",\\\"targetObjectName\\\":\\\"AppRole\\\"}}\"}],\"name\":\"entitlement\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"principalId\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"principalType\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"resourceId\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"resourceDisplayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"servicePrincipalApplicationIdentifier\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"true\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"},{\"key\":\"PropertyNameSoftDeleted\",\"value\":\"IsSoftDeleted\"}],\"name\":\"AppRoleAssignment\",\"supportedApis\":[\"AppRoleAssignment\"]},\"mapping\":{\"attributeMappings\":[{\"matchingPriority\":1,\"targetAttributeName\":\"id\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"id\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRoleAssignment\"}}"
+              }
+            ],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "members",
+            "required": false,
+            "type": "Reference",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "IsContainer",
+                "value": "true"
+              }
+            ],
+            "referencedObjects": [
+              {
+                "referencedObjectName": "Group",
+                "referencedProperty": null
+              },
+              {
+                "referencedObjectName": "User",
+                "referencedProperty": null
+              }
+            ]
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "false"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "false"
+          },
+          {
+            "key": "PropertyNameSoftDeleted",
+            "value": "IsSoftDeleted"
+          }
+        ]
+      },
+      {
+        "name": "Application",
+        "supportedApis": [
+          "Application"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "objectId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadOnly",
+            "name": "appMetadata",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "displayName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appRoles",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "ComplexObjectDefinition",
+                "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"multivalued\":true,\"name\":\"allowedMemberTypes\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"description\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"isEnabled\",\"required\":true,\"type\":\"Boolean\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"origin\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"false\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"}],\"name\":\"AppRole\",\"supportedApis\":[\"AppRole\"]},\"mapping\":{\"attributeMappings\":[{\"defaultValue\":\"User\",\"targetAttributeName\":\"allowedMemberTypes\"},{\"defaultValue\":\".\",\"targetAttributeName\":\"description\"},{\"matchingPriority\":1,\"targetAttributeName\":\"displayName\"},{\"defaultValue\":\"True\",\"targetAttributeName\":\"isEnabled\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"displayName\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRole\"}}"
+              }
+            ],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "homepage",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "identifierUris",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "replyUrls",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "false"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "name": "AppRole",
+        "supportedApis": [
+          "AppRole"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "id",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "allowedMemberTypes",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "description",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "displayName",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "isEnabled",
+            "required": true,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "origin",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "value",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "true"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "false"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "name": "AppRoleAssignment",
+        "supportedApis": [
+          "AppRoleAssignment"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "objectId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "id",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "entitlement",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "ComplexObjectDefinition",
+                "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"multivalued\":true,\"name\":\"allowedMemberTypes\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"description\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"isEnabled\",\"required\":true,\"type\":\"Boolean\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"origin\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"false\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"}],\"name\":\"AppRole\",\"supportedApis\":[\"AppRole\"]},\"mapping\":{\"attributeMappings\":[{\"defaultValue\":\"User\",\"targetAttributeName\":\"allowedMemberTypes\"},{\"defaultValue\":\".\",\"targetAttributeName\":\"description\"},{\"matchingPriority\":1,\"targetAttributeName\":\"displayName\"},{\"defaultValue\":\"True\",\"targetAttributeName\":\"isEnabled\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"displayName\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRole\"}}"
+              }
+            ],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "principalId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "principalType",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "resourceId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "resourceDisplayName",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "servicePrincipalApplicationIdentifier",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "displayName",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "value",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "true"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "true"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "false"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "false"
+          },
+          {
+            "key": "PropertyNameSoftDeleted",
+            "value": "IsSoftDeleted"
+          }
+        ]
+      },
+      {
+        "name": "ServicePrincipal",
+        "supportedApis": [
+          "ServicePrincipal"
+        ],
+        "attributes": [
+          {
+            "anchor": true,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "objectId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "displayName",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appId",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "appRoles",
+            "required": true,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [
+              {
+                "key": "ComplexObjectDefinition",
+                "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"multivalued\":true,\"name\":\"allowedMemberTypes\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"description\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"isEnabled\",\"required\":true,\"type\":\"Boolean\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"origin\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"false\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"}],\"name\":\"AppRole\",\"supportedApis\":[\"AppRole\"]},\"mapping\":{\"attributeMappings\":[{\"defaultValue\":\"User\",\"targetAttributeName\":\"allowedMemberTypes\"},{\"defaultValue\":\".\",\"targetAttributeName\":\"description\"},{\"matchingPriority\":1,\"targetAttributeName\":\"displayName\"},{\"defaultValue\":\"True\",\"targetAttributeName\":\"isEnabled\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"displayName\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRole\"}}"
+              }
+            ],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "microsoftFirstParty",
+            "required": false,
+            "type": "Boolean",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "homepage",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadOnly",
+            "name": "appMetadata",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": true,
+            "mutability": "ReadWrite",
+            "name": "tags",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          },
+          {
+            "anchor": false,
+            "caseExact": false,
+            "defaultValue": null,
+            "flowNullValues": false,
+            "multivalued": false,
+            "mutability": "ReadWrite",
+            "name": "applicationTemplateId",
+            "required": false,
+            "type": "String",
+            "apiExpressions": [],
+            "metadata": [],
+            "referencedObjects": []
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsSoftDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "IsHardDeletionSupported",
+            "value": "false"
+          },
+          {
+            "key": "ConnectorDataStorageRequired",
+            "value": "false"
+          },
+          {
+            "key": "IsSynchronizeAllSupported",
+            "value": "false"
+          },
+          {
+            "key": "PropertyNameSoftDeleted",
+            "value": "IsSoftDeleted"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -35,7 +35,7 @@ func (r *GenericResource) populateUnknownValues(ctx context.Context, state *tfsd
 			SingleItemUseODataFilter: r.AccessParams.ReadOptions.SingleItemUseODataFilter,
 			// leave out ExtraRequests, ExtraRequestsCustom
 		}
-		tfSource = r.AccessParams.ReadSingleRaw(ctx, &diags, state.Schema, readOptions, "", state, true, nil, nil)
+		tfSource = r.AccessParams.ReadSingleCompleteTf(ctx, &diags, state.Schema, readOptions, "", state, true)
 		if diags.HasError() {
 			return diags
 		}

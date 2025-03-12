@@ -30,8 +30,8 @@ var (
 	DeviceManagementConfigurationPolicySingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&DeviceManagementConfigurationPolicyResource)
 
-	DeviceManagementConfigurationPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&DeviceManagementConfigurationPolicySingularDataSource, "")
+	DeviceManagementConfigurationPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&DeviceManagementConfigurationPolicyResource, "")
 )
 
 var deviceManagementConfigurationPolicyReadOptions = generic.ReadOptions{

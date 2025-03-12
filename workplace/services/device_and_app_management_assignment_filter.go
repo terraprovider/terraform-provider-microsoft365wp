@@ -7,6 +7,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -28,15 +29,17 @@ var (
 	DeviceAndAppManagementAssignmentFilterSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&DeviceAndAppManagementAssignmentFilterResource)
 
-	DeviceAndAppManagementAssignmentFilterPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&DeviceAndAppManagementAssignmentFilterSingularDataSource, "")
+	DeviceAndAppManagementAssignmentFilterPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&DeviceAndAppManagementAssignmentFilterResource, "")
 )
 
 var deviceAndAppManagementAssignmentFilterReadOptions = generic.ReadOptions{
-	PluralNoFilterSupport: true,
+	DataSource: generic.DataSourceOptions{
+		NoFilterSupport: true,
+	},
 }
 
-func deviceAndAppManagementAssignmentFilterTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func deviceAndAppManagementAssignmentFilterTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {
 		// platform cannot be updated and may not even be written again after creation
 		delete(params.RawVal, "platform")

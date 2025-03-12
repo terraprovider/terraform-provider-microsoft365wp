@@ -15,7 +15,7 @@ export ARM_CLIENT_SECRET='...'
 
 
 data "microsoft365wp_android_managed_app_protection" "one" {
-  id = "T_0f190b8d-9e67-43b6-8d19-e567fbfda584"
+  id = "T_ba297831-e919-4f23-bd6a-31e613f08b52"
 }
 
 output "microsoft365wp_android_managed_app_protection" {

@@ -13,6 +13,23 @@ Please note that almost all information on this page has been sourced literally 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
 
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
+
 ## Example Usage
 
 ```terraform
@@ -46,25 +63,24 @@ output "microsoft365wp_ios_managed_app_protections" {
 
 ### Optional
 
-- `exclude_ids` (Set of String) Filter query to exclude objects with these ids.
-- `include_ids` (Set of String) Filter query to only return objects with these ids.
-- `odata_filter` (String) Raw OData $filter string to pass to MS Graph.
+- `exclude_ids` (Set of String) Exclude entities with these ids (using OData `$filter`).
+- `include_ids` (Set of String) Only return entities with these ids (using OData `$filter`).
+- `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
+- `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
+- `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
 
 ### Read-Only
 
-- `ios_managed_app_protections` (Attributes Set) (see [below for nested schema](#nestedatt--ios_managed_app_protections))
+- `ios_managed_app_protections` (Attributes List) (see [below for nested schema](#nestedatt--ios_managed_app_protections))
 
 <a id="nestedatt--ios_managed_app_protections"></a>
 ### Nested Schema for `ios_managed_app_protections`
-
-Required:
-
-- `id` (String) Key of the entity.
 
 Read-Only:
 
 - `created_date_time` (String) The date and time the policy was created.
 - `display_name` (String) Policy display name.
+- `id` (String) Key of the entity.
 - `last_modified_date_time` (String) Last time the policy was modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. The _provider_ default value is `["0"]`.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
 - `version` (String) Version of the entity.

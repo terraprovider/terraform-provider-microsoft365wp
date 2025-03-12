@@ -18,6 +18,15 @@ data "microsoft365wp_authentication_strength_policies" "all" {
   exclude_ids = ["01234567-89ab-cdef-0123-456789abcdee", "01234567-89ab-cdef-0123-456789abcdef"]
 }
 
+data "microsoft365wp_authentication_combination_configurations" "all" {
+  for_each = toset(data.microsoft365wp_authentication_strength_policies.all.authentication_strength_policies[*].id)
+
+  authentication_strength_policy_id = each.key
+}
+
 output "microsoft365wp_authentication_strength_policies" {
-  value = { for x in data.microsoft365wp_authentication_strength_policies.all.authentication_strength_policies : x.id => x }
+  value = {
+    for x in data.microsoft365wp_authentication_strength_policies.all.authentication_strength_policies :
+    x.id => merge(x, { combination_configurations = data.microsoft365wp_authentication_combination_configurations.all[x.id].authentication_combination_configurations })
+  }
 }

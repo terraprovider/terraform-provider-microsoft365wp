@@ -13,6 +13,23 @@ Please note that almost all information on this page has been sourced literally 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
 
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
+
 ## Example Usage
 
 ```terraform
@@ -46,22 +63,21 @@ output "microsoft365wp_conditional_access_policies" {
 
 ### Optional
 
-- `exclude_ids` (Set of String) Filter query to exclude objects with these ids.
-- `include_ids` (Set of String) Filter query to only return objects with these ids.
-- `odata_filter` (String) Raw OData $filter string to pass to MS Graph.
+- `exclude_ids` (Set of String) Exclude entities with these ids (using OData `$filter`).
+- `include_ids` (Set of String) Only return entities with these ids (using OData `$filter`).
+- `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
+- `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
+- `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
 
 ### Read-Only
 
-- `conditional_access_policies` (Attributes Set) (see [below for nested schema](#nestedatt--conditional_access_policies))
+- `conditional_access_policies` (Attributes List) (see [below for nested schema](#nestedatt--conditional_access_policies))
 
 <a id="nestedatt--conditional_access_policies"></a>
 ### Nested Schema for `conditional_access_policies`
-
-Required:
-
-- `id` (String) Specifies the identifier of a conditionalAccessPolicy object. Read-only.
 
 Read-Only:
 
 - `created_date_time` (String) The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Readonly.
 - `display_name` (String) Specifies a display name for the conditionalAccessPolicy object.
+- `id` (String) Specifies the identifier of a conditionalAccessPolicy object.

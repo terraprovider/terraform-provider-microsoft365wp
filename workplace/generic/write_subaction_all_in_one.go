@@ -16,6 +16,7 @@ type WriteSubActionAllInOne struct {
 	WriteSubActionBase
 
 	GraphErrorsAsWarnings bool
+	UsePatch              bool
 }
 
 func (a *WriteSubActionAllInOne) Initialize() {
@@ -64,13 +65,16 @@ func (a *WriteSubActionAllInOne) executeRequest(ctx context.Context, diags *diag
 		return
 	}
 
-	_, _, _, err = wsaReq.GenRes.AccessParams.graphClient.Post(ctx, msgraph.PostHttpRequestInput{
-		Body:             []byte(jsonBody),
-		ValidStatusCodes: []int{http.StatusOK, http.StatusCreated, http.StatusNoContent},
-		Uri: msgraph.Uri{
-			Entity: fmt.Sprintf("%s/%s", parentUri.Entity, a.UriSuffix),
-		},
-	})
+	validStatusCodes := []int{http.StatusOK, http.StatusCreated, http.StatusNoContent}
+	uri := msgraph.Uri{Entity: parentUri.Entity}
+	if a.UriSuffix != "" {
+		uri.Entity += "/" + a.UriSuffix
+	}
+	if a.UsePatch {
+		_, _, _, err = wsaReq.GenRes.AccessParams.graphClient.Patch(ctx, msgraph.PatchHttpRequestInput{Body: jsonBody, ValidStatusCodes: validStatusCodes, Uri: uri})
+	} else {
+		_, _, _, err = wsaReq.GenRes.AccessParams.graphClient.Post(ctx, msgraph.PostHttpRequestInput{Body: jsonBody, ValidStatusCodes: validStatusCodes, Uri: uri})
+	}
 	if err != nil {
 		summary := "Error creating/updating with MS Graph in WriteSubActionAllInOne"
 		detail := err.Error()

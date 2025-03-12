@@ -27,14 +27,18 @@ var (
 	AuthenticationContextClassReferenceSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&AuthenticationContextClassReferenceResource)
 
-	AuthenticationContextClassReferencePluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&AuthenticationContextClassReferenceSingularDataSource, "")
+	AuthenticationContextClassReferencePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&AuthenticationContextClassReferenceResource, "")
 )
 
 var authenticationContextClassReferenceReadOptions = generic.ReadOptions{
 	ValidStatusCodesExtra: []int{201},
-	PluralNoFilterSupport: true,
-	PluralNoSelectSupport: true,
+	DataSource: generic.DataSourceOptions{
+		NoFilterSupport: true,
+		Plural: generic.PluralOptions{
+			NoSelectSupport: true,
+		},
+	},
 }
 
 var authenticationContextClassReferenceWriteSubActions = []generic.WriteSubAction{

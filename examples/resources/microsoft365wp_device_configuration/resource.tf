@@ -296,6 +296,13 @@ resource "microsoft365wp_device_configuration" "windows_health_monitoring" {
   }
 }
 
+resource "microsoft365wp_device_configuration" "windows10_general" {
+  display_name = "TF Test Windows 10 General"
+  windows10_general = {
+    screen_capture_blocked = true
+  }
+}
+
 resource "microsoft365wp_device_configuration" "windows_update_for_business" {
   display_name = "TF Test Updates Windows"
   windows_update_for_business = {

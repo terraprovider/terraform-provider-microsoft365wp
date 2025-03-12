@@ -13,6 +13,23 @@ Please note that almost all information on this page has been sourced literally 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
 
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
+
 ## Example Usage
 
 ```terraform
@@ -45,17 +62,14 @@ output "microsoft365wp_cloud_pc_user_settings" {
 
 ### Read-Only
 
-- `cloud_pc_user_settings` (Attributes Set) (see [below for nested schema](#nestedatt--cloud_pc_user_settings))
+- `cloud_pc_user_settings` (Attributes List) (see [below for nested schema](#nestedatt--cloud_pc_user_settings))
 
 <a id="nestedatt--cloud_pc_user_settings"></a>
 ### Nested Schema for `cloud_pc_user_settings`
-
-Required:
-
-- `id` (String) Unique identifier for the Cloud PC user setting. Read-only.
 
 Read-Only:
 
 - `created_date_time` (String) The date and time the setting was created. The timestamp type represents the date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 looks like this: '2014-01-01T00:00:00Z'.
 - `display_name` (String) The setting name displayed in the user interface.
+- `id` (String) Unique identifier for the Cloud PC user setting.
 - `last_modified_date_time` (String) The last date and time the setting was modified. The timestamp type represents the date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 looks like this: '2014-01-01T00:00:00Z'.

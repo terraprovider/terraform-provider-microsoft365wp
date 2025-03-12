@@ -31,8 +31,8 @@ var (
 	NotificationMessageTemplateSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&NotificationMessageTemplateResource)
 
-	NotificationMessageTemplatePluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&NotificationMessageTemplateSingularDataSource, "")
+	NotificationMessageTemplatePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&NotificationMessageTemplateResource, "")
 )
 
 var notificationMessageTemplateReadOptions = generic.ReadOptions{
@@ -50,7 +50,7 @@ var notificationMessageTemplateWriteSubActions = []generic.WriteSubAction{
 		IdGetterFunc: func(ctx context.Context, diags *diag.Diagnostics, vRaw map[string]any, parentId string) string {
 			return fmt.Sprintf("%s_%s", parentId, vRaw["locale"].(string))
 		},
-		TerraformToGraphMiddleware: func(_ context.Context, p generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+		TerraformToGraphMiddleware: func(_ context.Context, _ *diag.Diagnostics, p *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 			if p.IsUpdate {
 				// locale cannot be updated
 				delete(p.RawVal, "locale")

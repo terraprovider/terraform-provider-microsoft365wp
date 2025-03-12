@@ -21,7 +21,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
-	"github.com/manicminer/hamilton/msgraph"
 )
 
 var (
@@ -44,8 +43,8 @@ var (
 	DeviceEnrollmentConfigurationSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&DeviceEnrollmentConfigurationResource)
 
-	DeviceEnrollmentConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&DeviceEnrollmentConfigurationSingularDataSource, "")
+	DeviceEnrollmentConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&DeviceEnrollmentConfigurationResource, "")
 )
 
 var deviceEnrollmentConfigurationOdataToConfigType = map[string]string{
@@ -62,8 +61,10 @@ var kSinglePlatformRestrictionOdataType = deviceEnrollmentConfigurationResourceS
 
 var deviceEnrollmentConfigurationReadOptions = generic.ReadOptions{
 	// do not use ODataFilter here as MS Graph does not seem to behave fully logical with any filter tried yet
-	ODataExpand:           "assignments",
-	PluralNoFilterSupport: true,
+	ODataExpand: "assignments",
+	DataSource: generic.DataSourceOptions{
+		NoFilterSupport: true,
+	},
 }
 
 var deviceEnrollmentConfigurationWriteSubActions = []generic.WriteSubAction{
@@ -82,7 +83,7 @@ var deviceEnrollmentConfigurationWriteSubActions = []generic.WriteSubAction{
 	},
 }
 
-func deviceEnrollmentConfigurationTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func deviceEnrollmentConfigurationTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	priorityAny, priorityOk := params.RawVal["priority"]
 	if priorityOk {
 		if priorityAny == nil {
@@ -113,7 +114,7 @@ func deviceEnrollmentConfigurationTerraformToGraphMiddleware(ctx context.Context
 	return nil
 }
 
-func deviceEnrollmentConfigurationGraphToTerraformMiddleware(ctx context.Context, params generic.GraphToTerraformMiddlewareParams) generic.GraphToTerraformMiddlewareReturns {
+func deviceEnrollmentConfigurationGraphToTerraformMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.GraphToTerraformMiddlewareParams) generic.GraphToTerraformMiddlewareReturns {
 	priority, priorityOk := params.RawVal["priority"].(float64)
 	if priorityOk && priority == 0 {
 		// displayName cannot be our marker to assert that it's the default config when reading from MS Graph, so we assert using id
@@ -169,23 +170,10 @@ func deviceEnrollmentConfigurationCreateModifyFunc(ctx context.Context, diags *d
 			panic(fmt.Errorf("unknown MS graph type %s", odataType))
 		}
 		odataFilter := fmt.Sprintf("deviceEnrollmentConfigurationType eq '%s' and priority eq 0", configType)
-		defaultIdResultRaw := params.R.AccessParams.ReadRaw(ctx, diags, msgraph.Uri{Entity: params.R.AccessParams.BaseUri}, "", odataFilter, []string{"id"}, false)
+
+		defConfigId := params.R.AccessParams.ReadId(ctx, diags, "", nil, true, odataFilter, kDefConfigIdRegex)
 		if diags.HasError() {
 			return
-		}
-
-		defConfigId := ""
-		if defaultIdItems, ok := defaultIdResultRaw["value"].([]any); ok && len(defaultIdItems) == 1 {
-			if id, ok := defaultIdItems[0].(map[string]any)["id"].(string); ok {
-				defConfigId = id
-			}
-		}
-		if defConfigId == "" {
-			diags.AddError(errorSummary, "Azure query result did not have the expected format")
-			return
-		}
-		if !kDefConfigIdRegex.MatchString(defConfigId) {
-			diags.AddError(errorSummary, fmt.Sprintf("id returned from Azure query does not match assertion regex (id is %s)", defConfigId))
 		}
 
 		params.UpdateExisting = true

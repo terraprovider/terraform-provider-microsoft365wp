@@ -1597,6 +1597,7 @@ Read-Only:
 - `used_license_count` (Number) The number of VPP licenses in use.
 - `vpp_token_account_type` (String) The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. / Possible types of an Apple Volume Purchase Program token; possible values are: `business` (Apple Volume Purchase Program token associated with an business program.), `education` (Apple Volume Purchase Program token associated with an education program.)
 - `vpp_token_apple_id` (String) The Apple Id associated with the given Apple Volume Purchase Program Token.
+- `vpp_token_display_name` (String)
 - `vpp_token_id` (String) Identifier of the VPP token associated with this app.
 - `vpp_token_organization_name` (String) The organization associated with the Apple Volume Purchase Program Token
 
@@ -1713,6 +1714,7 @@ Read-Only:
 - `used_license_count` (Number) The number of VPP licenses in use.
 - `vpp_token_account_type` (String) The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. / Possible types of an Apple Volume Purchase Program token; possible values are: `business` (Apple Volume Purchase Program token associated with an business program.), `education` (Apple Volume Purchase Program token associated with an education program.)
 - `vpp_token_apple_id` (String) The Apple Id associated with the given Apple Volume Purchase Program Token.
+- `vpp_token_display_name` (String)
 - `vpp_token_id` (String) Identifier of the VPP token associated with this app.
 - `vpp_token_organization_name` (String) The organization associated with the Apple Volume Purchase Program Token
 

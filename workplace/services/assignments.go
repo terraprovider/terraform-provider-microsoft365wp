@@ -156,15 +156,15 @@ func GetAssignmentChildResource(parentResource *generic.GenericResource, singleI
 		TypeNameSuffix: fmt.Sprintf("%s_assignment", parentResource.TypeNameSuffix),
 		SpecificSchema: schema.Schema{
 			Attributes: attributes,
-			MarkdownDescription: "\n\n**Note**: Due to technical difficulties trying to import this resource from MS Graph will result in an error, i.e. importing of this resource is not possible." +
+			MarkdownDescription: fmt.Sprintf("\n\nProvider Note: To import this resource, an ID consisting of `%s` and `id` being joined by a forward slash (`/`) must be used.", parentIdFieldName) +
 				generic.GetSubcategorySuffixFromMarkdownDescription(parentResource.SpecificSchema.MarkdownDescription),
 		},
 		AccessParams: generic.AccessParams{
 			BaseUri: parentResource.AccessParams.BaseUri,
-			HasParentItem: generic.HasParentItem{
+			ParentEntities: generic.ParentEntities{{
 				ParentIdField: path.Root(parentIdFieldName),
 				UriSuffix:     "/assignments",
-			},
+			}},
 			ReadOptions: generic.ReadOptions{
 				SingleItemUseODataFilter: singleItemUseODataFilter,
 			},

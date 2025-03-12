@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	dsschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 )
 
@@ -18,16 +18,53 @@ var (
 // GenericDataSourceSingular is the data source implementation.
 type GenericDataSourceSingular struct {
 	TypeNameSuffix string
-	SpecificSchema schema.Schema
+	SpecificSchema dsschema.Schema
 	AccessParams   AccessParams
+
+	odataFilterAttrsWithGraphNames map[string]string
 }
 
 func CreateGenericDataSourceSingularFromResource(genericResource *GenericResource) GenericDataSourceSingular {
-	return GenericDataSourceSingular{
-		TypeNameSuffix: genericResource.TypeNameSuffix,
-		SpecificSchema: ConvertResourceSchemaToDataSourceSingular(&genericResource.SpecificSchema, &genericResource.AccessParams),
-		AccessParams:   genericResource.AccessParams, // copylocks is fine here (but VSCode would only allow to disable it globally)
+
+	// Dev Note: Try to keep contents similar to CreateGenericDataSourcePluralFromResource
+
+	//
+	// IMPORTANT for the whole function: ConvertResourceAttributesToDataSourceSingular does not convert simple type attributes
+	// to data source attributes but leaves them as reasource attributes (as their required interface is identical).
+	// Therefore additional attributes will also be added from the resource schema.
+	//
+
+	//
+	// Preparations
+
+	accessParams := &genericResource.AccessParams
+	accessParams.InitializeGuarded(nil)
+
+	result := GenericDataSourceSingular{
+		TypeNameSuffix:                 genericResource.TypeNameSuffix,
+		AccessParams:                   *accessParams, // copylocks is fine here (but VSCode would only allow to disable it globally)
+		odataFilterAttrsWithGraphNames: map[string]string{},
 	}
+
+	//
+	// Choose required and convert attributes
+
+	isRequiredFunc := func(attrName string) bool { return accessParams.ParentEntities.ContainsFieldName(attrName) }
+	dsAttributes := ConvertResourceAttributesToDataSourceSingular(genericResource.SpecificSchema.Attributes,
+		isRequiredFunc)
+
+	ODataPrepareFilterAttributes(accessParams, dsAttributes, result.odataFilterAttrsWithGraphNames, true, false)
+
+	//
+	// Create schema and return
+
+	result.SpecificSchema = dsschema.Schema{
+		Attributes:          dsAttributes,
+		Description:         genericResource.SpecificSchema.Description,
+		MarkdownDescription: genericResource.SpecificSchema.MarkdownDescription,
+	}
+
+	return result // copylocks is fine here (but VSCode would only allow to disable it globally)
 }
 
 // Metadata returns the data source type name.
@@ -48,8 +85,13 @@ func (d *GenericDataSourceSingular) Schema(_ context.Context, _ datasource.Schem
 // Read refreshes the Terraform state with the latest data.
 func (d *GenericDataSourceSingular) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 
-	val := d.AccessParams.ReadSingleRaw(ctx, &resp.Diagnostics, req.Config.Schema,
-		d.AccessParams.ReadOptions, "", req.Config, false, nil, nil)
+	odataFilter, odataOrderby, odataTop := ODataGetFilterFromConfig(ctx, &resp.Diagnostics, &req.Config, &d.AccessParams, d.odataFilterAttrsWithGraphNames)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	val := d.AccessParams.ReadSingleCompleteTf3(ctx, &resp.Diagnostics, req.Config.Schema,
+		d.AccessParams.ReadOptions, "", req.Config, odataFilter, odataOrderby, odataTop, false, nil, nil)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -59,4 +101,5 @@ func (d *GenericDataSourceSingular) Read(ctx context.Context, req datasource.Rea
 		Schema: req.Config.Schema,
 		Raw:    val,
 	}
+	d.AccessParams.PopulateStateParentIdsFromRequest(ctx, &resp.Diagnostics, &resp.State, req.Config)
 }

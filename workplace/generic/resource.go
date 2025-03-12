@@ -3,6 +3,7 @@ package generic
 import (
 	"context"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -56,8 +57,8 @@ func (r *GenericResource) Create(ctx context.Context, req resource.CreateRequest
 
 func (r *GenericResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 
-	tfVal := r.AccessParams.ReadSingleRaw(ctx, &resp.Diagnostics, req.State.Schema,
-		r.AccessParams.ReadOptions, "", &req.State, true, &req.State, resp.Private)
+	tfVal := r.AccessParams.ReadSingleCompleteTf2(ctx, &resp.Diagnostics, req.State.Schema,
+		r.AccessParams.ReadOptions, "", &req.State, "", true, &req.State, resp.Private)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -67,13 +68,7 @@ func (r *GenericResource) Read(ctx context.Context, req resource.ReadRequest, re
 			Schema: req.State.Schema,
 			Raw:    tfVal,
 		}
-		if !r.AccessParams.HasParentItem.ParentIdField.Equal(path.Path{}) {
-			err := CopyValueAtPath(ctx, &newState, &req.State, r.AccessParams.HasParentItem.ParentIdField)
-			if err != nil {
-				resp.Diagnostics.AddError(fmt.Sprintf("CopyValueAtPath(), ParentIdField: %s", r.AccessParams.HasParentItem.ParentIdField), err.Error())
-				return
-			}
-		}
+		r.AccessParams.PopulateStateParentIdsFromRequest(ctx, &resp.Diagnostics, &newState, req.State)
 		resp.State = newState
 	} else {
 		// item not found (anymore), remove from state
@@ -96,11 +91,7 @@ func (r *GenericResource) Delete(ctx context.Context, req resource.DeleteRequest
 
 	baseUri := ""
 	id := ""
-	skipDelete := false
-
-	if r.AccessParams.IsSingleton {
-		skipDelete = true
-	}
+	skipDelete := r.AccessParams.SingularEntity.SkipDelete
 
 	if r.AccessParams.DeleteModifyFunc != nil {
 		id = r.AccessParams.GetId(ctx, diags, id, thisIdAttributer)
@@ -146,8 +137,28 @@ func (r *GenericResource) Delete(ctx context.Context, req resource.DeleteRequest
 }
 
 func (r *GenericResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Retrieve import ID and save to id attribute
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+
+	// do not use resource.ImportStatePassthroughID here to be able to import entities with parents
+
+	importPaths := []path.Path{}
+	importAttributeNames := []string{}
+	for _, v := range r.AccessParams.ParentEntities {
+		importPaths = append(importPaths, v.ParentIdField)
+		importAttributeNames = append(importAttributeNames, v.ParentIdField.String())
+	}
+	importPaths = append(importPaths, path.Root(r.AccessParams.IdNameTf))
+	importAttributeNames = append(importAttributeNames, r.AccessParams.IdNameTf)
+
+	idComponents := strings.Split(req.ID, "/")
+	if len(idComponents) != len(importPaths) {
+		resp.Diagnostics.AddError("Id for import does not have the correct format",
+			fmt.Sprintf("To import this resource, an id with the following component(s) must be specified: '%s' (separated by forward slashes in case of multiple components)", strings.Join(importAttributeNames, "/")))
+		return
+	}
+
+	for i, v := range idComponents {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, importPaths[i], strings.Trim(v, " "))...)
+	}
 }
 
 func (r *GenericResource) createUpdate(ctx context.Context, operationType OperationType,
@@ -160,6 +171,7 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 
 	// do this in here since we anyway need the original request and response for CreateModifyFuncParams and UpdateModifyFuncParams
 	var diags *diag.Diagnostics
+	var requestConfig *tfsdk.Config
 	var requestPlan *tfsdk.Plan
 	var requestState *tfsdk.State
 	var responseState *tfsdk.State
@@ -169,12 +181,14 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	switch operationType {
 	case OperationCreate:
 		diags = &createResponse.Diagnostics
+		requestConfig = &createRequest.Config
 		requestPlan = &createRequest.Plan
 		parentIdAttributer = createRequest.Config
 		responseState = &createResponse.State
 		responsePrivate = createResponse.Private
 	case OperationUpdate:
 		diags = &updateResponse.Diagnostics
+		requestConfig = &updateRequest.Config
 		requestPlan = &updateRequest.Plan
 		requestState = &updateRequest.State
 		thisIdAttributer = updateRequest.State
@@ -188,9 +202,20 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	id := ""
 	updateExisting := operationType == OperationUpdate
 
-	if operationType == OperationCreate && r.AccessParams.IsSingleton {
+	if operationType == OperationCreate && r.AccessParams.SingularEntity.UpdateInsteadOfCreate {
 		updateExisting = true
-		id = "singleton" // will only be used for TF resource but not for MS Graph for IsSingleton
+		thisIdAttributer = parentIdAttributer
+	}
+
+	if updateExisting {
+		if operationType == OperationCreate && r.AccessParams.SingularEntity.ReadIdAttrFromGraph {
+			id = r.AccessParams.ReadId(ctx, diags, baseUri, parentIdAttributer, r.AccessParams.SingularEntity.ReadIdAttrFromGraphUseSelectId, "", nil)
+		} else {
+			id = r.AccessParams.GetId(ctx, diags, id, thisIdAttributer)
+		}
+		if diags.HasError() {
+			return
+		}
 	}
 
 	switch operationType {
@@ -216,10 +241,6 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 
 	case OperationUpdate:
 		if r.AccessParams.UpdateModifyFunc != nil {
-			id = r.AccessParams.GetId(ctx, diags, id, thisIdAttributer)
-			if diags.HasError() {
-				return
-			}
 			params := UpdateModifyFuncParams{
 				R:       r,
 				Req:     *updateRequest,
@@ -238,26 +259,40 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	}
 
 	if operationType == OperationCreate && updateExisting {
-		diags.AddWarning("Using existing entity from MS Graph instead of creating new one", "The targeted entity is a singleton and/or has been created by MS Graph itself.")
+		diags.AddWarning("Using existing entity from MS Graph instead of creating new one", "The targeted entity is a singleton, has been created by MS Graph itself and/or is a descendant of another already existing entity.")
 	}
 
 	includeNullObjects := updateExisting && !r.AccessParams.UsePutForUpdate
 	rawVal := ConvertTerraformToOdataRaw(ctx, diags, requestPlan.Schema, includeNullObjects,
-		requestPlan.Raw, updateExisting, r.AccessParams.TerraformToGraphMiddleware, "Plan")
+		requestPlan.Raw, updateExisting, *requestConfig, r.AccessParams.TerraformToGraphMiddleware, "Plan")
 	if diags.HasError() {
 		return
 	}
 
-	subActionsData := r.executeWriteSubActionsPre(ctx, diags, operationType, "", thisIdAttributer, rawVal, requestState, requestPlan, responsePrivate)
+	subActionsData := r.executeWriteSubActionsPre(ctx, diags, operationType, id, thisIdAttributer, rawVal, requestState, requestPlan, responsePrivate)
 	if diags.HasError() {
 		return
 	}
 
-	var createResultRaw map[string]any
+	var createUpdateResultRaw map[string]any
 	if updateExisting {
-		r.AccessParams.UpdateRaw(ctx, diags, baseUri, id, thisIdAttributer, rawVal, r.AccessParams.UsePutForUpdate)
+		if r.AccessParams.ReplaceUpdateFunc == nil {
+			r.AccessParams.UpdateRaw(ctx, diags, baseUri, id, thisIdAttributer, rawVal, r.AccessParams.UsePutForUpdate)
+		} else {
+			params := ReplaceUpdateFuncParams{
+				R:            r,
+				BaseUri:      baseUri,
+				Id:           id,
+				IdAttributer: thisIdAttributer,
+				RawVal:       rawVal,
+			}
+			r.AccessParams.ReplaceUpdateFunc(ctx, diags, &params)
+			if params.RawResult != nil {
+				createUpdateResultRaw = params.RawResult
+			}
+		}
 	} else {
-		id, createResultRaw = r.AccessParams.CreateRaw(ctx, diags, baseUri, parentIdAttributer, rawVal, false)
+		id, createUpdateResultRaw = r.AccessParams.CreateRaw(ctx, diags, baseUri, parentIdAttributer, rawVal, false)
 	}
 	if diags.HasError() {
 		return
@@ -296,7 +331,7 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 			Raw:    requestPlan.Raw,
 			Schema: responseState.Schema,
 		}
-		diags.Append(responseStateTemp.SetAttribute(ctx, path.Root("id"), id)...)
+		diags.Append(responseStateTemp.SetAttribute(ctx, path.Root(r.AccessParams.IdNameTf), id)...)
 		if diags.HasError() {
 			return
 		}
@@ -318,8 +353,8 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	// Produce a wholly-known new state by determining the final values for any attributes left unknown in the planned state.
 	diagsPopulateUnknowns := diag.Diagnostics{} // need separate diags here as diags might already contain error(s) from WriteSubActions
 	populateSource := tftypes.Value{}
-	if createResultRaw != nil {
-		populateSource = ConvertOdataRawToTerraform(ctx, &diagsPopulateUnknowns, requestPlan.Schema, createResultRaw, "", r.AccessParams.GraphToTerraformMiddleware)
+	if createUpdateResultRaw != nil {
+		populateSource = ConvertOdataRawToTerraform(ctx, &diagsPopulateUnknowns, requestPlan.Schema, createUpdateResultRaw, "", r.AccessParams.GraphToTerraformMiddleware)
 		if diagsPopulateUnknowns.HasError() {
 			diags.Append(diagsPopulateUnknowns...)
 			return

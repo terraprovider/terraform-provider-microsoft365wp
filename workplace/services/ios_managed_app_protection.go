@@ -31,8 +31,8 @@ var (
 	IosManagedAppProtectionSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&IosManagedAppProtectionResource)
 
-	IosManagedAppProtectionPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&IosManagedAppProtectionSingularDataSource, "")
+	IosManagedAppProtectionPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&IosManagedAppProtectionResource, "")
 )
 
 var iosManagedAppProtectionReadOptions = generic.ReadOptions{
@@ -374,9 +374,7 @@ var iosManagedAppProtectionResourceSchema = schema.Schema{
 		},
 		"pin_required_instead_of_biometric_timeout": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("PT30M")},
-			Computed:            true,
-			MarkdownDescription: "Timeout in minutes for an app pin instead of non biometrics passcode. The _provider_ default value is `\"PT30M\"`.",
+			MarkdownDescription: "Timeout in minutes for an app pin instead of non biometrics passcode",
 		},
 		"previous_pin_block_count": schema.Int64Attribute{
 			Optional:            true,
@@ -448,9 +446,7 @@ var iosManagedAppProtectionResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
 			},
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("block")},
-			Computed:            true,
-			MarkdownDescription: "Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time). / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting). The _provider_ default value is `\"block\"`.",
+			MarkdownDescription: "Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time). / An admin initiated action to be applied on a managed app; possible values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting)",
 		},
 		"app_action_if_ios_device_model_not_allowed": schema.StringAttribute{
 			Optional: true,

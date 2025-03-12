@@ -20,26 +20,26 @@ resource "microsoft365wp_authentication_methods_policy" "singleton" {
 
     {
       id    = "Fido2"
-      state = "disabled"
+      state = "enabled"
       fido2 = {}
     },
 
     {
       id                      = "MicrosoftAuthenticator"
       microsoft_authenticator = {}
-      state                   = "disabled"
+      state                   = "enabled"
     },
 
     {
       id    = "Sms"
       sms   = {}
-      state = "disabled"
+      state = "enabled"
     },
 
     {
       id                    = "TemporaryAccessPass"
       temporary_access_pass = {}
-      state                 = "disabled"
+      state                 = "enabled"
     },
 
     {
@@ -57,7 +57,7 @@ resource "microsoft365wp_authentication_methods_policy" "singleton" {
     {
       id    = "Voice"
       voice = {}
-      state = "disabled"
+      state = "enabled"
     },
 
     {
@@ -73,4 +73,6 @@ resource "microsoft365wp_authentication_methods_policy" "singleton" {
     },
 
   ]
+
+  policy_migration_state = "migrationComplete"
 }

@@ -8,6 +8,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -30,8 +31,8 @@ var (
 	DeviceCustomAttributeShellScriptSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&DeviceCustomAttributeShellScriptResource)
 
-	DeviceCustomAttributeShellScriptPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&DeviceCustomAttributeShellScriptSingularDataSource, "")
+	DeviceCustomAttributeShellScriptPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&DeviceCustomAttributeShellScriptResource, "")
 )
 
 var deviceCustomAttributeShellScriptReadOptions = generic.ReadOptions{
@@ -47,7 +48,7 @@ var deviceCustomAttributeShellScriptWriteSubActions = []generic.WriteSubAction{
 	},
 }
 
-func deviceCustomAttributeShellScriptTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func deviceCustomAttributeShellScriptTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {
 		// displayName, customAttributeType cannot be updated and may not even be written again after creation
 		delete(params.RawVal, "displayName")

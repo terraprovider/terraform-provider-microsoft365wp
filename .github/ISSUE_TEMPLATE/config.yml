@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: TerraProvider website
+    url: https://www.terraprovider.com
+    about: General information about TerraProvider.
+  - name: Terraform Provider documentation
+    url: https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs
+    about: Provider documentation and examples.

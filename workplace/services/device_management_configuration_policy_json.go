@@ -1,58 +1,20 @@
 package services
 
-// INFO#1
-// ==========
-// There seems to be a bug in the TF plugin framework so that Computed: true does not seem to work for ListAttribute. TF
-// still complains if anything gets written to `settings_json` that differs from the literal config.
-// Therefore we currently:
-// - Save just the literal config values to the state on create or update (and do not refresh from MS Graph after the
-//   create/update).
-// - On read/refresh we strip down the JSON returned from MS Graph by removing all non-required attributes and then only
-//   save the result to the state. This alone will work fine for Terraform as long as the config matches exactly the
-//   stripped down response from MS Graph.
-// - On plan, we additionally use a plan modifier that takes both the config/plan JSON settings as well as the state
-//   JSON settings, strips them both down again (as above), sorts the list and then compares the results. If there is no
-//   relevant difference left, we replace the plan settings with the state settings and TF will happily recognize that
-//   there is no change required (TF will accept config or state for plan, but would panic for any other plan due to the
-//   bug mentioned above).
-//   This plan modifier helps whenever the config does not match exactly the stripped down response from MS Graph (e.g.
-//   contains additional fields from a JSON dump etc.). The reason we also have to strip down the state again is that
-//   directly after creation the state will contain exactly what was in the config (e.g. also additional fields) and
-//   therefore needs to be stripped down for comparison as well.
-// - Small caveat: If the config only contains the attributes that are required then the TF plan UI will properly show
-//   only the individual settings items to be updated that actually have changed. But if the config contains attributes
-//   that usually get filtered out then also these items will be shown as changed to user even if nothing relevant has
-//   changed on them.
-
-// INFO#2
-// ==========
-// `settings_json`` vs. `settings.setting_instance`: I could not get a schema closer to the actual REST call (based on
-// schema.SetNestedAttribute with an inner setting_instance) to work as its PlanModifiers would not be enough for it
-// to be recoqnized as "eqal". Therefore we stick with the simpler interface for now (which seems ok as settingInstance
-// really seems to only exist due to syntactic requirements in MS Graph)
-
 import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"sort"
 	"strings"
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpjsontypes"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 var (
@@ -64,17 +26,14 @@ var (
 			ReadOptions:     deviceManagementConfigurationPolicyJsonReadOptions,
 			WriteSubActions: deviceManagementConfigurationPolicyJsonWriteSubActions,
 			UsePutForUpdate: true,
-			// See INFO#1, INFO#2
-			TerraformToGraphMiddleware: deviceManagementConfigurationPolicyJsonTerraformToGraphMiddleware,
-			GraphToTerraformMiddleware: deviceManagementConfigurationPolicyJsonGraphToTerraformMiddleware,
 		},
 	}
 
 	DeviceManagementConfigurationPolicyJsonSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&DeviceManagementConfigurationPolicyJsonResource)
 
-	DeviceManagementConfigurationPolicyJsonPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&DeviceManagementConfigurationPolicyJsonSingularDataSource, "device_management_configuration_policies_json")
+	DeviceManagementConfigurationPolicyJsonPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&DeviceManagementConfigurationPolicyJsonResource, "device_management_configuration_policies_json")
 )
 
 var deviceManagementConfigurationPolicyJsonReadOptions = generic.ReadOptions{
@@ -197,24 +156,24 @@ var deviceManagementConfigurationPolicyJsonResourceSchema = schema.Schema{
 			MarkdownDescription: "Template reference information / Policy template reference information / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationpolicytemplatereference?view=graph-rest-beta. The _provider_ default value is `{}`.",
 		},
 		"assignments": deviceAndAppManagementAssignment,
-		"settings_json": schema.SetAttribute{
-			// See INFO#2
-			Required:    true,
-			ElementType: wpschema.JSONStringType,
-			Validators: []validator.Set{
-				setvalidator.SizeBetween(1, 5000),
+		"settings": schema.SetNestedAttribute{
+			Required: true,
+			NestedObject: schema.NestedAttributeObject{
+				Attributes: map[string]schema.Attribute{ // deviceManagementConfigurationSetting
+					"instance_json": schema.StringAttribute{
+						Required:            true,
+						CustomType:          wpjsontypes.NormalizedType{WpObjectFilterFunc: deviceManagementConfigurationPolicyJsonSettingsInstanceFilter},
+						Description:         `settingInstance`, // custom MS Graph attribute name
+						MarkdownDescription: "Setting Instance / Setting instance within policy / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationsettinginstance?view=graph-rest-beta",
+					},
+				},
 			},
-			PlanModifiers:       []planmodifier.Set{&deviceManagementConfigurationPolicyJsonSettingsInstancePlanModifier{}},
-			Description:         `settings`, // custom MS Graph attribute name
-			MarkdownDescription: `Policy settings`,
+			Validators:          []validator.Set{setvalidator.SizeBetween(1, 5000)},
+			MarkdownDescription: "Policy settings / Setting instance within policy / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationsetting?view=graph-rest-beta",
 		},
 	},
 	MarkdownDescription: "Device Management Configuration Policy / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationpolicy?view=graph-rest-beta ||| MS Graph: Device configuration",
 }
-
-//
-// See INFO#1
-//
 
 // Filters all properties that do not seem to be required or returned from MS Graph.
 // This helps to keep settings_json consistent and comparable throughout roundtrips to MS Graph.
@@ -232,112 +191,4 @@ func deviceManagementConfigurationPolicyJsonSettingsInstanceFilter(path string, 
 		!(strings.HasSuffix(path, "/groupSettingCollectionValue@odata.type")) &&
 		!(strings.HasSuffix(path, "/children") && (value == nil || (valueIsSlice && len(sliceValue) == 0)))
 	return
-}
-
-//
-// See INFO#1, INFO#2
-//
-
-func deviceManagementConfigurationPolicyJsonTerraformToGraphMiddleware(_ context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
-
-	type deviceManagementConfigurationPolicySettingModelJson struct {
-		SettingInstance json.RawMessage `json:"settingInstance"`
-	}
-
-	settings := params.RawVal["settings"].([]any)
-	for i := range settings {
-		settings[i] = deviceManagementConfigurationPolicySettingModelJson{
-			SettingInstance: json.RawMessage(settings[i].(string)),
-		}
-	}
-
-	return nil
-}
-
-func deviceManagementConfigurationPolicyJsonGraphToTerraformMiddleware(_ context.Context, params generic.GraphToTerraformMiddlewareParams) generic.GraphToTerraformMiddlewareReturns {
-
-	settingsRaw := params.RawVal["settings"]
-	if settingsRaw == nil {
-		return nil // settings might have not been returned from Graph
-	}
-	settings, ok := settingsRaw.([]any)
-	if !ok {
-		return fmt.Errorf("unsupported type for settings: %T", settingsRaw)
-	}
-
-	for i := range settings {
-		settingInstance := settings[i].(map[string]any)["settingInstance"].(map[string]any)
-
-		// See INFO#1. Ugly hack relying on go json doing the sorting automatically internally
-		newSettingInstance, err := wpschema.Traverse(settingInstance, deviceManagementConfigurationPolicyJsonSettingsInstanceFilter)
-		if err != nil {
-			return err
-		}
-		newSettingInstanceJson, err := json.Marshal(newSettingInstance)
-		if err != nil {
-			return err
-		}
-
-		settings[i] = string(newSettingInstanceJson)
-	}
-
-	return nil
-}
-
-//
-// See INFO#1
-//
-
-type deviceManagementConfigurationPolicyJsonSettingsInstancePlanModifier struct{ generic.EmptyDescriber }
-
-var _ planmodifier.Set = (*deviceManagementConfigurationPolicyJsonSettingsInstancePlanModifier)(nil)
-
-func (apm *deviceManagementConfigurationPolicyJsonSettingsInstancePlanModifier) PlanModifySet(ctx context.Context, req planmodifier.SetRequest, res *planmodifier.SetResponse) {
-	// do nothing on create or on destroy
-	if req.StateValue.IsNull() || req.PlanValue.IsNull() {
-		return
-	}
-
-	planElements := req.PlanValue.Elements()
-	stateElements := req.StateValue.Elements()
-	// do nothing (i.e. keep plan) if sizes differ
-	if len(planElements) != len(stateElements) {
-		return
-	}
-
-	planCleanStrings := apm.cleanAndSortElements(&res.Diagnostics, planElements, "planElements")
-	stateCleanStrings := apm.cleanAndSortElements(&res.Diagnostics, stateElements, "stateElements")
-
-	// updating only the really different elements in the plan would unfortunately make TF panic (see INFO#1 above)
-	equalsEssentially := true
-	for i := range planCleanStrings {
-		if planCleanStrings[i] != stateCleanStrings[i] {
-			tflog.Debug(ctx, fmt.Sprintf("planCleanStrings[%d]:  %s", i, planCleanStrings[i]))
-			tflog.Debug(ctx, fmt.Sprintf("stateCleanStrings[%d]: %s", i, stateCleanStrings[i]))
-			equalsEssentially = false
-			break
-		}
-	}
-	if equalsEssentially {
-		res.PlanValue = req.StateValue
-	}
-}
-
-func (apm *deviceManagementConfigurationPolicyJsonSettingsInstancePlanModifier) cleanAndSortElements(diags *diag.Diagnostics, elements []attr.Value, source string) []string {
-
-	result := make([]string, len(elements))
-	for i, element := range elements {
-		elementClean, err := wpschema.TraverseJson([]byte(element.(wpschema.JSONString).ValueJSONString()), deviceManagementConfigurationPolicyJsonSettingsInstanceFilter)
-		if err != nil {
-			diags.AddError(fmt.Sprintf("TraverseJson(%s[%d])", source, i), err.Error())
-			return nil
-		}
-		result = append(result, string(elementClean))
-	}
-
-	// Even though we use schema.SetAttribute we still need to sort our elements for comparison to make sure that both
-	// lists are in the same order when WE compare them (above).
-	sort.Strings(result)
-
-	return result
 }

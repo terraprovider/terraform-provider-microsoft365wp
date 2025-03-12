@@ -23,12 +23,12 @@ import (
 )
 
 // TerraformFromRaw returns the Terraform Value for the specified JSON Properties (raw map[string]any).
-func (t ToFromGraphTranslator) TerraformFromRaw(ctx context.Context, resourceModel map[string]any) (tftypes.Value, error) {
+func (t *ToFromGraphTranslator) TerraformFromRaw(ctx context.Context, resourceModel map[string]any) (tftypes.Value, error) {
 	return t.terraformValueFromRaw(ctx, nil, resourceModel)
 }
 
 // TerraformFromJsonString returns the Terraform Value for the specified JSON Properties (string).
-func (t ToFromGraphTranslator) TerraformFromJsonString(ctx context.Context, resourceModel string) (tftypes.Value, error) {
+func (t *ToFromGraphTranslator) TerraformFromJsonString(ctx context.Context, resourceModel string) (tftypes.Value, error) {
 	var v any
 
 	if err := json.Unmarshal([]byte(resourceModel), &v); err != nil {
@@ -42,20 +42,33 @@ func (t ToFromGraphTranslator) TerraformFromJsonString(ctx context.Context, reso
 	return tftypes.Value{}, fmt.Errorf("unexpected raw type: %T", v)
 }
 
-func (t ToFromGraphTranslator) terraformValueFromRaw(ctx context.Context, path *tftypes.AttributePath, v any) (tftypes.Value, error) {
+func (t *ToFromGraphTranslator) terraformValueFromRaw(ctx context.Context, path *tftypes.AttributePath, v any) (tftypes.Value, error) {
 
 	// first check if we have any translated value for this attribute - if so, we're finished already
-	tfValue, ok, err := t.GraphToTerraformTranslateValue(ctx, path, v)
+	tfValue, ok, err := t.GraphToTerraformTranslateValue(path, v)
 	if err != nil || ok {
 		return tfValue, err
 	}
 
-	attrType, err := t.SchemaTypeAtTerraformPath(ctx, path)
+	attrType, err := t.SchemaTypeAtTerraformPath(path)
 	if err != nil {
 		return tftypes.Value{}, fmt.Errorf("getting attribute type at %s: %w", path, err)
 	}
 
 	typ := attrType.TerraformType(ctx)
+
+	// if target is string but source is complex then assume that the target string should receive JSON
+	if typ.Is(tftypes.String) {
+		switch v := v.(type) {
+		case []any, map[string]any:
+			val, err := json.Marshal(v)
+			if err != nil {
+				return tftypes.Value{}, err
+			}
+
+			return tftypes.NewValue(typ, string(val)), nil
+		}
+	}
 
 	switch v := v.(type) {
 	//
@@ -63,7 +76,7 @@ func (t ToFromGraphTranslator) terraformValueFromRaw(ctx context.Context, path *
 	//
 	case nil:
 		// translation for existing but null values gets handled further up, so we just want a Terraform default here
-		return t.GraphToTerraformDefaultValue(ctx, path, false, typ)
+		return t.GraphToTerraformDefaultValue(path, false, typ)
 
 	case bool:
 		return tftypes.NewValue(tftypes.Bool, v), nil
@@ -78,6 +91,7 @@ func (t ToFromGraphTranslator) terraformValueFromRaw(ctx context.Context, path *
 	// Complex types.
 	//
 	case []any:
+
 		var vals []tftypes.Value
 		for idx, v := range v {
 			if typ.Is(tftypes.Set{}) {
@@ -97,28 +111,17 @@ func (t ToFromGraphTranslator) terraformValueFromRaw(ctx context.Context, path *
 
 	case map[string]any:
 
-		if typ.Is(tftypes.String) {
-			// TF target is JSON string.
-
-			val, err := json.Marshal(v)
-			if err != nil {
-				return tftypes.Value{}, err
-			}
-
-			return tftypes.NewValue(typ, string(val)), nil
-		}
-
 		vals := make(map[string]tftypes.Value)
 		if typ.Is(tftypes.Object{}) {
 			// TF target is "real" object
 
-			parentSchemaAttribute, err := t.SchemaAttributeAtTerraformPath(ctx, path)
+			parentSchemaAttribute, err := t.SchemaAttributeAtTerraformPath(path)
 			if err != nil {
 				return tftypes.Value{}, err
 			}
 
 			if odataType, ok := v["@odata.type"].(string); ok {
-				leafAttrs, ok := t.NestedObjectAttributesByOdataType(ctx, parentSchemaAttribute, odataType)
+				leafAttrs, ok := t.NestedObjectAttributesByOdataType(parentSchemaAttribute, odataType)
 				if ok {
 					// move attributes belonging to specific (sub-)type to corresponding new leaf object
 					leaf := make(map[string]any)
@@ -133,7 +136,7 @@ func (t ToFromGraphTranslator) terraformValueFromRaw(ctx context.Context, path *
 			}
 
 			for key, v := range v {
-				tfAttributeName, ok := t.TerraformAttributeNameFromGraphName(ctx, parentSchemaAttribute, key)
+				tfAttributeName, ok := t.TerraformAttributeNameFromGraphName(parentSchemaAttribute, key)
 				if !ok {
 					tflog.Info(ctx, "not found in Terraform schema", map[string]any{"key": key, "path": path})
 					continue
@@ -150,7 +153,7 @@ func (t ToFromGraphTranslator) terraformValueFromRaw(ctx context.Context, path *
 			// Set any missing attributes to Null.
 			for k, at := range typ.(tftypes.Object).AttributeTypes {
 				if _, ok := vals[k]; !ok {
-					defaultValue, err := t.GraphToTerraformDefaultValue(ctx, path.WithAttributeName(k), true, at)
+					defaultValue, err := t.GraphToTerraformDefaultValue(path.WithAttributeName(k), true, at)
 					if err != nil {
 						return tftypes.Value{}, err
 					}

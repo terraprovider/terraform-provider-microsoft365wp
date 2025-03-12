@@ -33,7 +33,7 @@ func DiagsError(diags tfdiag.Diagnostics) error {
 
 // CopyValueAtPath copies the value at a specified path from source State to destination State.
 // Lifted from https://github.com/hashicorp/terraform-provider-awscc/blob/v0.50.0/internal/generic/state.go
-func CopyValueAtPath(ctx context.Context, dst, src *tfsdk.State, p path.Path) error {
+func CopyValueAtPath(ctx context.Context, dst *tfsdk.State, src GetAttributer, p path.Path) error {
 	var val attr.Value
 	diags := src.GetAttribute(ctx, p, &val)
 

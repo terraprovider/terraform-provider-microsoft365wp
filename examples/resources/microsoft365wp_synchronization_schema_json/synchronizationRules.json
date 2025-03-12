@@ -1,0 +1,696 @@
+[
+  {
+    "containerFilter": null,
+    "editable": true,
+    "groupFilter": null,
+    "id": "01e28086-1453-4cb2-b95d-4fbc4564fcc0",
+    "name": "USER_INBOUND_USER",
+    "priority": 1,
+    "sourceDirectoryName": "Microsoft Entra ID",
+    "targetDirectoryName": "Microsoft Entra ID (target tenant)",
+    "metadata": [
+      {
+        "key": "defaultSourceObjectMappings",
+        "value": "[{\"AttributeMappings\":[{\"DefaultValue\":\"False\",\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":0,\"Source\":null,\"TargetAttributeName\":\"IsSoftDeleted\"},{\"DefaultValue\":\"True\",\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":0,\"Source\":null,\"TargetAttributeName\":\"accountEnabled\"},{\"DefaultValue\":\"en-US\",\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":0,\"Source\":null,\"TargetAttributeName\":\"preferredLanguage\"},{\"DefaultValue\":null,\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":1,\"Source\":null,\"TargetAttributeName\":\"netId\"}],\"DisableMonitoringForChanges\":false,\"Disposition\":0,\"Enabled\":false,\"EscrowBehavior\":1,\"FlowTypes\":7,\"Internal\":false,\"IsCustomerDefined\":false,\"Name\":null,\"OriginalJoiningProperty\":\"netId\",\"Scope\":{\"CategoryFilterGroups\":null,\"Groups\":null,\"InputFilterGroups\":[{\"Clauses\":[{\"MultiValuedComparisonType\":0,\"OperatorName\":\"EQUALS\",\"SourceOperandName\":\"alternativeSecurityIds\",\"TargetOperand\":{\"Values\":[\"None\"]}},{\"MultiValuedComparisonType\":0,\"OperatorName\":\"NOT EQUALS\",\"SourceOperandName\":\"userState\",\"TargetOperand\":{\"Values\":[\"PendingAcceptance\"]}}],\"Name\":\"Filter external users\"}]},\"SourceObjectName\":\"\",\"Synchronized\":false,\"TargetObjectName\":\"User\",\"Unsynchronized\":false},{\"AttributeMappings\":[{\"DefaultValue\":null,\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":1,\"Source\":null,\"TargetAttributeName\":\"objectId\"}],\"DisableMonitoringForChanges\":false,\"Disposition\":0,\"Enabled\":false,\"EscrowBehavior\":1,\"FlowTypes\":7,\"Internal\":false,\"IsCustomerDefined\":false,\"Name\":null,\"OriginalJoiningProperty\":\"objectId\",\"Scope\":null,\"SourceObjectName\":\"\",\"Synchronized\":false,\"TargetObjectName\":\"Group\",\"Unsynchronized\":false},{\"AttributeMappings\":[{\"DefaultValue\":null,\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":1,\"Source\":null,\"TargetAttributeName\":\"appId\"}],\"DisableMonitoringForChanges\":false,\"Disposition\":0,\"Enabled\":false,\"EscrowBehavior\":1,\"FlowTypes\":7,\"Internal\":false,\"IsCustomerDefined\":false,\"Name\":null,\"OriginalJoiningProperty\":\"appId\",\"Scope\":null,\"SourceObjectName\":\"\",\"Synchronized\":false,\"TargetObjectName\":\"Application\",\"Unsynchronized\":false},{\"AttributeMappings\":[{\"DefaultValue\":\"User\",\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":0,\"Source\":null,\"TargetAttributeName\":\"allowedMemberTypes\"},{\"DefaultValue\":\".\",\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":0,\"Source\":null,\"TargetAttributeName\":\"description\"},{\"DefaultValue\":null,\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":1,\"Source\":null,\"TargetAttributeName\":\"displayName\"},{\"DefaultValue\":\"True\",\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":0,\"Source\":null,\"TargetAttributeName\":\"isEnabled\"}],\"DisableMonitoringForChanges\":false,\"Disposition\":0,\"Enabled\":false,\"EscrowBehavior\":1,\"FlowTypes\":7,\"Internal\":false,\"IsCustomerDefined\":false,\"Name\":null,\"OriginalJoiningProperty\":\"displayName\",\"Scope\":null,\"SourceObjectName\":\"\",\"Synchronized\":false,\"TargetObjectName\":\"AppRole\",\"Unsynchronized\":false},{\"AttributeMappings\":[{\"DefaultValue\":null,\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":1,\"Source\":null,\"TargetAttributeName\":\"id\"}],\"DisableMonitoringForChanges\":false,\"Disposition\":0,\"Enabled\":false,\"EscrowBehavior\":1,\"FlowTypes\":7,\"Internal\":false,\"IsCustomerDefined\":false,\"Name\":null,\"OriginalJoiningProperty\":\"id\",\"Scope\":null,\"SourceObjectName\":\"\",\"Synchronized\":false,\"TargetObjectName\":\"AppRoleAssignment\",\"Unsynchronized\":false},{\"AttributeMappings\":[{\"DefaultValue\":null,\"ExportMissingReferences\":false,\"FlowBehavior\":0,\"FlowType\":0,\"MatchingPriority\":1,\"Source\":null,\"TargetAttributeName\":\"displayName\"}],\"DisableMonitoringForChanges\":false,\"Disposition\":0,\"Enabled\":false,\"EscrowBehavior\":1,\"FlowTypes\":7,\"Internal\":false,\"IsCustomerDefined\":false,\"Name\":null,\"OriginalJoiningProperty\":\"displayName\",\"Scope\":null,\"SourceObjectName\":\"\",\"Synchronized\":false,\"TargetObjectName\":\"ServicePrincipal\",\"Unsynchronized\":false}]"
+      },
+      {
+        "key": "supportsProvisionOnDemand",
+        "value": "true"
+      }
+    ],
+    "objectMappings": [
+      {
+        "enabled": true,
+        "flowTypes": "Add,Update,Delete",
+        "name": "Provision Microsoft Entra ID Users",
+        "sourceObjectName": "User",
+        "targetObjectName": "User",
+        "attributeMappings": [
+          {
+            "defaultValue": "False",
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "IsSoftDeleted",
+            "source": {
+              "expression": "[IsSoftDeleted]",
+              "name": "IsSoftDeleted",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": "True",
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "accountEnabled",
+            "source": {
+              "expression": "[accountEnabled]",
+              "name": "accountEnabled",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "streetAddress",
+            "source": {
+              "expression": "[streetAddress]",
+              "name": "streetAddress",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "city",
+            "source": {
+              "expression": "[city]",
+              "name": "city",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "state",
+            "source": {
+              "expression": "[state]",
+              "name": "state",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "postalCode",
+            "source": {
+              "expression": "[postalCode]",
+              "name": "postalCode",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "country",
+            "source": {
+              "expression": "[country]",
+              "name": "country",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "department",
+            "source": {
+              "expression": "[department]",
+              "name": "department",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "employeeId",
+            "source": {
+              "expression": "[employeeId]",
+              "name": "employeeId",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "displayName",
+            "source": {
+              "expression": "[displayName]",
+              "name": "displayName",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "givenName",
+            "source": {
+              "expression": "[givenName]",
+              "name": "givenName",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "jobTitle",
+            "source": {
+              "expression": "[jobTitle]",
+              "name": "jobTitle",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "mailNickname",
+            "source": {
+              "expression": "[mailNickname]",
+              "name": "mailNickname",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "manager",
+            "source": {
+              "expression": "[manager]",
+              "name": "manager",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "physicalDeliveryOfficeName",
+            "source": {
+              "expression": "[physicalDeliveryOfficeName]",
+              "name": "physicalDeliveryOfficeName",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": "en-US",
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "preferredLanguage",
+            "source": {
+              "expression": "[preferredLanguage]",
+              "name": "preferredLanguage",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "surname",
+            "source": {
+              "expression": "[surname]",
+              "name": "surname",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "telephoneNumber",
+            "source": {
+              "expression": "[telephoneNumber]",
+              "name": "telephoneNumber",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "userPrincipalName",
+            "source": {
+              "expression": "[userPrincipalName]",
+              "name": "userPrincipalName",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "ObjectAddOnly",
+            "matchingPriority": 1,
+            "targetAttributeName": "alternativeSecurityIds",
+            "source": {
+              "expression": "AltSecIdFromNetId([netId])",
+              "name": "AltSecIdFromNetId",
+              "type": "Function",
+              "parameters": [
+                {
+                  "key": "source",
+                  "value": {
+                    "expression": "[netId]",
+                    "name": "netId",
+                    "type": "Attribute",
+                    "parameters": []
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "showInAddressList",
+            "source": {
+              "expression": "\"true\"",
+              "name": "true",
+              "type": "Constant",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "targetAttributeName": "mail",
+            "source": {
+              "expression": "[mail]",
+              "name": "mail",
+              "type": "Attribute",
+              "parameters": []
+            }
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "ObjectAddOnly",
+            "matchingPriority": 0,
+            "targetAttributeName": "userType",
+            "source": {
+              "expression": "\"Member\"",
+              "name": "Member",
+              "type": "Constant",
+              "parameters": []
+            }
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsCustomerDefined",
+            "value": "false"
+          },
+          {
+            "key": "DisableMonitoringForChanges",
+            "value": "false"
+          },
+          {
+            "key": "Disposition",
+            "value": "\"Normal\""
+          },
+          {
+            "key": "ExcludeFromReporting",
+            "value": "false"
+          },
+          {
+            "key": "EscrowBehavior",
+            "value": "\"Default\""
+          },
+          {
+            "key": "Unsynchronized",
+            "value": "false"
+          },
+          {
+            "key": "OriginalJoiningProperty",
+            "value": "alternativeSecurityIds"
+          }
+        ],
+        "scope": {
+          "categoryFilterGroups": [],
+          "groups": [],
+          "inputFilterGroups": [
+            {
+              "name": "Filter external users",
+              "clauses": [
+                {
+                  "operatorName": "EQUALS",
+                  "sourceOperandName": "alternativeSecurityIds",
+                  "targetOperand": {
+                    "values": [
+                      "None"
+                    ]
+                  }
+                },
+                {
+                  "operatorName": "NOT EQUALS",
+                  "sourceOperandName": "userState",
+                  "targetOperand": {
+                    "values": [
+                      "PendingAcceptance"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "enabled": false,
+        "flowTypes": "Add,Update,Delete",
+        "name": null,
+        "scope": null,
+        "sourceObjectName": "",
+        "targetObjectName": "Group",
+        "attributeMappings": [
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 1,
+            "source": null,
+            "targetAttributeName": "objectId"
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsCustomerDefined",
+            "value": "false"
+          },
+          {
+            "key": "DisableMonitoringForChanges",
+            "value": "false"
+          },
+          {
+            "key": "Disposition",
+            "value": "\"Normal\""
+          },
+          {
+            "key": "ExcludeFromReporting",
+            "value": "false"
+          },
+          {
+            "key": "EscrowBehavior",
+            "value": "\"Default\""
+          },
+          {
+            "key": "Unsynchronized",
+            "value": "false"
+          },
+          {
+            "key": "OriginalJoiningProperty",
+            "value": "objectId"
+          }
+        ]
+      },
+      {
+        "enabled": false,
+        "flowTypes": "Add,Update,Delete",
+        "name": null,
+        "scope": null,
+        "sourceObjectName": "",
+        "targetObjectName": "Application",
+        "attributeMappings": [
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 1,
+            "source": null,
+            "targetAttributeName": "appId"
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsCustomerDefined",
+            "value": "false"
+          },
+          {
+            "key": "DisableMonitoringForChanges",
+            "value": "false"
+          },
+          {
+            "key": "Disposition",
+            "value": "\"Normal\""
+          },
+          {
+            "key": "ExcludeFromReporting",
+            "value": "false"
+          },
+          {
+            "key": "EscrowBehavior",
+            "value": "\"Default\""
+          },
+          {
+            "key": "Unsynchronized",
+            "value": "false"
+          },
+          {
+            "key": "OriginalJoiningProperty",
+            "value": "appId"
+          }
+        ]
+      },
+      {
+        "enabled": false,
+        "flowTypes": "Add,Update,Delete",
+        "name": null,
+        "scope": null,
+        "sourceObjectName": "",
+        "targetObjectName": "AppRole",
+        "attributeMappings": [
+          {
+            "defaultValue": "User",
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "source": null,
+            "targetAttributeName": "allowedMemberTypes"
+          },
+          {
+            "defaultValue": ".",
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "source": null,
+            "targetAttributeName": "description"
+          },
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 1,
+            "source": null,
+            "targetAttributeName": "displayName"
+          },
+          {
+            "defaultValue": "True",
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 0,
+            "source": null,
+            "targetAttributeName": "isEnabled"
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsCustomerDefined",
+            "value": "false"
+          },
+          {
+            "key": "DisableMonitoringForChanges",
+            "value": "false"
+          },
+          {
+            "key": "Disposition",
+            "value": "\"Normal\""
+          },
+          {
+            "key": "ExcludeFromReporting",
+            "value": "false"
+          },
+          {
+            "key": "EscrowBehavior",
+            "value": "\"Default\""
+          },
+          {
+            "key": "Unsynchronized",
+            "value": "false"
+          },
+          {
+            "key": "OriginalJoiningProperty",
+            "value": "displayName"
+          }
+        ]
+      },
+      {
+        "enabled": false,
+        "flowTypes": "Add,Update,Delete",
+        "name": null,
+        "scope": null,
+        "sourceObjectName": "",
+        "targetObjectName": "AppRoleAssignment",
+        "attributeMappings": [
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 1,
+            "source": null,
+            "targetAttributeName": "id"
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsCustomerDefined",
+            "value": "false"
+          },
+          {
+            "key": "DisableMonitoringForChanges",
+            "value": "false"
+          },
+          {
+            "key": "Disposition",
+            "value": "\"Normal\""
+          },
+          {
+            "key": "ExcludeFromReporting",
+            "value": "false"
+          },
+          {
+            "key": "EscrowBehavior",
+            "value": "\"Default\""
+          },
+          {
+            "key": "Unsynchronized",
+            "value": "false"
+          },
+          {
+            "key": "OriginalJoiningProperty",
+            "value": "id"
+          }
+        ]
+      },
+      {
+        "enabled": false,
+        "flowTypes": "Add,Update,Delete",
+        "name": null,
+        "scope": null,
+        "sourceObjectName": "",
+        "targetObjectName": "ServicePrincipal",
+        "attributeMappings": [
+          {
+            "defaultValue": null,
+            "exportMissingReferences": false,
+            "flowBehavior": "FlowWhenChanged",
+            "flowType": "Always",
+            "matchingPriority": 1,
+            "source": null,
+            "targetAttributeName": "displayName"
+          }
+        ],
+        "metadata": [
+          {
+            "key": "IsCustomerDefined",
+            "value": "false"
+          },
+          {
+            "key": "DisableMonitoringForChanges",
+            "value": "false"
+          },
+          {
+            "key": "Disposition",
+            "value": "\"Normal\""
+          },
+          {
+            "key": "ExcludeFromReporting",
+            "value": "false"
+          },
+          {
+            "key": "EscrowBehavior",
+            "value": "\"Default\""
+          },
+          {
+            "key": "Unsynchronized",
+            "value": "false"
+          },
+          {
+            "key": "OriginalJoiningProperty",
+            "value": "displayName"
+          }
+        ]
+      }
+    ]
+  }
+]

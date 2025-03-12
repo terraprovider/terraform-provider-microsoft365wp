@@ -6,6 +6,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -27,13 +28,15 @@ var (
 	WindowsFeatureUpdateProfileSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&WindowsFeatureUpdateProfileResource)
 
-	WindowsFeatureUpdateProfilePluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&WindowsFeatureUpdateProfileSingularDataSource, "")
+	WindowsFeatureUpdateProfilePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&WindowsFeatureUpdateProfileResource, "")
 )
 
 var windowsFeatureUpdateProfileReadOptions = generic.ReadOptions{
-	ODataExpand:           "assignments",
-	PluralNoFilterSupport: true,
+	ODataExpand: "assignments",
+	DataSource: generic.DataSourceOptions{
+		NoFilterSupport: true,
+	},
 }
 
 var windowsFeatureUpdateProfileWriteSubActions = []generic.WriteSubAction{
@@ -45,7 +48,7 @@ var windowsFeatureUpdateProfileWriteSubActions = []generic.WriteSubAction{
 	},
 }
 
-func windowsFeatureUpdateProfileTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func windowsFeatureUpdateProfileTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {
 		// installLatestWindows10OnWindows11IneligibleDevice cannot be updated and may not even be written again after creation
 		delete(params.RawVal, "installLatestWindows10OnWindows11IneligibleDevice")

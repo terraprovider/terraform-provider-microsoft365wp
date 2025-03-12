@@ -18,12 +18,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/big"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpjsontypes"
 
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
 // TerraformAsRaw returns the raw map[string]any representing JSON from a Terraform Value.
-func (t ToFromGraphTranslator) TerraformAsRaw(ctx context.Context, val tftypes.Value) (map[string]any, error) {
+func (t *ToFromGraphTranslator) TerraformAsRaw(ctx context.Context, val tftypes.Value) (map[string]any, error) {
 	v, err := t.rawFromTerraformValue(ctx, nil, val)
 
 	if err != nil {
@@ -42,7 +43,7 @@ func (t ToFromGraphTranslator) TerraformAsRaw(ctx context.Context, val tftypes.V
 }
 
 // TerraformAsJsonString returns the string representing JSON from a Terraform Value.
-func (t ToFromGraphTranslator) TerraformAsJsonString(ctx context.Context, val tftypes.Value) (string, error) {
+func (t *ToFromGraphTranslator) TerraformAsJsonString(ctx context.Context, val tftypes.Value) (string, error) {
 	v, err := t.TerraformAsRaw(ctx, val)
 
 	if err != nil {
@@ -60,16 +61,21 @@ func (t ToFromGraphTranslator) TerraformAsJsonString(ctx context.Context, val tf
 
 // rawFromTerraformValue returns the raw value (suitable for JSON marshaling) of the specified Terraform value.
 // Terraform attribute names are mapped to JSON property names.
-func (t ToFromGraphTranslator) rawFromTerraformValue(ctx context.Context, path *tftypes.AttributePath, val tftypes.Value) (any, error) {
+func (t *ToFromGraphTranslator) rawFromTerraformValue(ctx context.Context, path *tftypes.AttributePath, val tftypes.Value) (any, error) {
 
 	// first check if we have any translated value for this attribute - if so, we're finished already
-	graphValue, ok, err := t.TerraformToGraphTranslateValue(ctx, path, val)
+	graphValue, ok, err := t.TerraformToGraphTranslateValue(path, val)
 	if err != nil || ok {
 		return graphValue, err
 	}
 
 	if val.IsNull() || !val.IsKnown() {
 		return nil, nil
+	}
+
+	attrType, err := t.SchemaTypeAtTerraformPath(path)
+	if err != nil {
+		return tftypes.Value{}, fmt.Errorf("getting attribute type at %s: %w", path, err)
 	}
 
 	typ := val.Type()
@@ -96,6 +102,11 @@ func (t ToFromGraphTranslator) rawFromTerraformValue(ctx context.Context, path *
 		var s string
 		if err := val.As(&s); err != nil {
 			return nil, err
+		}
+		if t := new(wpjsontypes.NormalizedType); t.Equal(attrType) {
+			var v any
+			err := json.Unmarshal([]byte(s), &v)
+			return v, err
 		}
 		return s, nil
 
@@ -133,7 +144,7 @@ func (t ToFromGraphTranslator) rawFromTerraformValue(ctx context.Context, path *
 			return nil, err
 		}
 
-		parentSchemaAttribute, err := t.SchemaAttributeAtTerraformPath(ctx, path)
+		parentSchemaAttribute, err := t.SchemaAttributeAtTerraformPath(path)
 		if err != nil {
 			return tftypes.Value{}, err
 		}
@@ -153,7 +164,7 @@ func (t ToFromGraphTranslator) rawFromTerraformValue(ctx context.Context, path *
 			if v == nil && !t.IncludeNullObjectsInJson {
 				continue
 			}
-			odataType, ok := t.OdataTypeByTerraformAttributeName(ctx, parentSchemaAttribute, name)
+			odataType, ok := t.OdataTypeByTerraformAttributeName(parentSchemaAttribute, name)
 			if ok {
 				if v != nil {
 					leaf, ok := v.(map[string]any)
@@ -166,7 +177,7 @@ func (t ToFromGraphTranslator) rawFromTerraformValue(ctx context.Context, path *
 					vs["@odata.type"] = odataType
 				}
 			} else if typ.Is(tftypes.Object{}) {
-				propertyName, attributeIsWritable, ok := t.GraphAttributeNameFromTerraformName(ctx, parentSchemaAttribute, name)
+				propertyName, attributeIsWritable, ok := t.GraphAttributeNameFromTerraformName(parentSchemaAttribute, name)
 				if !ok {
 					return nil, fmt.Errorf("attribute name mapping not found: %s", name)
 				}

@@ -5,13 +5,30 @@ subcategory: "MS Graph: Corporate enrollment"
 
 # microsoft365wp_azure_ad_windows_autopilot_deployment_profile_assignments (Data Source)
 
-**Note**: Due to technical difficulties trying to import this resource from MS Graph will result in an error, i.e. importing of this resource is not possible.
+Provider Note: To import this resource, an ID consisting of `azure_ad_windows_autopilot_deployment_profile_id` and `id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 
 Please note that almost all information on this page has been sourced literally from the official Microsoft Graph API 
 documentation and therefore is governed by Microsoft and not by the publishers of this provider.  
 All supplements authored by the publishers of this provider have been explicitly marked as such.
+
+## Query Filters (if Supported)
+
+If filtering by attribute values is supported (see schema below), then values set by the practitioner inside the config 
+will be translated to a respective OData `$filter` clause. For string attributes (except enumerations!), simple 
+wildcards (`*`) are supported at the start and/or the end of the attribute value or else exactly once inside and will be 
+translated to corresponding OData predicates and functions (i.e. `eq`, `startswith`, `endswith` and `contains`). 
+Multiple filter clauses will be combined using ` and `.  
+If supported (see schema below), the attributes `odata_filter`, `odata_orderby` and `odata_top` can also be used to 
+provide literal values for the respective OData options.
+
+If this is a data source that returns a single element (singular data source), then the resulting OData query must 
+result in exactly one returned entity! If supported, `odata_top = 1` and `odata_orderby` may be used to select a single 
+entity from a list.
+
+Please note that in the end all OData clauses/options will have to be interpreted by MS Graph, so MS Graph might impose 
+further restrictions on what functionality may be used in practice.
 
 
 
@@ -24,17 +41,19 @@ All supplements authored by the publishers of this provider have been explicitly
 
 ### Optional
 
-- `exclude_ids` (Set of String) Filter query to exclude objects with these ids.
-- `include_ids` (Set of String) Filter query to only return objects with these ids.
-- `odata_filter` (String) Raw OData $filter string to pass to MS Graph.
+- `exclude_ids` (Set of String) Exclude entities with these ids (using OData `$filter`).
+- `include_ids` (Set of String) Only return entities with these ids (using OData `$filter`).
+- `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
+- `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
+- `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
 
 ### Read-Only
 
-- `azure_ad_windows_autopilot_deployment_profile_assignments` (Attributes Set) (see [below for nested schema](#nestedatt--azure_ad_windows_autopilot_deployment_profile_assignments))
+- `azure_ad_windows_autopilot_deployment_profile_assignments` (Attributes List) (see [below for nested schema](#nestedatt--azure_ad_windows_autopilot_deployment_profile_assignments))
 
 <a id="nestedatt--azure_ad_windows_autopilot_deployment_profile_assignments"></a>
 ### Nested Schema for `azure_ad_windows_autopilot_deployment_profile_assignments`
 
-Required:
+Read-Only:
 
 - `id` (String) The key of the assignment.

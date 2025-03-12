@@ -37,6 +37,9 @@ resource "microsoft365wp_android_managed_app_protection" "test1" {
 
   app_group_type = "allCoreMicrosoftApps"
 
+  fingerprint_and_biometric_enabled         = true
+  pin_required_instead_of_biometric_timeout = "PT30M"
+
   assignments = [
     { target = { group = { group_id = "298fded6-b252-4166-a473-f405e935f58d" } } },
   ]
@@ -118,7 +121,7 @@ resource "microsoft365wp_android_managed_app_protection" "test2" {
 - `disable_app_pin_if_device_pin_is_set` (Boolean) Indicates whether use of the app pin is required if the device pin is set. The _provider_ default value is `false`.
 - `encrypt_app_data` (Boolean) Indicates whether application data for managed apps should be encrypted. The _provider_ default value is `true`.
 - `exempted_app_packages` (Attributes Set) App packages in this list will be exempt from the policy and will be able to receive data from managed apps. / Key value pair for storing custom settings / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`. (see [below for nested schema](#nestedatt--exempted_app_packages))
-- `fingerprint_and_biometric_enabled` (Boolean) If null, this setting will be ignored. If false both fingerprints and biometrics will not be enabled. If true, both fingerprints and biometrics will be enabled. The _provider_ default value is `true`.
+- `fingerprint_and_biometric_enabled` (Boolean) If null, this setting will be ignored. If false both fingerprints and biometrics will not be enabled. If true, both fingerprints and biometrics will be enabled.
 - `fingerprint_blocked` (Boolean) Indicates whether use of the fingerprint reader is allowed in place of a pin if PinRequired is set to True. The _provider_ default value is `false`.
 - `grace_period_to_block_apps_during_off_clock_hours` (String) A grace period before blocking app access during off clock hours.
 - `keyboards_restricted` (Boolean) Indicates if keyboard restriction is enabled. If enabled list of approved keyboards must be provided as well. The _provider_ default value is `false`.
@@ -154,7 +157,7 @@ resource "microsoft365wp_android_managed_app_protection" "test2" {
 - `period_online_before_access_check` (String) The period after which access is checked when the device is connected to the internet. The _provider_ default value is `"PT30M"`.
 - `pin_character_set` (String) Character set which may be used for an app-level pin if PinRequired is set to True. / Character set which is to be used for a user's app PIN; possible values are: `numeric` (Numeric characters), `alphanumericAndSymbol` (Alphanumeric and symbolic characters). The _provider_ default value is `"numeric"`.
 - `pin_required` (Boolean) Indicates whether an app-level pin is required. The _provider_ default value is `true`.
-- `pin_required_instead_of_biometric_timeout` (String) Timeout in minutes for an app pin instead of non biometrics passcode. The _provider_ default value is `"PT30M"`.
+- `pin_required_instead_of_biometric_timeout` (String) Timeout in minutes for an app pin instead of non biometrics passcode
 - `previous_pin_block_count` (Number) Requires a pin to be unique from the number specified in this property. The _provider_ default value is `0`.
 - `print_blocked` (Boolean) Indicates whether printing is allowed from managed apps. The _provider_ default value is `false`.
 - `protected_messaging_redirect_app_type` (String) Defines how app messaging redirection is protected by an App Protection Policy. Default is anyApp. / Defines how app messaging redirection is protected by an App Protection Policy. Default is anyApp; possible values are: `anyApp` (App protection policy will allow messaging redirection to any app.), `anyManagedApp` (App protection policy will allow messaging redirection to any managed application.), `specificApps` (App protection policy will allow messaging redirection only to specified applications in related App protection policy settings. See related settings `messagingRedirectAppDisplayName`, `messagingRedirectAppPackageId` and `messagingRedirectAppUrlScheme`.), `blocked` (App protection policy will block messaging redirection to any app.). The _provider_ default value is `"anyApp"`.

@@ -21,8 +21,9 @@ type WriteSubActionIndividual struct {
 	ComparisonKeyAttribute     string
 	SetNestedPath              *tftypes.AttributePath
 	IdGetterFunc               func(context.Context, *diag.Diagnostics, map[string]any, string) string
-	UriAddRef                  bool
-	TerraformToGraphMiddleware func(context.Context, TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns
+	IsOdataReference           bool
+	OdataRefMapTypeToUriPrefix map[string]string
+	TerraformToGraphMiddleware func(context.Context, *diag.Diagnostics, *TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns
 }
 
 var _ WriteSubAction = &WriteSubActionIndividual{}
@@ -111,7 +112,16 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 	for k, vPlan := range planByKey {
 		if vState, ok := stateByKey[k]; ok {
 			if !vPlan.Equal(vState) {
-				elementsToUpdate = append(elementsToUpdate, vPlan)
+				if !a.IsOdataReference {
+					elementsToUpdate = append(elementsToUpdate, vPlan)
+				} else {
+					// OData references do not support updates and they should happen in very rare cases only anyway
+					// (i.e. in case a practitioner had assigned the wrong type to a reference and changes/fixes that).
+					diags.AddWarning("Warning from WriteSubActionIndividual.ExecutePost", "The element with id "+k+" has changed, but this is "+
+						"not supported for OData references and should not happend under normal circumstances. Deleting and re-adding it instead.")
+					elementsToDelete = append(elementsToDelete, vState)
+					elementsToAdd = append(elementsToAdd, vPlan)
+				}
 			}
 		} else {
 			elementsToAdd = append(elementsToAdd, vPlan)
@@ -133,7 +143,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 		return
 	}
 
-	parentUri := wsaReq.GenRes.AccessParams.GetUriWithIdForUD(ctx, diags, "", parentId, nil)
+	parentUri := wsaReq.GenRes.AccessParams.GetUriWithIdForUD(ctx, diags, "", parentId, wsaReq.IdAttributer)
 	if diags.HasError() {
 		return
 	}
@@ -149,33 +159,72 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 
 	// We do not check for errors after Graph operations but continue to try to finish other tasks as much as possible.
 	// Our caller will check for errors and exit later.
-	var diags2 diag.Diagnostics
 
-	for _, v := range elementsToAdd {
-		vRaw, id := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, false, false)
-		if diags2.HasError() {
-			diags.Append(diags2...)
-			return
+	addElementsFunc := func() {
+
+		createUri := childBaseUri
+		if a.IsOdataReference {
+			createUri += "/$ref"
 		}
-		wsaReq.GenRes.AccessParams.CreateRaw(ctx, diags, childBaseUri+id, nil, vRaw, true) // id might contain /$ref
+
+		for _, v := range elementsToAdd {
+
+			var diags2 diag.Diagnostics
+			vRaw, _ := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, false, false)
+			diags.Append(diags2...)
+			if diags2.HasError() {
+				return
+			}
+
+			wsaReq.GenRes.AccessParams.CreateRaw(ctx, diags, createUri, nil, vRaw, true)
+		}
 	}
 
-	for _, v := range elementsToUpdate {
-		vRaw, id := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, true, false)
-		if diags2.HasError() {
+	updateElementsFunc := func() {
+
+		// no need to check fo a.IsOdataReference here as updates are not supported for it
+
+		for _, v := range elementsToUpdate {
+
+			var diags2 diag.Diagnostics
+			vRaw, id := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, true, false)
 			diags.Append(diags2...)
-			return
+			if diags2.HasError() {
+				return
+			}
+
+			wsaReq.GenRes.AccessParams.UpdateRaw(ctx, diags, childBaseUri, id, nil, vRaw, false)
 		}
-		wsaReq.GenRes.AccessParams.UpdateRaw(ctx, diags, childBaseUri, id, nil, vRaw, false)
 	}
 
-	for _, v := range elementsToDelete {
-		_, id := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, false, true)
-		if diags2.HasError() {
+	deleteElementsFunc := func() {
+
+		for _, v := range elementsToDelete {
+
+			var diags2 diag.Diagnostics
+			_, id := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, false, true)
 			diags.Append(diags2...)
-			return
+			if diags2.HasError() {
+				return
+			}
+
+			if a.IsOdataReference {
+				id += "/$ref"
+			}
+
+			wsaReq.GenRes.AccessParams.DeleteRaw(ctx, diags, childBaseUri, id, nil)
 		}
-		wsaReq.GenRes.AccessParams.DeleteRaw(ctx, diags, childBaseUri, id, nil)
+	}
+
+	if a.IsOdataReference {
+		// delete first and then add to avoid problems duplicate elements on updates
+		deleteElementsFunc()
+		addElementsFunc()
+	} else {
+		// add, update and then delete to avoid problems with (missing) default elements etc.
+		addElementsFunc()
+		updateElementsFunc()
+		deleteElementsFunc()
 	}
 }
 
@@ -197,15 +246,43 @@ func (a *WriteSubActionIndividual) getElementRawValAndId(ctx context.Context, di
 			return nil, ""
 		}
 	}
-	if a.UriAddRef {
-		id += "/$ref"
-	}
 
-	if !isDelete && a.TerraformToGraphMiddleware != nil {
-		params := TerraformToGraphMiddlewareParams{RawVal: vRaw, IsUpdate: isUpdate}
-		if err := a.TerraformToGraphMiddleware(ctx, params); err != nil {
-			diags.AddError(ErrorSummary, fmt.Sprintf("Error running middleware for element %s: %s", v, err.Error()))
-			return nil, ""
+	if !isDelete {
+
+		if a.IsOdataReference {
+			// OData refs need the full OData URI of the target entity (instead of just a GUID id)
+
+			odataType, ok := vRaw["@odata.type"].(string)
+			if ok {
+				delete(vRaw, "@odata.type")
+			}
+			uriPrefix, ok := a.OdataRefMapTypeToUriPrefix[odataType]
+			if !ok {
+				uriPrefix, ok = a.OdataRefMapTypeToUriPrefix[""]
+				if !ok {
+					diags.AddError(ErrorSummary, fmt.Sprintf("Unable to find OData URI prefix for type %s in OdataRefMapTypeToUriPrefix", odataType))
+					return nil, ""
+				}
+			}
+
+			id, ok := vRaw["id"].(string)
+			if !ok {
+				diags.AddError(ErrorSummary, fmt.Sprintf("Unable to find id in element %v", vRaw))
+				return nil, ""
+			}
+			delete(vRaw, "id")
+
+			vRaw["@odata.id"] = uriPrefix + id
+		}
+
+		if a.TerraformToGraphMiddleware != nil {
+			params := TerraformToGraphMiddlewareParams{RawVal: vRaw, IsUpdate: isUpdate}
+			if err := a.TerraformToGraphMiddleware(ctx, diags, &params); err != nil {
+				diags.AddError(ErrorSummary, fmt.Sprintf("Error running middleware for element %s: %s", v, err.Error()))
+			}
+			if diags.HasError() {
+				return nil, ""
+			}
 		}
 	}
 

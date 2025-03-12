@@ -1,4 +1,4 @@
-package wpschema
+package wpobjectfilter
 
 //
 // Heavily inspired by https://github.com/dschnare/jsonfilter/tree/f82bfdf3
@@ -9,13 +9,13 @@ import (
 	"fmt"
 )
 
-type filterFunc func(path string, value any) (bool, error)
+type FilterFunc func(path string, value any) (bool, error)
 
-func Traverse(value any, filter filterFunc) (any, error) {
+func Traverse(value any, filter FilterFunc) (any, error) {
 	return traverseAny(value, "", filter)
 }
 
-func TraverseJson(jsonIn []byte, filter filterFunc) (jsonOut []byte, err error) {
+func TraverseJson(jsonIn []byte, filter FilterFunc) (jsonOut []byte, err error) {
 	var mapIn map[string]any
 	err = json.Unmarshal(jsonIn, &mapIn)
 	if err != nil {
@@ -30,7 +30,7 @@ func TraverseJson(jsonIn []byte, filter filterFunc) (jsonOut []byte, err error) 
 	return json.Marshal(mapOut)
 }
 
-func traverseAny(value any, path string, filter filterFunc) (any, error) {
+func traverseAny(value any, path string, filter FilterFunc) (any, error) {
 	switch switchValue := value.(type) {
 	case map[string]any:
 		return traverseMap(switchValue, path, filter)
@@ -41,7 +41,7 @@ func traverseAny(value any, path string, filter filterFunc) (any, error) {
 	return value, nil
 }
 
-func traverseMap(currentMap map[string]any, path string, filter filterFunc) (newMap map[string]any, err error) {
+func traverseMap(currentMap map[string]any, path string, filter FilterFunc) (newMap map[string]any, err error) {
 	newMap = make(map[string]any)
 	for k, v := range currentMap {
 		itemPath := fmt.Sprintf("%s/%s", path, k)
@@ -58,7 +58,7 @@ func traverseMap(currentMap map[string]any, path string, filter filterFunc) (new
 	return
 }
 
-func traverseSlice(currentSlice []any, path string, filter filterFunc) (newSlice []any, err error) {
+func traverseSlice(currentSlice []any, path string, filter FilterFunc) (newSlice []any, err error) {
 	for k, v := range currentSlice {
 		itemPath := fmt.Sprintf("%s[%d]", path, k)
 		keep, err := filter(itemPath, v)

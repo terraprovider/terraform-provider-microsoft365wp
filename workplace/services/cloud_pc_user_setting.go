@@ -27,13 +27,15 @@ var (
 	CloudPcUserSettingSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&CloudPcUserSettingResource)
 
-	CloudPcUserSettingPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&CloudPcUserSettingSingularDataSource, "")
+	CloudPcUserSettingPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&CloudPcUserSettingResource, "")
 )
 
 var cloudPcUserSettingReadOptions = generic.ReadOptions{
-	ODataExpand:           "assignments",
-	PluralNoFilterSupport: true,
+	ODataExpand: "assignments",
+	DataSource: generic.DataSourceOptions{
+		NoFilterSupport: true,
+	},
 }
 
 var cloudPcUserSettingWriteSubActions = []generic.WriteSubAction{
@@ -64,7 +66,7 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 					Optional:            true,
 					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 					Computed:            true,
-					MarkdownDescription: "`True` if an end user is allowed to set up cross-region disaster recovery for Cloud PC; otherwise, `false`. The default value is `false`. The _provider_ default value is `false`.",
+					MarkdownDescription: ". The _provider_ default value is `false`.",
 				},
 				"disaster_recovery_network_setting": schema.SingleNestedAttribute{
 					Optional: true,
@@ -93,9 +95,9 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 									"region_group": schema.StringAttribute{
 										Required: true,
 										Validators: []validator.String{
-											stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico"),
+											stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico", "australasia", "europe"),
 										},
-										MarkdownDescription: "Indicates the logic geographic group this region belongs to. Multiple regions can belong to one region group. When a region group is configured for disaster recovery, the new Cloud PC is assigned to one of the regions within the group based on resource availability. For example, the `europeUnion` region group contains the North Europe and West Europe regions.，`southKorea`, `middleEast`, `mexico`. You must use the `Prefer: include-unknown-enum-members` request header to get the following values in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `norway`, `switzerland`，`southKorea`, `middleEast`, `mexico`. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`",
+										MarkdownDescription: "Indicates the logic geographic group this region belongs to. Multiple regions can belong to one region group. When a region group is configured for disaster recovery, the new Cloud PC is assigned to one of the regions within the group based on resource availability. For example, the `europeUnion` region group contains the North Europe and West Europe regions.，`southKorea`, `middleEast`, `mexico`. Use the `Prefer: include-unknown-enum-members` request header to get the following values in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `norway`, `switzerland`，`southKorea`, `middleEast`, `mexico`. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`",
 									},
 									"region_name": schema.StringAttribute{
 										Required:            true,
@@ -118,13 +120,19 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
 					Computed:            true,
-					MarkdownDescription: "Possible values are: `notConfigured`, `crossRegion`, `premium`, `unknownFutureValue`. The _provider_ default value is `\"notConfigured\"`.",
+					MarkdownDescription: "Indicates the type of disaster recovery to perform when a disaster occurs on the user's Cloud PC. The The default value is `notConfigured`. / Possible values are: `notConfigured`, `crossRegion`, `premium`, `unknownFutureValue`. The _provider_ default value is `\"notConfigured\"`.",
 				},
 				"maintain_cross_region_restore_point_enabled": schema.BoolAttribute{
 					Optional:            true,
 					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
 					Computed:            true,
 					MarkdownDescription: "Indicates whether Windows 365 maintain the cross-region disaster recovery function generated restore points. If `true`, the Windows 365 stored restore points; `false` indicates that Windows 365 doesn't generate or keep the restore point from the original Cloud PC. If a disaster occurs, the new Cloud PC can only be provisioned using the initial image. This limitation can result in the loss of some user data on the original Cloud PC. The default value is `false`. The _provider_ default value is `true`.",
+				},
+				"user_initiated_disaster_recovery_allowed": schema.BoolAttribute{
+					Optional:            true,
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+					Computed:            true,
+					MarkdownDescription: "Indicates whether the client allows the end user to initiate a disaster recovery activation. `True` indicates that the client includes the option for the end user to activate Backup Cloud PC. When `false`, the end user doesn't have the option to activate disaster recovery. The default value is `false`. Currently, only premium disaster recovery is supported. The _provider_ default value is `false`.",
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},

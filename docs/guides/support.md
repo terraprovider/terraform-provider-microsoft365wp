@@ -39,7 +39,7 @@ Our engineers are happy to support you in these languages:
 
 * Monday-Friday
 * 08:00-18:00 CET / CEST
-* Except for public holidays in Hesse / Germany
+* Except for public holidays in Hesse / Germany, Christmas Eve and New Year's Eve
 
 ## Support response time
 

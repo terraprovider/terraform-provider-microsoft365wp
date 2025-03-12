@@ -1,41 +1,97 @@
 # `microsoft365wp` Terraform Provider Changelog
 
 
+## 0.16.0 (2025-03-12)
+
+### added
+
+- authentication_combination_configuration
+- authentication_flows_policy
+- authorization_policy
+- cloud_pc_device_image (data sources only)
+- cloud_pc_gallery_image (data sources only)
+- connected_organization
+- cross_tenant_access_policy_configuration_default
+- cross_tenant_access_policy_configuration_partner
+- cross_tenant_access_policy
+- device_configuration.windows10_general
+- device_management_script
+- device_registration_policy
+- identity_governance_custom_task_extension
+- identity_governance_lifecycle_management_settings
+- identity_governance_task_definition (data sources only)
+- identity_governance_workflow
+- identity_governance_workflow_version (data sources only)
+- identity_security_defaults_enforcement_policy
+- mobility_management_policy
+- sharepoint_settings
+- synchronization_schema_json
+- unified_role_definition
+- unified_role_management_policy_assignment (data sources only)
+- unified_role_management_policy
+- windows_management_app
+
+### changed
+
+- Allow import of non-importable resources
+- Update dependencies
+- Update MS Graph metadata & docs
+- Enhance data source filters
+- Singular data sources: support entity selection by attribute filters
+- Singular data sources: support entity selection by OData filter
+- Update dependencies
+- Update MS Graph metadata & docs
+
+### breaking
+
+- android_managed_app_protection: fix/update provider defaults
+- authentication_methods_policy: fix/update provider defaults
+- cloud_pc_provisioning_policy: add image_display_name
+- device_management_configuration_policy_json: adapt to match device_management_configuration_policy
+- ios_managed_app_protection: fix/update provider defaults
+
+
 ## 0.15.1 (2024-12-11)
 
-### changed (1 change)
-
-- Update dependencies
-
-### fixed (1 change)
+### fixed
 
 - Fix authentication_methods_policy
+
+### changed
+
+- Update dependencies
 
 
 ## 0.15.0 (2024-12-10)
 
-### added (9 changes)
+### added
 
-- mobile_app: add resource
+- authentication_context_class_reference
+- device_configuration: add edition_upgrade
+- mobile_app
 - Add provider function parse_intunewin_metadata
 - Add provider function parse_appxmsix_metadata
-- device_configuration: add edition_upgrade
-- windows_driver_update_profile: add resource
-- cloud_pc_*: adapt for current MS Graph behavior
-- authentication_context_class_reference: add resource
-- Update metadata: no relevant changes
-- Docs: major overhaul and various enhancements
+- windows_driver_update_profile
 
-### fixed (3 changes)
+### fixed
 
-- Fix handling of read-only attributes in nested derived types
 - cloud_pc_provisioning_policy: fix region_name handling
-- Fix handling of various base64 encoded attributes
+- Fix handling of read-only attributes in nested derived types
+
+### changed
+
+- Docs: major overhaul and various enhancements
+- Update metadata: no relevant changes
+- cloud_pc_*: adapt for current MS Graph behavior
+
+### breaking
+
+- Cleanup handling of various base64 encoded attributes
 
 
 ## 0.14.0 (2024-10-30)
 
-### added (2 changes)
+### changed
 
 - Update MS Graph metadata
 - Update dependencies
@@ -43,17 +99,17 @@
 
 ## 0.13.0 (2024-09-11)
 
-### added (4 changes)
+### added
 
-- Docs: Include description and allow values for enum types
-- Update graph metadata
 - device_configuration: support android_work_profile_general_device
 - device_configuration.ios_device_features: support ios_single_sign_on_extension
 
-### changed (1 change)
-
-- Convert warning to info if entity has vanished from graph
-
-### fixed (1 change)
+### fixed
 
 - Avoid state corruption when deleting...
+
+### changed
+
+- Convert warning to info if entity has vanished from graph
+- Docs: Include description and allow values for enum types
+- Update graph metadata

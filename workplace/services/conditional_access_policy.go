@@ -32,8 +32,8 @@ var (
 	ConditionalAccessPolicySingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&ConditionalAccessPolicyResource)
 
-	ConditionalAccessPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&ConditionalAccessPolicySingularDataSource, "")
+	ConditionalAccessPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&ConditionalAccessPolicyResource, "")
 )
 
 var conditionalAccessPolicyResourceSchemaValidators = []resource.ConfigValidator{
@@ -209,7 +209,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							MarkdownDescription: ". The _provider_ default value is `[]`.",
 						},
 					},
-					MarkdownDescription: "Devices in the policy. / Represents devices in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessdevices?view=graph-rest-beta",
+					MarkdownDescription: "Devices in the policy. / Represents devices in the scope of a [conditionalAccessTemplate](../resources/conditionalaccesstemplate.md) object. This resource is configured in the **conditionalAccessTemplate** resource > **details** property > **conditions** property > **devices** property. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessdevices?view=graph-rest-beta",
 				},
 				"device_states": schema.SingleNestedAttribute{
 					Optional: true,
@@ -627,7 +627,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Validators: []validator.String{
 								stringvalidator.OneOf("strictEnforcement", "disabled", "unknownFutureValue", "strictLocation"),
 							},
-							MarkdownDescription: "Specifies continuous access evaluation settings. The Note that you must use the `Prefer: include-unknown-enum-members` request header to get the following value(s) in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `strictLocation`. / Possible values are: `strictEnforcement`, `disabled`, `unknownFutureValue`, `strictLocation`",
+							MarkdownDescription: "Specifies continuous access evaluation settings. The Use the `Prefer: include-unknown-enum-members` request header to get the following value(s) in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `strictLocation`. / Possible values are: `strictEnforcement`, `disabled`, `unknownFutureValue`, `strictLocation`",
 						},
 					},
 					MarkdownDescription: "Session control for continuous access evaluation settings. / Session control to control continuous access evaluation settings. / https://learn.microsoft.com/en-us/graph/api/resources/continuousaccessevaluationsessioncontrol?view=graph-rest-beta",

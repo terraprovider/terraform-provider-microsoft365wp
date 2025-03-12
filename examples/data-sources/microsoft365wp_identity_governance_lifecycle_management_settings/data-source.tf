@@ -1,0 +1,22 @@
+terraform {
+  required_providers {
+    microsoft365wp = {
+      source = "terraprovider/microsoft365wp"
+    }
+  }
+}
+
+/*
+.env
+export ARM_TENANT_ID='...'
+export ARM_CLIENT_ID='...'
+export ARM_CLIENT_SECRET='...'
+*/
+
+
+data "microsoft365wp_identity_governance_lifecycle_management_settings" "singleton" {
+}
+
+output "microsoft365wp_identity_governance_lifecycle_management_settings" {
+  value = data.microsoft365wp_identity_governance_lifecycle_management_settings.singleton
+}

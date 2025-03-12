@@ -33,8 +33,8 @@ var (
 	DeviceConfigurationSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&DeviceConfigurationResource)
 
-	DeviceConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&DeviceConfigurationSingularDataSource, "")
+	DeviceConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&DeviceConfigurationResource, "")
 )
 
 var deviceConfigurationReadOptions = generic.ReadOptions{
@@ -4710,6 +4710,1965 @@ var deviceConfigurationResourceSchema = schema.Schema{
 				MarkdownDescription: "Windows Update for business configuration, allows you to specify how and when Windows as a Service updates your Windows 10/11 devices with feature and quality updates. Supports ODATA clauses that DeviceConfiguration entity supports: $filter by types of DeviceConfiguration, $top, $select only DeviceConfiguration base properties, $orderby only DeviceConfiguration base properties, and $skip. The query parameter '$search' is not supported. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsupdateforbusinessconfiguration?view=graph-rest-beta",
 			},
 		},
+		"windows10_general": generic.OdataDerivedTypeNestedAttributeRs{
+			DerivedType: "#microsoft.graph.windows10GeneralConfiguration",
+			SingleNestedAttribute: schema.SingleNestedAttribute{
+				Optional: true,
+				Attributes: map[string]schema.Attribute{ // windows10GeneralConfiguration
+					"accounts_block_adding_non_microsoft_account_email": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from adding email accounts to the device that are not associated with a Microsoft account. The _provider_ default value is `false`.",
+					},
+					"activate_apps_with_voice": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Specifies if Windows apps can be activated by voice. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"anti_theft_mode_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the user from selecting an AntiTheft mode preference (Windows 10 Mobile only). The _provider_ default value is `false`.",
+					},
+					"app_management_msi_allow_user_control_over_install": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `appManagementMSIAllowUserControlOverInstall`, // custom MS Graph attribute name
+						MarkdownDescription: "This policy setting permits users to change installation options that typically are available only to system administrators. The _provider_ default value is `false`.",
+					},
+					"app_management_msi_always_install_with_elevated_privileges": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `appManagementMSIAlwaysInstallWithElevatedPrivileges`, // custom MS Graph attribute name
+						MarkdownDescription: "This policy setting directs Windows Installer to use elevated permissions when it installs any program on the system. The _provider_ default value is `false`.",
+					},
+					"app_management_package_family_names_to_launch_after_log_on": schema.SetAttribute{
+						ElementType:         types.StringType,
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:            true,
+						MarkdownDescription: "List of semi-colon delimited Package Family Names of Windows apps. Listed Windows apps are to be launched after logon.​ The _provider_ default value is `[]`.",
+					},
+					"apps_allow_trusted_apps_sideloading": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "blocked", "allowed"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether apps from AppX packages signed with a trusted certificate can be side loaded. / State Management Setting; possible values are: `notConfigured` (Not configured.), `blocked` (Blocked.), `allowed` (Allowed.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"apps_block_windows_store_originated_apps": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to disable the launch of all apps from Windows Store that came pre-installed or were downloaded. The _provider_ default value is `false`.",
+					},
+					"authentication_allow_secondary_device": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Allows secondary authentication devices to work with Windows. The _provider_ default value is `false`.",
+					},
+					"authentication_preferred_azure_ad_tenant_domain_name": schema.StringAttribute{
+						Optional:            true,
+						Description:         `authenticationPreferredAzureADTenantDomainName`, // custom MS Graph attribute name
+						MarkdownDescription: "Specifies the preferred domain among available domains in the Azure AD tenant.",
+					},
+					"authentication_web_sign_in": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not Web Credential Provider will be enabled. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"bluetooth_allowed_services": schema.SetAttribute{
+						ElementType:         types.StringType,
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:            true,
+						MarkdownDescription: "Specify a list of allowed Bluetooth services and profiles in hex formatted strings. The _provider_ default value is `[]`.",
+					},
+					"bluetooth_block_advertising": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to Block the user from using bluetooth advertising. The _provider_ default value is `false`.",
+					},
+					"bluetooth_block_discoverable_mode": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to Block the user from using bluetooth discoverable mode. The _provider_ default value is `false`.",
+					},
+					"bluetooth_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to Block the user from using bluetooth. The _provider_ default value is `false`.",
+					},
+					"bluetooth_block_pre_pairing": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to block specific bundled Bluetooth peripherals to automatically pair with the host device. The _provider_ default value is `false`.",
+					},
+					"bluetooth_block_prompted_proximal_connections": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to block the users from using Swift Pair and other proximity based scenarios. The _provider_ default value is `false`.",
+					},
+					"camera_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to Block the user from accessing the camera of the device. The _provider_ default value is `false`.",
+					},
+					"cellular_block_data_when_roaming": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to Block the user from using data over cellular while roaming. The _provider_ default value is `false`.",
+					},
+					"cellular_block_vpn": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to Block the user from using VPN over cellular. The _provider_ default value is `false`.",
+					},
+					"cellular_block_vpn_when_roaming": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to Block the user from using VPN when roaming over cellular. The _provider_ default value is `false`.",
+					},
+					"cellular_data": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("blocked", "required", "allowed", "notConfigured"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("allowed")},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to allow the cellular data channel on the device. If not configured, the cellular data channel is allowed and the user can turn it off. / Possible values of the ConfigurationUsage list; possible values are: `blocked` (Disallowed.), `required` (Required.), `allowed` (Optional.), `notConfigured` (Not Configured.). The _provider_ default value is `\"allowed\"`.",
+					},
+					"certificates_block_manual_root_certificate_installation": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to Block the user from doing manual root certificate installation. The _provider_ default value is `false`.",
+					},
+					"configure_time_zone": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "Specifies the time zone to be applied to the device. This is the standard Windows name for the target time zone.",
+					},
+					"connected_devices_service_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to block Connected Devices Service which enables discovery and connection to other devices, remote messaging, remote app sessions and other cross-device experiences. The _provider_ default value is `false`.",
+					},
+					"copy_paste_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to Block the user from using copy paste. The _provider_ default value is `false`.",
+					},
+					"cortana_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to Block the user from using Cortana. The _provider_ default value is `false`.",
+					},
+					"cryptography_allow_fips_algorithm_policy": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Specify whether to allow or disallow the Federal Information Processing Standard (FIPS) policy. The _provider_ default value is `false`.",
+					},
+					"data_protection_block_direct_memory_access": schema.BoolAttribute{
+						Optional:            true,
+						MarkdownDescription: "This policy setting allows you to block direct memory access (DMA) for all hot pluggable PCI downstream ports until a user logs into Windows.",
+					},
+					"defender_block_end_user_access": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether or not to block end user access to Defender. The _provider_ default value is `false`.",
+					},
+					"defender_block_on_access_protection": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Allows or disallows Windows Defender On Access Protection functionality. The _provider_ default value is `false`.",
+					},
+					"defender_cloud_block_level": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "high", "highPlus", "zeroTolerance"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Specifies the level of cloud-delivered protection. / Possible values of Cloud Block Level; possible values are: `notConfigured` (Default value, uses the default Windows Defender Antivirus blocking level and provides strong detection without increasing the risk of detecting legitimate files), `high` (High applies a strong level of detection.), `highPlus` (High + uses the High level and applies addition protection measures), `zeroTolerance` (Zero tolerance blocks all unknown executables). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"defender_cloud_extended_timeout": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "Timeout extension for file scanning by the cloud. Valid values 0 to 50",
+					},
+					"defender_cloud_extended_timeout_in_seconds": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "Timeout extension for file scanning by the cloud. Valid values 0 to 50",
+					},
+					"defender_days_before_deleting_quarantined_malware": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "Number of days before deleting quarantined malware. Valid values 0 to 90",
+					},
+					"defender_detected_malware_actions": schema.SingleNestedAttribute{
+						Optional: true,
+						Attributes: map[string]schema.Attribute{ // defenderDetectedMalwareActions
+							"high_severity": schema.StringAttribute{
+								Optional: true,
+								Validators: []validator.String{
+									stringvalidator.OneOf("deviceDefault", "clean", "quarantine", "remove", "allow", "userDefined", "block"),
+								},
+								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
+								Computed:            true,
+								MarkdownDescription: "Indicates a Defender action to take for high severity Malware threat detected. / Defender’s default action to take on detected Malware threats; possible values are: `deviceDefault` (Apply action based on the update definition.), `clean` (Clean the detected threat.), `quarantine` (Quarantine the detected threat.), `remove` (Remove the detected threat.), `allow` (Allow the detected threat.), `userDefined` (Allow the user to determine the action to take with the detected threat.), `block` (Block the detected threat.). The _provider_ default value is `\"deviceDefault\"`.",
+							},
+							"low_severity": schema.StringAttribute{
+								Optional: true,
+								Validators: []validator.String{
+									stringvalidator.OneOf("deviceDefault", "clean", "quarantine", "remove", "allow", "userDefined", "block"),
+								},
+								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
+								Computed:            true,
+								MarkdownDescription: "Indicates a Defender action to take for low severity Malware threat detected. / Defender’s default action to take on detected Malware threats; possible values are: `deviceDefault` (Apply action based on the update definition.), `clean` (Clean the detected threat.), `quarantine` (Quarantine the detected threat.), `remove` (Remove the detected threat.), `allow` (Allow the detected threat.), `userDefined` (Allow the user to determine the action to take with the detected threat.), `block` (Block the detected threat.). The _provider_ default value is `\"deviceDefault\"`.",
+							},
+							"moderate_severity": schema.StringAttribute{
+								Optional: true,
+								Validators: []validator.String{
+									stringvalidator.OneOf("deviceDefault", "clean", "quarantine", "remove", "allow", "userDefined", "block"),
+								},
+								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
+								Computed:            true,
+								MarkdownDescription: "Indicates a Defender action to take for moderate severity Malware threat detected. / Defender’s default action to take on detected Malware threats; possible values are: `deviceDefault` (Apply action based on the update definition.), `clean` (Clean the detected threat.), `quarantine` (Quarantine the detected threat.), `remove` (Remove the detected threat.), `allow` (Allow the detected threat.), `userDefined` (Allow the user to determine the action to take with the detected threat.), `block` (Block the detected threat.). The _provider_ default value is `\"deviceDefault\"`.",
+							},
+							"severe_severity": schema.StringAttribute{
+								Optional: true,
+								Validators: []validator.String{
+									stringvalidator.OneOf("deviceDefault", "clean", "quarantine", "remove", "allow", "userDefined", "block"),
+								},
+								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
+								Computed:            true,
+								MarkdownDescription: "Indicates a Defender action to take for severe severity Malware threat detected. / Defender’s default action to take on detected Malware threats; possible values are: `deviceDefault` (Apply action based on the update definition.), `clean` (Clean the detected threat.), `quarantine` (Quarantine the detected threat.), `remove` (Remove the detected threat.), `allow` (Allow the detected threat.), `userDefined` (Allow the user to determine the action to take with the detected threat.), `block` (Block the detected threat.). The _provider_ default value is `\"deviceDefault\"`.",
+							},
+						},
+						MarkdownDescription: "Gets or sets Defender’s actions to take on detected Malware per threat level. / Specify Defender’s actions to take on detected Malware per threat level. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-defenderdetectedmalwareactions?view=graph-rest-beta",
+					},
+					"defender_disable_catchup_full_scan": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "When blocked, catch-up scans for scheduled full scans will be turned off. The _provider_ default value is `false`.",
+					},
+					"defender_disable_catchup_quick_scan": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "When blocked, catch-up scans for scheduled quick scans will be turned off. The _provider_ default value is `false`.",
+					},
+					"defender_file_extensions_to_exclude": schema.SetAttribute{
+						ElementType:         types.StringType,
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:            true,
+						MarkdownDescription: "File extensions to exclude from scans and real time protection. The _provider_ default value is `[]`.",
+					},
+					"defender_files_and_folders_to_exclude": schema.SetAttribute{
+						ElementType:         types.StringType,
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:            true,
+						MarkdownDescription: "Files and folder to exclude from scans and real time protection. The _provider_ default value is `[]`.",
+					},
+					"defender_monitor_file_activity": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("userDefined", "disable", "monitorAllFiles", "monitorIncomingFilesOnly", "monitorOutgoingFilesOnly"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
+						Computed:            true,
+						MarkdownDescription: "Value for monitoring file activity. / Possible values for monitoring file activity; possible values are: `userDefined` (User Defined, default value, no intent.), `disable` (Disable monitoring file activity.), `monitorAllFiles` (Monitor all files.), `monitorIncomingFilesOnly` (Monitor incoming files only.), `monitorOutgoingFilesOnly` (Monitor outgoing files only.). The _provider_ default value is `\"userDefined\"`.",
+					},
+					"defender_potentially_unwanted_app_action": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("deviceDefault", "block", "audit"),
+						},
+						MarkdownDescription: "Gets or sets Defender’s action to take on Potentially Unwanted Application (PUA), which includes software with behaviors of ad-injection, software bundling, persistent solicitation for payment or subscription, etc. Defender alerts user when PUA is being downloaded or attempts to install itself. Added in Windows 10 for desktop. / Defender’s action to take on detected Potentially Unwanted Application (PUA); possible values are: `deviceDefault` (PUA Protection is off. Defender will not protect against potentially unwanted applications.), `block` (PUA Protection is on. Detected items are blocked. They will show in history along with other threats.), `audit` (Audit mode. Defender will detect potentially unwanted applications, but take no actions. You can review information about applications Defender would have taken action against by searching for events created by Defender in the Event Viewer.)",
+					},
+					"defender_potentially_unwanted_app_action_setting": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("userDefined", "enable", "auditMode", "warn", "notConfigured"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
+						Computed:            true,
+						MarkdownDescription: "Gets or sets Defender’s action to take on Potentially Unwanted Application (PUA), which includes software with behaviors of ad-injection, software bundling, persistent solicitation for payment or subscription, etc. Defender alerts user when PUA is being downloaded or attempts to install itself. Added in Windows 10 for desktop. / Possible values of Defender PUA Protection; possible values are: `userDefined` (Device default value, no intent.), `enable` (Block functionality.), `auditMode` (Allow functionality but generate logs.), `warn` (Warning message to end user with ability to bypass block from attack surface reduction rule.), `notConfigured` (Not configured.). The _provider_ default value is `\"userDefined\"`.",
+					},
+					"defender_processes_to_exclude": schema.SetAttribute{
+						ElementType:         types.StringType,
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:            true,
+						MarkdownDescription: "Processes to exclude from scans and real time protection. The _provider_ default value is `[]`.",
+					},
+					"defender_prompt_for_sample_submission": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("userDefined", "alwaysPrompt", "promptBeforeSendingPersonalData", "neverSendData", "sendAllDataWithoutPrompting"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
+						Computed:            true,
+						MarkdownDescription: "The configuration for how to prompt user for sample submission. / Possible values for prompting user for samples submission; possible values are: `userDefined` (User Defined, default value, no intent.), `alwaysPrompt` (Always prompt.), `promptBeforeSendingPersonalData` (Send safe samples automatically.), `neverSendData` (Never send data.), `sendAllDataWithoutPrompting` (Send all data without prompting.). The _provider_ default value is `\"userDefined\"`.",
+					},
+					"defender_require_behavior_monitoring": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to require behavior monitoring. The _provider_ default value is `false`.",
+					},
+					"defender_require_cloud_protection": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to require cloud protection. The _provider_ default value is `false`.",
+					},
+					"defender_require_network_inspection_system": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to require network inspection system. The _provider_ default value is `false`.",
+					},
+					"defender_require_real_time_monitoring": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to require real time monitoring. The _provider_ default value is `false`.",
+					},
+					"defender_scan_archive_files": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to scan archive files. The _provider_ default value is `false`.",
+					},
+					"defender_scan_downloads": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to scan downloads. The _provider_ default value is `false`.",
+					},
+					"defender_scan_incoming_mail": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to scan incoming mail messages. The _provider_ default value is `false`.",
+					},
+					"defender_scan_mapped_network_drives_during_full_scan": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to scan mapped network drives during full scan. The _provider_ default value is `false`.",
+					},
+					"defender_scan_max_cpu": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "Max CPU usage percentage during scan. Valid values 0 to 100",
+					},
+					"defender_scan_network_files": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to scan files opened from a network folder. The _provider_ default value is `false`.",
+					},
+					"defender_scan_removable_drives_during_full_scan": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to scan removable drives during full scan. The _provider_ default value is `false`.",
+					},
+					"defender_scan_scripts_loaded_in_internet_explorer": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to scan scripts loaded in Internet Explorer browser. The _provider_ default value is `false`.",
+					},
+					"defender_scan_type": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("userDefined", "disabled", "quick", "full"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
+						Computed:            true,
+						MarkdownDescription: "The defender system scan type. / Possible values for system scan type; possible values are: `userDefined` (User Defined, default value, no intent.), `disabled` (System scan disabled.), `quick` (Quick system scan.), `full` (Full system scan.). The _provider_ default value is `\"userDefined\"`.",
+					},
+					"defender_scheduled_quick_scan_time": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "The time to perform a daily quick scan.",
+					},
+					"defender_scheduled_scan_time": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "The defender time for the system scan.",
+					},
+					"defender_schedule_scan_enable_low_cpu_priority": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "When enabled, low CPU priority will be used during scheduled scans. The _provider_ default value is `false`.",
+					},
+					"defender_signature_update_interval_in_hours": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "The signature update interval in hours. Specify 0 not to check. Valid values 0 to 24",
+					},
+					"defender_submit_samples_consent_type": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("sendSafeSamplesAutomatically", "alwaysPrompt", "neverSend", "sendAllSamplesAutomatically"),
+						},
+						MarkdownDescription: "Checks for the user consent level in Windows Defender to send data. / Possible values for DefenderSubmitSamplesConsentType; possible values are: `sendSafeSamplesAutomatically` (Send safe samples automatically), `alwaysPrompt` (Always prompt), `neverSend` (Never send), `sendAllSamplesAutomatically` (Send all samples automatically)",
+					},
+					"defender_system_scan_schedule": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("userDefined", "everyday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "noScheduledScan"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
+						Computed:            true,
+						MarkdownDescription: "Defender day of the week for the system scan. / Possible values for a weekly schedule; possible values are: `userDefined` (User Defined, default value, no intent.), `everyday` (Everyday.), `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.), `noScheduledScan` (No Scheduled Scan). The _provider_ default value is `\"userDefined\"`.",
+					},
+					"developer_unlock_setting": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "blocked", "allowed"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to allow developer unlock. / State Management Setting; possible values are: `notConfigured` (Not configured.), `blocked` (Blocked.), `allowed` (Allowed.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"device_management_block_factory_reset_on_mobile": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from resetting their phone. The _provider_ default value is `false`.",
+					},
+					"device_management_block_manual_unenroll": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from doing manual un-enrollment from device management. The _provider_ default value is `false`.",
+					},
+					"diagnostics_data_submission_mode": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("userDefined", "none", "basic", "enhanced", "full"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
+						Computed:            true,
+						MarkdownDescription: "Gets or sets a value allowing the device to send diagnostic and usage telemetry data, such as Watson. / Allow the device to send diagnostic and usage telemetry data, such as Watson; possible values are: `userDefined` (Allow the user to set.), `none` (No telemetry data is sent from OS components. Note: This value is only applicable to enterprise and server devices. Using this setting on other devices is equivalent to setting the value of 1.), `basic` (Sends basic telemetry data.), `enhanced` (Sends enhanced telemetry data including usage and insights data.), `full` (Sends full telemetry data including diagnostic data, such as system state.). The _provider_ default value is `\"userDefined\"`.",
+					},
+					"display_app_list_with_gdi_dpi_scaling_turned_off": schema.SetAttribute{
+						ElementType:         types.StringType,
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:            true,
+						Description:         `displayAppListWithGdiDPIScalingTurnedOff`, // custom MS Graph attribute name
+						MarkdownDescription: "List of legacy applications that have GDI DPI Scaling turned off. The _provider_ default value is `[]`.",
+					},
+					"display_app_list_with_gdi_dpi_scaling_turned_on": schema.SetAttribute{
+						ElementType:         types.StringType,
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:            true,
+						Description:         `displayAppListWithGdiDPIScalingTurnedOn`, // custom MS Graph attribute name
+						MarkdownDescription: "List of legacy applications that have GDI DPI Scaling turned on. The _provider_ default value is `[]`.",
+					},
+					"edge_allow_start_pages_modification": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Allow users to change Start pages on Edge. Use the EdgeHomepageUrls to specify the Start pages that the user would see by default when they open Edge. The _provider_ default value is `false`.",
+					},
+					"edge_block_access_to_about_flags": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to prevent access to about flags on Edge browser. The _provider_ default value is `false`.",
+					},
+					"edge_block_address_bar_dropdown": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Block the address bar dropdown functionality in Microsoft Edge. Disable this settings to minimize network connections from Microsoft Edge to Microsoft services. The _provider_ default value is `false`.",
+					},
+					"edge_block_autofill": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block auto fill. The _provider_ default value is `false`.",
+					},
+					"edge_block_compatibility_list": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Block Microsoft compatibility list in Microsoft Edge. This list from Microsoft helps Edge properly display sites with known compatibility issues. The _provider_ default value is `false`.",
+					},
+					"edge_block_developer_tools": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block developer tools in the Edge browser. The _provider_ default value is `false`.",
+					},
+					"edge_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from using the Edge browser. The _provider_ default value is `false`.",
+					},
+					"edge_block_edit_favorites": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from making changes to Favorites. The _provider_ default value is `false`.",
+					},
+					"edge_block_extensions": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block extensions in the Edge browser. The _provider_ default value is `false`.",
+					},
+					"edge_block_full_screen_mode": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Allow or prevent Edge from entering the full screen mode. The _provider_ default value is `false`.",
+					},
+					"edge_block_in_private_browsing": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block InPrivate browsing on corporate networks, in the Edge browser. The _provider_ default value is `false`.",
+					},
+					"edge_block_java_script": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from using JavaScript. The _provider_ default value is `false`.",
+					},
+					"edge_block_live_tile_data_collection": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Block the collection of information by Microsoft for live tile creation when users pin a site to Start from Microsoft Edge. The _provider_ default value is `false`.",
+					},
+					"edge_block_password_manager": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block password manager. The _provider_ default value is `false`.",
+					},
+					"edge_block_popups": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block popups. The _provider_ default value is `false`.",
+					},
+					"edge_block_prelaunch": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Decide whether Microsoft Edge is prelaunched at Windows startup. The _provider_ default value is `false`.",
+					},
+					"edge_block_printing": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Configure Edge to allow or block printing. The _provider_ default value is `false`.",
+					},
+					"edge_block_saving_history": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Configure Edge to allow browsing history to be saved or to never save browsing history. The _provider_ default value is `false`.",
+					},
+					"edge_block_search_engine_customization": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the user from adding new search engine or changing the default search engine. The _provider_ default value is `false`.",
+					},
+					"edge_block_search_suggestions": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the user from using the search suggestions in the address bar. The _provider_ default value is `false`.",
+					},
+					"edge_block_sending_do_not_track_header": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from sending the do not track header. The _provider_ default value is `false`.",
+					},
+					"edge_block_sending_intranet_traffic_to_internet_explorer": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to switch the intranet traffic from Edge to Internet Explorer. Note: the name of this property is misleading; the property is obsolete, use EdgeSendIntranetTrafficToInternetExplorer instead. The _provider_ default value is `false`.",
+					},
+					"edge_block_sideloading_extensions": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether the user can sideload extensions. The _provider_ default value is `false`.",
+					},
+					"edge_block_tab_preloading": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Configure whether Edge preloads the new tab page at Windows startup. The _provider_ default value is `false`.",
+					},
+					"edge_block_web_content_on_new_tab_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Configure to load a blank page in Edge instead of the default New tab page and prevent users from changing it. The _provider_ default value is `false`.",
+					},
+					"edge_clear_browsing_data_on_exit": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Clear browsing data on exiting Microsoft Edge. The _provider_ default value is `false`.",
+					},
+					"edge_cookie_policy": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("userDefined", "allow", "blockThirdParty", "blockAll"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
+						Computed:            true,
+						MarkdownDescription: "Indicates which cookies to block in the Edge browser. / Possible values to specify which cookies are allowed in Microsoft Edge; possible values are: `userDefined` (Allow the user to set.), `allow` (Allow.), `blockThirdParty` (Block only third party cookies.), `blockAll` (Block all cookies.). The _provider_ default value is `\"userDefined\"`.",
+					},
+					"edge_disable_first_run_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Block the Microsoft web page that opens on the first use of Microsoft Edge. This policy allows enterprises, like those enrolled in zero emissions configurations, to block this page. The _provider_ default value is `false`.",
+					},
+					"edge_enterprise_mode_site_list_location": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "Indicates the enterprise mode site list location. Could be a local file, local network or http location.",
+					},
+					"edge_favorites_bar_visibility": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Get or set a value that specifies whether to set the favorites bar to always be visible or hidden on any page. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"edge_favorites_list_location": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "The location of the favorites list to provision. Could be a local file, local network or http location.",
+					},
+					"edge_first_run_url": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "The first run URL for when Edge browser is opened for the first time.",
+					},
+					"edge_home_button_configuration": schema.SingleNestedAttribute{
+						Optional: true,
+						Attributes: map[string]schema.Attribute{ // edgeHomeButtonConfiguration
+							"hidden": generic.OdataDerivedTypeNestedAttributeRs{
+								DerivedType: "#microsoft.graph.edgeHomeButtonHidden",
+								SingleNestedAttribute: schema.SingleNestedAttribute{
+									Optional:   true,
+									Attributes: map[string]schema.Attribute{ // edgeHomeButtonHidden
+									},
+									Validators: []validator.Object{
+										deviceConfigurationEdgeHomeButtonConfigurationValidator,
+									},
+									MarkdownDescription: "Hide the home button. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-edgehomebuttonhidden?view=graph-rest-beta",
+								},
+							},
+							"loads_start_page": generic.OdataDerivedTypeNestedAttributeRs{
+								DerivedType: "#microsoft.graph.edgeHomeButtonLoadsStartPage",
+								SingleNestedAttribute: schema.SingleNestedAttribute{
+									Optional:   true,
+									Attributes: map[string]schema.Attribute{ // edgeHomeButtonLoadsStartPage
+									},
+									Validators: []validator.Object{
+										deviceConfigurationEdgeHomeButtonConfigurationValidator,
+									},
+									MarkdownDescription: "Show the home button; clicking the home button loads the Start page - this is also the default value. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-edgehomebuttonloadsstartpage?view=graph-rest-beta",
+								},
+							},
+							"opens_custom_url": generic.OdataDerivedTypeNestedAttributeRs{
+								DerivedType: "#microsoft.graph.edgeHomeButtonOpensCustomURL",
+								SingleNestedAttribute: schema.SingleNestedAttribute{
+									Optional: true,
+									Attributes: map[string]schema.Attribute{ // edgeHomeButtonOpensCustomURL
+										"home_button_custom_url": schema.StringAttribute{
+											Optional:            true,
+											Description:         `homeButtonCustomURL`, // custom MS Graph attribute name
+											MarkdownDescription: "The specific URL to load.",
+										},
+									},
+									Validators: []validator.Object{
+										deviceConfigurationEdgeHomeButtonConfigurationValidator,
+									},
+									MarkdownDescription: "Show the home button; clicking the home button loads a specific URL. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-edgehomebuttonopenscustomurl?view=graph-rest-beta",
+								},
+							},
+							"opens_new_tab": generic.OdataDerivedTypeNestedAttributeRs{
+								DerivedType: "#microsoft.graph.edgeHomeButtonOpensNewTab",
+								SingleNestedAttribute: schema.SingleNestedAttribute{
+									Optional:   true,
+									Attributes: map[string]schema.Attribute{ // edgeHomeButtonOpensNewTab
+									},
+									Validators: []validator.Object{
+										deviceConfigurationEdgeHomeButtonConfigurationValidator,
+									},
+									MarkdownDescription: "Show the home button; clicking the home button loads the New tab page. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-edgehomebuttonopensnewtab?view=graph-rest-beta",
+								},
+							},
+						},
+						MarkdownDescription: "Causes the Home button to either hide, load the default Start page, load a New tab page, or a custom URL / The home button configuration base class used to identify the available options / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-edgehomebuttonconfiguration?view=graph-rest-beta",
+					},
+					"edge_home_button_configuration_enabled": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enable the Home button configuration. The _provider_ default value is `false`.",
+					},
+					"edge_homepage_urls": schema.SetAttribute{
+						ElementType:         types.StringType,
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:            true,
+						MarkdownDescription: "The list of URLs for homepages shodwn on MDM-enrolled devices on Edge browser. The _provider_ default value is `[]`.",
+					},
+					"edge_kiosk_mode_restriction": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "digitalSignage", "normalMode", "publicBrowsingSingleApp", "publicBrowsingMultiApp"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Controls how the Microsoft Edge settings are restricted based on the configure kiosk mode. / Specify how the Microsoft Edge settings are restricted based on kiosk mode; possible values are: `notConfigured` (Not configured (unrestricted).), `digitalSignage` (Interactive/Digital signage in single-app mode.), `normalMode` (Normal mode (full version of Microsoft Edge).), `publicBrowsingSingleApp` (Public browsing in single-app mode.), `publicBrowsingMultiApp` (Public browsing (inPrivate) in multi-app mode.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"edge_kiosk_reset_after_idle_time_in_minutes": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "Specifies the time in minutes from the last user activity before Microsoft Edge kiosk resets.  Valid values are 0-1440. The default is 5. 0 indicates no reset. Valid values 0 to 1440",
+					},
+					"edge_new_tab_page_url": schema.StringAttribute{
+						Optional:            true,
+						Description:         `edgeNewTabPageURL`, // custom MS Graph attribute name
+						MarkdownDescription: "Specify the page opened when new tabs are created.",
+					},
+					"edge_opens_with": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "startPage", "newTabPage", "previousPages", "specificPages"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Specify what kind of pages are open at start. / Possible values for the EdgeOpensWith setting; possible values are: `notConfigured` (Not configured.), `startPage` (StartPage.), `newTabPage` (NewTabPage.), `previousPages` (PreviousPages.), `specificPages` (SpecificPages.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"edge_prevent_certificate_error_override": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Allow or prevent users from overriding certificate errors. The _provider_ default value is `false`.",
+					},
+					"edge_required_extension_package_family_names": schema.SetAttribute{
+						ElementType:         types.StringType,
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:            true,
+						MarkdownDescription: "Specify the list of package family names of browser extensions that are required and cannot be turned off by the user. The _provider_ default value is `[]`.",
+					},
+					"edge_require_smart_screen": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Require the user to use the smart screen filter. The _provider_ default value is `false`.",
+					},
+					"edge_search_engine": schema.SingleNestedAttribute{
+						Optional: true,
+						Attributes: map[string]schema.Attribute{ // edgeSearchEngineBase
+							"custom": generic.OdataDerivedTypeNestedAttributeRs{
+								DerivedType: "#microsoft.graph.edgeSearchEngineCustom",
+								SingleNestedAttribute: schema.SingleNestedAttribute{
+									Optional: true,
+									Attributes: map[string]schema.Attribute{ // edgeSearchEngineCustom
+										"edge_search_engine_open_search_xml_url": schema.StringAttribute{
+											Optional:            true,
+											PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+											Computed:            true,
+											MarkdownDescription: "Points to a https link containing the OpenSearch xml file that contains, at minimum, the short name and the URL to the search Engine. The _provider_ default value is `\"\"`.",
+										},
+									},
+									Validators:          []validator.Object{deviceConfigurationEdgeSearchEngineBaseValidator},
+									MarkdownDescription: "Allows IT admins to set a custom default search engine for MDM-Controlled devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-edgesearchenginecustom?view=graph-rest-beta",
+								},
+							},
+							"predefined": generic.OdataDerivedTypeNestedAttributeRs{
+								DerivedType: "#microsoft.graph.edgeSearchEngine",
+								SingleNestedAttribute: schema.SingleNestedAttribute{
+									Optional: true,
+									Attributes: map[string]schema.Attribute{ // edgeSearchEngine
+										"edge_search_engine_type": schema.StringAttribute{
+											Optional:            true,
+											Validators:          []validator.String{stringvalidator.OneOf("default", "bing")},
+											PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("default")},
+											Computed:            true,
+											MarkdownDescription: "Allows IT admins to set a predefined default search engine for MDM-Controlled devices. / Allows IT admind to set a predefined default search engine for MDM-Controlled devices; possible values are: `default` (Uses factory settings of Edge to assign the default search engine as per the user market), `bing` (Sets Bing as the default search engine). The _provider_ default value is `\"default\"`.",
+										},
+									},
+									Validators:          []validator.Object{deviceConfigurationEdgeSearchEngineBaseValidator},
+									MarkdownDescription: "Allows IT admins to set a predefined default search engine for MDM-Controlled devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-edgesearchengine?view=graph-rest-beta",
+								},
+							},
+						},
+						MarkdownDescription: "Allows IT admins to set a default search engine for MDM-Controlled devices. Users can override this and change their default search engine provided the AllowSearchEngineCustomization policy is not set. / Allows IT admins to set a default search engine for MDM-Controlled devices. Users can override this and change their default search engine provided the AllowSearchEngineCustomization policy is not set. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-edgesearchenginebase?view=graph-rest-beta",
+					},
+					"edge_send_intranet_traffic_to_internet_explorer": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to switch the intranet traffic from Edge to Internet Explorer. The _provider_ default value is `false`.",
+					},
+					"edge_show_message_when_opening_internet_explorer_sites": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "disabled", "enabled", "keepGoing"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Controls the message displayed by Edge before switching to Internet Explorer. / What message will be displayed by Edge before switching to Internet Explorer; possible values are: `notConfigured` (Not configured.), `disabled` (Disabled.), `enabled` (Enabled.), `keepGoing` (KeepGoing.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"edge_sync_favorites_with_internet_explorer": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enable favorites sync between Internet Explorer and Microsoft Edge. Additions, deletions, modifications and order changes to favorites are shared between browsers. The _provider_ default value is `false`.",
+					},
+					"edge_telemetry_for_microsoft365_analytics": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "intranet", "internet", "intranetAndInternet"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						Description:         `edgeTelemetryForMicrosoft365Analytics`, // custom MS Graph attribute name
+						MarkdownDescription: "Specifies what type of telemetry data (none, intranet, internet, both) is sent to Microsoft 365 Analytics. / Type of browsing data sent to Microsoft 365 analytics; possible values are: `notConfigured` (Default – No telemetry data collected or sent), `intranet` (Allow sending intranet history only: Only send browsing history data for intranet sites), `internet` (Allow sending internet history only: Only send browsing history data for internet sites), `intranetAndInternet` (Allow sending both intranet and internet history: Send browsing history data for intranet and internet sites). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"enable_automatic_redeployment": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Allow users with administrative rights to delete all user data and settings using CTRL + Win + R at the device lock screen so that the device can be automatically re-configured and re-enrolled into management. The _provider_ default value is `false`.",
+					},
+					"energy_saver_on_battery_threshold_percentage": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "This setting allows you to specify battery charge level at which Energy Saver is turned on. While on battery, Energy Saver is automatically turned on at (and below) the specified battery charge level. Valid input range (0-100). Valid values 0 to 100",
+					},
+					"energy_saver_plugged_in_threshold_percentage": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "This setting allows you to specify battery charge level at which Energy Saver is turned on. While plugged in, Energy Saver is automatically turned on at (and below) the specified battery charge level. Valid input range (0-100). Valid values 0 to 100",
+					},
+					"enterprise_cloud_print_discovery_end_point": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "Endpoint for discovering cloud printers.",
+					},
+					"enterprise_cloud_print_discovery_max_limit": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "Maximum number of printers that should be queried from a discovery endpoint. This is a mobile only setting. Valid values 1 to 65535",
+					},
+					"enterprise_cloud_print_mopria_discovery_resource_identifier": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "OAuth resource URI for printer discovery service as configured in Azure portal.",
+					},
+					"enterprise_cloud_print_oauth_authority": schema.StringAttribute{
+						Optional:            true,
+						Description:         `enterpriseCloudPrintOAuthAuthority`, // custom MS Graph attribute name
+						MarkdownDescription: "Authentication endpoint for acquiring OAuth tokens.",
+					},
+					"enterprise_cloud_print_oauth_client_identifier": schema.StringAttribute{
+						Optional:            true,
+						Description:         `enterpriseCloudPrintOAuthClientIdentifier`, // custom MS Graph attribute name
+						MarkdownDescription: "GUID of a client application authorized to retrieve OAuth tokens from the OAuth Authority.",
+					},
+					"enterprise_cloud_print_resource_identifier": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "OAuth resource URI for print service as configured in the Azure portal.",
+					},
+					"experience_block_device_discovery": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to enable device discovery UX. The _provider_ default value is `false`.",
+					},
+					"experience_block_error_dialog_when_no_sim": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `experienceBlockErrorDialogWhenNoSIM`, // custom MS Graph attribute name
+						MarkdownDescription: "Indicates whether or not to allow the error dialog from displaying if no SIM card is detected. The _provider_ default value is `false`.",
+					},
+					"experience_block_task_switcher": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to enable task switching on the device. The _provider_ default value is `false`.",
+					},
+					"experience_do_not_sync_browser_settings": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "blockedWithUserOverride", "blocked"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Allow or prevent the syncing of Microsoft Edge Browser settings. Option for IT admins to prevent syncing across devices, but allow user override. / Allow(Not Configured) or prevent(Block) the syncing of Microsoft Edge Browser settings. Option to prevent syncing across devices, but allow user override; possible values are: `notConfigured` (Default – Allow syncing of browser settings across devices.), `blockedWithUserOverride` (Prevent syncing of browser settings across user devices, allow user override of setting.), `blocked` (Absolutely prevent syncing of browser settings across user devices.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"find_my_files": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Controls if the user can configure search to Find My Files mode, which searches files in secondary hard drives and also outside of the user profile. Find My Files does not allow users to search files or locations to which they do not have access. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"game_dvr_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block DVR and broadcasting. The _provider_ default value is `false`.",
+					},
+					"ink_workspace_access": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Controls the user access to the ink workspace, from the desktop and from above the lock screen. / Values for the InkWorkspaceAccess setting; possible values are: `notConfigured` (Not configured.), `enabled` (Enabled.), `disabled` (Disabled.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"ink_workspace_access_state": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "blocked", "allowed"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Controls the user access to the ink workspace, from the desktop and from above the lock screen. / State Management Setting; possible values are: `notConfigured` (Not configured.), `blocked` (Blocked.), `allowed` (Allowed.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"ink_workspace_block_suggested_apps": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Specify whether to show recommended app suggestions in the ink workspace. The _provider_ default value is `false`.",
+					},
+					"internet_sharing_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from using internet sharing. The _provider_ default value is `false`.",
+					},
+					"location_services_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from location services. The _provider_ default value is `false`.",
+					},
+					"lock_screen_activate_apps_with_voice": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "This policy setting specifies whether Windows apps can be activated by voice while the system is locked. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"lock_screen_allow_timeout_configuration": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Specify whether to show a user-configurable setting to control the screen timeout while on the lock screen of Windows 10 Mobile devices. If this policy is set to Allow, the value set by lockScreenTimeoutInSeconds is ignored. The _provider_ default value is `false`.",
+					},
+					"lock_screen_block_action_center_notifications": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block action center notifications over lock screen. The _provider_ default value is `false`.",
+					},
+					"lock_screen_block_cortana": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not the user can interact with Cortana using speech while the system is locked. The _provider_ default value is `false`.",
+					},
+					"lock_screen_block_toast_notifications": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether to allow toast notifications above the device lock screen. The _provider_ default value is `false`.",
+					},
+					"lock_screen_timeout_in_seconds": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "Set the duration (in seconds) from the screen locking to the screen turning off for Windows 10 Mobile devices. Supported values are 11-1800. Valid values 11 to 1800",
+					},
+					"logon_block_fast_user_switching": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Disables the ability to quickly switch between users that are logged on simultaneously without logging off. The _provider_ default value is `false`.",
+					},
+					"messaging_block_mms": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `messagingBlockMMS`, // custom MS Graph attribute name
+						MarkdownDescription: "Indicates whether or not to block the MMS send/receive functionality on the device. The _provider_ default value is `false`.",
+					},
+					"messaging_block_rich_communication_services": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the RCS send/receive functionality on the device. The _provider_ default value is `false`.",
+					},
+					"messaging_block_sync": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block text message back up and restore and Messaging Everywhere. The _provider_ default value is `false`.",
+					},
+					"microsoft_account_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block a Microsoft account. The _provider_ default value is `false`.",
+					},
+					"microsoft_account_block_settings_sync": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block Microsoft account settings sync. The _provider_ default value is `false`.",
+					},
+					"microsoft_account_sign_in_assistant_settings": schema.StringAttribute{
+						Optional:            true,
+						Validators:          []validator.String{stringvalidator.OneOf("notConfigured", "disabled")},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Controls the Microsoft Account Sign-In Assistant (wlidsvc) NT service. / Values for the SignInAssistantSettings; possible values are: `notConfigured` (Not configured - wlidsvc Start will be set to SERVICE_DEMAND_START.), `disabled` (Disabled - wlidsvc Start will be set to SERVICE_DISABLED.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"network_proxy_apply_settings_device_wide": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "If set, proxy settings will be applied to all processes and accounts in the device. Otherwise, it will be applied to the user account that’s enrolled into MDM. The _provider_ default value is `false`.",
+					},
+					"network_proxy_automatic_configuration_url": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "Address to the proxy auto-config (PAC) script you want to use.",
+					},
+					"network_proxy_disable_auto_detect": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Disable automatic detection of settings. If enabled, the system will try to find the path to a proxy auto-config (PAC) script. The _provider_ default value is `false`.",
+					},
+					"network_proxy_server": schema.SingleNestedAttribute{
+						Optional: true,
+						Attributes: map[string]schema.Attribute{ // windows10NetworkProxyServer
+							"address": schema.StringAttribute{
+								Optional:            true,
+								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+								Computed:            true,
+								MarkdownDescription: "Address to the proxy server. Specify an address in the format <server>\\[“:”<port>\\]. The _provider_ default value is `\"\"`.",
+							},
+							"exceptions": schema.SetAttribute{
+								ElementType:         types.StringType,
+								Optional:            true,
+								PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+								Computed:            true,
+								MarkdownDescription: "Addresses that should not use the proxy server. The system will not use the proxy server for addresses beginning with what is specified in this node. The _provider_ default value is `[]`.",
+							},
+							"use_for_local_addresses": schema.BoolAttribute{
+								Optional:            true,
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								Computed:            true,
+								MarkdownDescription: "Specifies whether the proxy server should be used for local (intranet) addresses. The _provider_ default value is `false`.",
+							},
+						},
+						MarkdownDescription: "Specifies manual proxy server settings. / Network Proxy Server Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windows10networkproxyserver?view=graph-rest-beta",
+					},
+					"nfc_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from using near field communication. The _provider_ default value is `false`.",
+					},
+					"one_drive_disable_file_sync": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Gets or sets a value allowing IT admins to prevent apps and features from working with files on OneDrive. The _provider_ default value is `false`.",
+					},
+					"password_block_simple": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Specify whether PINs or passwords such as \"1111\" or \"1234\" are allowed. For Windows 10 desktops, it also controls the use of picture passwords. The _provider_ default value is `false`.",
+					},
+					"password_expiration_days": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "The password expiration in days. Valid values 0 to 730",
+					},
+					"password_minimum_age_in_days": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "This security setting determines the period of time (in days) that a password must be used before the user can change it. Valid values 0 to 998",
+					},
+					"password_minimum_character_set_count": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "The number of character sets required in the password.",
+					},
+					"password_minimum_length": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "The minimum password length. Valid values 4 to 16",
+					},
+					"password_minutes_of_inactivity_before_screen_timeout": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "The minutes of inactivity before the screen times out.",
+					},
+					"password_previous_password_block_count": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "The number of previous passwords to prevent reuse of. Valid values 0 to 50",
+					},
+					"password_required": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to require the user to have a password. The _provider_ default value is `false`.",
+					},
+					"password_required_type": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("deviceDefault", "alphanumeric", "numeric"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("deviceDefault")},
+						Computed:            true,
+						MarkdownDescription: "The required password type. / Possible values of required passwords; possible values are: `deviceDefault` (Device default value, no intent.), `alphanumeric` (Alphanumeric password required.), `numeric` (Numeric password required.). The _provider_ default value is `\"deviceDefault\"`.",
+					},
+					"password_require_when_resume_from_idle_state": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to require a password upon resuming from an idle state. The _provider_ default value is `false`.",
+					},
+					"password_sign_in_failure_count_before_factory_reset": schema.Int64Attribute{
+						Optional:            true,
+						MarkdownDescription: "The number of sign in failures before factory reset. Valid values 0 to 999",
+					},
+					"personalization_desktop_image_url": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "A http or https Url to a jpg, jpeg or png image that needs to be downloaded and used as the Desktop Image or a file Url to a local image on the file system that needs to used as the Desktop Image.",
+					},
+					"personalization_lock_screen_image_url": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "A http or https Url to a jpg, jpeg or png image that neeeds to be downloaded and used as the Lock Screen Image or a file Url to a local image on the file system that needs to be used as the Lock Screen Image.",
+					},
+					"power_button_action_on_battery": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "noAction", "sleep", "hibernate", "shutdown"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "This setting specifies the action that Windows takes when a user presses the Power button while on battery. / Power action types; possible values are: `notConfigured` (Not configured), `noAction` (No action), `sleep` (Put device in sleep state), `hibernate` (Put device in hibernate state), `shutdown` (Shutdown device). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"power_button_action_plugged_in": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "noAction", "sleep", "hibernate", "shutdown"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "This setting specifies the action that Windows takes when a user presses the Power button while plugged in. / Power action types; possible values are: `notConfigured` (Not configured), `noAction` (No action), `sleep` (Put device in sleep state), `hibernate` (Put device in hibernate state), `shutdown` (Shutdown device). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"power_hybrid_sleep_on_battery": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "This setting allows you to turn off hybrid sleep while on battery. If you set this setting to disable, a hiberfile is not generated when the system transitions to sleep (Stand By). If you set this setting to enable or do not configure this policy setting, users control this setting. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"power_hybrid_sleep_plugged_in": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "This setting allows you to turn off hybrid sleep while plugged in. If you set this setting to disable, a hiberfile is not generated when the system transitions to sleep (Stand By). If you set this setting to enable or do not configure this policy setting, users control this setting. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"power_lid_close_action_on_battery": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "noAction", "sleep", "hibernate", "shutdown"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "This setting specifies the action that Windows takes when a user closes the lid on a mobile PC while on battery. / Power action types; possible values are: `notConfigured` (Not configured), `noAction` (No action), `sleep` (Put device in sleep state), `hibernate` (Put device in hibernate state), `shutdown` (Shutdown device). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"power_lid_close_action_plugged_in": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "noAction", "sleep", "hibernate", "shutdown"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "This setting specifies the action that Windows takes when a user closes the lid on a mobile PC while plugged in. / Power action types; possible values are: `notConfigured` (Not configured), `noAction` (No action), `sleep` (Put device in sleep state), `hibernate` (Put device in hibernate state), `shutdown` (Shutdown device). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"power_sleep_button_action_on_battery": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "noAction", "sleep", "hibernate", "shutdown"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "This setting specifies the action that Windows takes when a user presses the Sleep button while on battery. / Power action types; possible values are: `notConfigured` (Not configured), `noAction` (No action), `sleep` (Put device in sleep state), `hibernate` (Put device in hibernate state), `shutdown` (Shutdown device). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"power_sleep_button_action_plugged_in": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "noAction", "sleep", "hibernate", "shutdown"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "This setting specifies the action that Windows takes when a user presses the Sleep button while plugged in. / Power action types; possible values are: `notConfigured` (Not configured), `noAction` (No action), `sleep` (Put device in sleep state), `hibernate` (Put device in hibernate state), `shutdown` (Shutdown device). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"printer_block_addition": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Prevent user installation of additional printers from printers settings. The _provider_ default value is `false`.",
+					},
+					"printer_default_name": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "Name (network host name) of an installed printer.",
+					},
+					"printer_names": schema.SetAttribute{
+						ElementType:         types.StringType,
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						Computed:            true,
+						MarkdownDescription: "Automatically provision printers based on their names (network host names). The _provider_ default value is `[]`.",
+					},
+					"privacy_advertising_id": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "blocked", "allowed"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enables or disables the use of advertising ID. Added in Windows 10, version 1607. / State Management Setting; possible values are: `notConfigured` (Not configured.), `blocked` (Blocked.), `allowed` (Allowed.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"privacy_auto_accept_pairing_and_consent_prompts": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to allow the automatic acceptance of the pairing and privacy user consent dialog when launching apps. The _provider_ default value is `false`.",
+					},
+					"privacy_block_activity_feed": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Blocks the usage of cloud based speech services for Cortana, Dictation, or Store applications. The _provider_ default value is `false`.",
+					},
+					"privacy_block_input_personalization": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the usage of cloud based speech services for Cortana, Dictation, or Store applications. The _provider_ default value is `false`.",
+					},
+					"privacy_block_publish_user_activities": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Blocks the shared experiences/discovery of recently used resources in task switcher etc. The _provider_ default value is `false`.",
+					},
+					"privacy_disable_launch_experience": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "This policy prevents the privacy experience from launching during user logon for new and upgraded users.​ The _provider_ default value is `false`.",
+					},
+					"reset_protection_mode_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from reset protection mode. The _provider_ default value is `false`.",
+					},
+					"safe_search_filter": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("userDefined", "strict", "moderate"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
+						Computed:            true,
+						MarkdownDescription: "Specifies what filter level of safe search is required. / Specifies what level of safe search (filtering adult content) is required; possible values are: `userDefined` (User Defined, default value, no intent.), `strict` (Strict, highest filtering against adult content.), `moderate` (Moderate filtering against adult content (valid search results will not be filtered).). The _provider_ default value is `\"userDefined\"`.",
+					},
+					"screen_capture_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from taking Screenshots. The _provider_ default value is `false`.",
+					},
+					"search_block_diacritics": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Specifies if search can use diacritics. The _provider_ default value is `false`.",
+					},
+					"search_block_web_results": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the web search. The _provider_ default value is `false`.",
+					},
+					"search_disable_auto_language_detection": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Specifies whether to use automatic language detection when indexing content and properties. The _provider_ default value is `false`.",
+					},
+					"search_disable_indexer_backoff": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to disable the search indexer backoff feature. The _provider_ default value is `false`.",
+					},
+					"search_disable_indexing_encrypted_items": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block indexing of WIP-protected items to prevent them from appearing in search results for Cortana or Explorer. The _provider_ default value is `false`.",
+					},
+					"search_disable_indexing_removable_drive": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to allow users to add locations on removable drives to libraries and to be indexed. The _provider_ default value is `false`.",
+					},
+					"search_disable_location": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Specifies if search can use location information. The _provider_ default value is `false`.",
+					},
+					"search_disable_use_location": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Specifies if search can use location information. The _provider_ default value is `false`.",
+					},
+					"search_enable_automatic_index_size_manangement": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Specifies minimum amount of hard drive space on the same drive as the index location before indexing stops. The _provider_ default value is `false`.",
+					},
+					"search_enable_remote_queries": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block remote queries of this computer’s index. The _provider_ default value is `false`.",
+					},
+					"security_block_azure_ad_joined_devices_auto_encryption": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `securityBlockAzureADJoinedDevicesAutoEncryption`, // custom MS Graph attribute name
+						MarkdownDescription: "Specify whether to allow automatic device encryption during OOBE when the device is Azure AD joined (desktop only). The _provider_ default value is `false`.",
+					},
+					"settings_block_accounts_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Accounts in Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_add_provisioning_package": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the user from installing provisioning packages. The _provider_ default value is `false`.",
+					},
+					"settings_block_apps_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Apps in Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_change_language": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the user from changing the language settings. The _provider_ default value is `false`.",
+					},
+					"settings_block_change_power_sleep": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the user from changing power and sleep settings. The _provider_ default value is `false`.",
+					},
+					"settings_block_change_region": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the user from changing the region settings. The _provider_ default value is `false`.",
+					},
+					"settings_block_change_system_time": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the user from changing date and time settings. The _provider_ default value is `false`.",
+					},
+					"settings_block_devices_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Devices in Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_ease_of_access_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Ease of Access in Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_edit_device_name": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the user from editing the device name. The _provider_ default value is `false`.",
+					},
+					"settings_block_gaming_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Gaming in Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_network_internet_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Network & Internet in Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_personalization_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Personalization in Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_privacy_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Privacy in Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_remove_provisioning_package": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the runtime configuration agent from removing provisioning packages. The _provider_ default value is `false`.",
+					},
+					"settings_block_settings_app": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_system_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to System in Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_time_language_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Time & Language in Settings app. The _provider_ default value is `false`.",
+					},
+					"settings_block_update_security_page": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block access to Update & Security in Settings app. The _provider_ default value is `false`.",
+					},
+					"shared_user_app_data_allowed": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block multiple users of the same app to share data. The _provider_ default value is `false`.",
+					},
+					"smartscreen_app_install_control": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "anywhere", "storeOnly", "recommendations", "preferStore"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						Description:         `smartScreenAppInstallControl`, // custom MS Graph attribute name
+						MarkdownDescription: "Added in Windows 10, version 1703. Allows IT Admins to control whether users are allowed to install apps from places other than the Store. / App Install control Setting; possible values are: `notConfigured` (Not configured), `anywhere` (Turn off app recommendations), `storeOnly` (Allow apps from Store only), `recommendations` (Show me app recommendations), `preferStore` (Warn me before installing apps from outside the Store). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"smartscreen_block_prompt_override": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `smartScreenBlockPromptOverride`, // custom MS Graph attribute name
+						MarkdownDescription: "Indicates whether or not users can override SmartScreen Filter warnings about potentially malicious websites. The _provider_ default value is `false`.",
+					},
+					"smartscreen_block_prompt_override_for_files": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `smartScreenBlockPromptOverrideForFiles`, // custom MS Graph attribute name
+						MarkdownDescription: "Indicates whether or not users can override the SmartScreen Filter warnings about downloading unverified files. The _provider_ default value is `false`.",
+					},
+					"start_block_unpinning_apps_from_taskbar": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block the user from unpinning apps from taskbar. The _provider_ default value is `false`.",
+					},
+					"start_menu_app_list_visibility": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							wpvalidator.FlagEnumValues("userDefined", "collapse", "remove", "disableSettingsApp"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
+						Computed:            true,
+						MarkdownDescription: "Setting the value of this collapses the app list, removes the app list entirely, or disables the corresponding toggle in the Settings app. / Type of start menu app list visibility; possible values are: `userDefined` (User defined. Default value.), `collapse` (Collapse the app list on the start menu.), `remove` (Removes the app list entirely from the start menu.), `disableSettingsApp` (Disables the corresponding toggle (Collapse or Remove) in the Settings app.). The _provider_ default value is `\"userDefined\"`.",
+					},
+					"start_menu_hide_change_account_settings": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides the change account setting from appearing in the user tile in the start menu. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_frequently_used_apps": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides the most used apps from appearing on the start menu and disables the corresponding toggle in the Settings app. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_hibernate": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides hibernate from appearing in the power button in the start menu. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_lock": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides lock from appearing in the user tile in the start menu. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_power_button": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides the power button from appearing in the start menu. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_recent_jump_lists": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides recent jump lists from appearing on the start menu/taskbar and disables the corresponding toggle in the Settings app. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_recently_added_apps": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides recently added apps from appearing on the start menu and disables the corresponding toggle in the Settings app. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_restart_options": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides “Restart/Update and Restart” from appearing in the power button in the start menu. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_shutdown": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `startMenuHideShutDown`, // custom MS Graph attribute name
+						MarkdownDescription: "Enabling this policy hides shut down/update and shut down from appearing in the power button in the start menu. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_sign_out": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides sign out from appearing in the user tile in the start menu. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_sleep": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides sleep from appearing in the power button in the start menu. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_switch_account": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides switch account from appearing in the user tile in the start menu. The _provider_ default value is `false`.",
+					},
+					"start_menu_hide_user_tile": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Enabling this policy hides the user tile from appearing in the start menu. The _provider_ default value is `false`.",
+					},
+					"start_menu_layout_edge_assets_xml": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "This policy setting allows you to import Edge assets to be used with startMenuLayoutXml policy. Start layout can contain secondary tile from Edge app which looks for Edge local asset file. Edge local asset would not exist and cause Edge secondary tile to appear empty in this case. This policy only gets applied when startMenuLayoutXml policy is modified. The value should be a UTF-8 Base64 encoded byte array.",
+					},
+					"start_menu_layout_xml": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "Allows admins to override the default Start menu layout and prevents the user from changing it. The layout is modified by specifying an XML file based on a layout modification schema. XML needs to be in a UTF8 encoded byte array format.",
+					},
+					"start_menu_mode": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("userDefined", "fullScreen", "nonFullScreen"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("userDefined")},
+						Computed:            true,
+						MarkdownDescription: "Allows admins to decide how the Start menu is displayed. / Type of display modes for the start menu; possible values are: `userDefined` (User defined. Default value.), `fullScreen` (Full screen.), `nonFullScreen` (Non-full screen.). The _provider_ default value is `\"userDefined\"`.",
+					},
+					"start_menu_pinned_folder_documents": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enforces the visibility (Show/Hide) of the Documents folder shortcut on the Start menu. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"start_menu_pinned_folder_downloads": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enforces the visibility (Show/Hide) of the Downloads folder shortcut on the Start menu. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"start_menu_pinned_folder_file_explorer": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enforces the visibility (Show/Hide) of the FileExplorer shortcut on the Start menu. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"start_menu_pinned_folder_home_group": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enforces the visibility (Show/Hide) of the HomeGroup folder shortcut on the Start menu. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"start_menu_pinned_folder_music": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enforces the visibility (Show/Hide) of the Music folder shortcut on the Start menu. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"start_menu_pinned_folder_network": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enforces the visibility (Show/Hide) of the Network folder shortcut on the Start menu. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"start_menu_pinned_folder_personal_folder": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enforces the visibility (Show/Hide) of the PersonalFolder shortcut on the Start menu. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"start_menu_pinned_folder_pictures": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enforces the visibility (Show/Hide) of the Pictures folder shortcut on the Start menu. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"start_menu_pinned_folder_settings": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enforces the visibility (Show/Hide) of the Settings folder shortcut on the Start menu. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"start_menu_pinned_folder_videos": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "hide", "show"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Enforces the visibility (Show/Hide) of the Videos folder shortcut on the Start menu. / Generic visibility state; possible values are: `notConfigured` (Not configured.), `hide` (Hide.), `show` (Show.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"storage_block_removable_storage": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from using removable storage. The _provider_ default value is `false`.",
+					},
+					"storage_require_mobile_device_encryption": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicating whether or not to require encryption on a mobile device. The _provider_ default value is `false`.",
+					},
+					"storage_restrict_app_data_to_system_volume": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether application data is restricted to the system drive. The _provider_ default value is `false`.",
+					},
+					"storage_restrict_app_install_to_system_volume": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether the installation of applications is restricted to the system drive. The _provider_ default value is `false`.",
+					},
+					"system_telemetry_proxy_server": schema.StringAttribute{
+						Optional:            true,
+						MarkdownDescription: "Gets or sets the fully qualified domain name (FQDN) or IP address of a proxy server to forward Connected User Experiences and Telemetry requests.",
+					},
+					"task_manager_block_end_task": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Specify whether non-administrators can use Task Manager to end tasks. The _provider_ default value is `false`.",
+					},
+					"tenant_lockdown_require_network_during_out_of_box_experience": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Whether the device is required to connect to the network. The _provider_ default value is `false`.",
+					},
+					"uninstall_built_in_apps": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to uninstall a fixed list of built-in Windows apps. The _provider_ default value is `false`.",
+					},
+					"usb_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from USB connection. The _provider_ default value is `false`.",
+					},
+					"voice_recording_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from voice recording. The _provider_ default value is `false`.",
+					},
+					"webrtc_block_localhost_ip_address": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `webRtcBlockLocalhostIpAddress`, // custom MS Graph attribute name
+						MarkdownDescription: "Indicates whether or not user's localhost IP address is displayed while making phone calls using the WebRTC. The _provider_ default value is `false`.",
+					},
+					"wifi_block_automatic_connect_hotspots": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `wiFiBlockAutomaticConnectHotspots`, // custom MS Graph attribute name
+						MarkdownDescription: "Indicating whether or not to block automatically connecting to Wi-Fi hotspots. Has no impact if Wi-Fi is blocked. The _provider_ default value is `false`.",
+					},
+					"wifi_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `wiFiBlocked`, // custom MS Graph attribute name
+						MarkdownDescription: "Indicates whether or not to Block the user from using Wi-Fi. The _provider_ default value is `false`.",
+					},
+					"wifi_block_manual_configuration": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						Description:         `wiFiBlockManualConfiguration`, // custom MS Graph attribute name
+						MarkdownDescription: "Indicates whether or not to Block the user from using Wi-Fi manual configuration. The _provider_ default value is `false`.",
+					},
+					"wifi_scan_interval": schema.Int64Attribute{
+						Optional:            true,
+						Description:         `wiFiScanInterval`, // custom MS Graph attribute name
+						MarkdownDescription: "Specify how often devices scan for Wi-Fi networks. Supported values are 1-500, where 100 = default, and 500 = low frequency. Valid values 1 to 500",
+					},
+					"windows10_apps_force_update_schedule": schema.SingleNestedAttribute{
+						Optional: true,
+						Attributes: map[string]schema.Attribute{ // windows10AppsForceUpdateSchedule
+							"recurrence": schema.StringAttribute{
+								Optional: true,
+								Validators: []validator.String{
+									stringvalidator.OneOf("none", "daily", "weekly", "monthly"),
+								},
+								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("none")},
+								Computed:            true,
+								MarkdownDescription: "Recurrence schedule. / Possible values for App update on Windows10 recurrence; possible values are: `none` (Default value, specifies a single occurence.), `daily` (Daily.), `weekly` (Weekly.), `monthly` (Monthly.). The _provider_ default value is `\"none\"`.",
+							},
+							"run_immediately_if_after_start_date_time": schema.BoolAttribute{
+								Optional:            true,
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								Computed:            true,
+								MarkdownDescription: "If true, runs the task immediately if StartDateTime is in the past, else, runs at the next recurrence. The _provider_ default value is `false`.",
+							},
+							"start_date_time": schema.StringAttribute{
+								Optional:            true,
+								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+								Computed:            true,
+								MarkdownDescription: "The start time for the force restart. The _provider_ default value is `\"\"`.",
+							},
+						},
+						Description:         `windows10AppsForceUpdateSchedule`, // custom MS Graph attribute name
+						MarkdownDescription: "Windows 10 force update schedule for Apps. / Windows 10 force update schedule for Apps / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windows10appsforceupdateschedule?view=graph-rest-beta",
+					},
+					"windows_spotlight_block_consumer_specific_features": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Allows IT admins to block experiences that are typically for consumers only, such as Start suggestions, Membership notifications, Post-OOBE app install and redirect tiles. The _provider_ default value is `false`.",
+					},
+					"windows_spotlight_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Allows IT admins to turn off all Windows Spotlight features. The _provider_ default value is `false`.",
+					},
+					"windows_spotlight_block_on_action_center": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Block suggestions from Microsoft that show after each OS clean install, upgrade or in an on-going basis to introduce users to what is new or changed. The _provider_ default value is `false`.",
+					},
+					"windows_spotlight_block_tailored_experiences": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Block personalized content in Windows spotlight based on user’s device usage. The _provider_ default value is `false`.",
+					},
+					"windows_spotlight_block_third_party_notifications": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Block third party content delivered via Windows Spotlight. The _provider_ default value is `false`.",
+					},
+					"windows_spotlight_block_welcome_experience": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Block Windows Spotlight Windows welcome experience. The _provider_ default value is `false`.",
+					},
+					"windows_spotlight_block_windows_tips": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Allows IT admins to turn off the popup of Windows Tips. The _provider_ default value is `false`.",
+					},
+					"windows_spotlight_configure_on_lock_screen": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "disabled", "enabled"),
+						},
+						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+						Computed:            true,
+						MarkdownDescription: "Specifies the type of Spotlight. / Allows IT admind to set a predefined default search engine for MDM-Controlled devices; possible values are: `notConfigured` (Spotlight on lock screen is not configured), `disabled` (Disable Windows Spotlight on lock screen), `enabled` (Enable Windows Spotlight on lock screen). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"windows_store_block_auto_update": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to block automatic update of apps from Windows Store. The _provider_ default value is `false`.",
+					},
+					"windows_store_blocked": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to Block the user from using the Windows store. The _provider_ default value is `false`.",
+					},
+					"windows_store_enable_private_store_only": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to enable Private Store Only. The _provider_ default value is `false`.",
+					},
+					"wireless_display_block_projection_to_this_device": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to allow other devices from discovering this PC for projection. The _provider_ default value is `false`.",
+					},
+					"wireless_display_block_user_input_from_receiver": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to allow user input from wireless display receiver. The _provider_ default value is `false`.",
+					},
+					"wireless_display_require_pin_for_pairing": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates whether or not to require a PIN for new devices to initiate pairing. The _provider_ default value is `false`.",
+					},
+				},
+				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
+				MarkdownDescription: "This topic provides descriptions of the declared methods, properties and relationships exposed by the windows10GeneralConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windows10generalconfiguration?view=graph-rest-beta",
+			},
+		},
 	},
 	MarkdownDescription: "Device Configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta ||| MS Graph: Device configuration",
 }
@@ -4731,6 +6690,7 @@ var deviceConfigurationDeviceConfigurationValidator = objectvalidator.ExactlyOne
 	path.MatchRelative().AtParent().AtName("macos_software_update"),
 	path.MatchRelative().AtParent().AtName("windows_health_monitoring"),
 	path.MatchRelative().AtParent().AtName("windows_update_for_business"),
+	path.MatchRelative().AtParent().AtName("windows10_general"),
 )
 
 var deviceConfigurationAppListItemAttributes = map[string]schema.Attribute{ // appListItem
@@ -4967,6 +6927,18 @@ var deviceConfigurationMacOSSingleSignOnExtensionValidator = objectvalidator.Exa
 var deviceConfigurationWindowsUpdateInstallScheduleTypeValidator = objectvalidator.ExactlyOneOf(
 	path.MatchRelative().AtParent().AtName("active_hours"),
 	path.MatchRelative().AtParent().AtName("scheduled"),
+)
+
+var deviceConfigurationEdgeHomeButtonConfigurationValidator = objectvalidator.ExactlyOneOf(
+	path.MatchRelative().AtParent().AtName("hidden"),
+	path.MatchRelative().AtParent().AtName("loads_start_page"),
+	path.MatchRelative().AtParent().AtName("opens_custom_url"),
+	path.MatchRelative().AtParent().AtName("opens_new_tab"),
+)
+
+var deviceConfigurationEdgeSearchEngineBaseValidator = objectvalidator.ExactlyOneOf(
+	path.MatchRelative().AtParent().AtName("custom"),
+	path.MatchRelative().AtParent().AtName("predefined"),
 )
 
 type deviceConfigurationEditionUpgradeProductKeyPlanModifier struct{ generic.EmptyDescriber }

@@ -51,7 +51,7 @@ func (wsa *CheckPublishingStateWsa) ExecutePost(ctx context.Context, diags *diag
 
 	for {
 		// include id for easier debugging
-		body := wsaReq.GenRes.AccessParams.ReadRaw(ctx, diags, entityUriUri, "", "", []string{"id", "publishingState"}, false)
+		body := wsaReq.GenRes.AccessParams.ReadRaw2(ctx, diags, entityUriUri, "", "", []string{"id", "publishingState"}, false)
 		if diags.HasError() {
 			return
 		}

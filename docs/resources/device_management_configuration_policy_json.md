@@ -35,7 +35,7 @@ export ARM_CLIENT_SECRET='...'
 resource "microsoft365wp_device_management_configuration_policy_json" "test1" {
   name = "TF Test JSON 1"
 
-  settings_json = [for x in [
+  settings = [for x in [
     {
       "@odata.type"       = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
       settingDefinitionId = "device_vendor_msft_bitlocker_requiredeviceencryption",
@@ -59,7 +59,7 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test1" {
         ]
       }
     },
-  ] : jsonencode(x)]
+  ] : { instance_json = jsonencode(x) }]
 
   assignments = [
     for x in [
@@ -73,7 +73,7 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test1" {
 resource "microsoft365wp_device_management_configuration_policy_json" "test2" {
   name = "TF Test JSON 2"
 
-  settings_json = [for x in [
+  settings = [for x in [
     {
       "@odata.type"       = "#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance"
       settingDefinitionId = "device_vendor_msft_policy_config_defender_excludedpaths"
@@ -88,7 +88,7 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test2" {
         }
       ]
     }
-  ] : jsonencode(x)]
+  ] : { instance_json = jsonencode(x) }]
 
   assignments = [
     { target = { all_devices = {} } },
@@ -104,7 +104,7 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test_fire
     template_id = "6078910e-d808-4a9f-a51d-1b8a7bacb7c0_1"
   }
 
-  settings_json = [for x in [
+  settings = [for x in [
     {
       "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
       settingInstanceTemplateReference = {
@@ -119,7 +119,7 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test_fire
         value = "vendor_msft_firewall_mdmstore_global_disablestatefulftp_true"
       }
     }
-  ] : jsonencode(x)]
+  ] : { instance_json = jsonencode(x) }]
 }
 ```
 
@@ -129,7 +129,7 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test_fire
 ### Required
 
 - `name` (String) Policy name
-- `settings_json` (Set of String) Policy settings
+- `settings` (Attributes Set) Policy settings / Setting instance within policy / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationsetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings))
 
 ### Optional
 
@@ -148,6 +148,14 @@ resource "microsoft365wp_device_management_configuration_policy_json" "test_fire
 - `is_assigned` (Boolean) Policy assignment status. This property is read-only.
 - `last_modified_date_time` (String) Policy last modification date and time
 - `setting_count` (Number) Number of settings
+
+<a id="nestedatt--settings"></a>
+### Nested Schema for `settings`
+
+Required:
+
+- `instance_json` (String) Setting Instance / Setting instance within policy / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationsettinginstance?view=graph-rest-beta
+
 
 <a id="nestedatt--assignments"></a>
 ### Nested Schema for `assignments`

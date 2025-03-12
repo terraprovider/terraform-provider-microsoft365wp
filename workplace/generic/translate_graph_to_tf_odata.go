@@ -24,17 +24,19 @@ func ConvertOdataJsonToRaw(ctx context.Context, diags *diag.Diagnostics, jsonVal
 }
 
 func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper,
-	rawVal map[string]any, valueToTargetSetName string, middlewareFunc func(context.Context, GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns) tftypes.Value {
+	rawVal map[string]any, valueToTargetSetName string, middlewareFunc func(context.Context, *diag.Diagnostics, *GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns) tftypes.Value {
 
 	runMiddleware := func(item map[string]any) bool {
 		params := GraphToTerraformMiddlewareParams{
 			RawVal: item,
 		}
-		if err := middlewareFunc(ctx, params); err != nil {
+		if err := middlewareFunc(ctx, diags, &params); err != nil {
 			diags.AddError(
 				"Creation Of Terraform State Unsuccessful",
 				fmt.Sprintf("GraphToTerraformMiddleware returned an error: %s", err.Error()),
 			)
+		}
+		if diags.HasError() {
 			return false
 		}
 
@@ -44,16 +46,18 @@ func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, sc
 	if valueToTargetSetName == "" {
 		// In rare cases we might actually receive a value collection with zero or just one item (e.g. if there does not
 		// exist a direct route an item and instead an OData $filter is required to target it)
-		// Added "len(rawVal) <= 5" as an additional sanity check to not trigger on any other entity that might have
+		// Added "len(rawVal) <= 3" as an additional sanity check to not trigger on any other entity that might have
 		// a "value" attribute containing an array
-		if items, ok := rawVal["value"].([]any); ok && len(rawVal) <= 5 {
-			switch len(items) {
-			case 0:
-				return tftypes.Value{} // gets translated to "not found" upstream
-			case 1:
+		if items, ok := rawVal["value"].([]any); ok && len(rawVal) <= 3 {
+			singleValueIsValid := false
+			if len(items) == 1 {
 				if singleValue, ok := items[0].(map[string]any); ok {
 					rawVal = singleValue
+					singleValueIsValid = true
 				}
+			}
+			if !singleValueIsValid {
+				return tftypes.Value{} // gets translated to "not found" upstream
 			}
 		}
 		if middlewareFunc != nil {
@@ -89,7 +93,7 @@ func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, sc
 }
 
 func ConvertOdataJsonToTerraform(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper, jsonVal []byte,
-	valueToTargetSetName string, middlewareFunc func(context.Context, GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns) tftypes.Value {
+	valueToTargetSetName string, middlewareFunc func(context.Context, *diag.Diagnostics, *GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns) tftypes.Value {
 
 	rawVal := ConvertOdataJsonToRaw(ctx, diags, jsonVal)
 	if diags.HasError() {

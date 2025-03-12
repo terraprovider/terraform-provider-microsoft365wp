@@ -7,6 +7,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -29,13 +30,15 @@ var (
 	WindowsDriverUpdateProfileSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&WindowsDriverUpdateProfileResource)
 
-	WindowsDriverUpdateProfilePluralDataSource = generic.CreateGenericDataSourcePluralFromSingular(
-		&WindowsDriverUpdateProfileSingularDataSource, "")
+	WindowsDriverUpdateProfilePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
+		&WindowsDriverUpdateProfileResource, "")
 )
 
 var windowsDriverUpdateProfileReadOptions = generic.ReadOptions{
-	ODataExpand:           "assignments,driverInventories",
-	PluralNoFilterSupport: true,
+	ODataExpand: "assignments,driverInventories",
+	DataSource: generic.DataSourceOptions{
+		NoFilterSupport: true,
+	},
 }
 
 var windowsDriverUpdateProfileWriteSubActions = []generic.WriteSubAction{
@@ -47,7 +50,7 @@ var windowsDriverUpdateProfileWriteSubActions = []generic.WriteSubAction{
 	},
 }
 
-func windowsDriverUpdateProfileTerraformToGraphMiddleware(ctx context.Context, params generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+func windowsDriverUpdateProfileTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {
 		// remove unchangeable attribute(s) from PATCH
 		delete(params.RawVal, "approvalType")
