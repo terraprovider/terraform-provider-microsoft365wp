@@ -19,8 +19,18 @@ var (
 		TypeNameSuffix: "authentication_strength_policy",
 		SpecificSchema: authenticationStrengthPolicyResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/policies/authenticationStrengthPolicies",
-			WriteSubActions: authenticationStrengthPolicyWriteSubActions,
+			BaseUri: "/policies/authenticationStrengthPolicies",
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"allowedCombinations"},
+							UriSuffix:  "updateAllowedCombinations",
+							UpdateOnly: true,
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -30,16 +40,6 @@ var (
 	AuthenticationStrengthPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&AuthenticationStrengthPolicyResource, "")
 )
-
-var authenticationStrengthPolicyWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"allowedCombinations"},
-			UriSuffix:  "updateAllowedCombinations",
-			UpdateOnly: true,
-		},
-	},
-}
 
 var authenticationStrengthPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // authenticationStrengthPolicy
@@ -53,10 +53,10 @@ var authenticationStrengthPolicyResourceSchema = schema.Schema{
 			Required:    true,
 			Validators: []validator.Set{
 				setvalidator.ValueStringsAre(
-					wpvalidator.FlagEnumValues("password", "voice", "hardwareOath", "softwareOath", "sms", "fido2", "windowsHelloForBusiness", "microsoftAuthenticatorPush", "deviceBasedPush", "temporaryAccessPassOneTime", "temporaryAccessPassMultiUse", "email", "x509CertificateSingleFactor", "x509CertificateMultiFactor", "federatedSingleFactor", "federatedMultiFactor", "unknownFutureValue"),
+					wpvalidator.FlagEnumValues("password", "voice", "hardwareOath", "softwareOath", "sms", "fido2", "windowsHelloForBusiness", "microsoftAuthenticatorPush", "deviceBasedPush", "temporaryAccessPassOneTime", "temporaryAccessPassMultiUse", "email", "x509CertificateSingleFactor", "x509CertificateMultiFactor", "federatedSingleFactor", "federatedMultiFactor", "unknownFutureValue", "qrCodePin"),
 				),
 			},
-			MarkdownDescription: "A collection of authentication method modes that are required be used to satify this authentication strength. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`",
+			MarkdownDescription: "A collection of authentication method modes that are required be used to satify this authentication strength. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,

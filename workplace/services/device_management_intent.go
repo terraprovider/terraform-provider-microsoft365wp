@@ -21,9 +21,26 @@ var (
 		TypeNameSuffix: "device_management_intent",
 		SpecificSchema: deviceManagementIntentResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:                    "/deviceManagement/Intents",
-			ReadOptions:                deviceManagementIntentReadOptions,
-			WriteSubActions:            deviceManagementIntentWriteSubActions,
+			BaseUri: "/deviceManagement/Intents",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "assignments,settings",
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+						},
+					},
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"settings"},
+							UriSuffix:  "updateSettings",
+						},
+					},
+				},
+			},
 			TerraformToGraphMiddleware: deviceManagementIntentTerraformToGraphMiddleware,
 			CreateModifyFunc:           deviceManagementIntentCreateModifyFunc,
 		},
@@ -35,25 +52,6 @@ var (
 	DeviceManagementIntentPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&DeviceManagementIntentResource, "")
 )
-
-var deviceManagementIntentReadOptions = generic.ReadOptions{
-	ODataExpand: "assignments,settings",
-}
-
-var deviceManagementIntentWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-		},
-	},
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"settings"},
-			UriSuffix:  "updateSettings",
-		},
-	},
-}
 
 func deviceManagementIntentTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {

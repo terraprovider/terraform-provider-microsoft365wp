@@ -5,6 +5,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -14,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
 var (
@@ -34,14 +36,12 @@ var (
 func authenticationMethodsPolicyGraphToTerraformMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.GraphToTerraformMiddlewareParams) generic.GraphToTerraformMiddlewareReturns {
 	amConfigsOrg, amConfigsOk := params.RawVal["authenticationMethodConfigurations"].([]any)
 	if amConfigsOk {
-		// remove entries of types federatedIdentityCredentialAuthenticationMethodConfiguration, qrCodePinAuthenticationMethodConfiguration
-		// for now as the types have not yet been documented anywhere
+		// remove entries of type federatedIdentityCredentialAuthenticationMethodConfiguration for now as the type has not yet been documented anywhere
 		amConfigsNew := make([]any, 0)
 		for _, configAny := range amConfigsOrg {
 			if configMap, configMapOk := configAny.(map[string]any); configMapOk {
 				if odataType, odataTypeOk := configMap["@odata.type"].(string); odataTypeOk &&
-					(odataType == "#microsoft.graph.federatedIdentityCredentialAuthenticationMethodConfiguration" ||
-						odataType == "#microsoft.graph.qrCodePinAuthenticationMethodConfiguration") {
+					odataType == "#microsoft.graph.federatedIdentityCredentialAuthenticationMethodConfiguration" {
 					// skip appending to new slice
 					continue
 				}
@@ -79,6 +79,7 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 			Required: true,
 			Validators: []validator.String{
 				stringvalidator.OneOf("preMigration", "migrationInProgress", "migrationComplete", "unknownFutureValue"),
+				wpvalidator.TranslateValueToTerraformOnly([]wpvalidator.TranslationTuple{{GraphValue: nil, TerraformValue: tftypes.NewValue(tftypes.String, "migrationComplete")}}),
 			},
 			MarkdownDescription: "The state of migration of the authentication methods policy from the legacy multifactor authentication and self-service password reset (SSPR) policies. The possible values are: <br/><li>`premigration` - means the authentication methods policy is used for authentication only, legacy policies are respected. <li>`migrationInProgress` - means the authentication methods policy is used for both authentication and SSPR, legacy policies are respected. <li>`migrationComplete` - means the authentication methods policy is used for authentication and SSPR, legacy policies are ignored. <li>`unknownFutureValue` - Evolvable enumeration sentinel value. Don't use. / Possible values are: `preMigration`, `migrationInProgress`, `migrationComplete`, `unknownFutureValue`",
 		},
@@ -446,6 +447,40 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 							MarkdownDescription: "Represents a Microsoft Authenticator authentication methods policy. Authentication methods policies define configuration settings and users or groups that are enabled to use the authentication method. / https://learn.microsoft.com/en-us/graph/api/resources/microsoftauthenticatorauthenticationmethodconfiguration?view=graph-rest-beta",
 						},
 					},
+					"qr_code_pin": generic.OdataDerivedTypeNestedAttributeRs{
+						DerivedType: "#microsoft.graph.qrCodePinAuthenticationMethodConfiguration",
+						SingleNestedAttribute: schema.SingleNestedAttribute{
+							Optional: true,
+							Attributes: map[string]schema.Attribute{ // qrCodePinAuthenticationMethodConfiguration
+								"pin_length": schema.Int64Attribute{
+									Optional:            true,
+									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(8)},
+									Computed:            true,
+									MarkdownDescription: "A memorized alphanumeric secret code. Minimum length is 8 as per NIST 800-63B and can't be longer than 20 digits. The _provider_ default value is `8`.",
+								},
+								"standard_qr_code_lifetime_in_days": schema.Int64Attribute{
+									Optional:            true,
+									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(365)},
+									Computed:            true,
+									Description:         `standardQRCodeLifetimeInDays`, // custom MS Graph attribute name
+									MarkdownDescription: "The maximum value is 395 days and the default value is 365 days. The _provider_ default value is `365`.",
+								},
+								"include_targets": schema.SetNestedAttribute{
+									Optional: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: authenticationMethodsPolicyAuthenticationMethodTargetAttributes,
+									},
+									PlanModifiers:       []planmodifier.Set{authenticationMethodsPolicyTargetsDefaultAllUsers},
+									Computed:            true,
+									MarkdownDescription: "A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID.\n\nThe following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`.",
+								},
+							},
+							Validators: []validator.Object{
+								authenticationMethodsPolicyAuthenticationMethodConfigurationValidator,
+							},
+							MarkdownDescription: "Represents the QR code authentication method policy that defines configuration settings and target users or groups who are enabled to use QR code authentication method. / https://learn.microsoft.com/en-us/graph/api/resources/qrcodepinauthenticationmethodconfiguration?view=graph-rest-beta",
+						},
+					},
 					"sms": generic.OdataDerivedTypeNestedAttributeRs{
 						DerivedType: "#microsoft.graph.smsAuthenticationMethodConfiguration",
 						SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -689,6 +724,33 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 									Computed:            true,
 									MarkdownDescription: "Defines strong authentication configurations. This configuration includes the default authentication mode and the different rules for strong authentication bindings. / Defines the strong authentication configurations for the X.509 certificate. This configuration includes the default authentication mode and the different rules of strong authentication bindings. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateauthenticationmodeconfiguration?view=graph-rest-beta. The _provider_ default value is `{}`.",
 								},
+								"certificate_authority_scopes": schema.SetNestedAttribute{
+									Optional: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{ // x509CertificateAuthorityScope
+											"include_targets": schema.SetNestedAttribute{
+												Optional: true,
+												NestedObject: schema.NestedAttributeObject{
+													Attributes: authenticationMethodsPolicyIncludeTargetAttributes,
+												},
+												PlanModifiers:       []planmodifier.Set{authenticationMethodsPolicyTargetsDefaultAllUsers},
+												Computed:            true,
+												MarkdownDescription: "A collection of groups that are enabled to be in scope to use certificates issued by specific certificate authority. / Defines the users and groups that are included in a set of changes. / https://learn.microsoft.com/en-us/graph/api/resources/includetarget?view=graph-rest-beta. The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`.",
+											},
+											"public_key_infrastructure_identifier": schema.StringAttribute{
+												Required:            true,
+												MarkdownDescription: "Public Key Infrastructure container object under which the certificate authorities are stored in the Entra PKI based trust store.",
+											},
+											"subject_key_identifier": schema.StringAttribute{
+												Required:            true,
+												MarkdownDescription: "Subject Key Identifier that identifies the certificate authority uniquely.",
+											},
+										},
+									},
+									PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+									Computed:            true,
+									MarkdownDescription: "Defines configuration to allow a group of users to use certificates from specific issuing certificate authorities to successfully authenticate. / Defines configuration to allow a group of users to use certificates from specific issuing certificate authorities to successfully authenticate. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateauthorityscope?view=graph-rest-beta. The _provider_ default value is `[]`.",
+								},
 								"certificate_user_bindings": schema.SetNestedAttribute{
 									Optional: true,
 									NestedObject: schema.NestedAttributeObject{
@@ -795,6 +857,7 @@ var authenticationMethodsPolicyAuthenticationMethodConfigurationValidator = obje
 	path.MatchRelative().AtParent().AtName("fido2"),
 	path.MatchRelative().AtParent().AtName("hardware_oath"),
 	path.MatchRelative().AtParent().AtName("microsoft_authenticator"),
+	path.MatchRelative().AtParent().AtName("qr_code_pin"),
 	path.MatchRelative().AtParent().AtName("sms"),
 	path.MatchRelative().AtParent().AtName("software_oath"),
 	path.MatchRelative().AtParent().AtName("temporary_access_pass"),

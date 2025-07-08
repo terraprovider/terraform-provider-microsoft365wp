@@ -22,10 +22,26 @@ var (
 		TypeNameSuffix: "device_management_configuration_policy_json",
 		SpecificSchema: deviceManagementConfigurationPolicyJsonResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/deviceManagement/configurationPolicies",
-			ReadOptions:     deviceManagementConfigurationPolicyJsonReadOptions,
-			WriteSubActions: deviceManagementConfigurationPolicyJsonWriteSubActions,
-			UsePutForUpdate: true,
+			BaseUri: "/deviceManagement/configurationPolicies",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "settings",
+				ExtraRequests: []generic.ReadExtraRequest{
+					{
+						Attribute: "assignments",
+					},
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				UsePutForUpdate: true,
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -35,25 +51,6 @@ var (
 	DeviceManagementConfigurationPolicyJsonPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&DeviceManagementConfigurationPolicyJsonResource, "device_management_configuration_policies_json")
 )
-
-var deviceManagementConfigurationPolicyJsonReadOptions = generic.ReadOptions{
-	ODataExpand: "settings",
-	ExtraRequests: []generic.ReadExtraRequest{
-		{
-			ParentAttribute: "assignments",
-			UriSuffix:       "assignments",
-		},
-	},
-}
-
-var deviceManagementConfigurationPolicyJsonWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-		},
-	},
-}
 
 var deviceManagementConfigurationPolicyJsonResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // deviceManagementConfigurationPolicy
@@ -93,11 +90,11 @@ var deviceManagementConfigurationPolicyJsonResourceSchema = schema.Schema{
 		"platforms": schema.StringAttribute{
 			Optional: true,
 			Validators: []validator.String{
-				wpvalidator.FlagEnumValues("none", "android", "iOS", "macOS", "windows10X", "windows10", "linux", "unknownFutureValue", "androidEnterprise", "aosp"),
+				wpvalidator.FlagEnumValues("none", "android", "iOS", "macOS", "windows10X", "windows10", "linux", "unknownFutureValue", "androidEnterprise", "aosp", "visionOS", "tvOS"),
 			},
 			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("windows10")},
 			Computed:            true,
-			MarkdownDescription: "Platforms for this policy. / Supported platform types; possible values are: `none` (Default. No platform type specified.), `android` (Settings for Android platform.), `iOS` (Settings for iOS platform.), `macOS` (Settings for MacOS platform.), `windows10X` (Windows 10 X.), `windows10` (Settings for Windows 10 platform.), `linux` (Settings for Linux platform.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.), `androidEnterprise` (Settings for Corporate Owned Android Enterprise devices.), `aosp` (Settings for Android Open Source Project platform.). The _provider_ default value is `\"windows10\"`.",
+			MarkdownDescription: "Platforms for this policy. / Supported platform types; possible values are: `none` (Default. No platform type specified.), `android` (Settings for Android platform.), `iOS` (Settings for iOS platform.), `macOS` (Settings for MacOS platform.), `windows10X` (Windows 10 X.), `windows10` (Settings for Windows 10 platform.), `linux` (Settings for Linux platform.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.), `androidEnterprise` (Settings for Corporate Owned Android Enterprise devices.), `aosp` (Settings for Android Open Source Project platform.), `visionOS` (Settings for visionOS platform.), `tvOS` (Settings for tvOS platform.). The _provider_ default value is `\"windows10\"`.",
 		},
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,

@@ -1,6 +1,6 @@
 ---
 page_title: "microsoft365wp_mobility_management_policy Resource - microsoft365wp"
-subcategory: "MS Graph: Directory management"
+subcategory: "MS Graph: App management"
 ---
 
 # microsoft365wp_mobility_management_policy (Resource)

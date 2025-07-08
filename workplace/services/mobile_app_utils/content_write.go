@@ -279,7 +279,7 @@ func (*WriteContentWsa) createContentVersion(ctx context.Context, diags *diag.Di
 	mobileAppUri string, odatatype string) (string, string) {
 
 	baseUri := fmt.Sprintf("%s/%s/contentVersions", mobileAppUri, strings.TrimPrefix(odatatype, "#"))
-	versionId, _ := r.AccessParams.CreateRaw(ctx, diags, baseUri, nil, map[string]any{}, false)
+	versionId, _ := r.AccessParams.CreateRaw2(ctx, diags, baseUri, nil, map[string]any{}, false, false)
 	versionUri := fmt.Sprintf("%s/%s", baseUri, versionId)
 
 	return versionId, versionUri
@@ -297,7 +297,7 @@ func (*WriteContentWsa) createContentFile(ctx context.Context, diags *diag.Diagn
 		"manifest":      contentFileInfo.Manifest,
 		"isDependency":  false,
 	}
-	fileId, _ := r.AccessParams.CreateRaw(ctx, diags, baseUri, nil, body, false)
+	fileId, _ := r.AccessParams.CreateRaw2(ctx, diags, baseUri, nil, body, false, false)
 	fileUri := fmt.Sprintf("%s/%s", baseUri, fileId)
 
 	return fileId, fileUri
@@ -347,7 +347,7 @@ func (*WriteContentWsa) commitContentFile(ctx context.Context, diags *diag.Diagn
 		return
 	}
 
-	r.AccessParams.CreateRaw(ctx, diags, baseUri, nil, bodyRaw, true)
+	r.AccessParams.CreateRaw2(ctx, diags, baseUri, nil, bodyRaw, true, false)
 }
 
 func (*WriteContentWsa) patchMobileApp(ctx context.Context, diags *diag.Diagnostics, r *generic.GenericResource,
@@ -357,7 +357,7 @@ func (*WriteContentWsa) patchMobileApp(ctx context.Context, diags *diag.Diagnost
 		"@odata.type":             odatatype,
 		"committedContentVersion": contentVersionId,
 	}
-	r.AccessParams.UpdateRaw(ctx, diags, r.AccessParams.BaseUri, mobileAppId, mobileAppIdAttributer, body, false)
+	r.AccessParams.UpdateRaw2(ctx, diags, r.AccessParams.BaseUri, mobileAppId, mobileAppIdAttributer, body, false)
 }
 
 //

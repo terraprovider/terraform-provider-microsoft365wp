@@ -36,6 +36,8 @@ export ARM_CLIENT_SECRET='...'
 
 resource "microsoft365wp_azure_ad_windows_autopilot_deployment_profile" "test" {
   display_name = "TF Test 1"
+
+  locale = "" // user select
 }
 
 // For this resource MS Graph requires for assignments to be individually created or deleted.

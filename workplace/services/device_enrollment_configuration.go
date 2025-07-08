@@ -28,15 +28,37 @@ var (
 		TypeNameSuffix: "device_enrollment_configuration",
 		SpecificSchema: deviceEnrollmentConfigurationResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:                    "/deviceManagement/deviceEnrollmentConfigurations",
-			ReadOptions:                deviceEnrollmentConfigurationReadOptions,
-			WriteSubActions:            deviceEnrollmentConfigurationWriteSubActions,
+			BaseUri: "/deviceManagement/deviceEnrollmentConfigurations",
+			ReadOptions: generic.ReadOptions{
+				// do not use ODataFilter here as MS Graph does not seem to behave fully logical with any filter tried yet
+				ODataExpand: "assignments",
+				DataSource: generic.DataSourceOptions{
+					NoFilterSupport: true,
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							AttributesMap: map[string]string{"assignments": "enrollmentConfigurationAssignments"},
+							UriSuffix:     "assign",
+						},
+					},
+					&generic.WriteSubActionAllInOne{
+						GraphErrorsAsWarnings: true,
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"priority"},
+							UriSuffix:  "setPriority",
+						},
+					},
+				},
+				SerializeWrites:   true,
+				SerialWritesDelay: time.Second * 3,
+			},
 			TerraformToGraphMiddleware: deviceEnrollmentConfigurationTerraformToGraphMiddleware,
 			GraphToTerraformMiddleware: deviceEnrollmentConfigurationGraphToTerraformMiddleware,
 			CreateModifyFunc:           deviceEnrollmentConfigurationCreateModifyFunc,
 			DeleteModifyFunc:           deviceEnrollmentConfigurationDeleteModifyFunc,
-			SerializeWrites:            true,
-			SerialWritesDelay:          time.Second * 3,
 		},
 	}
 
@@ -58,30 +80,6 @@ var kDefConfigPriority float64 = 0
 var kDefConfigDisplayName = "###TfWorkplaceDefault###"
 var kDefConfigIdRegex, _ = regexp.Compile("(?i)_Default[a-z0-9]+$")
 var kSinglePlatformRestrictionOdataType = deviceEnrollmentConfigurationResourceSchema.Attributes["single_platform_restriction"].(generic.OdataDerivedTypeNestedAttributeRs).DerivedType
-
-var deviceEnrollmentConfigurationReadOptions = generic.ReadOptions{
-	// do not use ODataFilter here as MS Graph does not seem to behave fully logical with any filter tried yet
-	ODataExpand: "assignments",
-	DataSource: generic.DataSourceOptions{
-		NoFilterSupport: true,
-	},
-}
-
-var deviceEnrollmentConfigurationWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			AttributesMap: map[string]string{"assignments": "enrollmentConfigurationAssignments"},
-			UriSuffix:     "assign",
-		},
-	},
-	&generic.WriteSubActionAllInOne{
-		GraphErrorsAsWarnings: true,
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"priority"},
-			UriSuffix:  "setPriority",
-		},
-	},
-}
 
 func deviceEnrollmentConfigurationTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	priorityAny, priorityOk := params.RawVal["priority"]
@@ -261,21 +259,21 @@ var deviceEnrollmentConfigurationResourceSchema = schema.Schema{
 						Attributes:          deviceEnrollmentConfigurationDeviceEnrollmentPlatformRestrictionAttributes,
 						PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Android for work restrictions based on platform, platform operating system version, and device ownership / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`.",
+						MarkdownDescription: "Indicates restrictions for Android For Work platform. / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`.",
 					},
 					"android_restriction": schema.SingleNestedAttribute{
 						Optional:            true,
 						Attributes:          deviceEnrollmentConfigurationDeviceEnrollmentPlatformRestrictionAttributes,
 						PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Android restrictions based on platform, platform operating system version, and device ownership / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`.",
+						MarkdownDescription: "Indicates restrictions for Android platform. / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`.",
 					},
 					"ios_restriction": schema.SingleNestedAttribute{
 						Optional:            true,
 						Attributes:          deviceEnrollmentConfigurationDeviceEnrollmentPlatformRestrictionAttributes,
 						PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Ios restrictions based on platform, platform operating system version, and device ownership / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`.",
+						MarkdownDescription: "Indicates restrictions for IOS platform. / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`.",
 					},
 					"macos_restriction": schema.SingleNestedAttribute{
 						Optional:            true,
@@ -283,20 +281,20 @@ var deviceEnrollmentConfigurationResourceSchema = schema.Schema{
 						PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 						Computed:            true,
 						Description:         `macOSRestriction`, // custom MS Graph attribute name
-						MarkdownDescription: "Mac restrictions based on platform, platform operating system version, and device ownership / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`.",
+						MarkdownDescription: "Indicates restrictions for MacOS platform. / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`.",
 					},
 					"windows_restriction": schema.SingleNestedAttribute{
 						Optional:            true,
 						Attributes:          deviceEnrollmentConfigurationDeviceEnrollmentPlatformRestrictionAttributes,
 						PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Windows restrictions based on platform, platform operating system version, and device ownership / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`.",
+						MarkdownDescription: "Indicates restrictions for Windows platform. / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`.",
 					},
 				},
 				Validators: []validator.Object{
 					deviceEnrollmentConfigurationDeviceEnrollmentConfigurationValidator,
 				},
-				MarkdownDescription: "Device Enrollment Configuration that restricts the types of devices a user can enroll / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestrictionsconfiguration?view=graph-rest-beta",
+				MarkdownDescription: "Default Device Enrollment Platform Restrictions Configuration that restricts the types of devices a user can enroll / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestrictionsconfiguration?view=graph-rest-beta",
 			},
 		},
 		"single_platform_restriction": generic.OdataDerivedTypeNestedAttributeRs{

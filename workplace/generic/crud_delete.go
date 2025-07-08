@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"terraform-provider-microsoft365wp/workplace/external/msgraph"
+
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/manicminer/hamilton/msgraph"
 )
 
 func (aps *AccessParams) DeleteRaw(ctx context.Context, diags *diag.Diagnostics,

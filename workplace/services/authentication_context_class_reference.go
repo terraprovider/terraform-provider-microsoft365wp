@@ -18,9 +18,21 @@ var (
 		TypeNameSuffix: "authentication_context_class_reference",
 		SpecificSchema: authenticationContextClassReferenceResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/identity/conditionalAccess/authenticationContextClassReferences",
-			ReadOptions:     authenticationContextClassReferenceReadOptions,
-			WriteSubActions: authenticationContextClassReferenceWriteSubActions,
+			BaseUri: "/identity/conditionalAccess/authenticationContextClassReferences",
+			ReadOptions: generic.ReadOptions{
+				ValidStatusCodesExtra: []int{201},
+				DataSource: generic.DataSourceOptions{
+					NoFilterSupport: true,
+					Plural: generic.PluralOptions{
+						NoSelectSupport: true,
+					},
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&authenticationContextClassReferenceClearIsAvailableBeforeDeleteWsa{},
+				},
+			},
 		},
 	}
 
@@ -30,20 +42,6 @@ var (
 	AuthenticationContextClassReferencePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&AuthenticationContextClassReferenceResource, "")
 )
-
-var authenticationContextClassReferenceReadOptions = generic.ReadOptions{
-	ValidStatusCodesExtra: []int{201},
-	DataSource: generic.DataSourceOptions{
-		NoFilterSupport: true,
-		Plural: generic.PluralOptions{
-			NoSelectSupport: true,
-		},
-	},
-}
-
-var authenticationContextClassReferenceWriteSubActions = []generic.WriteSubAction{
-	&authenticationContextClassReferenceClearIsAvailableBeforeDeleteWsa{},
-}
 
 var authenticationContextClassReferenceResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // authenticationContextClassReference
@@ -93,7 +91,7 @@ func (*authenticationContextClassReferenceClearIsAvailableBeforeDeleteWsa) Execu
 		return
 	}
 	if isAvailableTypes.ValueBool() {
-		wsaReq.GenRes.AccessParams.UpdateRaw(ctx, diags, "", wsaReq.Id, wsaReq.IdAttributer, map[string]any{"isAvailable": false}, false)
+		wsaReq.GenRes.AccessParams.UpdateRaw2(ctx, diags, "", wsaReq.Id, wsaReq.IdAttributer, map[string]any{"isAvailable": false}, false)
 	}
 }
 

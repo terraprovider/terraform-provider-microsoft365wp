@@ -24,9 +24,25 @@ var (
 		TypeNameSuffix: "device_configuration",
 		SpecificSchema: deviceConfigurationResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/deviceManagement/deviceConfigurations",
-			ReadOptions:     deviceConfigurationReadOptions,
-			WriteSubActions: deviceConfigurationWriteSubActions,
+			BaseUri: "/deviceManagement/deviceConfigurations",
+			ReadOptions: generic.ReadOptions{
+				ODataFilter: "not(isof('microsoft.graph.windows10CustomConfiguration'))",
+				ExtraRequests: []generic.ReadExtraRequest{
+					{
+						Attribute: "assignments",
+					},
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -36,25 +52,6 @@ var (
 	DeviceConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&DeviceConfigurationResource, "")
 )
-
-var deviceConfigurationReadOptions = generic.ReadOptions{
-	ODataFilter: "not(isof('microsoft.graph.windows10CustomConfiguration'))",
-	ExtraRequests: []generic.ReadExtraRequest{
-		{
-			ParentAttribute: "assignments",
-			UriSuffix:       "assignments",
-		},
-	},
-}
-
-var deviceConfigurationWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-		},
-	},
-}
 
 var deviceConfigurationResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // deviceConfiguration
@@ -352,8 +349,52 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						MarkdownDescription: "List of Google account emails that will be required to authenticate after a device is factory reset before it can be set up. The _provider_ default value is `[]`.",
 					},
 					"global_proxy": schema.SingleNestedAttribute{
-						Optional:   true,
+						Optional: true,
 						Attributes: map[string]schema.Attribute{ // androidDeviceOwnerGlobalProxy
+							"auto_config": generic.OdataDerivedTypeNestedAttributeRs{
+								DerivedType: "#microsoft.graph.androidDeviceOwnerGlobalProxyAutoConfig",
+								SingleNestedAttribute: schema.SingleNestedAttribute{
+									Optional: true,
+									Attributes: map[string]schema.Attribute{ // androidDeviceOwnerGlobalProxyAutoConfig
+										"proxy_auto_config_url": schema.StringAttribute{
+											Required:            true,
+											Description:         `proxyAutoConfigURL`, // custom MS Graph attribute name
+											MarkdownDescription: "The proxy auto-config URL",
+										},
+									},
+									Validators: []validator.Object{
+										deviceConfigurationAndroidDeviceOwnerGlobalProxyValidator,
+									},
+									MarkdownDescription: "Android Device Owner Global Proxy Auto Config. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerglobalproxyautoconfig?view=graph-rest-beta",
+								},
+							},
+							"direct": generic.OdataDerivedTypeNestedAttributeRs{
+								DerivedType: "#microsoft.graph.androidDeviceOwnerGlobalProxyDirect",
+								SingleNestedAttribute: schema.SingleNestedAttribute{
+									Optional: true,
+									Attributes: map[string]schema.Attribute{ // androidDeviceOwnerGlobalProxyDirect
+										"excluded_hosts": schema.SetAttribute{
+											ElementType:         types.StringType,
+											Optional:            true,
+											PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+											Computed:            true,
+											MarkdownDescription: "The excluded hosts. The _provider_ default value is `[]`.",
+										},
+										"host": schema.StringAttribute{
+											Required:            true,
+											MarkdownDescription: "The host name",
+										},
+										"port": schema.Int64Attribute{
+											Required:            true,
+											MarkdownDescription: "The port",
+										},
+									},
+									Validators: []validator.Object{
+										deviceConfigurationAndroidDeviceOwnerGlobalProxyValidator,
+									},
+									MarkdownDescription: "Android Device Owner Global Proxy Direct. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerglobalproxydirect?view=graph-rest-beta",
+								},
+							},
 						},
 						MarkdownDescription: "Proxy is set up directly with host, port and excluded hosts. / Android Device Owner Global Proxy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerglobalproxy?view=graph-rest-beta",
 					},
@@ -400,8 +441,84 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // androidDeviceOwnerKioskModeAppPositionItem
 								"item": schema.SingleNestedAttribute{
-									Optional:   true,
+									Optional: true,
 									Attributes: map[string]schema.Attribute{ // androidDeviceOwnerKioskModeHomeScreenItem
+										"app": generic.OdataDerivedTypeNestedAttributeRs{
+											DerivedType: "#microsoft.graph.androidDeviceOwnerKioskModeApp",
+											SingleNestedAttribute: schema.SingleNestedAttribute{
+												Optional:   true,
+												Attributes: deviceConfigurationAndroidDeviceOwnerKioskModeAppAttributes,
+												Validators: []validator.Object{
+													deviceConfigurationAndroidDeviceOwnerKioskModeHomeScreenItemValidator,
+												},
+												MarkdownDescription: "An application on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeapp?view=graph-rest-beta",
+											},
+										},
+										"folder_item": generic.OdataDerivedTypeNestedAttributeRs{
+											DerivedType: "#microsoft.graph.androidDeviceOwnerKioskModeFolderItem",
+											SingleNestedAttribute: schema.SingleNestedAttribute{
+												Optional: true,
+												Attributes: map[string]schema.Attribute{ // androidDeviceOwnerKioskModeFolderItem
+													"app": generic.OdataDerivedTypeNestedAttributeRs{
+														DerivedType: "#microsoft.graph.androidDeviceOwnerKioskModeApp",
+														SingleNestedAttribute: schema.SingleNestedAttribute{
+															Optional:   true,
+															Attributes: deviceConfigurationAndroidDeviceOwnerKioskModeAppAttributes,
+															Validators: []validator.Object{
+																deviceConfigurationAndroidDeviceOwnerKioskModeFolderItemValidator,
+															},
+															MarkdownDescription: "An application on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeapp?view=graph-rest-beta",
+														},
+													},
+													"weblink": generic.OdataDerivedTypeNestedAttributeRs{
+														DerivedType: "#microsoft.graph.androidDeviceOwnerKioskModeWeblink",
+														SingleNestedAttribute: schema.SingleNestedAttribute{
+															Optional:   true,
+															Attributes: deviceConfigurationAndroidDeviceOwnerKioskModeWeblinkAttributes,
+															Validators: []validator.Object{
+																deviceConfigurationAndroidDeviceOwnerKioskModeFolderItemValidator,
+															},
+															MarkdownDescription: "A weblink on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeweblink?view=graph-rest-beta",
+														},
+													},
+												},
+												Validators: []validator.Object{
+													deviceConfigurationAndroidDeviceOwnerKioskModeHomeScreenItemValidator,
+												},
+												MarkdownDescription: "Represents an item that can be added to Android Device Owner folder (application or weblink) / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodefolderitem?view=graph-rest-beta",
+											},
+										},
+										"managed_folder_reference": generic.OdataDerivedTypeNestedAttributeRs{
+											DerivedType: "#microsoft.graph.androidDeviceOwnerKioskModeManagedFolderReference",
+											SingleNestedAttribute: schema.SingleNestedAttribute{
+												Optional: true,
+												Attributes: map[string]schema.Attribute{ // androidDeviceOwnerKioskModeManagedFolderReference
+													"folder_identifier": schema.StringAttribute{
+														Optional:            true,
+														MarkdownDescription: "Unique identifier for the folder",
+													},
+													"folder_name": schema.StringAttribute{
+														Required:            true,
+														MarkdownDescription: "Name of the folder",
+													},
+												},
+												Validators: []validator.Object{
+													deviceConfigurationAndroidDeviceOwnerKioskModeHomeScreenItemValidator,
+												},
+												MarkdownDescription: "A reference to folder containing apps and weblinks on the Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodemanagedfolderreference?view=graph-rest-beta",
+											},
+										},
+										"weblink": generic.OdataDerivedTypeNestedAttributeRs{
+											DerivedType: "#microsoft.graph.androidDeviceOwnerKioskModeWeblink",
+											SingleNestedAttribute: schema.SingleNestedAttribute{
+												Optional:   true,
+												Attributes: deviceConfigurationAndroidDeviceOwnerKioskModeWeblinkAttributes,
+												Validators: []validator.Object{
+													deviceConfigurationAndroidDeviceOwnerKioskModeHomeScreenItemValidator,
+												},
+												MarkdownDescription: "A weblink on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeweblink?view=graph-rest-beta",
+											},
+										},
 									},
 									PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
 									Computed:            true,
@@ -490,6 +607,28 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Optional: true,
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: map[string]schema.Attribute{ // androidDeviceOwnerKioskModeFolderItem
+											"app": generic.OdataDerivedTypeNestedAttributeRs{
+												DerivedType: "#microsoft.graph.androidDeviceOwnerKioskModeApp",
+												SingleNestedAttribute: schema.SingleNestedAttribute{
+													Optional:   true,
+													Attributes: deviceConfigurationAndroidDeviceOwnerKioskModeAppAttributes,
+													Validators: []validator.Object{
+														deviceConfigurationAndroidDeviceOwnerKioskModeFolderItemValidator,
+													},
+													MarkdownDescription: "An application on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeapp?view=graph-rest-beta",
+												},
+											},
+											"weblink": generic.OdataDerivedTypeNestedAttributeRs{
+												DerivedType: "#microsoft.graph.androidDeviceOwnerKioskModeWeblink",
+												SingleNestedAttribute: schema.SingleNestedAttribute{
+													Optional:   true,
+													Attributes: deviceConfigurationAndroidDeviceOwnerKioskModeWeblinkAttributes,
+													Validators: []validator.Object{
+														deviceConfigurationAndroidDeviceOwnerKioskModeFolderItemValidator,
+													},
+													MarkdownDescription: "A weblink on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeweblink?view=graph-rest-beta",
+												},
+											},
 										},
 									},
 									PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
@@ -1470,6 +1609,24 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Optional:            true,
 									MarkdownDescription: "Name of the app",
 								},
+								"app": generic.OdataDerivedTypeNestedAttributeRs{
+									DerivedType: "#microsoft.graph.iosHomeScreenApp",
+									SingleNestedAttribute: schema.SingleNestedAttribute{
+										Optional:            true,
+										Attributes:          deviceConfigurationIosHomeScreenAppAttributes,
+										Validators:          []validator.Object{deviceConfigurationIosHomeScreenItemValidator},
+										MarkdownDescription: "Represents an icon for an app on the Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenapp?view=graph-rest-beta",
+									},
+								},
+								"folder": generic.OdataDerivedTypeNestedAttributeRs{
+									DerivedType: "#microsoft.graph.iosHomeScreenFolder",
+									SingleNestedAttribute: schema.SingleNestedAttribute{
+										Optional:            true,
+										Attributes:          deviceConfigurationIosHomeScreenFolderAttributes,
+										Validators:          []validator.Object{deviceConfigurationIosHomeScreenItemValidator},
+										MarkdownDescription: "A folder containing pages of apps and web clips on the Home Screen. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenfolder?view=graph-rest-beta",
+									},
+								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
@@ -1499,6 +1656,24 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											"display_name": schema.StringAttribute{
 												Optional:            true,
 												MarkdownDescription: "Name of the app",
+											},
+											"app": generic.OdataDerivedTypeNestedAttributeRs{
+												DerivedType: "#microsoft.graph.iosHomeScreenApp",
+												SingleNestedAttribute: schema.SingleNestedAttribute{
+													Optional:            true,
+													Attributes:          deviceConfigurationIosHomeScreenAppAttributes,
+													Validators:          []validator.Object{deviceConfigurationIosHomeScreenItemValidator},
+													MarkdownDescription: "Represents an icon for an app on the Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenapp?view=graph-rest-beta",
+												},
+											},
+											"folder": generic.OdataDerivedTypeNestedAttributeRs{
+												DerivedType: "#microsoft.graph.iosHomeScreenFolder",
+												SingleNestedAttribute: schema.SingleNestedAttribute{
+													Optional:            true,
+													Attributes:          deviceConfigurationIosHomeScreenFolderAttributes,
+													Validators:          []validator.Object{deviceConfigurationIosHomeScreenItemValidator},
+													MarkdownDescription: "A folder containing pages of apps and web clips on the Home Screen. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenfolder?view=graph-rest-beta",
+												},
 											},
 										},
 									},
@@ -6723,6 +6898,45 @@ var deviceConfigurationKeyValuePairAttributes = map[string]schema.Attribute{ // 
 	},
 }
 
+var deviceConfigurationAndroidDeviceOwnerGlobalProxyValidator = objectvalidator.ExactlyOneOf(
+	path.MatchRelative().AtParent().AtName("auto_config"),
+	path.MatchRelative().AtParent().AtName("direct"),
+)
+
+var deviceConfigurationAndroidDeviceOwnerKioskModeHomeScreenItemValidator = objectvalidator.ExactlyOneOf(
+	path.MatchRelative().AtParent().AtName("app"),
+	path.MatchRelative().AtParent().AtName("folder_item"),
+	path.MatchRelative().AtParent().AtName("managed_folder_reference"),
+	path.MatchRelative().AtParent().AtName("weblink"),
+)
+
+var deviceConfigurationAndroidDeviceOwnerKioskModeAppAttributes = map[string]schema.Attribute{ // androidDeviceOwnerKioskModeApp
+	"class_name": schema.StringAttribute{
+		Optional:            true,
+		MarkdownDescription: "Class name of application",
+	},
+	"package": schema.StringAttribute{
+		Required:            true,
+		MarkdownDescription: "Package name of application",
+	},
+}
+
+var deviceConfigurationAndroidDeviceOwnerKioskModeFolderItemValidator = objectvalidator.ExactlyOneOf(
+	path.MatchRelative().AtParent().AtName("app"),
+	path.MatchRelative().AtParent().AtName("weblink"),
+)
+
+var deviceConfigurationAndroidDeviceOwnerKioskModeWeblinkAttributes = map[string]schema.Attribute{ // androidDeviceOwnerKioskModeWeblink
+	"label": schema.StringAttribute{
+		Optional:            true,
+		MarkdownDescription: "Display name for weblink",
+	},
+	"link": schema.StringAttribute{
+		Required:            true,
+		MarkdownDescription: "Link for weblink",
+	},
+}
+
 var deviceConfigurationAirPrintDestinationAttributes = map[string]schema.Attribute{ // airPrintDestination
 	"force_tls": schema.BoolAttribute{
 		Required:            true,
@@ -6763,6 +6977,47 @@ var deviceConfigurationIosBookmarkAttributes = map[string]schema.Attribute{ // i
 		PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
 		Computed:            true,
 		MarkdownDescription: "URL allowed to access. The _provider_ default value is `\"\"`.",
+	},
+}
+
+var deviceConfigurationIosHomeScreenItemValidator = objectvalidator.ExactlyOneOf(
+	path.MatchRelative().AtParent().AtName("app"),
+	path.MatchRelative().AtParent().AtName("folder"),
+)
+
+var deviceConfigurationIosHomeScreenAppAttributes = map[string]schema.Attribute{ // iosHomeScreenApp
+	"bundle_id": schema.StringAttribute{
+		Required:            true,
+		Description:         `bundleID`, // custom MS Graph attribute name
+		MarkdownDescription: "BundleID of the app if isWebClip is false or the URL of a web clip if isWebClip is true.",
+	},
+	"is_web_clip": schema.BoolAttribute{
+		Optional:            true,
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		Computed:            true,
+		MarkdownDescription: "When true, the bundle ID will be handled as a URL for a web clip. The _provider_ default value is `false`.",
+	},
+}
+
+var deviceConfigurationIosHomeScreenFolderAttributes = map[string]schema.Attribute{ // iosHomeScreenFolder
+	"pages": schema.SetNestedAttribute{
+		Required: true,
+		NestedObject: schema.NestedAttributeObject{
+			Attributes: map[string]schema.Attribute{ // iosHomeScreenFolderPage
+				"apps": schema.SetNestedAttribute{
+					Required: true,
+					NestedObject: schema.NestedAttributeObject{
+						Attributes: deviceConfigurationIosHomeScreenAppAttributes,
+					},
+					MarkdownDescription: "A list of apps and web clips to appear on a page within a folder. This collection can contain a maximum of 500 elements. / Represents an icon for an app on the Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenapp?view=graph-rest-beta",
+				},
+				"display_name": schema.StringAttribute{
+					Optional:            true,
+					MarkdownDescription: "Name of the folder page",
+				},
+			},
+		},
+		MarkdownDescription: "Pages of Home Screen Layout Icons which must be applications or web clips. This collection can contain a maximum of 500 elements. / A page for a folder containing apps and web clips on the Home Screen. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenfolderpage?view=graph-rest-beta",
 	},
 }
 

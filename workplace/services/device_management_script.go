@@ -18,9 +18,23 @@ var (
 		TypeNameSuffix: "device_management_script",
 		SpecificSchema: deviceManagementScriptResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/deviceManagement/deviceManagementScripts",
-			ReadOptions:     deviceManagementScriptReadOptions,
-			WriteSubActions: deviceManagementScriptWriteSubActions,
+			BaseUri: "/deviceManagement/deviceManagementScripts",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "assignments",
+				DataSource: generic.DataSourceOptions{
+					NoIdFilterSupport: true,
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							AttributesMap: map[string]string{"assignments": "deviceManagementScriptAssignments"},
+							UriSuffix:     "assign",
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -30,19 +44,6 @@ var (
 	DeviceManagementScriptPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&DeviceManagementScriptResource, "")
 )
-
-var deviceManagementScriptReadOptions = generic.ReadOptions{
-	ODataExpand: "assignments",
-}
-
-var deviceManagementScriptWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			AttributesMap: map[string]string{"assignments": "deviceManagementScriptAssignments"},
-			UriSuffix:     "assign",
-		},
-	},
-}
 
 var deviceManagementScriptResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // deviceManagementScript

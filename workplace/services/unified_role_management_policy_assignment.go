@@ -17,8 +17,16 @@ var (
 		TypeNameSuffix: "unified_role_management_policy_assignment",
 		SpecificSchema: unifiedRoleManagementPolicyAssignmentResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:     "/policies/roleManagementPolicyAssignments",
-			ReadOptions: unifiedRoleManagementPolicyAssignmentReadOptions,
+			BaseUri: "/policies/roleManagementPolicyAssignments",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "policy($expand=rules,effectiveRules)",
+				DataSource: generic.DataSourceOptions{
+					ExtraFilterAttributes: []string{"policy_id", "role_definition_id", "scope_id", "scope_type"},
+					Plural: generic.PluralOptions{
+						ExtraAttributes: []string{"policy_id", "role_definition_id", "scope_id", "scope_type"},
+					},
+				},
+			},
 		},
 	}
 
@@ -28,16 +36,6 @@ var (
 	UnifiedRoleManagementPolicyAssignmentPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&unifiedRoleManagementPolicyAssignmentResource, "")
 )
-
-var unifiedRoleManagementPolicyAssignmentReadOptions = generic.ReadOptions{
-	ODataExpand: "policy($expand=rules,effectiveRules)",
-	DataSource: generic.DataSourceOptions{
-		ExtraFilterAttributes: []string{"policy_id", "role_definition_id", "scope_id", "scope_type"},
-		Plural: generic.PluralOptions{
-			ExtraAttributes: []string{"policy_id", "role_definition_id", "scope_id", "scope_type"},
-		},
-	},
-}
 
 var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // unifiedRoleManagementPolicyAssignment
@@ -52,11 +50,11 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 		},
 		"role_definition_id": schema.StringAttribute{
 			Required:            true,
-			MarkdownDescription: "For Microsoft Entra roles policy, it's the identifier of the [role definition](unifiedroledefinition.md) object where the policy applies. For PIM for groups membership and ownership, it's either `member` or `owner`. Supports $filter (`eq`).",
+			MarkdownDescription: "For Microsoft Entra roles policy, it's the identifier of the [role definition](unifiedroledefinition.md) object where the policy applies. For PIM for Groups membership and ownership, it's either `member` or `owner`. Supports $filter (`eq`).",
 		},
 		"scope_id": schema.StringAttribute{
 			Required:            true,
-			MarkdownDescription: "The identifier of the scope where the policy is assigned.  Can be `/` for the tenant or a group ID. Required.",
+			MarkdownDescription: "The identifier of the scope where the policy is assigned. Can be `/` for the tenant or a group ID. Required.",
 		},
 		"scope_type": schema.StringAttribute{
 			Required:            true,

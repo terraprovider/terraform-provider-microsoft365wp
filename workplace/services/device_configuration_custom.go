@@ -24,9 +24,28 @@ var (
 		TypeNameSuffix: "device_configuration_custom",
 		SpecificSchema: deviceConfigurationCustomResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:                    "/deviceManagement/deviceConfigurations",
-			ReadOptions:                deviceConfigurationCustomReadOptions,
-			WriteSubActions:            deviceConfigurationCustomWriteSubActions,
+			BaseUri: "/deviceManagement/deviceConfigurations",
+			ReadOptions: generic.ReadOptions{
+				ODataFilter: "isof('microsoft.graph.windows10CustomConfiguration')",
+				ExtraRequests: []generic.ReadExtraRequest{
+					{
+						Attribute: "assignments",
+					},
+				},
+				ExtraRequestsCustom: []generic.ReadExtraRequestCustom{
+					deviceConfigurationCustomExtraRequestCustomReadSecretValue,
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+						},
+					},
+				},
+			},
 			TerraformToGraphMiddleware: deviceConfigurationCustomTerraformToGraphMiddleware,
 		},
 	}
@@ -37,28 +56,6 @@ var (
 	DeviceConfigurationCustomPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&DeviceConfigurationCustomResource, "device_configurations_custom")
 )
-
-var deviceConfigurationCustomReadOptions = generic.ReadOptions{
-	ODataFilter: "isof('microsoft.graph.windows10CustomConfiguration')",
-	ExtraRequests: []generic.ReadExtraRequest{
-		{
-			ParentAttribute: "assignments",
-			UriSuffix:       "assignments",
-		},
-	},
-	ExtraRequestsCustom: []generic.ReadExtraRequestCustom{
-		deviceConfigurationCustomExtraRequestCustomReadSecretValue,
-	},
-}
-
-var deviceConfigurationCustomWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-		},
-	},
-}
 
 func deviceConfigurationCustomTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 

@@ -86,6 +86,7 @@ Read-Only:
 - `hardware_oath` (Attributes) Represents a Hardware OATH authentication method policy. Authentication method policies define configuration settings and users or groups that are enabled to use the authentication method. / https://learn.microsoft.com/en-us/graph/api/resources/hardwareoathauthenticationmethodconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--hardware_oath))
 - `id` (String) The policy name.
 - `microsoft_authenticator` (Attributes) Represents a Microsoft Authenticator authentication methods policy. Authentication methods policies define configuration settings and users or groups that are enabled to use the authentication method. / https://learn.microsoft.com/en-us/graph/api/resources/microsoftauthenticatorauthenticationmethodconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--microsoft_authenticator))
+- `qr_code_pin` (Attributes) Represents the QR code authentication method policy that defines configuration settings and target users or groups who are enabled to use QR code authentication method. / https://learn.microsoft.com/en-us/graph/api/resources/qrcodepinauthenticationmethodconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--qr_code_pin))
 - `sms` (Attributes) Represents a Text Message authentication methods policy. Authentication methods policies define configuration settings and users or groups that are enabled to use the authentication method. / https://learn.microsoft.com/en-us/graph/api/resources/smsauthenticationmethodconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--sms))
 - `software_oath` (Attributes) Represents the authentication policy for a third-party software OATH authentication method. Authentication methods policies define configuration settings and users or groups that are enabled to use the authentication method. / https://learn.microsoft.com/en-us/graph/api/resources/softwareoathauthenticationmethodconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--authentication_method_configurations--software_oath))
 - `state` (String) The state of the policy. / Possible values are: `enabled`, `disabled`
@@ -289,6 +290,28 @@ Read-Only:
 
 
 
+<a id="nestedatt--authentication_method_configurations--qr_code_pin"></a>
+### Nested Schema for `authentication_method_configurations.qr_code_pin`
+
+Read-Only:
+
+- `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID.
+
+The following types are derived from this resource type: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--qr_code_pin--include_targets))
+- `pin_length` (Number) A memorized alphanumeric secret code. Minimum length is 8 as per NIST 800-63B and can't be longer than 20 digits.
+- `standard_qr_code_lifetime_in_days` (Number) The maximum value is 395 days and days.
+
+<a id="nestedatt--authentication_method_configurations--qr_code_pin--include_targets"></a>
+### Nested Schema for `authentication_method_configurations.qr_code_pin.include_targets`
+
+Read-Only:
+
+- `id` (String) Object identifier of a Microsoft Entra user or group.
+- `is_registration_required` (Boolean) Determines if the user is enforced to register the authentication method.
+- `target_type` (String) and `unknownFutureValue`. From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. / Possible values are: `user`, `group`, `unknownFutureValue`
+
+
+
 <a id="nestedatt--authentication_method_configurations--sms"></a>
 ### Nested Schema for `authentication_method_configurations.sms`
 
@@ -378,6 +401,7 @@ Read-Only:
 Read-Only:
 
 - `authentication_mode_configuration` (Attributes) Defines strong authentication configurations. This configuration includes the default authentication mode and the different rules for strong authentication bindings. / Defines the strong authentication configurations for the X.509 certificate. This configuration includes the default authentication mode and the different rules of strong authentication bindings. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateauthenticationmodeconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration))
+- `certificate_authority_scopes` (Attributes Set) Defines configuration to allow a group of users to use certificates from specific issuing certificate authorities to successfully authenticate. / Defines configuration to allow a group of users to use certificates from specific issuing certificate authorities to successfully authenticate. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateauthorityscope?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--certificate_authority_scopes))
 - `certificate_user_bindings` (Attributes Set) Defines fields in the X.509 certificate that map to attributes of the Microsoft Entra user object in order to bind the certificate to the user. The **priority** of the object determines the order in which the binding is carried out. The first binding that matches will be used and the rest ignored. / Defines the fields in the X.509 certificate that map to attributes of the Microsoft Entra user object in order to bind the certificate to the user account. / https://learn.microsoft.com/en-us/graph/api/resources/x509certificateuserbinding?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--certificate_user_bindings))
 - `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID.
 
@@ -404,6 +428,25 @@ Read-Only:
 - `x509_certificate_authentication_mode` (String) The type of strong authentication mode. The Required. / Possible values are: `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `unknownFutureValue`
 - `x509_certificate_required_affinity_level` (String) The / Possible values are: `low`, `high`, `unknownFutureValue`
 - `x509_certificate_rule_type` (String) The type of the X.509 certificate mode configuration rule. The Use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `issuerSubjectAndPolicyOID`. Required. / Possible values are: `issuerSubject`, `policyOID`, `unknownFutureValue`, `issuerSubjectAndPolicyOID`
+
+
+
+<a id="nestedatt--authentication_method_configurations--x509_certificate--certificate_authority_scopes"></a>
+### Nested Schema for `authentication_method_configurations.x509_certificate.certificate_authority_scopes`
+
+Read-Only:
+
+- `include_targets` (Attributes Set) A collection of groups that are enabled to be in scope to use certificates issued by specific certificate authority. / Defines the users and groups that are included in a set of changes. / https://learn.microsoft.com/en-us/graph/api/resources/includetarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--certificate_authority_scopes--include_targets))
+- `public_key_infrastructure_identifier` (String) Public Key Infrastructure container object under which the certificate authorities are stored in the Entra PKI based trust store.
+- `subject_key_identifier` (String) Subject Key Identifier that identifies the certificate authority uniquely.
+
+<a id="nestedatt--authentication_method_configurations--x509_certificate--certificate_authority_scopes--include_targets"></a>
+### Nested Schema for `authentication_method_configurations.x509_certificate.certificate_authority_scopes.include_targets`
+
+Read-Only:
+
+- `id` (String) The ID of the entity targeted.
+- `target_type` (String) The kind of entity targeted. / Possible values are: `user`, `group`, `unknownFutureValue`
 
 
 

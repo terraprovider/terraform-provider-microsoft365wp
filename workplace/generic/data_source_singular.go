@@ -11,60 +11,55 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &GenericDataSourceSingular{}
-	_ datasource.DataSourceWithConfigure = &GenericDataSourceSingular{}
+	_ datasource.DataSource                     = &GenericDataSourceSingular{}
+	_ datasource.DataSourceWithConfigure        = &GenericDataSourceSingular{}
+	_ datasource.DataSourceWithConfigValidators = &GenericDataSourceSingular{}
 )
 
 // GenericDataSourceSingular is the data source implementation.
 type GenericDataSourceSingular struct {
-	TypeNameSuffix string
-	SpecificSchema dsschema.Schema
-	AccessParams   AccessParams
+	TypeNameSuffix           string
+	SpecificSchema           dsschema.Schema
+	SpecificConfigValidators []datasource.ConfigValidator
+	AccessParams             AccessParams
 
 	odataFilterAttrsWithGraphNames map[string]string
 }
 
 func CreateGenericDataSourceSingularFromResource(genericResource *GenericResource) GenericDataSourceSingular {
 
-	// Dev Note: Try to keep contents similar to CreateGenericDataSourcePluralFromResource
+	// Dev Note: Try to keep this func similar to CreateGenericDataSourcePluralFromResource
 
-	//
 	// IMPORTANT for the whole function: ConvertResourceAttributesToDataSourceSingular does not convert simple type attributes
 	// to data source attributes but leaves them as reasource attributes (as their required interface is identical).
 	// Therefore additional attributes will also be added from the resource schema.
-	//
 
-	//
 	// Preparations
-
 	accessParams := &genericResource.AccessParams
 	accessParams.InitializeGuarded(nil)
+	rsSchema := &genericResource.SpecificSchema
 
-	result := GenericDataSourceSingular{
-		TypeNameSuffix:                 genericResource.TypeNameSuffix,
+	dsResult := GenericDataSourceSingular{
+		TypeNameSuffix: genericResource.TypeNameSuffix,
+		SpecificSchema: dsschema.Schema{
+			Attributes:          map[string]dsschema.Attribute{},
+			Description:         rsSchema.Description,
+			MarkdownDescription: rsSchema.MarkdownDescription,
+		},
 		AccessParams:                   *accessParams, // copylocks is fine here (but VSCode would only allow to disable it globally)
 		odataFilterAttrsWithGraphNames: map[string]string{},
 	}
+	dsAttributesRoot := dsResult.SpecificSchema.Attributes
 
-	//
-	// Choose required and convert attributes
-
-	isRequiredFunc := func(attrName string) bool { return accessParams.ParentEntities.ContainsFieldName(attrName) }
-	dsAttributes := ConvertResourceAttributesToDataSourceSingular(genericResource.SpecificSchema.Attributes,
-		isRequiredFunc)
-
-	ODataPrepareFilterAttributes(accessParams, dsAttributes, result.odataFilterAttrsWithGraphNames, true, false)
-
-	//
-	// Create schema and return
-
-	result.SpecificSchema = dsschema.Schema{
-		Attributes:          dsAttributes,
-		Description:         genericResource.SpecificSchema.Description,
-		MarkdownDescription: genericResource.SpecificSchema.MarkdownDescription,
+	// Select and convert attributes
+	for attrName, rsAttribute := range rsSchema.Attributes {
+		identifiesParent := accessParams.ParentEntities.ContainsFieldName(attrName)
+		dsAttributesRoot[attrName] = convertResourceAttr2DataSourceAttr(rsAttribute, identifiesParent, false, attrName)
 	}
 
-	return result // copylocks is fine here (but VSCode would only allow to disable it globally)
+	dsPrepareFilterAttributes(accessParams, dsAttributesRoot, dsResult.odataFilterAttrsWithGraphNames, &dsResult.SpecificConfigValidators, true, false)
+
+	return dsResult // copylocks is fine here (but VSCode would only allow to disable it globally)
 }
 
 // Metadata returns the data source type name.
@@ -82,10 +77,14 @@ func (d *GenericDataSourceSingular) Schema(_ context.Context, _ datasource.Schem
 	resp.Schema = d.SpecificSchema
 }
 
+func (d *GenericDataSourceSingular) ConfigValidators(context.Context) []datasource.ConfigValidator {
+	return d.SpecificConfigValidators
+}
+
 // Read refreshes the Terraform state with the latest data.
 func (d *GenericDataSourceSingular) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 
-	odataFilter, odataOrderby, odataTop := ODataGetFilterFromConfig(ctx, &resp.Diagnostics, &req.Config, &d.AccessParams, d.odataFilterAttrsWithGraphNames)
+	odataFilter, odataOrderby, odataTop := dsGetFilterFromConfig(ctx, &resp.Diagnostics, &req.Config, &d.AccessParams, d.odataFilterAttrsWithGraphNames)
 	if resp.Diagnostics.HasError() {
 		return
 	}

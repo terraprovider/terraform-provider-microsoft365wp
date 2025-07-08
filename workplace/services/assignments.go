@@ -5,6 +5,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -14,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
 var deviceAndAppManagementAssignment = schema.SetNestedAttribute{
@@ -36,9 +38,10 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 	Required: true,
 	Attributes: map[string]schema.Attribute{ // deviceAndAppManagementAssignmentTarget
 		"filter_id": schema.StringAttribute{
-			Computed:            true,
-			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			Optional: true,
+			Validators: []validator.String{
+				wpvalidator.TranslateValueToTerraformOnly([]wpvalidator.TranslationTuple{{GraphValue: "00000000-0000-0000-0000-000000000000", TerraformValue: tftypes.NewValue(tftypes.String, nil)}}),
+			},
 			Description:         `deviceAndAppManagementAssignmentFilterId`, // custom MS Graph attribute name
 			MarkdownDescription: "The ID of the filter for the target assignment.",
 		},
@@ -163,7 +166,7 @@ func GetAssignmentChildResource(parentResource *generic.GenericResource, singleI
 			BaseUri: parentResource.AccessParams.BaseUri,
 			ParentEntities: generic.ParentEntities{{
 				ParentIdField: path.Root(parentIdFieldName),
-				UriSuffix:     "/assignments",
+				UriSuffix:     "assignments",
 			}},
 			ReadOptions: generic.ReadOptions{
 				SingleItemUseODataFilter: singleItemUseODataFilter,

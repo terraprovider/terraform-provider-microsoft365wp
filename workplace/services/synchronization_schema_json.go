@@ -20,16 +20,22 @@ var (
 			ParentEntities: generic.ParentEntities{
 				{
 					ParentIdField: path.Root("service_principal_id"),
-					UriSuffix:     "/synchronization/jobs",
+					UriSuffix:     "synchronization/jobs",
 				},
 			},
-			SingularEntity: generic.SingularEntity{
-				UriSuffix:             "/schema",
-				UpdateInsteadOfCreate: true,
-				// http DELETE is valid here (will reset synchronizationSchema to default values)
-				NoPluralDataSource: true,
+			UriSuffix: "schema",
+			ReadOptions: generic.ReadOptions{
+				DataSource: generic.DataSourceOptions{
+					Plural: generic.PluralOptions{
+						NoDataSource: true,
+					},
+				},
 			},
-			UsePutForUpdate: true,
+			WriteOptions: generic.WriteOptions{
+				UpdateInsteadOfCreate: true,
+				UsePutForUpdate:       true,
+				// http DELETE is valid here (will reset synchronizationSchema to default values)
+			},
 		},
 	}
 
@@ -66,7 +72,7 @@ var synchronizationSchemaJsonResourceSchema = schema.Schema{
 			MarkdownDescription: "Contains the collection of directories and all of their objects. / Provides the synchronization engine information about a directory and its objects. This resource tells the synchronization engine, for example, that the directory has objects named **user** and **group**, which attributes are supported for those objects, and the types for those attributes. In order for the object and attribute to participate in [synchronization rules](synchronization-synchronizationrule.md) and [object mappings](synchronization-objectmapping.md), they must be defined as part of the directory definition.\n\nIn general, the default [synchronization schema](synchronization-synchronizationschema.md) provided as part of the [synchronization template](synchronization-synchronizationtemplate.md) defines the most commonly used objects and attributes for that directory. However, if the directory supports the addition of custom attributes, you might want to expand the default definition with your own custom objects or attributes. For more information, see the following articles.\n\nDirectory definitions are updated as part of the [synchronization schema](synchronization-synchronizationschema.md). / https://learn.microsoft.com/en-us/graph/api/resources/synchronization-directorydefinition?view=graph-rest-beta",
 		},
 	},
-	MarkdownDescription: "Defines what objects are synchronized and how they are synchronized. The synchronization schema contains most of the setup information for a particular synchronization job. Typically, you customize some of the [attribute mappings](synchronization-attributemapping.md), or add a [scoping filter](synchronization-filter.md) to synchronize only objects that satisfy a certain condition.\n\nThe following sections describe the high-level components of the synchronization schema. / https://learn.microsoft.com/en-us/graph/api/resources/synchronization-synchronizationschema?view=graph-rest-beta\n\nProvider Note: This resource cannot be imported (as the provider cannot determine the `service_principal_id` at the time of import and hence is not able to build the correct URI to read the existing MS Graph entity). ||| MS Graph: Synchronization",
+	MarkdownDescription: "Defines what objects are synchronized and how they are synchronized. The synchronization schema contains most of the setup information for a particular synchronization job. Typically, you customize some of the [attribute mappings](synchronization-attributemapping.md), or add a [scoping filter](synchronization-filter.md) to synchronize only objects that satisfy a certain condition.\n\nThe following sections describe the high-level components of the synchronization schema. / https://learn.microsoft.com/en-us/graph/api/resources/synchronization-synchronizationschema?view=graph-rest-beta\n\nProvider Note: To import this resource, an ID consisting of `service_principal_id` and `id` being joined by a forward slash (`/`) must be used. ||| MS Graph: Synchronization",
 }
 
 func synchronizationSchemaJsonDirectoriesFilter(path string, value any) (pass bool, err error) {

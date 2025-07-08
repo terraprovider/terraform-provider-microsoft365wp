@@ -20,8 +20,12 @@ var (
 		TypeNameSuffix: "device_and_app_management_assignment_filter",
 		SpecificSchema: deviceAndAppManagementAssignmentFilterResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:                    "/deviceManagement/assignmentFilters",
-			ReadOptions:                deviceAndAppManagementAssignmentFilterReadOptions,
+			BaseUri: "/deviceManagement/assignmentFilters",
+			ReadOptions: generic.ReadOptions{
+				DataSource: generic.DataSourceOptions{
+					NoFilterSupport: true,
+				},
+			},
 			TerraformToGraphMiddleware: deviceAndAppManagementAssignmentFilterTerraformToGraphMiddleware,
 		},
 	}
@@ -32,12 +36,6 @@ var (
 	DeviceAndAppManagementAssignmentFilterPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&DeviceAndAppManagementAssignmentFilterResource, "")
 )
-
-var deviceAndAppManagementAssignmentFilterReadOptions = generic.ReadOptions{
-	DataSource: generic.DataSourceOptions{
-		NoFilterSupport: true,
-	},
-}
 
 func deviceAndAppManagementAssignmentFilterTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {

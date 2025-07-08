@@ -21,15 +21,24 @@ var (
 		TypeNameSuffix: "identity_governance_workflow_version",
 		SpecificSchema: identityGovernanceWorkflowVersionResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:     "/identityGovernance/lifecycleWorkflows/workflows",
-			IdNameGraph: "versionNumber",
+			BaseUri: "/identityGovernance/lifecycleWorkflows/workflows",
 			ParentEntities: generic.ParentEntities{
 				{
 					ParentIdField: path.Root("workflow_id"),
-					UriSuffix:     "/versions",
+					UriSuffix:     "versions",
 				},
 			},
-			ReadOptions:                identityGovernanceWorkflowVersionReadOptions,
+			EntityId: generic.EntityIdOptions{
+				AttrNameGraph: "versionNumber",
+			},
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "tasks",
+				DataSource: generic.DataSourceOptions{
+					Plural: generic.PluralOptions{
+						ExtraAttributes: []string{"category"},
+					},
+				},
+			},
 			GraphToTerraformMiddleware: identityGovernanceWorkflowVersionGraphToTerraformMiddleware,
 		},
 	}
@@ -40,15 +49,6 @@ var (
 	IdentityGovernanceWorkflowVersionPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&identityGovernanceWorkflowVersionResource, "")
 )
-
-var identityGovernanceWorkflowVersionReadOptions = generic.ReadOptions{
-	ODataExpand: "tasks",
-	DataSource: generic.DataSourceOptions{
-		Plural: generic.PluralOptions{
-			ExtraAttributes: []string{"category"},
-		},
-	},
-}
 
 func identityGovernanceWorkflowVersionGraphToTerraformMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.GraphToTerraformMiddlewareParams) generic.GraphToTerraformMiddlewareReturns {
 	// versionNumber is number, but we need a string
@@ -298,7 +298,7 @@ var identityGovernanceWorkflowVersionResourceSchema = schema.Schema{
 			MarkdownDescription: "The version of the workflow.",
 		},
 	},
-	MarkdownDescription: "Represents a version of a [lifecycle workflow](../resources/identitygovernance-workflowversion.md). Workflow versions are subsequent versions of workflows you can create when you need to change the workflow configuration other than its basic properties. You can view older versions of the workflow and associated reports will note which workflow version had been run. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta ||| MS Graph: Workflow",
+	MarkdownDescription: "Represents a version of a [lifecycle workflow](../resources/identitygovernance-workflowversion.md). Workflow versions are subsequent versions of workflows you can create when you need to change the workflow configuration other than its basic properties. You can view older versions of the workflow and associated reports will note which workflow version had been run. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta ||| MS Graph: Lifecycle workflows",
 }
 
 var identityGovernanceWorkflowVersionIdentityGovernanceWorkflowExecutionConditionsValidator = objectvalidator.ExactlyOneOf(

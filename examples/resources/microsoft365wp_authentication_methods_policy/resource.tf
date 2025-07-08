@@ -37,6 +37,12 @@ resource "microsoft365wp_authentication_methods_policy" "singleton" {
     },
 
     {
+      id          = "QRCodePin"
+      qr_code_pin = {}
+      state       = "disabled"
+    },
+
+    {
       id                    = "TemporaryAccessPass"
       temporary_access_pass = {}
       state                 = "enabled"

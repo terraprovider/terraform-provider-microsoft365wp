@@ -22,9 +22,15 @@ var (
 		TypeNameSuffix: "identity_governance_workflow",
 		SpecificSchema: identityGovernanceWorkflowResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:           "/identityGovernance/lifecycleWorkflows/workflows",
-			ReadOptions:       identityGovernanceWorkflowReadOptions,
-			ReplaceUpdateFunc: identityGovernanceWorkflowReplaceUpdateFunc,
+			BaseUri: "/identityGovernance/lifecycleWorkflows/workflows",
+			ReadOptions: generic.ReadOptions{
+				DataSource: generic.DataSourceOptions{
+					Plural: generic.PluralOptions{
+						ExtraAttributes: []string{"category", "is_enabled", "is_scheduling_enabled"},
+					},
+				},
+			},
+			UpdateReplaceFunc: identityGovernanceWorkflowUpdateReplaceFunc,
 		},
 	}
 
@@ -35,18 +41,10 @@ var (
 		&IdentityGovernanceWorkflowResource, "")
 )
 
-var identityGovernanceWorkflowReadOptions = generic.ReadOptions{
-	DataSource: generic.DataSourceOptions{
-		Plural: generic.PluralOptions{
-			ExtraAttributes: []string{"category", "is_enabled", "is_scheduling_enabled"},
-		},
-	},
-}
-
-func identityGovernanceWorkflowReplaceUpdateFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.ReplaceUpdateFuncParams) {
+func identityGovernanceWorkflowUpdateReplaceFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.UpdateReplaceFuncParams) {
 	baseUri := fmt.Sprintf("%s/%s/createNewVersion", params.R.AccessParams.BaseUri, params.Id)
 	rawVal := map[string]any{"workflow": params.RawVal}
-	_, params.RawResult = params.R.AccessParams.CreateRaw(ctx, diags, baseUri, params.IdAttributer, rawVal, false)
+	_, params.RawResult = params.R.AccessParams.CreateRaw2(ctx, diags, baseUri, params.IdAttributer, rawVal, false, false)
 }
 
 var identityGovernanceWorkflowResourceSchema = schema.Schema{

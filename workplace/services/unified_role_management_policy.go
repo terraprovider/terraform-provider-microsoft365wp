@@ -19,11 +19,18 @@ var (
 		SpecificSchema: unifiedRoleManagementPolicyResourceSchema,
 		AccessParams: generic.AccessParams{
 			BaseUri: "/policies/roleManagementPolicies",
-			SingularEntity: generic.SingularEntity{
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "rules,effectiveRules",
+				DataSource: generic.DataSourceOptions{
+					Plural: generic.PluralOptions{
+						ExtraAttributes: []string{"is_organization_default", "scope_id", "scope_type"},
+					},
+				},
+			},
+			WriteOptions: generic.WriteOptions{
 				UpdateInsteadOfCreate: true,
 				SkipDelete:            true,
 			},
-			ReadOptions: unifiedRoleManagementPolicyReadOptions,
 		},
 	}
 
@@ -33,15 +40,6 @@ var (
 	UnifiedRoleManagementPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&UnifiedRoleManagementPolicyResource, "")
 )
-
-var unifiedRoleManagementPolicyReadOptions = generic.ReadOptions{
-	ODataExpand: "rules,effectiveRules",
-	DataSource: generic.DataSourceOptions{
-		Plural: generic.PluralOptions{
-			ExtraAttributes: []string{"is_organization_default", "scope_id", "scope_type"},
-		},
-	},
-}
 
 var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // unifiedRoleManagementPolicy

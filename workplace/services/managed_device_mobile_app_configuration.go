@@ -20,9 +20,21 @@ var (
 		TypeNameSuffix: "managed_device_mobile_app_configuration",
 		SpecificSchema: managedDeviceMobileAppConfigurationResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/deviceAppManagement/mobileAppConfigurations",
-			ReadOptions:     managedDeviceMobileAppConfigurationReadOptions,
-			WriteSubActions: managedDeviceMobileAppConfigurationWriteSubActions,
+			BaseUri: "/deviceAppManagement/mobileAppConfigurations",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "assignments",
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+							UpdateOnly: true,
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -32,20 +44,6 @@ var (
 	ManagedDeviceMobileAppConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&ManagedDeviceMobileAppConfigurationResource, "")
 )
-
-var managedDeviceMobileAppConfigurationReadOptions = generic.ReadOptions{
-	ODataExpand: "assignments",
-}
-
-var managedDeviceMobileAppConfigurationWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-			UpdateOnly: true,
-		},
-	},
-}
 
 var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // managedDeviceMobileAppConfiguration

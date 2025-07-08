@@ -20,9 +20,47 @@ var (
 		TypeNameSuffix: "connected_organization",
 		SpecificSchema: connectedOrganizationResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/identityGovernance/entitlementManagement/connectedOrganizations",
-			ReadOptions:     connectedOrganizationReadOptions,
-			WriteSubActions: connectedOrganizationWriteSubActions,
+			BaseUri: "/identityGovernance/entitlementManagement/connectedOrganizations",
+			ReadOptions: generic.ReadOptions{
+				ExtraRequests: []generic.ReadExtraRequest{
+					{
+						Attribute: "internalSponsors",
+					},
+					{
+						Attribute: "externalSponsors",
+					},
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionIndividual{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"internalSponsors"},
+							UriSuffix:  "internalSponsors",
+							UpdateOnly: true,
+						},
+						ComparisonKeyAttribute: "id",
+						SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("internal_sponsors"),
+						IsOdataReference:       true,
+						OdataRefMapTypeToUriPrefix: map[string]string{
+							"": "https://graph.microsoft.com/beta/directoryObjects/", // this will work for users and groups
+						},
+					},
+					&generic.WriteSubActionIndividual{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"externalSponsors"},
+							UriSuffix:  "externalSponsors",
+							UpdateOnly: true,
+						},
+						ComparisonKeyAttribute: "id",
+						SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("external_sponsors"),
+						IsOdataReference:       true,
+						OdataRefMapTypeToUriPrefix: map[string]string{
+							"": "https://graph.microsoft.com/beta/directoryObjects/", // this will work for users and groups
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -32,48 +70,6 @@ var (
 	ConnectedOrganizationPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&ConnectedOrganizationResource, "")
 )
-
-var connectedOrganizationReadOptions = generic.ReadOptions{
-	ExtraRequests: []generic.ReadExtraRequest{
-		{
-			ParentAttribute: "internalSponsors",
-			UriSuffix:       "internalSponsors",
-		},
-		{
-			ParentAttribute: "externalSponsors",
-			UriSuffix:       "externalSponsors",
-		},
-	},
-}
-
-var connectedOrganizationWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionIndividual{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"internalSponsors"},
-			UriSuffix:  "internalSponsors",
-			UpdateOnly: true,
-		},
-		ComparisonKeyAttribute: "id",
-		SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("internal_sponsors"),
-		IsOdataReference:       true,
-		OdataRefMapTypeToUriPrefix: map[string]string{
-			"": "https://graph.microsoft.com/beta/directoryObjects/", // this will work for users and groups
-		},
-	},
-	&generic.WriteSubActionIndividual{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"externalSponsors"},
-			UriSuffix:  "externalSponsors",
-			UpdateOnly: true,
-		},
-		ComparisonKeyAttribute: "id",
-		SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("external_sponsors"),
-		IsOdataReference:       true,
-		OdataRefMapTypeToUriPrefix: map[string]string{
-			"": "https://graph.microsoft.com/beta/directoryObjects/", // this will work for users and groups
-		},
-	},
-}
 
 var connectedOrganizationResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // connectedOrganization

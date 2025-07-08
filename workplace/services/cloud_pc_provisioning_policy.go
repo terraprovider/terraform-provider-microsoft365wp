@@ -20,9 +20,27 @@ var (
 		TypeNameSuffix: "cloud_pc_provisioning_policy",
 		SpecificSchema: cloudPcProvisioningPolicyResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/deviceManagement/virtualEndpoint/provisioningPolicies",
-			ReadOptions:     cloudPcProvisioningPolicyReadOptions,
-			WriteSubActions: cloudPcProvisioningPolicyWriteSubActions,
+			BaseUri: "/deviceManagement/virtualEndpoint/provisioningPolicies",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "assignments",
+				DataSource: generic.DataSourceOptions{
+					NoFilterSupport: true,
+					Plural: generic.PluralOptions{
+						ExtraAttributes: []string{"image_id", "image_type", "managed_by", "provisioning_type"},
+					},
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes:        []string{"assignments"},
+							UriSuffix:         "assign",
+							EmptyBeforeDelete: true,
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -32,26 +50,6 @@ var (
 	CloudPcProvisioningPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&CloudPcProvisioningPolicyResource, "")
 )
-
-var cloudPcProvisioningPolicyReadOptions = generic.ReadOptions{
-	ODataExpand: "assignments",
-	DataSource: generic.DataSourceOptions{
-		NoFilterSupport: true,
-		Plural: generic.PluralOptions{
-			ExtraAttributes: []string{"image_id", "image_type", "managed_by", "provisioning_type"},
-		},
-	},
-}
-
-var cloudPcProvisioningPolicyWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes:        []string{"assignments"},
-			UriSuffix:         "assign",
-			EmptyBeforeDelete: true,
-		},
-	},
-}
 
 var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // cloudPcProvisioningPolicy
@@ -72,7 +70,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					MarkdownDescription: "The unique identifier (ID) of a Windows Autopatch group. An Autopatch group is a logical container or unit that groups several Microsoft Entra groups and software update policies. Devices with the same Autopatch group ID share unified software update management. The default value is `null` that indicates that no Autopatch group is associated with the provisioning policy.",
 				},
 			},
-			MarkdownDescription: "The specific settings for Windows Autopatch that enable its customers to experience it on Cloud PC. The settings take effect when the tenant enrolls in Windows Autopatch and the **managedType** of the **microsoftManagedDesktop** property is set as `starterManaged`. Supports `$select`. / Represents specific settings for Windows Autopatch that enable its customers to experience it on Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicyautopatch?view=graph-rest-beta",
+			MarkdownDescription: "Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. The settings take effect when the tenant enrolls in Autopatch and the **managedType** of the **microsoftManagedDesktop** property is set as `starterManaged`. Supports `$select`. / Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicyautopatch?view=graph-rest-beta",
 		},
 		"autopilot_configuration": schema.SingleNestedAttribute{
 			Optional: true,
@@ -132,7 +130,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 						Validators: []validator.String{
 							stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico", "australasia", "europe"),
 						},
-						MarkdownDescription: "The logical geographic group this region belongs to. Multiple regions can belong to one region group. A customer can select a **regionGroup** when they provision a Cloud PC, and the Cloud PC is put in one of the regions in the group based on resource status. For example, the Europe region group contains the Northern Europe and Western Europe regions.and `southKorea`. Read-only. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`",
+						MarkdownDescription: "The logical geographic group this region belongs to. Multiple regions can belong to one region group. A customer can select a **regionGroup** when they provision a Cloud PC, and the Cloud PC is put in one of the regions in the group based on resource status. For example, the Europe region group contains the Northern Europe and Western Europe regions. Use the `Prefer: include-unknown-enum-members` request header to get the following values in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`. Read-only. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`",
 					},
 					"region_name": schema.StringAttribute{
 						Optional:            true,

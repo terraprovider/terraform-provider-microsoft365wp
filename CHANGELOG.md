@@ -1,6 +1,39 @@
 # `microsoft365wp` Terraform Provider Changelog
 
 
+## 0.17.0 (2025-07-08)
+
+### added
+
+- application (data sources only)
+- attribute_set
+- cross_tenant_identity_sync_policy_partner
+- custom_security_attribute_definition
+- device_compliance_script
+- external_identities_policy
+- group (data sources only)
+- group_assigned_license
+- intune_branding_profile
+- service_principal (data sources only)
+- subscribed_sku (data sources only)
+- user (data sources only)
+
+### fixed
+
+- assignmentTarget: fix filter_id
+- azure_ad_windows_autopilot_deployment_profile: fix locale="" on create
+
+### changed
+
+- authentication_methods_policy: convert null from MS Graph to "migrationComplete"
+- Update dependencies
+- Update MS Graph metadata & docs
+
+### breaking
+
+- authentication_methods_policy: add qr_code_pin
+
+
 ## 0.16.0 (2025-03-12)
 
 ### added

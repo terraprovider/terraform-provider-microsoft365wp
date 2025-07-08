@@ -3,49 +3,12 @@ package generic
 import (
 	"fmt"
 	"regexp"
-	"strings"
 
 	dsschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	rsschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
-func ConvertResourceAttributesToDataSourceSingular(sourceRsAttributes map[string]rsschema.Attribute, isRequiredFunc func(string) bool) map[string]dsschema.Attribute {
-
-	targetDsAttributes := make(map[string]dsschema.Attribute)
-	for attrName, rsAttribute := range sourceRsAttributes {
-		targetDsAttributes[attrName] = convertResourceAttr2DataSourceAttr(rsAttribute, isRequiredFunc(attrName))
-	}
-	return targetDsAttributes
-}
-
-func ConvertResourceAttributesToDataSourcePlural(sourceRsAttributes map[string]rsschema.Attribute, nestedListName string,
-	isRootAndRequiredAttrFunc func(string) bool, isNestedListAttrFunc func(string, rsschema.Attribute) (bool, dsschema.Attribute)) map[string]dsschema.Attribute {
-
-	targetRootDsAttributes := make(map[string]dsschema.Attribute)
-	targetNestedListDsAttributes := make(map[string]dsschema.Attribute)
-	for attrName, rsAttribute := range sourceRsAttributes {
-		if isRootAndRequiredAttrFunc(attrName) {
-			targetRootDsAttributes[attrName] = convertResourceAttr2DataSourceAttr(rsAttribute, true)
-		}
-		if ok, dsAttribute := isNestedListAttrFunc(attrName, rsAttribute); ok {
-			if dsAttribute == nil {
-				dsAttribute = convertResourceAttr2DataSourceAttr(rsAttribute, false)
-			}
-			targetNestedListDsAttributes[attrName] = dsAttribute
-		}
-	}
-
-	targetRootDsAttributes[nestedListName] = dsschema.ListNestedAttribute{
-		Computed: true,
-		NestedObject: dsschema.NestedAttributeObject{
-			Attributes: targetNestedListDsAttributes,
-		},
-	}
-
-	return targetRootDsAttributes
-}
-
-func convertResourceAttr2DataSourceAttr(rsAttribute rsschema.Attribute, required bool) dsschema.Attribute {
+func convertResourceAttr2DataSourceAttr(rsAttribute rsschema.Attribute, required bool, odataDerivedTypeIsPlaceholderOnly bool, odataDerivedTypeDescNameTf string) dsschema.Attribute {
 
 	optional := false
 	computed := !required
@@ -87,7 +50,7 @@ func convertResourceAttr2DataSourceAttr(rsAttribute rsschema.Attribute, required
 	case rsschema.SingleNestedAttribute:
 		dsAttributes := make(map[string]dsschema.Attribute)
 		for nKey, nValue := range typed.Attributes {
-			dsAttributes[nKey] = convertResourceAttr2DataSourceAttr(nValue, false)
+			dsAttributes[nKey] = convertResourceAttr2DataSourceAttr(nValue, false, odataDerivedTypeIsPlaceholderOnly, nKey)
 		}
 		return dsschema.SingleNestedAttribute{
 			Attributes:          dsAttributes,
@@ -103,8 +66,16 @@ func convertResourceAttr2DataSourceAttr(rsAttribute rsschema.Attribute, required
 		}
 	case OdataDerivedTypeNestedAttributeRs:
 		dsAttributes := make(map[string]dsschema.Attribute)
-		for nKey, nValue := range typed.Attributes {
-			dsAttributes[nKey] = convertResourceAttr2DataSourceAttr(nValue, false)
+		mdDescription := ""
+		if !odataDerivedTypeIsPlaceholderOnly {
+			for nKey, nValue := range typed.Attributes {
+				dsAttributes[nKey] = convertResourceAttr2DataSourceAttr(nValue, false, odataDerivedTypeIsPlaceholderOnly, nKey)
+			}
+			mdDescription = descCleanupRegex.ReplaceAllLiteralString(typed.MarkdownDescription, "")
+		} else {
+			mdDescription = fmt.Sprintf("Please note that this nested object does not have any attributes "+
+				"but only exists to be able to test if the parent object is of derived OData type `%s` "+
+				"(using e.g. `if x.%s != null`).", typed.DerivedType, odataDerivedTypeDescNameTf)
 		}
 		return OdataDerivedTypeNestedAttributeDs{
 			SingleNestedAttribute: dsschema.SingleNestedAttribute{
@@ -115,7 +86,7 @@ func convertResourceAttr2DataSourceAttr(rsAttribute rsschema.Attribute, required
 				Computed:            computed,
 				Sensitive:           typed.Sensitive,
 				Description:         typed.Description,
-				MarkdownDescription: descCleanupRegex.ReplaceAllLiteralString(typed.MarkdownDescription, ""),
+				MarkdownDescription: mdDescription,
 				DeprecationMessage:  typed.DeprecationMessage,
 			},
 			DerivedType: typed.DerivedType,
@@ -123,7 +94,7 @@ func convertResourceAttr2DataSourceAttr(rsAttribute rsschema.Attribute, required
 	case rsschema.SetNestedAttribute:
 		dsAttributes := make(map[string]dsschema.Attribute)
 		for nKey, nValue := range typed.NestedObject.Attributes {
-			dsAttributes[nKey] = convertResourceAttr2DataSourceAttr(nValue, false)
+			dsAttributes[nKey] = convertResourceAttr2DataSourceAttr(nValue, false, odataDerivedTypeIsPlaceholderOnly, nKey)
 		}
 		nestedObject := dsschema.NestedAttributeObject{
 			Attributes: dsAttributes,
@@ -144,7 +115,7 @@ func convertResourceAttr2DataSourceAttr(rsAttribute rsschema.Attribute, required
 	case rsschema.ListNestedAttribute:
 		dsAttributes := make(map[string]dsschema.Attribute)
 		for nKey, nValue := range typed.NestedObject.Attributes {
-			dsAttributes[nKey] = convertResourceAttr2DataSourceAttr(nValue, false)
+			dsAttributes[nKey] = convertResourceAttr2DataSourceAttr(nValue, false, odataDerivedTypeIsPlaceholderOnly, nKey)
 		}
 		nestedObject := dsschema.NestedAttributeObject{
 			Attributes: dsAttributes,
@@ -165,8 +136,4 @@ func convertResourceAttr2DataSourceAttr(rsAttribute rsschema.Attribute, required
 	}
 
 	panic(fmt.Sprintf("Don't know how to convert attribute of type %T", rsAttribute))
-}
-
-func GetSubcategorySuffixFromMarkdownDescription(markdownDescription string) string {
-	return " ||| " + strings.Split(markdownDescription, " ||| ")[1]
 }

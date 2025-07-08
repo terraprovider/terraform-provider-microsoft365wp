@@ -13,8 +13,15 @@ var (
 		TypeNameSuffix: "cloud_pc_gallery_image",
 		SpecificSchema: cloudPcGalleryImageResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:     "/deviceManagement/virtualEndpoint/galleryImages",
-			ReadOptions: cloudPcGalleryImageReadOptions,
+			BaseUri: "/deviceManagement/virtualEndpoint/galleryImages",
+			ReadOptions: generic.ReadOptions{
+				DataSource: generic.DataSourceOptions{
+					ExtraFilterAttributes: []string{"offer_name", "publisher_name", "status", "sku_name"},
+					Plural: generic.PluralOptions{
+						ExtraAttributes: []string{"offer_name", "publisher_name", "status", "sku_name", "start_date", "end_date", "expiration_date"},
+					},
+				},
+			},
 		},
 	}
 
@@ -24,15 +31,6 @@ var (
 	CloudPcGalleryImagePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&cloudPcGalleryImageResource, "")
 )
-
-var cloudPcGalleryImageReadOptions = generic.ReadOptions{
-	DataSource: generic.DataSourceOptions{
-		ExtraFilterAttributes: []string{"offer_name", "publisher_name", "status", "sku_name"},
-		Plural: generic.PluralOptions{
-			ExtraAttributes: []string{"offer_name", "publisher_name", "status", "sku_name", "start_date", "end_date", "expiration_date"},
-		},
-	},
-}
 
 var cloudPcGalleryImageResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // cloudPcGalleryImage

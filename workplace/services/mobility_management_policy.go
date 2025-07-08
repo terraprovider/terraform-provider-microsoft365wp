@@ -31,12 +31,33 @@ var (
 					},
 				},
 			},
-			SingularEntity: generic.SingularEntity{
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "includedGroups",
+			},
+			WriteOptions: generic.WriteOptions{
 				UpdateInsteadOfCreate: true,
 				SkipDelete:            true,
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionIndividual{
+						ComparisonKeyAttribute: "id",
+						SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("included_groups"),
+						IsOdataReference:       true,
+						OdataRefMapTypeToUriPrefix: map[string]string{
+							"": "https://graph.microsoft.com/odata/groups/",
+						},
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"includedGroups"},
+							UriSuffix:  "includedGroups",
+						},
+					},
+					&generic.WriteSubActionAllInOne{
+						UsePatch: true,
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"appliesTo"},
+						},
+					},
+				},
 			},
-			ReadOptions:                mobilityManagementPolicyReadOptions,
-			WriteSubActions:            mobilityManagementPolicyWriteSubActions,
 			TerraformToGraphMiddleware: mobilityManagementPolicyTerraformToGraphMiddleware,
 		},
 	}
@@ -47,31 +68,6 @@ var (
 	MobilityManagementPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&MobilityManagementPolicyResource, "")
 )
-
-var mobilityManagementPolicyReadOptions = generic.ReadOptions{
-	ODataExpand: "includedGroups",
-}
-
-var mobilityManagementPolicyWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionIndividual{
-		ComparisonKeyAttribute: "id",
-		SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("included_groups"),
-		IsOdataReference:       true,
-		OdataRefMapTypeToUriPrefix: map[string]string{
-			"": "https://graph.microsoft.com/odata/groups/",
-		},
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"includedGroups"},
-			UriSuffix:  "includedGroups",
-		},
-	},
-	&generic.WriteSubActionAllInOne{
-		UsePatch: true,
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"appliesTo"},
-		},
-	},
-}
 
 func mobilityManagementPolicyTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	// "selected" gets implied automatically if includedGroups contains any entries but it may not be written to Graph
@@ -148,5 +144,5 @@ var mobilityManagementPolicyResourceSchema = schema.Schema{
 			MarkdownDescription: "Microsoft Entra groups under the scope of the mobility management application if appliesTo is `selected` / Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group. This resource is an open type that allows other properties to be passed in.\n\nFor performance reasons, the [create](../api/group-post-groups.md), [get](../api/group-get.md), and [list](../api/group-list.md) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option.\n\nThis resource supports: / https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta. The _provider_ default value is `[]`.  \nProvider Note: Please note that this attribute's must not contain any entries if `applies_to` is `none` or `all`.",
 		},
 	},
-	MarkdownDescription: "In Microsoft Entra ID, a mobility management policy represents an autoenrollment configuration for a mobility management (MDM or MAM) application. These policies are only applicable to devices based on Windows 10 OS and its derivatives (Surface Hub, HoloLens etc.). [Autoenrollment](/windows/client-management/mdm/azure-ad-and-microsoft-intune-automatic-mdm-enrollment-in-the-new-portal) enables organizations to automatically enroll devices into their chosen mobility management application as part of [Microsoft Entra join](/azure/active-directory/devices/concept-azure-ad-join) or [Microsoft Entra register](/azure/active-directory/devices/concept-azure-ad-register) process on Windows 10 devices. / https://learn.microsoft.com/en-us/graph/api/resources/mobilitymanagementpolicy?view=graph-rest-beta\n\nProvider Note: Please note that MS Graph does currently (as of 2025-02) not allow to update (or even read) this entity using\napplication permissions but only using work or school account delegated permissions (also see\nhttps://learn.microsoft.com/en-us/graph/api/mobiledevicemanagementpolicies-get?view=graph-rest-beta#permissions). ||| MS Graph: Directory management",
+	MarkdownDescription: "In Microsoft Entra ID, a mobility management policy represents an autoenrollment configuration for a mobility management (MDM or MAM) application. These policies are only applicable to devices based on Windows 10 OS and its derivatives (Surface Hub, HoloLens etc.). [Autoenrollment](/windows/client-management/mdm/azure-ad-and-microsoft-intune-automatic-mdm-enrollment-in-the-new-portal) enables organizations to automatically enroll devices into their chosen mobility management application as part of [Microsoft Entra join](/azure/active-directory/devices/concept-azure-ad-join) or [Microsoft Entra register](/azure/active-directory/devices/concept-azure-ad-register) process on Windows 10 devices. / https://learn.microsoft.com/en-us/graph/api/resources/mobilitymanagementpolicy?view=graph-rest-beta\n\nProvider Note: Please note that MS Graph does currently (as of 2025-02) not allow to update (or even read) this entity using\napplication permissions but only using work or school account delegated permissions (also see\nhttps://learn.microsoft.com/en-us/graph/api/mobiledevicemanagementpolicies-get?view=graph-rest-beta#permissions). ||| MS Graph: App management",
 }

@@ -4,11 +4,18 @@ import (
 	"context"
 	"net/http"
 
+	"terraform-provider-microsoft365wp/workplace/external/msgraph"
+
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/manicminer/hamilton/msgraph"
 )
 
 func (aps *AccessParams) UpdateRaw(ctx context.Context, diags *diag.Diagnostics,
+	baseUri string, id string, idAttributer GetAttributer, rawVal map[string]any) {
+
+	aps.UpdateRaw2(ctx, diags, baseUri, id, idAttributer, rawVal, aps.WriteOptions.UsePutForUpdate)
+}
+
+func (aps *AccessParams) UpdateRaw2(ctx context.Context, diags *diag.Diagnostics,
 	baseUri string, id string, idAttributer GetAttributer, rawVal map[string]any, usePut bool) {
 
 	uri := aps.GetUriWithIdForUD(ctx, diags, baseUri, id, idAttributer)

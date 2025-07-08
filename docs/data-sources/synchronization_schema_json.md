@@ -9,7 +9,7 @@ Defines what objects are synchronized and how they are synchronized. The synchro
 
 The following sections describe the high-level components of the synchronization schema. / https://learn.microsoft.com/en-us/graph/api/resources/synchronization-synchronizationschema?view=graph-rest-beta
 
-Provider Note: This resource cannot be imported (as the provider cannot determine the `service_principal_id` at the time of import and hence is not able to build the correct URI to read the existing MS Graph entity).
+Provider Note: To import this resource, an ID consisting of `service_principal_id` and `id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 

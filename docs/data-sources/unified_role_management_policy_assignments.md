@@ -78,8 +78,8 @@ output "microsoft365wp_unified_role_management_policy_assignments_group" {
 - `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
 - `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
 - `policy_id` (String) The id of the policy.
-- `role_definition_id` (String) For Microsoft Entra roles policy, it's the identifier of the [role definition](unifiedroledefinition.md) object where the policy applies. For PIM for groups membership and ownership, it's either `member` or `owner`. Supports $filter (`eq`).
-- `scope_id` (String) The identifier of the scope where the policy is assigned.  Can be `/` for the tenant or a group ID. Required.
+- `role_definition_id` (String) For Microsoft Entra roles policy, it's the identifier of the [role definition](unifiedroledefinition.md) object where the policy applies. For PIM for Groups membership and ownership, it's either `member` or `owner`. Supports $filter (`eq`).
+- `scope_id` (String) The identifier of the scope where the policy is assigned. Can be `/` for the tenant or a group ID. Required.
 - `scope_type` (String) The type of the scope where the policy is assigned. One of `Directory`, `DirectoryRole`, `Group`. Required.
 
 ### Read-Only
@@ -93,6 +93,6 @@ Read-Only:
 
 - `id` (String) Unique identifier for the policy assignment. The ID is typically a concatenation of the unifiedRoleManagementPolicy ID and the roleDefinitionId separated by an underscore.
 - `policy_id` (String) The id of the policy.
-- `role_definition_id` (String) For Microsoft Entra roles policy, it's the identifier of the [role definition](unifiedroledefinition.md) object where the policy applies. For PIM for groups membership and ownership, it's either `member` or `owner`. Supports $filter (`eq`).
-- `scope_id` (String) The identifier of the scope where the policy is assigned.  Can be `/` for the tenant or a group ID. Required.
+- `role_definition_id` (String) For Microsoft Entra roles policy, it's the identifier of the [role definition](unifiedroledefinition.md) object where the policy applies. For PIM for Groups membership and ownership, it's either `member` or `owner`. Supports $filter (`eq`).
+- `scope_id` (String) The identifier of the scope where the policy is assigned. Can be `/` for the tenant or a group ID. Required.
 - `scope_type` (String) The type of the scope where the policy is assigned. One of `Directory`, `DirectoryRole`, `Group`. Required.

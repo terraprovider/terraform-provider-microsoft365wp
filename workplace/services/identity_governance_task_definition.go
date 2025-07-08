@@ -15,8 +15,15 @@ var (
 		TypeNameSuffix: "identity_governance_task_definition",
 		SpecificSchema: identityGovernanceTaskDefinitionResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:     "/identityGovernance/lifecycleWorkflows/taskDefinitions",
-			ReadOptions: identityGovernanceTaskDefinitionReadOptions,
+			BaseUri: "/identityGovernance/lifecycleWorkflows/taskDefinitions",
+			ReadOptions: generic.ReadOptions{
+				DataSource: generic.DataSourceOptions{
+					ExtraFilterAttributes: []string{"display_name"},
+					Plural: generic.PluralOptions{
+						ExtraAttributes: []string{"category"},
+					},
+				},
+			},
 		},
 	}
 
@@ -26,15 +33,6 @@ var (
 	IdentityGovernanceTaskDefinitionPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&identityGovernanceTaskDefinitionResource, "")
 )
-
-var identityGovernanceTaskDefinitionReadOptions = generic.ReadOptions{
-	DataSource: generic.DataSourceOptions{
-		ExtraFilterAttributes: []string{"display_name"},
-		Plural: generic.PluralOptions{
-			ExtraAttributes: []string{"category"},
-		},
-	},
-}
 
 var identityGovernanceTaskDefinitionResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // identityGovernance.taskDefinition

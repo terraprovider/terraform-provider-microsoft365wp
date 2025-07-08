@@ -50,7 +50,6 @@ export ARM_CLIENT_SECRET='...'
 
 
 data "microsoft365wp_device_management_scripts" "all" {
-  exclude_ids = ["01234567-89ab-cdef-0123-456789abcdee", "01234567-89ab-cdef-0123-456789abcdef"]
 }
 
 output "microsoft365wp_device_management_scripts" {
@@ -63,8 +62,6 @@ output "microsoft365wp_device_management_scripts" {
 
 ### Optional
 
-- `exclude_ids` (Set of String) Exclude entities with these ids (using OData `$filter`).
-- `include_ids` (Set of String) Only return entities with these ids (using OData `$filter`).
 - `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
 - `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
 - `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.

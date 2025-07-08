@@ -609,6 +609,32 @@ Optional:
 <a id="nestedatt--android_device_owner_general_device--global_proxy"></a>
 ### Nested Schema for `android_device_owner_general_device.global_proxy`
 
+Optional:
+
+- `auto_config` (Attributes) Android Device Owner Global Proxy Auto Config. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerglobalproxyautoconfig?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--global_proxy--auto_config))
+- `direct` (Attributes) Android Device Owner Global Proxy Direct. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerglobalproxydirect?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--global_proxy--direct))
+
+<a id="nestedatt--android_device_owner_general_device--global_proxy--auto_config"></a>
+### Nested Schema for `android_device_owner_general_device.global_proxy.auto_config`
+
+Required:
+
+- `proxy_auto_config_url` (String) The proxy auto-config URL
+
+
+<a id="nestedatt--android_device_owner_general_device--global_proxy--direct"></a>
+### Nested Schema for `android_device_owner_general_device.global_proxy.direct`
+
+Required:
+
+- `host` (String) The host name
+- `port` (Number) The port
+
+Optional:
+
+- `excluded_hosts` (Set of String) The excluded hosts. The _provider_ default value is `[]`.
+
+
 
 <a id="nestedatt--android_device_owner_general_device--kiosk_mode_app_positions"></a>
 ### Nested Schema for `android_device_owner_general_device.kiosk_mode_app_positions`
@@ -620,6 +646,82 @@ Optional:
 
 <a id="nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item"></a>
 ### Nested Schema for `android_device_owner_general_device.kiosk_mode_app_positions.item`
+
+Optional:
+
+- `app` (Attributes) An application on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeapp?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--app))
+- `folder_item` (Attributes) Represents an item that can be added to Android Device Owner folder (application or weblink) / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodefolderitem?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--folder_item))
+- `managed_folder_reference` (Attributes) A reference to folder containing apps and weblinks on the Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodemanagedfolderreference?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--managed_folder_reference))
+- `weblink` (Attributes) A weblink on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeweblink?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--weblink))
+
+<a id="nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--app"></a>
+### Nested Schema for `android_device_owner_general_device.kiosk_mode_app_positions.item.app`
+
+Required:
+
+- `package` (String) Package name of application
+
+Optional:
+
+- `class_name` (String) Class name of application
+
+
+<a id="nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--folder_item"></a>
+### Nested Schema for `android_device_owner_general_device.kiosk_mode_app_positions.item.folder_item`
+
+Optional:
+
+- `app` (Attributes) An application on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeapp?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--folder_item--app))
+- `weblink` (Attributes) A weblink on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeweblink?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--folder_item--weblink))
+
+<a id="nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--folder_item--app"></a>
+### Nested Schema for `android_device_owner_general_device.kiosk_mode_app_positions.item.folder_item.app`
+
+Required:
+
+- `package` (String) Package name of application
+
+Optional:
+
+- `class_name` (String) Class name of application
+
+
+<a id="nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--folder_item--weblink"></a>
+### Nested Schema for `android_device_owner_general_device.kiosk_mode_app_positions.item.folder_item.weblink`
+
+Required:
+
+- `link` (String) Link for weblink
+
+Optional:
+
+- `label` (String) Display name for weblink
+
+
+
+<a id="nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--managed_folder_reference"></a>
+### Nested Schema for `android_device_owner_general_device.kiosk_mode_app_positions.item.managed_folder_reference`
+
+Required:
+
+- `folder_name` (String) Name of the folder
+
+Optional:
+
+- `folder_identifier` (String) Unique identifier for the folder
+
+
+<a id="nestedatt--android_device_owner_general_device--kiosk_mode_app_positions--item--weblink"></a>
+### Nested Schema for `android_device_owner_general_device.kiosk_mode_app_positions.item.weblink`
+
+Required:
+
+- `link` (String) Link for weblink
+
+Optional:
+
+- `label` (String) Display name for weblink
+
 
 
 
@@ -651,6 +753,35 @@ Optional:
 
 <a id="nestedatt--android_device_owner_general_device--kiosk_mode_managed_folders--items"></a>
 ### Nested Schema for `android_device_owner_general_device.kiosk_mode_managed_folders.items`
+
+Optional:
+
+- `app` (Attributes) An application on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeapp?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_managed_folders--items--app))
+- `weblink` (Attributes) A weblink on the Android Device Owner Managed Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeweblink?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_device_owner_general_device--kiosk_mode_managed_folders--items--weblink))
+
+<a id="nestedatt--android_device_owner_general_device--kiosk_mode_managed_folders--items--app"></a>
+### Nested Schema for `android_device_owner_general_device.kiosk_mode_managed_folders.items.app`
+
+Required:
+
+- `package` (String) Package name of application
+
+Optional:
+
+- `class_name` (String) Class name of application
+
+
+<a id="nestedatt--android_device_owner_general_device--kiosk_mode_managed_folders--items--weblink"></a>
+### Nested Schema for `android_device_owner_general_device.kiosk_mode_managed_folders.items.weblink`
+
+Required:
+
+- `link` (String) Link for weblink
+
+Optional:
+
+- `label` (String) Display name for weblink
+
 
 
 
@@ -952,7 +1083,53 @@ Optional:
 
 Optional:
 
+- `app` (Attributes) Represents an icon for an app on the Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenapp?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--home_screen_dock_icons--app))
 - `display_name` (String) Name of the app
+- `folder` (Attributes) A folder containing pages of apps and web clips on the Home Screen. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenfolder?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--home_screen_dock_icons--folder))
+
+<a id="nestedatt--ios_device_features--home_screen_dock_icons--app"></a>
+### Nested Schema for `ios_device_features.home_screen_dock_icons.app`
+
+Required:
+
+- `bundle_id` (String) BundleID of the app if isWebClip is false or the URL of a web clip if isWebClip is true.
+
+Optional:
+
+- `is_web_clip` (Boolean) When true, the bundle ID will be handled as a URL for a web clip. The _provider_ default value is `false`.
+
+
+<a id="nestedatt--ios_device_features--home_screen_dock_icons--folder"></a>
+### Nested Schema for `ios_device_features.home_screen_dock_icons.folder`
+
+Required:
+
+- `pages` (Attributes Set) Pages of Home Screen Layout Icons which must be applications or web clips. This collection can contain a maximum of 500 elements. / A page for a folder containing apps and web clips on the Home Screen. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenfolderpage?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--home_screen_dock_icons--folder--pages))
+
+<a id="nestedatt--ios_device_features--home_screen_dock_icons--folder--pages"></a>
+### Nested Schema for `ios_device_features.home_screen_dock_icons.folder.pages`
+
+Required:
+
+- `apps` (Attributes Set) A list of apps and web clips to appear on a page within a folder. This collection can contain a maximum of 500 elements. / Represents an icon for an app on the Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenapp?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--home_screen_dock_icons--folder--pages--apps))
+
+Optional:
+
+- `display_name` (String) Name of the folder page
+
+<a id="nestedatt--ios_device_features--home_screen_dock_icons--folder--pages--apps"></a>
+### Nested Schema for `ios_device_features.home_screen_dock_icons.folder.pages.apps`
+
+Required:
+
+- `bundle_id` (String) BundleID of the app if isWebClip is false or the URL of a web clip if isWebClip is true.
+
+Optional:
+
+- `is_web_clip` (Boolean) When true, the bundle ID will be handled as a URL for a web clip. The _provider_ default value is `false`.
+
+
+
 
 
 <a id="nestedatt--ios_device_features--home_screen_pages"></a>
@@ -968,7 +1145,53 @@ Optional:
 
 Optional:
 
+- `app` (Attributes) Represents an icon for an app on the Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenapp?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--home_screen_pages--icons--app))
 - `display_name` (String) Name of the app
+- `folder` (Attributes) A folder containing pages of apps and web clips on the Home Screen. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenfolder?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--home_screen_pages--icons--folder))
+
+<a id="nestedatt--ios_device_features--home_screen_pages--icons--app"></a>
+### Nested Schema for `ios_device_features.home_screen_pages.icons.app`
+
+Required:
+
+- `bundle_id` (String) BundleID of the app if isWebClip is false or the URL of a web clip if isWebClip is true.
+
+Optional:
+
+- `is_web_clip` (Boolean) When true, the bundle ID will be handled as a URL for a web clip. The _provider_ default value is `false`.
+
+
+<a id="nestedatt--ios_device_features--home_screen_pages--icons--folder"></a>
+### Nested Schema for `ios_device_features.home_screen_pages.icons.folder`
+
+Required:
+
+- `pages` (Attributes Set) Pages of Home Screen Layout Icons which must be applications or web clips. This collection can contain a maximum of 500 elements. / A page for a folder containing apps and web clips on the Home Screen. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenfolderpage?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--home_screen_pages--icons--folder--pages))
+
+<a id="nestedatt--ios_device_features--home_screen_pages--icons--folder--pages"></a>
+### Nested Schema for `ios_device_features.home_screen_pages.icons.folder.pages`
+
+Required:
+
+- `apps` (Attributes Set) A list of apps and web clips to appear on a page within a folder. This collection can contain a maximum of 500 elements. / Represents an icon for an app on the Home Screen / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenapp?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios_device_features--home_screen_pages--icons--folder--pages--apps))
+
+Optional:
+
+- `display_name` (String) Name of the folder page
+
+<a id="nestedatt--ios_device_features--home_screen_pages--icons--folder--pages--apps"></a>
+### Nested Schema for `ios_device_features.home_screen_pages.icons.folder.pages.apps`
+
+Required:
+
+- `bundle_id` (String) BundleID of the app if isWebClip is false or the URL of a web clip if isWebClip is true.
+
+Optional:
+
+- `is_web_clip` (Boolean) When true, the bundle ID will be handled as a URL for a web clip. The _provider_ default value is `false`.
+
+
+
 
 
 

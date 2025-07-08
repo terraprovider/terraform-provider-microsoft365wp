@@ -18,9 +18,23 @@ var (
 		TypeNameSuffix: "cloud_pc_user_setting",
 		SpecificSchema: cloudPcUserSettingResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/deviceManagement/virtualEndpoint/userSettings",
-			ReadOptions:     cloudPcUserSettingReadOptions,
-			WriteSubActions: cloudPcUserSettingWriteSubActions,
+			BaseUri: "/deviceManagement/virtualEndpoint/userSettings",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "assignments",
+				DataSource: generic.DataSourceOptions{
+					NoFilterSupport: true,
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -30,22 +44,6 @@ var (
 	CloudPcUserSettingPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&CloudPcUserSettingResource, "")
 )
-
-var cloudPcUserSettingReadOptions = generic.ReadOptions{
-	ODataExpand: "assignments",
-	DataSource: generic.DataSourceOptions{
-		NoFilterSupport: true,
-	},
-}
-
-var cloudPcUserSettingWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-		},
-	},
-}
 
 var cloudPcUserSettingResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // cloudPcUserSetting
@@ -97,7 +95,7 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 										Validators: []validator.String{
 											stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico", "australasia", "europe"),
 										},
-										MarkdownDescription: "Indicates the logic geographic group this region belongs to. Multiple regions can belong to one region group. When a region group is configured for disaster recovery, the new Cloud PC is assigned to one of the regions within the group based on resource availability. For example, the `europeUnion` region group contains the North Europe and West Europe regions.，`southKorea`, `middleEast`, `mexico`. Use the `Prefer: include-unknown-enum-members` request header to get the following values in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `norway`, `switzerland`，`southKorea`, `middleEast`, `mexico`. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`",
+										MarkdownDescription: "Indicates the logic geographic group this region belongs to. Multiple regions can belong to one region group. When a region group is configured for disaster recovery, the new Cloud PC is assigned to one of the regions within the group based on resource availability. For example, the `europeUnion` region group contains the North Europe and West Europe regions. Use the `Prefer: include-unknown-enum-members` request header to get the following values in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`",
 									},
 									"region_name": schema.StringAttribute{
 										Required:            true,

@@ -77,6 +77,7 @@ output "microsoft365wp_cross_tenant_access_policy_configuration_partner" {
 - `b2b_collaboration_outbound` (Attributes) Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B collaboration. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--b2b_collaboration_outbound))
 - `b2b_direct_connect_inbound` (Attributes) Defines your partner-specific configuration for users from other organizations accessing your resources via Azure B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound))
 - `b2b_direct_connect_outbound` (Attributes) Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound))
+- `identity_synchronization` (Attributes) Defines the cross-tenant policy for the synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multitenant organization by automating the creation, update, and deletion of users from one tenant to another. / Defines the cross-tenant policy for synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users from one tenant to another. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta (see [below for nested schema](#nestedatt--identity_synchronization))
 - `inbound_trust` (Attributes) Determines the partner-specific configuration for trusting other Conditional Access claims from external Microsoft Entra organizations. / Defines the Conditional Access claims you want to accept from other Microsoft Entra organizations via your cross-tenant access policy configuration. These can be configured in your default configuration, partner-specific configuration, or both. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyinboundtrust?view=graph-rest-beta (see [below for nested schema](#nestedatt--inbound_trust))
 - `is_in_multi_tenant_organization` (Boolean) Identifies whether a tenant is a member of a multitenant organization.
 - `is_service_provider` (Boolean) Identifies whether the partner-specific configuration is a Cloud Service Provider for your organization.
@@ -268,6 +269,24 @@ Read-Only:
 - `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
 - `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`
 
+
+
+
+<a id="nestedatt--identity_synchronization"></a>
+### Nested Schema for `identity_synchronization`
+
+Read-Only:
+
+- `display_name` (String) Display name for the cross-tenant user synchronization policy. Use the name of the partner Microsoft Entra tenant to easily identify the policy. Optional.
+- `tenant_id` (String) Tenant identifier for the partner Microsoft Entra organization.
+- `user_sync_inbound` (Attributes) Defines whether users can be synchronized from the partner tenant. Key. / Defines whether users can be synchronized from the partner tenant. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta (see [below for nested schema](#nestedatt--identity_synchronization--user_sync_inbound))
+
+<a id="nestedatt--identity_synchronization--user_sync_inbound"></a>
+### Nested Schema for `identity_synchronization.user_sync_inbound`
+
+Read-Only:
+
+- `is_sync_allowed` (Boolean) Defines whether user objects should be synchronized from the partner tenant. `false` causes any current user synchronization from the source tenant to the target tenant to stop. This property has no impact on existing users who have already been synchronized.
 
 
 

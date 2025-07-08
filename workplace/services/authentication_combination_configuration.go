@@ -25,7 +25,7 @@ var (
 			ParentEntities: generic.ParentEntities{
 				{
 					ParentIdField: path.Root("authentication_strength_policy_id"),
-					UriSuffix:     "/combinationConfigurations",
+					UriSuffix:     "combinationConfigurations",
 				},
 			},
 		},
@@ -55,12 +55,12 @@ var authenticationCombinationConfigurationResourceSchema = schema.Schema{
 			Optional:    true,
 			Validators: []validator.Set{
 				setvalidator.ValueStringsAre(
-					wpvalidator.FlagEnumValues("password", "voice", "hardwareOath", "softwareOath", "sms", "fido2", "windowsHelloForBusiness", "microsoftAuthenticatorPush", "deviceBasedPush", "temporaryAccessPassOneTime", "temporaryAccessPassMultiUse", "email", "x509CertificateSingleFactor", "x509CertificateMultiFactor", "federatedSingleFactor", "federatedMultiFactor", "unknownFutureValue"),
+					wpvalidator.FlagEnumValues("password", "voice", "hardwareOath", "softwareOath", "sms", "fido2", "windowsHelloForBusiness", "microsoftAuthenticatorPush", "deviceBasedPush", "temporaryAccessPassOneTime", "temporaryAccessPassMultiUse", "email", "x509CertificateSingleFactor", "x509CertificateMultiFactor", "federatedSingleFactor", "federatedMultiFactor", "unknownFutureValue", "qrCodePin"),
 				),
 			},
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Which authentication method combinations this configuration applies to. Must be an **allowedCombinations** object defined for the [authenticationStrengthPolicy](../resources/authenticationstrengthpolicy.md). For **fido2combinationConfigurations** use `\"fido2\"`, for **x509certificatecombinationconfiguration** use `\"x509CertificateSingleFactor\"` or `\"x509CertificateMultiFactor\"`. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`. The _provider_ default value is `[]`.",
+			MarkdownDescription: "Which authentication method combinations this configuration applies to. Must be an **allowedCombinations** object defined for the [authenticationStrengthPolicy](../resources/authenticationstrengthpolicy.md). For **fido2combinationConfigurations** use `\"fido2\"`, for **x509certificatecombinationconfiguration** use `\"x509CertificateSingleFactor\"` or `\"x509CertificateMultiFactor\"`. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`. The _provider_ default value is `[]`.",
 		},
 		"fido2": generic.OdataDerivedTypeNestedAttributeRs{
 			DerivedType: "#microsoft.graph.fido2CombinationConfiguration",
@@ -110,7 +110,7 @@ var authenticationCombinationConfigurationResourceSchema = schema.Schema{
 			},
 		},
 	},
-	MarkdownDescription: "Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta\n\nProvider Note: This resource cannot be imported (as the provider cannot determine the value of `authentication_strength_policy_id` at the time of import and hence is not able to build the correct URI to read the existing MS Graph entity). ||| MS Graph: Authentication strengths",
+	MarkdownDescription: "Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta\n\nProvider Note: To import this resource, an ID consisting of `authentication_strength_policy_id` and `id` being joined by a forward slash (`/`) must be used. ||| MS Graph: Authentication",
 }
 
 var authenticationCombinationConfigurationAuthenticationCombinationConfigurationValidator = objectvalidator.ExactlyOneOf(

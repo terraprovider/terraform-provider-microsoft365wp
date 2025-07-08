@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"terraform-provider-microsoft365wp/workplace/external/msgraph"
+
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/manicminer/hamilton/msgraph"
 )
 
 var _ WriteSubAction = &WriteSubActionAllInOne{}

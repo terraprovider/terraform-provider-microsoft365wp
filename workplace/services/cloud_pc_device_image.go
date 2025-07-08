@@ -14,8 +14,15 @@ var (
 		TypeNameSuffix: "cloud_pc_device_image",
 		SpecificSchema: cloudPcDeviceImageResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:     "/deviceManagement/virtualEndpoint/deviceImages",
-			ReadOptions: cloudPcDeviceImageReadOptions,
+			BaseUri: "/deviceManagement/virtualEndpoint/deviceImages",
+			ReadOptions: generic.ReadOptions{
+				DataSource: generic.DataSourceOptions{
+					ExtraFilterAttributes: []string{"operating_system", "os_build_number", "os_status", "status"},
+					Plural: generic.PluralOptions{
+						ExtraAttributes: []string{"expiration_date", "operating_system", "os_build_number", "os_status", "os_version_number", "status", "version"},
+					},
+				},
+			},
 		},
 	}
 
@@ -25,15 +32,6 @@ var (
 	CloudPcDeviceImagePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&cloudPcDeviceImageResource, "")
 )
-
-var cloudPcDeviceImageReadOptions = generic.ReadOptions{
-	DataSource: generic.DataSourceOptions{
-		ExtraFilterAttributes: []string{"operating_system", "os_build_number", "os_status", "status"},
-		Plural: generic.PluralOptions{
-			ExtraAttributes: []string{"expiration_date", "operating_system", "os_build_number", "os_status", "os_version_number", "status", "version"},
-		},
-	},
-}
 
 var cloudPcDeviceImageResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // cloudPcDeviceImage
@@ -81,6 +79,10 @@ var cloudPcDeviceImageResourceSchema = schema.Schema{
 		"scope_ids": schema.SetAttribute{
 			ElementType: types.StringType,
 			Optional:    true,
+		},
+		"size_in_gb": schema.Int64Attribute{
+			Optional:    true,
+			Description: `sizeInGB`, // custom MS Graph attribute name
 		},
 		"source_image_resource_id": schema.StringAttribute{
 			Optional:            true,

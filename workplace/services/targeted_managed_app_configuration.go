@@ -21,9 +21,28 @@ var (
 		TypeNameSuffix: "targeted_managed_app_configuration",
 		SpecificSchema: targetedManagedAppConfigurationResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/deviceAppManagement/targetedManagedAppConfigurations",
-			ReadOptions:     targetedManagedAppConfigurationReadOptions,
-			WriteSubActions: targetedManagedAppConfigurationWriteSubActions,
+			BaseUri: "/deviceAppManagement/targetedManagedAppConfigurations",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "apps,assignments",
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"appGroupType", "apps"},
+							UriSuffix:  "targetApps",
+							UpdateOnly: true,
+						},
+					},
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+							UpdateOnly: true,
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -33,27 +52,6 @@ var (
 	TargetedManagedAppConfigurationPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&TargetedManagedAppConfigurationResource, "")
 )
-
-var targetedManagedAppConfigurationReadOptions = generic.ReadOptions{
-	ODataExpand: "apps,assignments",
-}
-
-var targetedManagedAppConfigurationWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"appGroupType", "apps"},
-			UriSuffix:  "targetApps",
-			UpdateOnly: true,
-		},
-	},
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-			UpdateOnly: true,
-		},
-	},
-}
 
 var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // targetedManagedAppConfiguration

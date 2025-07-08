@@ -20,8 +20,15 @@ var (
 		TypeNameSuffix: "unified_role_definition",
 		SpecificSchema: unifiedRoleDefinitionResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:                    "/roleManagement/directory/roleDefinitions",
-			ReadOptions:                unifiedRoleDefinitionReadOptions,
+			BaseUri: "/roleManagement/directory/roleDefinitions",
+			ReadOptions: generic.ReadOptions{
+				DataSource: generic.DataSourceOptions{
+					ExtraFilterAttributes: []string{"display_name"},
+					Plural: generic.PluralOptions{
+						ExtraAttributes: []string{"allowed_principal_types", "is_built_in", "is_enabled", "is_privileged"},
+					},
+				},
+			},
 			TerraformToGraphMiddleware: unifiedRoleDefinitionTerraformToGraphMiddleware,
 		},
 	}
@@ -32,15 +39,6 @@ var (
 	UnifiedRoleDefinitionPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&UnifiedRoleDefinitionResource, "")
 )
-
-var unifiedRoleDefinitionReadOptions = generic.ReadOptions{
-	DataSource: generic.DataSourceOptions{
-		ExtraFilterAttributes: []string{"display_name"},
-		Plural: generic.PluralOptions{
-			ExtraAttributes: []string{"allowed_principal_types", "is_built_in", "is_enabled", "is_privileged"},
-		},
-	},
-}
 
 func unifiedRoleDefinitionTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {

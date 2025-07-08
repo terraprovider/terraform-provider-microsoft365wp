@@ -23,7 +23,7 @@ type WriteSubActionIndividual struct {
 	IdGetterFunc               func(context.Context, *diag.Diagnostics, map[string]any, string) string
 	IsOdataReference           bool
 	OdataRefMapTypeToUriPrefix map[string]string
-	TerraformToGraphMiddleware func(context.Context, *diag.Diagnostics, *TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns
+	TerraformToGraphMiddleware TerraformToGraphMiddlewareFunc
 }
 
 var _ WriteSubAction = &WriteSubActionIndividual{}
@@ -176,7 +176,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 				return
 			}
 
-			wsaReq.GenRes.AccessParams.CreateRaw(ctx, diags, createUri, nil, vRaw, true)
+			wsaReq.GenRes.AccessParams.CreateRaw2(ctx, diags, createUri, nil, vRaw, true, false)
 		}
 	}
 
@@ -193,7 +193,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 				return
 			}
 
-			wsaReq.GenRes.AccessParams.UpdateRaw(ctx, diags, childBaseUri, id, nil, vRaw, false)
+			wsaReq.GenRes.AccessParams.UpdateRaw2(ctx, diags, childBaseUri, id, nil, vRaw, false)
 		}
 	}
 

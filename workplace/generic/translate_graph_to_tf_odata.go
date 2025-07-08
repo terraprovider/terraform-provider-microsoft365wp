@@ -24,11 +24,14 @@ func ConvertOdataJsonToRaw(ctx context.Context, diags *diag.Diagnostics, jsonVal
 }
 
 func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper,
-	rawVal map[string]any, valueToTargetSetName string, middlewareFunc func(context.Context, *diag.Diagnostics, *GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns) tftypes.Value {
+	rawVal map[string]any, valueToTargetSetName string, middlewareFunc GraphToTerraformMiddlewareFunc,
+	middlewareExpectedId string, middlewareFuncTargetSetRunOnRawVal bool) tftypes.Value {
 
-	runMiddleware := func(item map[string]any) bool {
+	runMiddleware := func(item map[string]any, isTargetSetOnRawVal bool) bool {
 		params := GraphToTerraformMiddlewareParams{
-			RawVal: item,
+			ExpectedId:          middlewareExpectedId,
+			RawVal:              item,
+			IsTargetSetOnRawVal: isTargetSetOnRawVal,
 		}
 		if err := middlewareFunc(ctx, diags, &params); err != nil {
 			diags.AddError(
@@ -61,15 +64,28 @@ func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, sc
 			}
 		}
 		if middlewareFunc != nil {
-			if ok := runMiddleware(rawVal); !ok {
+			if ok := runMiddleware(rawVal, false); !ok {
+				return tftypes.Value{}
+			}
+			if len(rawVal) == 0 {
+				// a completely empty map signals "not found"
 				return tftypes.Value{}
 			}
 		}
 	} else {
-		items := rawVal["value"].([]any)
-		if middlewareFunc != nil {
+		if middlewareFunc != nil && middlewareFuncTargetSetRunOnRawVal {
+			if ok := runMiddleware(rawVal, true); !ok {
+				return tftypes.Value{}
+			}
+		}
+		items, ok := rawVal["value"].([]any)
+		if !ok {
+			diags.AddError("Creation Of Terraform State Unsuccessful", "JSON property 'value' not found in OData result or not an array.")
+			return tftypes.Value{}
+		}
+		if middlewareFunc != nil && !middlewareFuncTargetSetRunOnRawVal {
 			for _, x := range items {
-				if ok := runMiddleware(x.(map[string]any)); !ok {
+				if ok := runMiddleware(x.(map[string]any), true); !ok {
 					return tftypes.Value{}
 				}
 			}
@@ -92,15 +108,16 @@ func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, sc
 	return tfVal
 }
 
-func ConvertOdataJsonToTerraform(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper, jsonVal []byte,
-	valueToTargetSetName string, middlewareFunc func(context.Context, *diag.Diagnostics, *GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns) tftypes.Value {
+func ConvertOdataJsonToTerraform(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper,
+	jsonVal []byte, valueToTargetSetName string, middlewareFunc GraphToTerraformMiddlewareFunc,
+	middlewareExpectedId string, middlewareFuncTargetSetRunOnRawVal bool) tftypes.Value {
 
 	rawVal := ConvertOdataJsonToRaw(ctx, diags, jsonVal)
 	if diags.HasError() {
 		return tftypes.Value{}
 	}
 
-	tfVal := ConvertOdataRawToTerraform(ctx, diags, schema, rawVal, valueToTargetSetName, middlewareFunc)
+	tfVal := ConvertOdataRawToTerraform(ctx, diags, schema, rawVal, valueToTargetSetName, middlewareFunc, middlewareExpectedId, middlewareFuncTargetSetRunOnRawVal)
 	if diags.HasError() {
 		return tftypes.Value{}
 	}

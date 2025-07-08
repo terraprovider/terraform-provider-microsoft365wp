@@ -2,7 +2,7 @@ package generic
 
 import (
 	"fmt"
-	"terraform-provider-microsoft365wp/workplace/strcase"
+	"terraform-provider-microsoft365wp/workplace/external/strcase"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
 	dsschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"

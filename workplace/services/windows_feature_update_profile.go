@@ -18,9 +18,23 @@ var (
 		TypeNameSuffix: "windows_feature_update_profile",
 		SpecificSchema: windowsFeatureUpdateProfileResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:                    "/deviceManagement/windowsFeatureUpdateProfiles",
-			ReadOptions:                windowsFeatureUpdateProfileReadOptions,
-			WriteSubActions:            windowsFeatureUpdateProfileWriteSubActions,
+			BaseUri: "/deviceManagement/windowsFeatureUpdateProfiles",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "assignments",
+				DataSource: generic.DataSourceOptions{
+					NoFilterSupport: true,
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+						},
+					},
+				},
+			},
 			TerraformToGraphMiddleware: windowsFeatureUpdateProfileTerraformToGraphMiddleware,
 		},
 	}
@@ -31,22 +45,6 @@ var (
 	WindowsFeatureUpdateProfilePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&WindowsFeatureUpdateProfileResource, "")
 )
-
-var windowsFeatureUpdateProfileReadOptions = generic.ReadOptions{
-	ODataExpand: "assignments",
-	DataSource: generic.DataSourceOptions{
-		NoFilterSupport: true,
-	},
-}
-
-var windowsFeatureUpdateProfileWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-		},
-	},
-}
 
 func windowsFeatureUpdateProfileTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {

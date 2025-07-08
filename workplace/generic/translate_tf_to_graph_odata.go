@@ -11,7 +11,7 @@ import (
 )
 
 func ConvertTerraformToOdataJson(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper, includeNullObjects bool, val tftypes.Value,
-	isUpdate bool, config tfsdk.Config, middlewareFunc func(context.Context, *diag.Diagnostics, *TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns,
+	isUpdate bool, config tfsdk.Config, middlewareFunc TerraformToGraphMiddlewareFunc,
 	valSourceDesc string) []byte {
 
 	rawVal := ConvertTerraformToOdataRaw(ctx, diags, schema, includeNullObjects, val, isUpdate, config, middlewareFunc, valSourceDesc)
@@ -28,7 +28,7 @@ func ConvertTerraformToOdataJson(ctx context.Context, diags *diag.Diagnostics, s
 }
 
 func ConvertTerraformToOdataRaw(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper, includeNullObjects bool, val tftypes.Value,
-	isUpdate bool, config tfsdk.Config, middlewareFunc func(context.Context, *diag.Diagnostics, *TerraformToGraphMiddlewareParams) TerraformToGraphMiddlewareReturns,
+	isUpdate bool, config tfsdk.Config, middlewareFunc TerraformToGraphMiddlewareFunc,
 	valSourceDesc string) map[string]any {
 
 	translator := NewToFromGraphTranslator(schema, includeNullObjects)

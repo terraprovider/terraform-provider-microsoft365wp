@@ -19,9 +19,11 @@ var (
 		TypeNameSuffix: "device_registration_policy",
 		SpecificSchema: deviceRegistrationPolicyResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/policies/deviceRegistrationPolicy",
-			IsSingleton:     true,
-			UsePutForUpdate: true,
+			BaseUri:     "/policies/deviceRegistrationPolicy",
+			IsSingleton: true,
+			WriteOptions: generic.WriteOptions{
+				UsePutForUpdate: true,
+			},
 		},
 	}
 

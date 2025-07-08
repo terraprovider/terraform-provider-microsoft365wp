@@ -1,13 +1,13 @@
 ---
 page_title: "microsoft365wp_authentication_combination_configurations Data Source - microsoft365wp"
-subcategory: "MS Graph: Authentication strengths"
+subcategory: "MS Graph: Authentication"
 ---
 
 # microsoft365wp_authentication_combination_configurations (Data Source)
 
 Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta
 
-Provider Note: This resource cannot be imported (as the provider cannot determine the value of `authentication_strength_policy_id` at the time of import and hence is not able to build the correct URI to read the existing MS Graph entity).
+Provider Note: To import this resource, an ID consisting of `authentication_strength_policy_id` and `id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 

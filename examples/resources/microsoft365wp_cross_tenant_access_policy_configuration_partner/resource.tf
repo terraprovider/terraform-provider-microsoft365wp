@@ -19,5 +19,6 @@ resource "microsoft365wp_cross_tenant_access_policy_configuration_partner" "test
 
   automatic_user_consent_settings = {
     outbound_allowed = true
+    inbound_allowed  = true # required for cross_tenant_identity_sync_policy_partner.user_sync_inbound.is_sync_allowed = true
   }
 }

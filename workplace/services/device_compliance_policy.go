@@ -21,9 +21,27 @@ var (
 		TypeNameSuffix: "device_compliance_policy",
 		SpecificSchema: deviceCompliancePolicyResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/deviceManagement/deviceCompliancePolicies",
-			ReadOptions:     deviceCompliancePolicyReadOptions,
-			WriteSubActions: deviceCompliancePolicyWriteSubActions,
+			BaseUri: "/deviceManagement/deviceCompliancePolicies",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "scheduledActionsForRule($expand=scheduledActionConfigurations),assignments",
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							AttributesMap: map[string]string{"scheduledActionsForRule": "deviceComplianceScheduledActionForRules"},
+							UriSuffix:     "scheduleActionsForRules",
+							UpdateOnly:    true,
+						},
+					},
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -33,26 +51,6 @@ var (
 	DeviceCompliancePolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&DeviceCompliancePolicyResource, "")
 )
-
-var deviceCompliancePolicyReadOptions = generic.ReadOptions{
-	ODataExpand: "scheduledActionsForRule($expand=scheduledActionConfigurations),assignments",
-}
-
-var deviceCompliancePolicyWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			AttributesMap: map[string]string{"scheduledActionsForRule": "deviceComplianceScheduledActionForRules"},
-			UriSuffix:     "scheduleActionsForRules",
-			UpdateOnly:    true,
-		},
-	},
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-		},
-	},
-}
 
 var deviceCompliancePolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // deviceCompliancePolicy
@@ -266,7 +264,7 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Devices must not be jailbroken or rooted. The _provider_ default value is `false`.",
+						MarkdownDescription: "Indicates the device should not be rooted. When TRUE, if the device is detected as rooted it will be reported non-compliant. When FALSE, the device is not reported as non-compliant regardless of device rooted state. Default is FALSE. The _provider_ default value is `false`.",
 					},
 					"security_disable_usb_debugging": schema.BoolAttribute{
 						Optional:            true,
@@ -341,13 +339,13 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("unavailable")},
 						Computed:            true,
-						MarkdownDescription: "MDATP Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.). The _provider_ default value is `\"unavailable\"`.",
+						MarkdownDescription: "Indicates the Microsoft Defender for Endpoint (also referred to Microsoft Defender Advanced Threat Protection (MDATP)) minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.). The _provider_ default value is `\"unavailable\"`.",
 					},
 					"device_threat_protection_enabled": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Require that devices have enabled device threat protection. The _provider_ default value is `false`.",
+						MarkdownDescription: "Indicates whether the policy requires devices have device threat protection enabled.  When TRUE, threat protection is enabled.  When FALSE, threat protection is not enabled.  Default is FALSE. The _provider_ default value is `false`.",
 					},
 					"device_threat_protection_required_security_level": schema.StringAttribute{
 						Optional: true,
@@ -356,63 +354,63 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("unavailable")},
 						Computed:            true,
-						MarkdownDescription: "Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.). The _provider_ default value is `\"unavailable\"`.",
+						MarkdownDescription: "Indicates the minimum mobile threat protection risk level to that results in Intune reporting device noncompliance. / Device threat protection levels for the Device Threat Protection API; possible values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.). The _provider_ default value is `\"unavailable\"`.",
 					},
 					"min_android_security_patch_level": schema.StringAttribute{
 						Optional:            true,
-						MarkdownDescription: "Minimum Android security patch level.",
+						MarkdownDescription: "Indicates the minimum Android security patch level required to mark the device as compliant.  For example: \"February 1, 2025\"",
 					},
 					"os_maximum_version": schema.StringAttribute{
 						Optional:            true,
-						MarkdownDescription: "Maximum Android version.",
+						MarkdownDescription: "Indicates the maximum Android version required to mark the device as compliant.  For example: \"15\"",
 					},
 					"os_minimum_version": schema.StringAttribute{
 						Optional:            true,
-						MarkdownDescription: "Minimum Android version.",
+						MarkdownDescription: "Indicates the minimum Android version required to mark the device as compliant. For example: \"14\"",
 					},
 					"password_expiration_days": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "Number of days before the password expires. Valid values 1 to 365",
+						MarkdownDescription: "Indicates the number of days before the password expires. Valid values 1 to 365.",
 					},
 					"password_minimum_length": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "Minimum password length. Valid values 4 to 16",
+						MarkdownDescription: "Indicates the minimum password length required to mark the device as compliant. Valid values are 4 to 16, inclusive. Valid values 4 to 16",
 					},
 					"password_minimum_letter_characters": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "Indicates the minimum number of letter characters required for device password. Valid values 1 to 16",
+						MarkdownDescription: "Indicates the minimum number of letter characters required for device password for the device to be marked compliant. Valid values 1 to 16.",
 					},
 					"password_minimum_lower_case_characters": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "Indicates the minimum number of lower case characters required for device password. Valid values 1 to 16",
+						MarkdownDescription: "Indicates the minimum number of lower case characters required for device password for the device to be marked compliant. Valid values 1 to 16.",
 					},
 					"password_minimum_non_letter_characters": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "Indicates the minimum number of non-letter characters required for device password. Valid values 1 to 16",
+						MarkdownDescription: "Indicates the minimum number of non-letter characters required for device password for the device to be marked compliant. Valid values 1 to 16.",
 					},
 					"password_minimum_numeric_characters": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "Indicates the minimum number of numeric characters required for device password. Valid values 1 to 16",
+						MarkdownDescription: "Indicates the minimum number of numeric characters required for device password for the device to be marked compliant. Valid values 1 to 16.",
 					},
 					"password_minimum_symbol_characters": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "Indicates the minimum number of symbol characters required for device password. Valid values 1 to 16",
+						MarkdownDescription: "Indicates the minimum number of symbol characters required for device password for the device to be marked compliant. Valid values 1 to 16.",
 					},
 					"password_minimum_upper_case_characters": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "Indicates the minimum number of upper case letter characters required for device password. Valid values 1 to 16",
+						MarkdownDescription: "Indicates the minimum number of upper case letter characters required for device password for the device to be marked compliant. Valid values 1 to 16.",
 					},
 					"password_minutes_of_inactivity_before_lock": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "Minutes of inactivity before a password is required.",
+						MarkdownDescription: "Indicates the number of minutes of inactivity before a password is required.",
 					},
 					"password_previous_password_count_to_block": schema.Int64Attribute{
 						Optional:            true,
-						MarkdownDescription: "Number of previous passwords to block. Valid values 1 to 24",
+						MarkdownDescription: "Indicates the number of previous passwords to block. Valid values 1 to 24.",
 					},
 					"password_required": schema.BoolAttribute{
 						Optional:            true,
-						MarkdownDescription: "Require a password to unlock device.",
+						MarkdownDescription: "Indicates whether a password is required to unlock the device. When TRUE, there must be a password set that unlocks the device for the device to be marked as compliant.  When FALSE, a device is marked as compliant whether or not a password is set as required to unlock the device.  Default is FALSE.",
 					},
 					"password_required_type": schema.StringAttribute{
 						Optional: true,
@@ -421,36 +419,42 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 						},
 						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("numeric")},
 						Computed:            true,
-						MarkdownDescription: "Type of characters in password. / Android Device Owner policy required password type; possible values are: `deviceDefault` (Device default value, no intent.), `required` (There must be a password set, but there are no restrictions on type.), `numeric` (At least numeric.), `numericComplex` (At least numeric with no repeating or ordered sequences.), `alphabetic` (At least alphabetic password.), `alphanumeric` (At least alphanumeric password), `alphanumericWithSymbols` (At least alphanumeric with symbols.), `lowSecurityBiometric` (Low security biometrics based password required.), `customPassword` (Custom password set by the admin.). The _provider_ default value is `\"numeric\"`.",
+						MarkdownDescription: "Indicates the password complexity requirement for the device to be marked compliant. / Android Device Owner policy required password type; possible values are: `deviceDefault` (Device default value, no intent.), `required` (There must be a password set, but there are no restrictions on type.), `numeric` (At least numeric.), `numericComplex` (At least numeric with no repeating or ordered sequences.), `alphabetic` (At least alphabetic password.), `alphanumeric` (At least alphanumeric password), `alphanumericWithSymbols` (At least alphanumeric with symbols.), `lowSecurityBiometric` (Low security biometrics based password required.), `customPassword` (Custom password set by the admin.). The _provider_ default value is `\"numeric\"`.",
 					},
 					"require_no_pending_system_updates": schema.BoolAttribute{
 						Optional:            true,
-						MarkdownDescription: "Require device to have no pending Android system updates.",
+						MarkdownDescription: "Indicates whether the device has pending security or OS updates and sets the compliance state accordingly.  When TRUE, checks if there are any pending system updates on each check in and if there are any pending security or OS version updates (System Updates), the device will be reported as non-compliant. If set to FALSE, then checks for any pending security or OS version updates (System Updates) are done without impact to device compliance state. Default is FALSE.",
+					},
+					"security_block_jailbroken_devices": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Indicates the device should not be rooted. When TRUE, if the device is detected as rooted it will be reported non-compliant. When FALSE, the device is not reported as non-compliant regardless of device rooted state. Default is FALSE. The _provider_ default value is `false`.",
 					},
 					"security_required_android_safety_net_evaluation_type": schema.StringAttribute{
 						Optional:            true,
 						Validators:          []validator.String{stringvalidator.OneOf("basic", "hardwareBacked")},
-						MarkdownDescription: "Require a specific Play Integrity evaluation type for compliance. / An enum representing the Android Play Integrity API evaluation types; possible values are: `basic` (Default value. Typical measurements and reference data were used.), `hardwareBacked` (Strong Integrity checks (such as a hardware-backed proof of boot integrity) were used.)",
+						MarkdownDescription: "Indicates the types of measurements and reference data used to evaluate the device SafetyNet evaluation. Evaluation is completed on the device to assess device integrity based on checks defined by Android and built into the device hardware, for example, compromised OS version or root detection.with default value of `basic`. / An enum representing the Android Play Integrity API evaluation types; possible values are: `basic` (Default value. Typical measurements and reference data were used.), `hardwareBacked` (Strong Integrity checks (such as a hardware-backed proof of boot integrity) were used.)",
 					},
 					"security_require_intune_app_integrity": schema.BoolAttribute{
 						Optional:            true,
-						MarkdownDescription: "If setting is set to true, checks that the Intune app installed on fully managed, dedicated, or corporate-owned work profile Android Enterprise enrolled devices, is the one provided by Microsoft from the Managed Google Playstore. If the check fails, the device will be reported as non-compliant.",
+						MarkdownDescription: "Indicates whether Intune application integrity is required to mark the device as compliant.  When TRUE, Intune checks that the Intune app installed on fully managed, dedicated, or corporate-owned work profile Android Enterprise enrolled devices, is the one provided by Microsoft from the Managed Google Play store. If the check fails, the device will be reported as non-compliant. Default is FALSE.",
 					},
 					"security_require_safety_net_attestation_basic_integrity": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Require the device to pass the Play Integrity basic integrity check. The _provider_ default value is `false`.",
+						MarkdownDescription: "Indicates whether the compliance check will validate the Google Play Integrity check. When TRUE, the Google Play integrity basic check must pass to consider the device compliant.  When FALSE, the Google Play integrity basic check can pass or fail and the device will be considered compliant.  Default is FALSE. The _provider_ default value is `false`.",
 					},
 					"security_require_safety_net_attestation_certified_device": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Require the device to pass the Play Integrity device integrity check. The _provider_ default value is `false`.",
+						MarkdownDescription: "Indicates whether the compliance check will validate the Google Play Integrity check. When TRUE, the Google Play integrity device check must pass to consider the device compliant.  When FALSE, the Google Play integrity device check can pass or fail and the device will be considered compliant.  Default is FALSE. The _provider_ default value is `false`.",
 					},
 					"storage_require_encryption": schema.BoolAttribute{
 						Optional:            true,
-						MarkdownDescription: "Require encryption on Android devices.",
+						MarkdownDescription: "Indicates whether encryption on Android devices is required to mark the device as compliant.",
 					},
 				},
 				Validators: []validator.Object{
@@ -548,7 +552,7 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Devices must not be jailbroken or rooted. The _provider_ default value is `false`.",
+						MarkdownDescription: "Indicates the device should not be rooted. When TRUE, if the device is detected as rooted it will be reported non-compliant. When FALSE, the device is not reported as non-compliant regardless of device rooted state. Default is FALSE. The _provider_ default value is `false`.",
 					},
 					"security_disable_usb_debugging": schema.BoolAttribute{
 						Optional:            true,
@@ -698,7 +702,7 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 					},
 					"security_block_jailbroken_devices": schema.BoolAttribute{
 						Optional:            true,
-						MarkdownDescription: "Devices must not be jailbroken or rooted.",
+						MarkdownDescription: "Indicates the device should not be rooted. When TRUE, if the device is detected as rooted it will be reported non-compliant. When FALSE, the device is not reported as non-compliant regardless of device rooted state. Default is FALSE.",
 					},
 					"storage_require_encryption": schema.BoolAttribute{
 						Optional:            true,
@@ -837,7 +841,7 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Devices must not be jailbroken or rooted. The _provider_ default value is `false`.",
+						MarkdownDescription: "Indicates the device should not be jailbroken. When TRUE, if the device is detected as jailbroken it will be reported non-compliant. When FALSE, the device is not reported as non-compliant regardless of device jailbroken state. Default is FALSE. The _provider_ default value is `false`.",
 					},
 				},
 				Validators: []validator.Object{

@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"terraform-provider-microsoft365wp/workplace/external/msgraph"
+
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/manicminer/hamilton/msgraph"
 )
 
 //
@@ -51,11 +52,18 @@ func (aps *AccessParams) GetId(ctx context.Context, diags *diag.Diagnostics, id 
 		}
 
 		var idAttribute types.String // might be null
-		diags.Append(idAttributer.GetAttribute(ctx, path.Root(aps.IdNameTf), &idAttribute)...)
+		diags.Append(idAttributer.GetAttribute(ctx, path.Root(aps.EntityId.AttrNameTf), &idAttribute)...)
 		if diags.HasError() {
 			return ""
 		}
 		id = idAttribute.ValueString() // nil will become ""
+
+		if id == "" && aps.EntityId.FallbackIdGetterFunc != nil {
+			id = aps.EntityId.FallbackIdGetterFunc(ctx, diags, idAttributer)
+			if diags.HasError() {
+				return ""
+			}
+		}
 	}
 
 	return id
@@ -101,11 +109,13 @@ func (aps *AccessParams) getUriInternal(ctx context.Context, diags *diag.Diagnos
 				parentId = mappedParentIdValue
 			}
 			baseUri += fmt.Sprintf("/%s", parentId)
-			baseUri += pe.UriSuffix
+			if pe.UriSuffix != "" {
+				baseUri += fmt.Sprintf("/%s", pe.UriSuffix)
+			}
 		}
 	}
 
-	if !withIdAppended || aps.SingularEntity.UriNoId {
+	if !withIdAppended || aps.UriNoId {
 		return msgraph.Uri{Entity: baseUri}, baseODataFilter
 	}
 
@@ -124,14 +134,16 @@ func (aps *AccessParams) getUriInternal(ctx context.Context, diags *diag.Diagnos
 
 	// baseODataFilter will only be returned for SingleItemUseODataFilter, also see ReadOptions.ODataFilter
 	if useODataFilterToSelectById {
-		odataFilter := fmt.Sprintf("%s eq '%s'", aps.IdNameGraph, id)
+		odataFilter := fmt.Sprintf("%s eq '%s'", aps.EntityId.AttrNameGraph, id)
 		if baseODataFilter != "" {
 			odataFilter = fmt.Sprintf("(%s) and (%s)", baseODataFilter, odataFilter)
 		}
 		return msgraph.Uri{Entity: baseUri}, odataFilter
 	} else {
 		uriEntity := fmt.Sprintf("%s/%s", baseUri, id)
-		uriEntity += aps.SingularEntity.UriSuffix
+		if aps.UriSuffix != "" {
+			uriEntity += fmt.Sprintf("/%s", aps.UriSuffix)
+		}
 		return msgraph.Uri{Entity: uriEntity}, ""
 	}
 }

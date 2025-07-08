@@ -1,13 +1,13 @@
 ---
 page_title: "microsoft365wp_authentication_combination_configuration Resource - microsoft365wp"
-subcategory: "MS Graph: Authentication strengths"
+subcategory: "MS Graph: Authentication"
 ---
 
 # microsoft365wp_authentication_combination_configuration (Resource)
 
 Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta
 
-Provider Note: This resource cannot be imported (as the provider cannot determine the value of `authentication_strength_policy_id` at the time of import and hence is not able to build the correct URI to read the existing MS Graph entity).
+Provider Note: To import this resource, an ID consisting of `authentication_strength_policy_id` and `id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 
@@ -26,7 +26,7 @@ All supplements authored by the publishers of this provider have been explicitly
 
 ### Optional
 
-- `applies_to_combinations` (Set of String) Which authentication method combinations this configuration applies to. Must be an **allowedCombinations** object defined for the [authenticationStrengthPolicy](../resources/authenticationstrengthpolicy.md). For **fido2combinationConfigurations** use `"fido2"`, for **x509certificatecombinationconfiguration** use `"x509CertificateSingleFactor"` or `"x509CertificateMultiFactor"`. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`. The _provider_ default value is `[]`.
+- `applies_to_combinations` (Set of String) Which authentication method combinations this configuration applies to. Must be an **allowedCombinations** object defined for the [authenticationStrengthPolicy](../resources/authenticationstrengthpolicy.md). For **fido2combinationConfigurations** use `"fido2"`, for **x509certificatecombinationconfiguration** use `"x509CertificateSingleFactor"` or `"x509CertificateMultiFactor"`. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`. The _provider_ default value is `[]`.
 - `fido2` (Attributes) Configuration to require specific FIDO2 key types in an authentication strength. An administrator may use this entity to specify which Authenticator Attestations GUIDs (AAGUIDs) are allowed, as part of certain authentication method combinations, in an [authentication strength](authenticationstrengthpolicy.md).
 
 Inherits and derived from [authenticationCombinationConfiguration](../resources/authenticationcombinationconfiguration.md). / https://learn.microsoft.com/en-us/graph/api/resources/fido2combinationconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--fido2))

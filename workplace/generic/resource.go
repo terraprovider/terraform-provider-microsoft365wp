@@ -17,9 +17,10 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ resource.Resource                = &GenericResource{}
-	_ resource.ResourceWithConfigure   = &GenericResource{}
-	_ resource.ResourceWithImportState = &GenericResource{}
+	_ resource.Resource                     = &GenericResource{}
+	_ resource.ResourceWithConfigure        = &GenericResource{}
+	_ resource.ResourceWithConfigValidators = &GenericResource{}
+	_ resource.ResourceWithImportState      = &GenericResource{}
 )
 
 // Resource implementation.
@@ -91,7 +92,7 @@ func (r *GenericResource) Delete(ctx context.Context, req resource.DeleteRequest
 
 	baseUri := ""
 	id := ""
-	skipDelete := r.AccessParams.SingularEntity.SkipDelete
+	skipDelete := r.AccessParams.WriteOptions.SkipDelete
 
 	if r.AccessParams.DeleteModifyFunc != nil {
 		id = r.AccessParams.GetId(ctx, diags, id, thisIdAttributer)
@@ -115,22 +116,32 @@ func (r *GenericResource) Delete(ctx context.Context, req resource.DeleteRequest
 		skipDelete = params.SkipDelete
 	}
 
-	if skipDelete {
-		diags.AddWarning("Skipping deletion of entity from MS Graph, just removing resource from state", "Cannot delete entities that are singletons and/or have been created by MS Graph itself.")
-		return
-	}
-
 	subActionsData := r.executeWriteSubActionsPre(ctx, diags, OperationDelete, id, thisIdAttributer, nil, &req.State, nil, resp.Private)
 	if diags.HasError() {
 		return
 	}
 
-	r.AccessParams.DeleteRaw(ctx, diags, baseUri, id, thisIdAttributer)
-	if diags.HasError() {
-		return
+	if skipDelete {
+		diags.AddWarning("Skipping deletion of entity from MS Graph, just removing resource from state", "Cannot delete entities that are singletons and/or have been created by MS Graph itself.")
+	} else {
+		if r.AccessParams.DeleteReplaceFunc == nil {
+			r.AccessParams.DeleteRaw(ctx, diags, baseUri, id, thisIdAttributer)
+		} else {
+			params := DeleteReplaceFuncParams{
+				R:            r,
+				Client:       r.AccessParams.graphClient,
+				BaseUri:      baseUri,
+				Id:           id,
+				IdAttributer: thisIdAttributer,
+			}
+			r.AccessParams.DeleteReplaceFunc(ctx, diags, &params)
+		}
+		if diags.HasError() {
+			return
+		}
 	}
 
-	r.executeWriteSubActionPost(ctx, diags, OperationDelete, id, thisIdAttributer, subActionsData, &req.State, nil, &resp.State, resp.Private)
+	r.executeWriteSubActionsPost(ctx, diags, OperationDelete, id, thisIdAttributer, subActionsData, &req.State, nil, &resp.State, resp.Private)
 	if diags.HasError() {
 		return
 	}
@@ -146,8 +157,8 @@ func (r *GenericResource) ImportState(ctx context.Context, req resource.ImportSt
 		importPaths = append(importPaths, v.ParentIdField)
 		importAttributeNames = append(importAttributeNames, v.ParentIdField.String())
 	}
-	importPaths = append(importPaths, path.Root(r.AccessParams.IdNameTf))
-	importAttributeNames = append(importAttributeNames, r.AccessParams.IdNameTf)
+	importPaths = append(importPaths, path.Root(r.AccessParams.EntityId.AttrNameTf))
+	importAttributeNames = append(importAttributeNames, r.AccessParams.EntityId.AttrNameTf)
 
 	idComponents := strings.Split(req.ID, "/")
 	if len(idComponents) != len(importPaths) {
@@ -202,14 +213,30 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	id := ""
 	updateExisting := operationType == OperationUpdate
 
-	if operationType == OperationCreate && r.AccessParams.SingularEntity.UpdateInsteadOfCreate {
-		updateExisting = true
-		thisIdAttributer = parentIdAttributer
+	if operationType == OperationCreate {
+		if r.AccessParams.WriteOptions.UpdateInsteadOfCreate {
+			updateExisting = true
+		} else if r.AccessParams.WriteOptions.UpdateIfExistsOnCreate {
+			// id must exist in config or be provided by FallbackIdGetterFunc
+			id = r.AccessParams.GetId(ctx, diags, id, createRequest.Config)
+			if diags.HasError() {
+				return
+			}
+			if r.AccessParams.CheckEntityExistence(ctx, diags, id, createRequest.Config) {
+				updateExisting = true
+			}
+			if diags.HasError() {
+				return
+			}
+		}
+		if updateExisting {
+			thisIdAttributer = createRequest.Config
+		}
 	}
 
-	if updateExisting {
-		if operationType == OperationCreate && r.AccessParams.SingularEntity.ReadIdAttrFromGraph {
-			id = r.AccessParams.ReadId(ctx, diags, baseUri, parentIdAttributer, r.AccessParams.SingularEntity.ReadIdAttrFromGraphUseSelectId, "", nil)
+	if updateExisting && id == "" {
+		if operationType == OperationCreate && r.AccessParams.EntityId.CreateUpdateReadIdFromGraph {
+			id = r.AccessParams.ReadId(ctx, diags, baseUri, parentIdAttributer, r.AccessParams.EntityId.CreateUpdateReadIdFromGraphUseODataSelect, "", nil)
 		} else {
 			id = r.AccessParams.GetId(ctx, diags, id, thisIdAttributer)
 		}
@@ -259,10 +286,11 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	}
 
 	if operationType == OperationCreate && updateExisting {
-		diags.AddWarning("Using existing entity from MS Graph instead of creating new one", "The targeted entity is a singleton, has been created by MS Graph itself and/or is a descendant of another already existing entity.")
+		diags.AddWarning("Using existing entity from MS Graph instead of creating new one",
+			"The targeted entity is a singleton, has been created by MS Graph itself, is a descendant of another already existing entity and/or already exists itself and can only be modified.")
 	}
 
-	includeNullObjects := updateExisting && !r.AccessParams.UsePutForUpdate
+	includeNullObjects := updateExisting && !r.AccessParams.WriteOptions.UsePutForUpdate
 	rawVal := ConvertTerraformToOdataRaw(ctx, diags, requestPlan.Schema, includeNullObjects,
 		requestPlan.Raw, updateExisting, *requestConfig, r.AccessParams.TerraformToGraphMiddleware, "Plan")
 	if diags.HasError() {
@@ -276,23 +304,43 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 
 	var createUpdateResultRaw map[string]any
 	if updateExisting {
-		if r.AccessParams.ReplaceUpdateFunc == nil {
-			r.AccessParams.UpdateRaw(ctx, diags, baseUri, id, thisIdAttributer, rawVal, r.AccessParams.UsePutForUpdate)
+		if r.AccessParams.UpdateReplaceFunc == nil {
+			r.AccessParams.UpdateRaw(ctx, diags, baseUri, id, thisIdAttributer, rawVal)
 		} else {
-			params := ReplaceUpdateFuncParams{
+			params := UpdateReplaceFuncParams{
 				R:            r,
+				Client:       r.AccessParams.graphClient,
 				BaseUri:      baseUri,
 				Id:           id,
 				IdAttributer: thisIdAttributer,
 				RawVal:       rawVal,
 			}
-			r.AccessParams.ReplaceUpdateFunc(ctx, diags, &params)
+			r.AccessParams.UpdateReplaceFunc(ctx, diags, &params)
 			if params.RawResult != nil {
 				createUpdateResultRaw = params.RawResult
 			}
 		}
 	} else {
-		id, createUpdateResultRaw = r.AccessParams.CreateRaw(ctx, diags, baseUri, parentIdAttributer, rawVal, false)
+		if r.AccessParams.CreateReplaceFunc == nil {
+			id, createUpdateResultRaw = r.AccessParams.CreateRaw(ctx, diags, baseUri, parentIdAttributer, rawVal)
+		} else {
+			params := CreateReplaceFuncParams{
+				R:            r,
+				Client:       r.AccessParams.graphClient,
+				BaseUri:      baseUri,
+				IdAttributer: parentIdAttributer,
+				RawVal:       rawVal,
+			}
+			r.AccessParams.CreateReplaceFunc(ctx, diags, &params)
+			id = params.Id
+			createUpdateResultRaw = params.RawResult
+		}
+		if diags.HasError() {
+			return
+		}
+		if id == "" {
+			id = r.AccessParams.GetId(ctx, diags, id, parentIdAttributer)
+		}
 	}
 	if diags.HasError() {
 		return
@@ -331,7 +379,7 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 			Raw:    requestPlan.Raw,
 			Schema: responseState.Schema,
 		}
-		diags.Append(responseStateTemp.SetAttribute(ctx, path.Root(r.AccessParams.IdNameTf), id)...)
+		diags.Append(responseStateTemp.SetAttribute(ctx, path.Root(r.AccessParams.EntityId.AttrNameTf), id)...)
 		if diags.HasError() {
 			return
 		}
@@ -348,13 +396,14 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	// But do not check for errors here yet as we want to ensure that populating runs even in case of errors here to get
 	// the state as complete as possible. Terraform will still bring up the errors as they will still be there after
 	// populating has run.
-	r.executeWriteSubActionPost(ctx, diags, operationType, id, thisIdAttributer, subActionsData, requestState, requestPlan, responseState, responsePrivate)
+	r.executeWriteSubActionsPost(ctx, diags, operationType, id, thisIdAttributer, subActionsData, requestState, requestPlan, responseState, responsePrivate)
 
 	// Produce a wholly-known new state by determining the final values for any attributes left unknown in the planned state.
 	diagsPopulateUnknowns := diag.Diagnostics{} // need separate diags here as diags might already contain error(s) from WriteSubActions
 	populateSource := tftypes.Value{}
 	if createUpdateResultRaw != nil {
-		populateSource = ConvertOdataRawToTerraform(ctx, &diagsPopulateUnknowns, requestPlan.Schema, createUpdateResultRaw, "", r.AccessParams.GraphToTerraformMiddleware)
+		populateSource = ConvertOdataRawToTerraform(ctx, &diagsPopulateUnknowns, requestPlan.Schema, createUpdateResultRaw, "",
+			r.AccessParams.GraphToTerraformMiddleware, id, r.AccessParams.GraphToTerraformMiddlewareTargetSetRunOnRawVal)
 		if diagsPopulateUnknowns.HasError() {
 			diags.Append(diagsPopulateUnknowns...)
 			return
@@ -369,13 +418,13 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 }
 
 func (r *GenericResource) checkAndLockMutex() bool {
-	if r.AccessParams.SerializeWrites {
+	if r.AccessParams.WriteOptions.SerializeWrites {
 		if !r.serializationMutex.TryLock() {
 			r.serializationMutex.Lock()
-			time.Sleep(r.AccessParams.SerialWritesDelay)
+			time.Sleep(r.AccessParams.WriteOptions.SerialWritesDelay)
 		}
 	}
-	return r.AccessParams.SerializeWrites
+	return r.AccessParams.WriteOptions.SerializeWrites
 }
 
 func (r *GenericResource) executeWriteSubActionsPre(ctx context.Context, diags *diag.Diagnostics, wsaOperation OperationType,
@@ -383,7 +432,7 @@ func (r *GenericResource) executeWriteSubActionsPre(ctx context.Context, diags *
 	respPrivate PrivateDataGetSetter) map[string]any {
 
 	subActionsData := make(map[string]any)
-	for _, a := range r.AccessParams.WriteSubActions {
+	for _, a := range r.AccessParams.WriteOptions.SubActions {
 		if a.CheckRunAction(wsaOperation) {
 			wsaRequest := WriteSubActionRequest{
 				GenRes:         r,
@@ -406,11 +455,11 @@ func (r *GenericResource) executeWriteSubActionsPre(ctx context.Context, diags *
 	return subActionsData
 }
 
-func (r *GenericResource) executeWriteSubActionPost(ctx context.Context, diags *diag.Diagnostics, wsaOperation OperationType,
+func (r *GenericResource) executeWriteSubActionsPost(ctx context.Context, diags *diag.Diagnostics, wsaOperation OperationType,
 	id string, idAttributer GetAttributer, subActionsData map[string]any, reqState *tfsdk.State, reqPlan *tfsdk.Plan, respState *tfsdk.State,
 	respPrivate PrivateDataGetSetter) {
 
-	for _, a := range r.AccessParams.WriteSubActions {
+	for _, a := range r.AccessParams.WriteOptions.SubActions {
 		if a.CheckRunAction(wsaOperation) {
 			wsaRequest := WriteSubActionRequest{
 				GenRes:         r,

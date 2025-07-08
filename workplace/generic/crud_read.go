@@ -8,12 +8,13 @@ import (
 	"net/url"
 	"regexp"
 
+	"terraform-provider-microsoft365wp/workplace/external/msgraph"
+
 	"github.com/hashicorp/go-azure-sdk/sdk/odata"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"github.com/manicminer/hamilton/msgraph"
 )
 
 func (aps *AccessParams) ReadSingleCompleteTf(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper,
@@ -31,6 +32,11 @@ func (aps *AccessParams) ReadSingleCompleteTf3(ctx context.Context, diags *diag.
 	readOptions ReadOptions, id string, idAttributer GetAttributer, odataFilter string, odataOrderby string, odataTop int,
 	tolerateNotFound bool, reqState *tfsdk.State, respPrivate PrivateDataGetSetter) tftypes.Value {
 
+	id = aps.GetId(ctx, diags, id, idAttributer) // we need the id anyway for GraphToTerraformMiddleware
+	if diags.HasError() {
+		return tftypes.Value{}
+	}
+
 	if odataFilter == "" {
 		odataFilter = readOptions.ODataFilter
 	}
@@ -39,40 +45,74 @@ func (aps *AccessParams) ReadSingleCompleteTf3(ctx context.Context, diags *diag.
 		return tftypes.Value{}
 	}
 
-	rawVal := aps.ReadRaw3(ctx, diags, uri, readOptions.ODataExpand, odataFilter2, nil, odataOrderby, odataTop, tolerateNotFound)
-	if rawVal == nil {
+	rawVal := aps.ReadRaw3(ctx, diags, uri, readOptions.ODataExpand, odataFilter2, readOptions.ODataSelect, odataOrderby, odataTop, tolerateNotFound)
+	if rawVal == nil || diags.HasError() {
 		return tftypes.Value{}
 	}
 
-	for _, r := range readOptions.ExtraRequests {
-		// TBD: fix leafUri for use with odataFilter, odataOrderby, odataTop
-		leafUri := fmt.Sprintf("%s/%s", uri.Entity, r.UriSuffix)
-		rawLeafVal := aps.ReadRaw(ctx, diags, leafUri, tolerateNotFound)
-		if diags.HasError() {
-			return tftypes.Value{}
+	if len(readOptions.ExtraRequests) > 0 || len(readOptions.ExtraRequestsCustom) > 0 {
+
+		// also see ConvertOdataRawToTerraform (but we need to do this up here for the extra requests to work)
+		if items, ok := rawVal["value"].([]any); ok && len(rawVal) <= 3 {
+			if len(items) == 1 {
+				if singleValue, ok := items[0].(map[string]any); ok {
+					rawVal = singleValue
+				}
+			}
 		}
 
-		if rawLeafVal != nil {
-			rawVal[r.ParentAttribute] = rawLeafVal["value"]
+		// need actual id for next requests in case the main item had been found using odataFilter etc.
+		if id == "" && odataFilter != "" {
+			var ok bool
+			if id, ok = rawVal[aps.EntityId.AttrNameGraph].(string); !ok {
+				diags.AddError("Error reading from MS Graph", "Unable to determine entity id for extra requests")
+				return tftypes.Value{}
+			}
+			uri.Entity = fmt.Sprintf("%s/%s", uri.Entity, id)
+		}
+
+		for _, r := range readOptions.ExtraRequests {
+			uriSuffix := r.UriSuffix
+			if uriSuffix == "" {
+				uriSuffix = r.Attribute
+			}
+			leafUri := fmt.Sprintf("%s/%s", uri.Entity, uriSuffix)
+			rawLeafVal := aps.ReadRaw(ctx, diags, leafUri, tolerateNotFound)
+			if diags.HasError() {
+				return tftypes.Value{}
+			}
+
+			if rawLeafVal != nil {
+				if valueItems, ok := rawLeafVal["value"].([]any); ok {
+					rawVal[r.Attribute] = valueItems
+				} else {
+					delete(rawLeafVal, "@odata.context") // ensure that we focus on the real content attributes
+					if len(rawLeafVal) > 0 {
+						rawVal[r.Attribute] = rawLeafVal
+					} else {
+						rawVal[r.Attribute] = nil
+					}
+				}
+			}
+		}
+
+		for _, c := range readOptions.ExtraRequestsCustom {
+			params := ReadExtraRequestCustomParams{
+				Client:           aps.graphClient,
+				Uri:              uri,
+				TolerateNotFound: tolerateNotFound,
+				ReqState:         reqState,
+				RespPrivate:      respPrivate,
+				RawVal:           rawVal,
+			}
+			c(ctx, diags, params)
+			if diags.HasError() {
+				return tftypes.Value{}
+			}
 		}
 	}
 
-	for _, c := range readOptions.ExtraRequestsCustom {
-		params := ReadExtraRequestCustomParams{
-			Client:           aps.graphClient,
-			Uri:              uri,
-			TolerateNotFound: tolerateNotFound,
-			ReqState:         reqState,
-			RespPrivate:      respPrivate,
-			RawVal:           rawVal,
-		}
-		c(ctx, diags, params)
-		if diags.HasError() {
-			return tftypes.Value{}
-		}
-	}
-
-	tfVal := ConvertOdataRawToTerraform(ctx, diags, schema, rawVal, "", aps.GraphToTerraformMiddleware)
+	tfVal := ConvertOdataRawToTerraform(ctx, diags, schema, rawVal, "", aps.GraphToTerraformMiddleware, id, aps.GraphToTerraformMiddlewareTargetSetRunOnRawVal)
 	if diags.HasError() {
 		return tftypes.Value{}
 	}
@@ -125,7 +165,7 @@ func (aps *AccessParams) ReadId(ctx context.Context, diags *diag.Diagnostics,
 
 	odataSelect := []string{}
 	if useOdataSelect {
-		odataSelect = append(odataSelect, aps.IdNameGraph)
+		odataSelect = append(odataSelect, aps.EntityId.AttrNameGraph)
 	}
 	idResultRaw := aps.ReadRaw2(ctx, diags, baseUriUri, "", odataFilter, odataSelect, false)
 	if diags.HasError() {
@@ -142,10 +182,10 @@ func (aps *AccessParams) ReadId(ctx context.Context, diags *diag.Diagnostics,
 		}
 	}
 
-	if id, ok := idResultRaw[aps.IdNameGraph].(string); ok {
+	if id, ok := idResultRaw[aps.EntityId.AttrNameGraph].(string); ok {
 		idResult = id
 	} else if valueSlice, ok := idResultRaw["value"].([]any); ok && len(valueSlice) == 1 {
-		if id, ok := valueSlice[0].(map[string]any)[aps.IdNameGraph].(string); ok {
+		if id, ok := valueSlice[0].(map[string]any)[aps.EntityId.AttrNameGraph].(string); ok {
 			idResult = id
 		}
 	}
@@ -161,6 +201,18 @@ func (aps *AccessParams) ReadId(ctx context.Context, diags *diag.Diagnostics,
 		}
 	}
 
+	return
+}
+
+func (aps *AccessParams) CheckEntityExistence(ctx context.Context, diags *diag.Diagnostics,
+	id string, idAttributer GetAttributer) (entityExists bool) {
+
+	uri, odataFilter2 := aps.GetUriWithIdForR(ctx, diags, "", id, idAttributer, aps.ReadOptions.SingleItemUseODataFilter, aps.ReadOptions.ODataFilter)
+	if diags.HasError() {
+		return
+	}
+
+	entityExists = aps.ReadRaw2(ctx, diags, uri, "", odataFilter2, nil, true) != nil
 	return
 }
 

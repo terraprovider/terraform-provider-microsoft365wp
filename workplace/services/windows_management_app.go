@@ -21,7 +21,7 @@ var (
 		AccessParams: generic.AccessParams{
 			BaseUri:           "/deviceAppManagement/windowsManagementApp",
 			IsSingleton:       true,
-			ReplaceUpdateFunc: windowsManagementAppReplaceUpdateFunc,
+			UpdateReplaceFunc: windowsManagementAppUpdateReplaceFunc,
 		},
 	}
 
@@ -29,14 +29,14 @@ var (
 		&WindowsManagementAppResource)
 )
 
-func windowsManagementAppReplaceUpdateFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.ReplaceUpdateFuncParams) {
+func windowsManagementAppUpdateReplaceFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.UpdateReplaceFuncParams) {
 	errorSummary := "Error updating resource"
 
 	targetState, ok := params.RawVal["managedInstaller"].(string)
 	if !ok {
 		diags.AddError(errorSummary, "Unable to read target value of managedInstaller")
 	}
-	tflog.Info(ctx, "windowsManagementAppResourceReplaceUpdateFunc", map[string]any{"targetState": targetState})
+	tflog.Info(ctx, "windowsManagementAppResourceUpdateReplaceFunc", map[string]any{"targetState": targetState})
 
 	currentStateResultRaw := params.R.AccessParams.ReadRaw(ctx, diags, params.R.AccessParams.BaseUri, false)
 	if diags.HasError() {
@@ -46,12 +46,12 @@ func windowsManagementAppReplaceUpdateFunc(ctx context.Context, diags *diag.Diag
 	if !ok {
 		diags.AddError(errorSummary, "Unable to read current value of managedInstaller")
 	}
-	tflog.Info(ctx, "windowsManagementAppResourceReplaceUpdateFunc", map[string]any{"currentState": currentState})
+	tflog.Info(ctx, "windowsManagementAppResourceUpdateReplaceFunc", map[string]any{"currentState": currentState})
 
 	if targetState != currentState {
-		params.R.AccessParams.CreateRaw(ctx, diags, params.R.AccessParams.BaseUri+"/setAsManagedInstaller", params.IdAttributer, make(map[string]any), true)
+		params.R.AccessParams.CreateRaw2(ctx, diags, params.R.AccessParams.BaseUri+"/setAsManagedInstaller", params.IdAttributer, make(map[string]any), true, false)
 	} else {
-		tflog.Info(ctx, "windowsManagementAppResourceReplaceUpdateFunc: Nothing to do, target equals current state")
+		tflog.Info(ctx, "windowsManagementAppResourceUpdateReplaceFunc: Nothing to do, target equals current state")
 	}
 }
 

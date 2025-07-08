@@ -17,11 +17,11 @@ var (
 		TypeNameSuffix: "authorization_policy",
 		SpecificSchema: authorizationPolicyResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:     "/policies/authorizationPolicy/authorizationPolicy",
-			IsSingleton: true,
-			SingularEntity: generic.SingularEntity{
-				ReadIdAttrFromGraphUseSelectId: true,
+			BaseUri: "/policies/authorizationPolicy/authorizationPolicy",
+			EntityId: generic.EntityIdOptions{
+				CreateUpdateReadIdFromGraphUseODataSelect: true,
 			},
+			IsSingleton: true,
 		},
 	}
 

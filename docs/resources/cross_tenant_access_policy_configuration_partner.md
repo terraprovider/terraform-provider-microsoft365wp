@@ -39,6 +39,7 @@ resource "microsoft365wp_cross_tenant_access_policy_configuration_partner" "test
 
   automatic_user_consent_settings = {
     outbound_allowed = true
+    inbound_allowed  = true # required for cross_tenant_identity_sync_policy_partner.user_sync_inbound.is_sync_allowed = true
   }
 }
 ```
@@ -59,6 +60,7 @@ resource "microsoft365wp_cross_tenant_access_policy_configuration_partner" "test
 
 ### Read-Only
 
+- `identity_synchronization` (Attributes) Defines the cross-tenant policy for the synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multitenant organization by automating the creation, update, and deletion of users from one tenant to another. / Defines the cross-tenant policy for synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users from one tenant to another. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta (see [below for nested schema](#nestedatt--identity_synchronization))
 - `is_in_multi_tenant_organization` (Boolean) Identifies whether a tenant is a member of a multitenant organization.
 - `is_service_provider` (Boolean) Identifies whether the partner-specific configuration is a Cloud Service Provider for your organization.
 
@@ -312,3 +314,22 @@ Required:
 
 - `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
 - `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`
+
+
+
+
+<a id="nestedatt--identity_synchronization"></a>
+### Nested Schema for `identity_synchronization`
+
+Read-Only:
+
+- `display_name` (String) Display name for the cross-tenant user synchronization policy. Use the name of the partner Microsoft Entra tenant to easily identify the policy. Optional.
+- `tenant_id` (String) Tenant identifier for the partner Microsoft Entra organization. Read-only.
+- `user_sync_inbound` (Attributes) Defines whether users can be synchronized from the partner tenant. Key. / Defines whether users can be synchronized from the partner tenant. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta (see [below for nested schema](#nestedatt--identity_synchronization--user_sync_inbound))
+
+<a id="nestedatt--identity_synchronization--user_sync_inbound"></a>
+### Nested Schema for `identity_synchronization.user_sync_inbound`
+
+Read-Only:
+
+- `is_sync_allowed` (Boolean) Defines whether user objects should be synchronized from the partner tenant. `false` causes any current user synchronization from the source tenant to the target tenant to stop. This property has no impact on existing users who have already been synchronized.

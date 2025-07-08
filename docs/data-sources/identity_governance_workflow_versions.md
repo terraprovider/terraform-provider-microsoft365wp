@@ -1,6 +1,6 @@
 ---
 page_title: "microsoft365wp_identity_governance_workflow_versions Data Source - microsoft365wp"
-subcategory: "MS Graph: Workflow"
+subcategory: "MS Graph: Lifecycle workflows"
 ---
 
 # microsoft365wp_identity_governance_workflow_versions (Data Source)

@@ -22,9 +22,28 @@ var (
 		TypeNameSuffix: "ios_managed_app_protection",
 		SpecificSchema: iosManagedAppProtectionResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/deviceAppManagement/iosManagedAppProtections",
-			ReadOptions:     iosManagedAppProtectionReadOptions,
-			WriteSubActions: iosManagedAppProtectionWriteSubActions,
+			BaseUri: "/deviceAppManagement/iosManagedAppProtections",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "apps,assignments",
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"appGroupType", "apps"},
+							UriSuffix:  "targetApps",
+							UpdateOnly: true,
+						},
+					},
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+							UpdateOnly: true,
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -34,27 +53,6 @@ var (
 	IosManagedAppProtectionPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&IosManagedAppProtectionResource, "")
 )
-
-var iosManagedAppProtectionReadOptions = generic.ReadOptions{
-	ODataExpand: "apps,assignments",
-}
-
-var iosManagedAppProtectionWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"appGroupType", "apps"},
-			UriSuffix:  "targetApps",
-			UpdateOnly: true,
-		},
-	},
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-			UpdateOnly: true,
-		},
-	},
-}
 
 var iosManagedAppProtectionResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // iosManagedAppProtection
@@ -114,12 +112,12 @@ var iosManagedAppProtectionResourceSchema = schema.Schema{
 			Optional:    true,
 			Validators: []validator.Set{
 				setvalidator.ValueStringsAre(
-					stringvalidator.OneOf("oneDriveForBusiness", "sharePoint", "box", "localStorage", "photoLibrary"),
+					stringvalidator.OneOf("oneDriveForBusiness", "sharePoint", "box", "localStorage", "photoLibrary", "iManage", "egnyte", "unknownFutureValue"),
 				),
 			},
 			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Data storage locations where a user may store managed data. / Storage locations where managed apps can potentially store their data; possible values are: `oneDriveForBusiness` (OneDrive for business), `sharePoint` (SharePoint), `box` (Box), `localStorage` (Local storage on the device), `photoLibrary` (The device's photo library). The _provider_ default value is `[]`.",
+			MarkdownDescription: "Data storage locations where a user may store managed data. / The storage locations where managed apps can potentially store their data; possible values are: `oneDriveForBusiness` (Indicates allowed storage location for the managed app to save files is 'OneDrive for Business'.), `sharePoint` (Indicates allowed storage location for the managed app to save files is 'Sharepoint'.), `box` (Indicates that the allowed storage location for a managed app to save files is to 'Box'. Box is a non-Microsoft solution that enables cloud-based file storage capabilities.), `localStorage` (Indicates allowed storage location for the managed app to save files is local storage on the device.), `photoLibrary` (Indicates allowed storage location for the managed app to save files is the device's photo library.), `iManage` (Indicates that the allowed storage location for a managed app is to save files to 'iManage'. iManage is a non-Microsoft solution that enables cloud-based file storage capabilities.), `egnyte` (Indicates that the allowed storage location for a managed app is to save files to 'Egnyte'. Egynte is a non-Microsoft solution that enables cloud-based file storage capabilities.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `[]`.",
 		},
 		"allowed_inbound_data_transfer_sources": schema.StringAttribute{
 			Optional: true,

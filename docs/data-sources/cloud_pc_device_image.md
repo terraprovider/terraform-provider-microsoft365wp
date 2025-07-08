@@ -80,6 +80,7 @@ output "microsoft365wp_cloud_pc_device_image" {
 - `last_modified_date_time` (String) The data and time when the image was last modified. The timestamp represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`.
 - `os_version_number` (String) The operating system version of this image. For example, `10.0.22000.296`.
 - `scope_ids` (Set of String)
+- `size_in_gb` (Number) sizeInGB
 - `source_image_resource_id` (String) The unique identifier (ID) of the source image resource on Azure. The required ID format is: "/subscriptions/{subscription-id}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/images/{imageName}".
 - `status_details` (String) Possible values are: `internalServerError`, `sourceImageNotFound`, `osVersionNotSupported`, `sourceImageInvalid`, `sourceImageNotGeneralized`, `unknownFutureValue`, `vmAlreadyAzureAdjoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`
 - `version` (String) The image version. For example, `0.0.1` and `1.5.13`.

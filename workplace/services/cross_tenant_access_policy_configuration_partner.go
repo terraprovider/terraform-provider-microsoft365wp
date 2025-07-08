@@ -15,9 +15,18 @@ var (
 		TypeNameSuffix: "cross_tenant_access_policy_configuration_partner",
 		SpecificSchema: crossTenantAccessPolicyConfigurationPartnerResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:     "/policies/crossTenantAccessPolicy/partners",
-			IdNameGraph: "tenantId",
-			ReadOptions: crossTenantAccessPolicyConfigurationPartnerReadOptions,
+			BaseUri: "/policies/crossTenantAccessPolicy/partners",
+			EntityId: generic.EntityIdOptions{
+				AttrNameGraph: "tenantId",
+			},
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "identitySynchronization",
+				DataSource: generic.DataSourceOptions{
+					Plural: generic.PluralOptions{
+						ExtraAttributes: []string{"is_in_multi_tenant_organization", "is_service_provider"},
+					},
+				},
+			},
 		},
 	}
 
@@ -27,14 +36,6 @@ var (
 	CrossTenantAccessPolicyConfigurationPartnerPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&CrossTenantAccessPolicyConfigurationPartnerResource, "")
 )
-
-var crossTenantAccessPolicyConfigurationPartnerReadOptions = generic.ReadOptions{
-	DataSource: generic.DataSourceOptions{
-		Plural: generic.PluralOptions{
-			ExtraAttributes: []string{"is_in_multi_tenant_organization", "is_service_provider"},
-		},
-	},
-}
 
 var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyConfigurationPartner
@@ -141,6 +142,30 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 				},
 			},
 			MarkdownDescription: "Defines the partner-specific tenant restrictions configuration for users in your organization who access a partner organization using partner supplied identities on your network or devices. / Defines how to target your tenant restrictions settings. Tenant restrictions give you control over the external organizations that your users can access from your network or devices when they use external identities. Settings can be targeted to specific users, groups, or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytenantrestrictions?view=graph-rest-beta",
+		},
+		"identity_synchronization": schema.SingleNestedAttribute{
+			Computed: true,
+			Attributes: map[string]schema.Attribute{ // crossTenantIdentitySyncPolicyPartner
+				"display_name": schema.StringAttribute{
+					Computed:            true,
+					MarkdownDescription: "Display name for the cross-tenant user synchronization policy. Use the name of the partner Microsoft Entra tenant to easily identify the policy. Optional.",
+				},
+				"tenant_id": schema.StringAttribute{
+					Computed:            true,
+					MarkdownDescription: "Tenant identifier for the partner Microsoft Entra organization. Read-only.",
+				},
+				"user_sync_inbound": schema.SingleNestedAttribute{
+					Computed: true,
+					Attributes: map[string]schema.Attribute{ // crossTenantUserSyncInbound
+						"is_sync_allowed": schema.BoolAttribute{
+							Computed:            true,
+							MarkdownDescription: "Defines whether user objects should be synchronized from the partner tenant. `false` causes any current user synchronization from the source tenant to the target tenant to stop. This property has no impact on existing users who have already been synchronized.",
+						},
+					},
+					MarkdownDescription: "Defines whether users can be synchronized from the partner tenant. Key. / Defines whether users can be synchronized from the partner tenant. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta",
+				},
+			},
+			MarkdownDescription: "Defines the cross-tenant policy for the synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multitenant organization by automating the creation, update, and deletion of users from one tenant to another. / Defines the cross-tenant policy for synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users from one tenant to another. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta",
 		},
 	},
 	MarkdownDescription: "Represents the partner-specific configuration for cross-tenant access and tenant restrictions. Cross-tenant access settings include inbound and outbound settings of Microsoft Entra B2B collaboration and B2B direct connect.\n\nFor any partner-specific property that is `null`, these settings inherit the behavior configured in your [default cross-tenant access settings](../resources/crosstenantaccesspolicyconfigurationdefault.md). / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta ||| MS Graph: Cross-tenant access",

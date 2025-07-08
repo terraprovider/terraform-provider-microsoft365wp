@@ -19,7 +19,15 @@ var (
 		TypeNameSuffix: "azure_ad_windows_autopilot_deployment_profile",
 		SpecificSchema: azureAdWindowsAutopilotDeploymentProfileResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:                    "/deviceManagement/windowsAutopilotDeploymentProfiles",
+			BaseUri: "/deviceManagement/windowsAutopilotDeploymentProfiles",
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionPostAndPatch{
+						AttributesPatch: []string{"locale", "@odata.type"},
+						AttributesKeep:  []string{"@odata.type"},
+					},
+				},
+			},
 			TerraformToGraphMiddleware: azureAdWindowsAutopilotDeploymentProfileTerraformToGraphMiddleware,
 		},
 	}

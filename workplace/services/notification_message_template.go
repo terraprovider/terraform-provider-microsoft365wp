@@ -22,9 +22,37 @@ var (
 		TypeNameSuffix: "notification_message_template",
 		SpecificSchema: notificationMessageTemplateResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:         "/deviceManagement/notificationMessageTemplates",
-			ReadOptions:     notificationMessageTemplateReadOptions,
-			WriteSubActions: notificationMessageTemplateWriteSubActions,
+			BaseUri: "/deviceManagement/notificationMessageTemplates",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "localizedNotificationMessages",
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionIndividual{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"localizedNotificationMessages"},
+							UriSuffix:  "localizedNotificationMessages",
+						},
+						ComparisonKeyAttribute: "locale",
+						SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("localized_notification_messages"),
+						IdGetterFunc: func(ctx context.Context, diags *diag.Diagnostics, vRaw map[string]any, parentId string) string {
+							return fmt.Sprintf("%s_%s", parentId, vRaw["locale"].(string))
+						},
+						TerraformToGraphMiddleware: func(_ context.Context, _ *diag.Diagnostics, p *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+							if p.IsUpdate {
+								// locale cannot be updated
+								delete(p.RawVal, "locale")
+							}
+							//lint:ignore S1002 Keep for clarity
+							if p.RawVal["isDefault"].(bool) == false {
+								// isDefault cannot be set to false, one must set another locale's isDefault to true instead
+								delete(p.RawVal, "isDefault")
+							}
+							return nil
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -34,36 +62,6 @@ var (
 	NotificationMessageTemplatePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&NotificationMessageTemplateResource, "")
 )
-
-var notificationMessageTemplateReadOptions = generic.ReadOptions{
-	ODataExpand: "localizedNotificationMessages",
-}
-
-var notificationMessageTemplateWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionIndividual{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"localizedNotificationMessages"},
-			UriSuffix:  "localizedNotificationMessages",
-		},
-		ComparisonKeyAttribute: "locale",
-		SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("localized_notification_messages"),
-		IdGetterFunc: func(ctx context.Context, diags *diag.Diagnostics, vRaw map[string]any, parentId string) string {
-			return fmt.Sprintf("%s_%s", parentId, vRaw["locale"].(string))
-		},
-		TerraformToGraphMiddleware: func(_ context.Context, _ *diag.Diagnostics, p *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
-			if p.IsUpdate {
-				// locale cannot be updated
-				delete(p.RawVal, "locale")
-			}
-			//lint:ignore S1002 Keep for clarity
-			if p.RawVal["isDefault"].(bool) == false {
-				// isDefault cannot be set to false, one must set another locale's isDefault to true instead
-				delete(p.RawVal, "isDefault")
-			}
-			return nil
-		},
-	},
-}
 
 var notificationMessageTemplateResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // notificationMessageTemplate

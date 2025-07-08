@@ -20,9 +20,23 @@ var (
 		TypeNameSuffix: "windows_driver_update_profile",
 		SpecificSchema: windowsDriverUpdateProfileResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:                    "/deviceManagement/windowsDriverUpdateProfiles",
-			ReadOptions:                windowsDriverUpdateProfileReadOptions,
-			WriteSubActions:            windowsDriverUpdateProfileWriteSubActions,
+			BaseUri: "/deviceManagement/windowsDriverUpdateProfiles",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "assignments,driverInventories",
+				DataSource: generic.DataSourceOptions{
+					NoFilterSupport: true,
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							Attributes: []string{"assignments"},
+							UriSuffix:  "assign",
+						},
+					},
+				},
+			},
 			TerraformToGraphMiddleware: windowsDriverUpdateProfileTerraformToGraphMiddleware,
 		},
 	}
@@ -33,22 +47,6 @@ var (
 	WindowsDriverUpdateProfilePluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&WindowsDriverUpdateProfileResource, "")
 )
-
-var windowsDriverUpdateProfileReadOptions = generic.ReadOptions{
-	ODataExpand: "assignments,driverInventories",
-	DataSource: generic.DataSourceOptions{
-		NoFilterSupport: true,
-	},
-}
-
-var windowsDriverUpdateProfileWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			Attributes: []string{"assignments"},
-			UriSuffix:  "assign",
-		},
-	},
-}
 
 func windowsDriverUpdateProfileTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {

@@ -481,16 +481,17 @@ Read-Only:
 
 Read-Only:
 
-- `v10_0` (Boolean) When TRUE, only Version 10.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v11_0` (Boolean) When TRUE, only Version 11.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v12_0` (Boolean) When TRUE, only Version 12.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v13_0` (Boolean) When TRUE, only Version 13.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v14_0` (Boolean) When TRUE, only Version 14.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v15_0` (Boolean) When TRUE, only Version 15.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v16_0` (Boolean) When TRUE, only Version 16.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v17_0` (Boolean) When TRUE, only Version 17.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v8_0` (Boolean) When TRUE, only Version 8.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v9_0` (Boolean) When TRUE, only Version 9.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 10.0 or later is required to install the app. If 'False', iOS Version 10.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v11_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 11.0 or later is required to install the app. If 'False', iOS Version 11.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v12_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 12.0 or later is required to install the app. If 'False', iOS Version 12.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v13_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 13.0 or later is required to install the app. If 'False', iOS Version 13.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v14_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 14.0 or later is required to install the app. If 'False', iOS Version 14.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v15_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 15.0 or later is required to install the app. If 'False', iOS Version 15.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v16_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 16.0 or later is required to install the app. If 'False', iOS Version 16.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v17_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 17.0 or later is required to install the app. If 'False', iOS Version 17.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v18_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 18.0 or later is required to install the app. If 'False', iOS Version 18.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v8_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 8.0 or later is required to install the app. If 'False', iOS Version 8.0  is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v9_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 9.0 or later is required to install the app. If 'False', iOS Version 9.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
 
 
 
@@ -518,16 +519,17 @@ Read-Only:
 
 Read-Only:
 
-- `v10_0` (Boolean) When TRUE, only Version 10.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v11_0` (Boolean) When TRUE, only Version 11.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v12_0` (Boolean) When TRUE, only Version 12.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v13_0` (Boolean) When TRUE, only Version 13.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v14_0` (Boolean) When TRUE, only Version 14.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v15_0` (Boolean) When TRUE, only Version 15.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v16_0` (Boolean) When TRUE, only Version 16.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v17_0` (Boolean) When TRUE, only Version 17.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v8_0` (Boolean) When TRUE, only Version 8.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v9_0` (Boolean) When TRUE, only Version 9.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 10.0 or later is required to install the app. If 'False', iOS Version 10.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v11_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 11.0 or later is required to install the app. If 'False', iOS Version 11.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v12_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 12.0 or later is required to install the app. If 'False', iOS Version 12.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v13_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 13.0 or later is required to install the app. If 'False', iOS Version 13.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v14_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 14.0 or later is required to install the app. If 'False', iOS Version 14.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v15_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 15.0 or later is required to install the app. If 'False', iOS Version 15.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v16_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 16.0 or later is required to install the app. If 'False', iOS Version 16.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v17_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 17.0 or later is required to install the app. If 'False', iOS Version 17.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v18_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 18.0 or later is required to install the app. If 'False', iOS Version 18.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v8_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 8.0 or later is required to install the app. If 'False', iOS Version 8.0  is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v9_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 9.0 or later is required to install the app. If 'False', iOS Version 9.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
 
 
 
@@ -547,7 +549,7 @@ Read-Only:
 - `used_license_count` (Number) The number of VPP licenses in use.
 - `vpp_token_account_type` (String) The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. / Possible types of an Apple Volume Purchase Program token; possible values are: `business` (Apple Volume Purchase Program token associated with an business program.), `education` (Apple Volume Purchase Program token associated with an education program.)
 - `vpp_token_apple_id` (String) The Apple Id associated with the given Apple Volume Purchase Program Token.
-- `vpp_token_display_name` (String)
+- `vpp_token_display_name` (String) Display name of the VPP token associated with this app.
 - `vpp_token_id` (String) Identifier of the VPP token associated with this app.
 - `vpp_token_organization_name` (String) The organization associated with the Apple Volume Purchase Program Token
 
@@ -652,19 +654,20 @@ Read-Only:
 
 Read-Only:
 
-- `v10_10` (Boolean) When TRUE, indicates OS X 10.10 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_11` (Boolean) When TRUE, indicates OS X 10.11 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_12` (Boolean) When TRUE, indicates macOS 10.12 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_13` (Boolean) When TRUE, indicates macOS 10.13 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_14` (Boolean) When TRUE, indicates macOS 10.14 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_15` (Boolean) When TRUE, indicates macOS 10.15 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_7` (Boolean) When TRUE, indicates Mac OS X 10.7 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_8` (Boolean) When TRUE, indicates OS X 10.8 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_9` (Boolean) When TRUE, indicates OS X 10.9 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v11_0` (Boolean) When TRUE, indicates macOS 11.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v12_0` (Boolean) When TRUE, indicates macOS 12.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v13_0` (Boolean) When TRUE, indicates macOS 13.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v14_0` (Boolean) When TRUE, indicates macOS 14.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
+- `v10_10` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.10 or later is required to install the app. If 'False', OS X Version 10.10 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_11` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.11 or later is required to install the app. If 'False', OS X Version 10.11 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_12` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.12 or later is required to install the app. If 'False', OS X Version 10.12 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_13` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.13 or later is required to install the app. If 'False', OS X Version 10.13 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_14` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.14 or later is required to install the app. If 'False', OS X Version 10.14 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_15` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.15 or later is required to install the app. If 'False', OS X Version 10.15 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_7` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.7 or later is required to install the app. If 'False', OS X Version 10.7 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_8` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.8 or later is required to install the app. If 'False', OS X Version 10.8 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_9` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.9 or later is required to install the app. If 'False', OS X Version 10.9 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v11_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 11.0 or later is required to install the app. If 'False', OS X Version 11.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v12_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 12.0 or later is required to install the app. If 'False', OS X Version 12.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v13_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 13.0 or later is required to install the app. If 'False', OS X Version 13.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v14_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 14.0 or later is required to install the app. If 'False', OS X Version 14.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v15_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 15.0 or later is required to install the app. If 'False', OS X Version 15.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
 
 
 
@@ -701,19 +704,20 @@ Read-Only:
 
 Read-Only:
 
-- `v10_10` (Boolean) When TRUE, indicates OS X 10.10 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_11` (Boolean) When TRUE, indicates OS X 10.11 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_12` (Boolean) When TRUE, indicates macOS 10.12 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_13` (Boolean) When TRUE, indicates macOS 10.13 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_14` (Boolean) When TRUE, indicates macOS 10.14 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_15` (Boolean) When TRUE, indicates macOS 10.15 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_7` (Boolean) When TRUE, indicates Mac OS X 10.7 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_8` (Boolean) When TRUE, indicates OS X 10.8 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_9` (Boolean) When TRUE, indicates OS X 10.9 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v11_0` (Boolean) When TRUE, indicates macOS 11.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v12_0` (Boolean) When TRUE, indicates macOS 12.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v13_0` (Boolean) When TRUE, indicates macOS 13.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v14_0` (Boolean) When TRUE, indicates macOS 14.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
+- `v10_10` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.10 or later is required to install the app. If 'False', OS X Version 10.10 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_11` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.11 or later is required to install the app. If 'False', OS X Version 10.11 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_12` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.12 or later is required to install the app. If 'False', OS X Version 10.12 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_13` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.13 or later is required to install the app. If 'False', OS X Version 10.13 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_14` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.14 or later is required to install the app. If 'False', OS X Version 10.14 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_15` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.15 or later is required to install the app. If 'False', OS X Version 10.15 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_7` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.7 or later is required to install the app. If 'False', OS X Version 10.7 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_8` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.8 or later is required to install the app. If 'False', OS X Version 10.8 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_9` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.9 or later is required to install the app. If 'False', OS X Version 10.9 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v11_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 11.0 or later is required to install the app. If 'False', OS X Version 11.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v12_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 12.0 or later is required to install the app. If 'False', OS X Version 12.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v13_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 13.0 or later is required to install the app. If 'False', OS X Version 13.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v14_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 14.0 or later is required to install the app. If 'False', OS X Version 14.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v15_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 15.0 or later is required to install the app. If 'False', OS X Version 15.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
 
 
 
@@ -765,19 +769,20 @@ Read-Only:
 
 Read-Only:
 
-- `v10_10` (Boolean) When TRUE, indicates OS X 10.10 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_11` (Boolean) When TRUE, indicates OS X 10.11 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_12` (Boolean) When TRUE, indicates macOS 10.12 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_13` (Boolean) When TRUE, indicates macOS 10.13 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_14` (Boolean) When TRUE, indicates macOS 10.14 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_15` (Boolean) When TRUE, indicates macOS 10.15 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_7` (Boolean) When TRUE, indicates Mac OS X 10.7 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_8` (Boolean) When TRUE, indicates OS X 10.8 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v10_9` (Boolean) When TRUE, indicates OS X 10.9 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v11_0` (Boolean) When TRUE, indicates macOS 11.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v12_0` (Boolean) When TRUE, indicates macOS 12.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v13_0` (Boolean) When TRUE, indicates macOS 13.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
-- `v14_0` (Boolean) When TRUE, indicates macOS 14.0 or later is required to install the app. When FALSE, indicates some other OS version is the minimum OS to install the app.
+- `v10_10` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.10 or later is required to install the app. If 'False', OS X Version 10.10 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_11` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.11 or later is required to install the app. If 'False', OS X Version 10.11 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_12` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.12 or later is required to install the app. If 'False', OS X Version 10.12 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_13` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.13 or later is required to install the app. If 'False', OS X Version 10.13 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_14` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.14 or later is required to install the app. If 'False', OS X Version 10.14 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_15` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.15 or later is required to install the app. If 'False', OS X Version 10.15 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_7` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.7 or later is required to install the app. If 'False', OS X Version 10.7 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_8` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.8 or later is required to install the app. If 'False', OS X Version 10.8 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_9` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.9 or later is required to install the app. If 'False', OS X Version 10.9 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v11_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 11.0 or later is required to install the app. If 'False', OS X Version 11.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v12_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 12.0 or later is required to install the app. If 'False', OS X Version 12.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v13_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 13.0 or later is required to install the app. If 'False', OS X Version 13.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v14_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 14.0 or later is required to install the app. If 'False', OS X Version 14.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v15_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 15.0 or later is required to install the app. If 'False', OS X Version 15.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
 
 
 <a id="nestedatt--macos_pkg--post_install_script"></a>
@@ -812,7 +817,7 @@ Read-Only:
 - `used_license_count` (Number) The number of VPP licenses in use.
 - `vpp_token_account_type` (String) The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. / Possible types of an Apple Volume Purchase Program token; possible values are: `business` (Apple Volume Purchase Program token associated with an business program.), `education` (Apple Volume Purchase Program token associated with an education program.)
 - `vpp_token_apple_id` (String) The Apple Id associated with the given Apple Volume Purchase Program Token.
-- `vpp_token_display_name` (String)
+- `vpp_token_display_name` (String) Display name of the VPP token associated with this app.
 - `vpp_token_id` (String) Identifier of the VPP token associated with this app.
 - `vpp_token_organization_name` (String) The organization associated with the Apple Volume Purchase Program Token
 
@@ -981,16 +986,17 @@ Read-Only:
 
 Read-Only:
 
-- `v10_0` (Boolean) When TRUE, only Version 10.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v11_0` (Boolean) When TRUE, only Version 11.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v12_0` (Boolean) When TRUE, only Version 12.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v13_0` (Boolean) When TRUE, only Version 13.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v14_0` (Boolean) When TRUE, only Version 14.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v15_0` (Boolean) When TRUE, only Version 15.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v16_0` (Boolean) When TRUE, only Version 16.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v17_0` (Boolean) When TRUE, only Version 17.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v8_0` (Boolean) When TRUE, only Version 8.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v9_0` (Boolean) When TRUE, only Version 9.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 10.0 or later is required to install the app. If 'False', iOS Version 10.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v11_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 11.0 or later is required to install the app. If 'False', iOS Version 11.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v12_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 12.0 or later is required to install the app. If 'False', iOS Version 12.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v13_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 13.0 or later is required to install the app. If 'False', iOS Version 13.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v14_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 14.0 or later is required to install the app. If 'False', iOS Version 14.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v15_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 15.0 or later is required to install the app. If 'False', iOS Version 15.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v16_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 16.0 or later is required to install the app. If 'False', iOS Version 16.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v17_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 17.0 or later is required to install the app. If 'False', iOS Version 17.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v18_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 18.0 or later is required to install the app. If 'False', iOS Version 18.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v8_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 8.0 or later is required to install the app. If 'False', iOS Version 8.0  is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v9_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 9.0 or later is required to install the app. If 'False', iOS Version 9.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
 
 
 
@@ -1020,16 +1026,17 @@ Read-Only:
 
 Read-Only:
 
-- `v10_0` (Boolean) When TRUE, only Version 10.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v11_0` (Boolean) When TRUE, only Version 11.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v12_0` (Boolean) When TRUE, only Version 12.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v13_0` (Boolean) When TRUE, only Version 13.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v14_0` (Boolean) When TRUE, only Version 14.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v15_0` (Boolean) When TRUE, only Version 15.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v16_0` (Boolean) When TRUE, only Version 16.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v17_0` (Boolean) When TRUE, only Version 17.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v8_0` (Boolean) When TRUE, only Version 8.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
-- `v9_0` (Boolean) When TRUE, only Version 9.0 or later is supported. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v10_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 10.0 or later is required to install the app. If 'False', iOS Version 10.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v11_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 11.0 or later is required to install the app. If 'False', iOS Version 11.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v12_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 12.0 or later is required to install the app. If 'False', iOS Version 12.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v13_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 13.0 or later is required to install the app. If 'False', iOS Version 13.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v14_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 14.0 or later is required to install the app. If 'False', iOS Version 14.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v15_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 15.0 or later is required to install the app. If 'False', iOS Version 15.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v16_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 16.0 or later is required to install the app. If 'False', iOS Version 16.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v17_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 17.0 or later is required to install the app. If 'False', iOS Version 17.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v18_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 18.0 or later is required to install the app. If 'False', iOS Version 18.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v8_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 8.0 or later is required to install the app. If 'False', iOS Version 8.0  is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
+- `v9_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 9.0 or later is required to install the app. If 'False', iOS Version 9.0 is not the minimum version. Exactly one of the minimum operating system boolean values will be TRUE.
 
 
 
@@ -1047,28 +1054,29 @@ Read-Only:
 
 Read-Only:
 
-- `allow_available_uninstall` (Boolean) When TRUE, indicates that uninstall is supported from the company portal for the Windows app (Win32) with an Available assignment. When FALSE, indicates that uninstall is not supported for the Windows app (Win32) with an Available assignment.
-- `applicable_architectures` (String) The Windows architecture(s) for which this app can run on. / Contains properties for Windows architecture; possible values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.).
+- `allow_available_uninstall` (Boolean) Indicates whether the uninstall is supported from the company portal for the Win32 app with an available assignment. When TRUE, indicates that uninstall is supported from the company portal for the Windows app (Win32) with an available assignment. When FALSE, indicates that uninstall is not supported for the Windows app (Win32) with an Available assignment.
+- `allowed_architectures` (String) Indicates the Windows architecture(s) this app should be installed on. The app will be treated as not applicable for devices with architectures not matching the selected value. When a non-null value is provided for the `allowedArchitectures` property, the value of the `applicableArchitectures` property is set to `none`. / Contains properties for Windows architecture; possible values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.)
+- `applicable_architectures` (String) Indicates the Windows architecture(s) this app should be installed on. The app will be treated as not applicable for devices with architectures not matching the selected value. When a non-null value is provided for the `allowedArchitectures` property, the value of the `applicableArchitectures` property is set to `none`. / Contains properties for Windows architecture; possible values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.).
 - `committed_content_version` (String) The internal committed content version.
-- `detection_rules` (Attributes Set) The detection rules to detect Win32 Line of Business (LoB) app. / Base class to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappdetection?view=graph-rest-beta. (see [below for nested schema](#nestedatt--win32_lob--detection_rules))
-- `display_version` (String) The version displayed in the UX for this app.
+- `detection_rules` (Attributes Set) Indicates the detection rules to detect Win32 Line of Business (LoB) app. Possible values are `Win32LobAppPowerShellScriptDetection, Win32LobAppRegistryDetection, Win32LobAppFileSystemDetection, Win32LobAppProductCodeDetection`. / Base class to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappdetection?view=graph-rest-beta. (see [below for nested schema](#nestedatt--win32_lob--detection_rules))
+- `display_version` (String) Indicates the version displayed in the UX for this app. Used to set the version of the app. Example: `1.0.3.215`.
 - `file_name` (String) The name of the main Lob application file.
-- `install_command_line` (String) The command line to install this app
-- `install_experience` (Attributes) The install experience for this app. / Contains installation experience properties for a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappinstallexperience?view=graph-rest-beta. (see [below for nested schema](#nestedatt--win32_lob--install_experience))
-- `minimum_cpu_speed_in_mhz` (Number) The value for the minimum CPU speed which is required to install this app.
-- `minimum_free_disk_space_in_mb` (Number) The value for the minimum free disk space which is required to install this app.
-- `minimum_memory_in_mb` (Number) The value for the minimum physical memory which is required to install this app.
-- `minimum_number_of_processors` (Number) The value for the minimum number of processors which is required to install this app.
-- `minimum_supported_windows_release` (String) The value for the minimum supported windows release.
-- `msi_information` (Attributes) The MSI details if this Win32 app is an MSI app. / Contains MSI app properties for a Win32 App. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappmsiinformation?view=graph-rest-beta (see [below for nested schema](#nestedatt--win32_lob--msi_information))
-- `requirement_rules` (Attributes Set) The requirement rules to detect Win32 Line of Business (LoB) app. / Base class to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapprequirement?view=graph-rest-beta. (see [below for nested schema](#nestedatt--win32_lob--requirement_rules))
-- `return_codes` (Attributes Set) The return codes for post installation behavior. / Contains return code properties for a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappreturncode?view=graph-rest-beta. (see [below for nested schema](#nestedatt--win32_lob--return_codes))
-- `rules` (Attributes Set) The detection and requirement rules for this app. / A base complex type to store the detection or requirement rule data for a Win32 LOB app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapprule?view=graph-rest-beta (see [below for nested schema](#nestedatt--win32_lob--rules))
-- `setup_file_path` (String) The relative path of the setup file in the encrypted Win32LobApp package.
+- `install_command_line` (String) Indicates the command line to install this app. Used to install the Win32 app. Example: `msiexec /i "Orca.Msi" /qn`.
+- `install_experience` (Attributes) Indicates the install experience for this app. / Contains installation experience properties for a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappinstallexperience?view=graph-rest-beta. (see [below for nested schema](#nestedatt--win32_lob--install_experience))
+- `minimum_cpu_speed_in_mhz` (Number) Indicates the value for the minimum CPU speed which is required to install this app. Allowed range from `0` to `clock speed from WMI helper`.
+- `minimum_free_disk_space_in_mb` (Number) Indicates the value for the minimum free disk space which is required to install this app. Allowed range from `0` to `driver's maximum available free space`.
+- `minimum_memory_in_mb` (Number) Indicates the value for the minimum physical memory which is required to install this app. Allowed range from `0` to `total physical memory from WMI helper`.
+- `minimum_number_of_processors` (Number) Indicates the value for the minimum number of processors which is required to install this app. Minimum value is `0`.
+- `minimum_supported_windows_release` (String) Indicates the value for the minimum supported windows release. Example: `Windows11_23H2`.
+- `msi_information` (Attributes) Indicates the MSI details if this Win32 app is an MSI app. / Contains MSI app properties for a Win32 App. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappmsiinformation?view=graph-rest-beta (see [below for nested schema](#nestedatt--win32_lob--msi_information))
+- `requirement_rules` (Attributes Set) Indicates the requirement rules to detect Win32 Line of Business (LoB) app. / Base class to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapprequirement?view=graph-rest-beta. (see [below for nested schema](#nestedatt--win32_lob--requirement_rules))
+- `return_codes` (Attributes Set) Indicates the return codes for post installation behavior. / Contains return code properties for a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappreturncode?view=graph-rest-beta. (see [below for nested schema](#nestedatt--win32_lob--return_codes))
+- `rules` (Attributes Set) Indicates the detection and requirement rules for this app. / A base complex type to store the detection or requirement rule data for a Win32 LOB app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapprule?view=graph-rest-beta (see [below for nested schema](#nestedatt--win32_lob--rules))
+- `setup_file_path` (String) Indicates the relative path of the setup file in the encrypted Win32LobApp package. Example: `Intel-SA-00075 Detection and Mitigation Tool.msi`.
 - `size` (Number) The total size, including all uploaded files. This property is
 - `source_file` (String) Provider Note: The path to the IntuneWin file to be uploaded.
 - `source_sha256` (String) Provider Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.
-- `uninstall_command_line` (String) The command line to uninstall this app
+- `uninstall_command_line` (String) Indicates the command line to uninstall this app. Used to uninstall the app. Example: `msiexec /x "{85F4CBCB-9BBC-4B50-A7D8-E1106771498D}" /qn`.
 
 <a id="nestedatt--win32_lob--detection_rules"></a>
 ### Nested Schema for `win32_lob.detection_rules`
@@ -1216,7 +1224,62 @@ Read-Only:
 
 Read-Only:
 
+- `filesystem` (Attributes) A complex type to store file or folder rule data for a Win32 LOB app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappfilesystemrule?view=graph-rest-beta (see [below for nested schema](#nestedatt--win32_lob--rules--filesystem))
+- `powershell_script` (Attributes) A complex type to store the PowerShell script rule data for a Win32 LOB app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapppowershellscriptrule?view=graph-rest-beta (see [below for nested schema](#nestedatt--win32_lob--rules--powershell_script))
+- `product_code` (Attributes) A complex type to store the product code and version rule data for a Win32 LOB app. This rule is not supported as a requirement rule. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappproductcoderule?view=graph-rest-beta (see [below for nested schema](#nestedatt--win32_lob--rules--product_code))
+- `registry` (Attributes) A complex type to store registry rule data for a Win32 LOB app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappregistryrule?view=graph-rest-beta (see [below for nested schema](#nestedatt--win32_lob--rules--registry))
 - `rule_type` (String) The rule type indicating the purpose of the rule. / Contains rule types for Win32 LOB apps; possible values are: `detection` (Detection rule.), `requirement` (Requirement rule.)
+
+<a id="nestedatt--win32_lob--rules--filesystem"></a>
+### Nested Schema for `win32_lob.rules.filesystem`
+
+Read-Only:
+
+- `check_32_bit_on_64_system` (Boolean) A value indicating whether to expand environment variables in the 32-bit context on 64-bit systems.
+- `comparison_value` (String) The file or folder comparison value.
+- `file_or_folder_name` (String) The file or folder name to look up.
+- `operation_type` (String) The file system operation type. / A list of possible operations for rules used to make determinations about an application based on files or folders. Unless noted, can be used with either detection or requirement rules; possible values are: `notConfigured` (Default. Indicates that the rule does not have the operation type configured.), `exists` (Indicates that the rule evaluates whether the specified file or folder exists.), `modifiedDate` (Indicates that the rule compares the modified date of the specified file against a provided comparison value by DateTime comparison.), `createdDate` (Indicates that the rule compares the created date of the specified file against a provided comparison value by DateTime comparison.), `version` (Indicates that the rule compares the detected version of the specified file against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the value read at the given registry value is not discovered to be in version-compatible format, a string comparison will be used instead.), `sizeInMB` (Indicates that the rule compares the size of the file in MiB (rounded down) against a provided comparison value by integer comparison.), `doesNotExist` (Indicates that the rule evaluates whether the specified file or folder does not exist. It is the functional inverse of an equivalent rule that uses operation type `exists`.), `sizeInBytes` (Indicates that the rule compares the size of the file in bytes against a provided comparison value by integer comparison.), `appVersion` (Indicates that the rule compares the detected version of the file against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the detected version of the file is not discovered to be in version-compatible format, a string comparison will be used instead. This is similar to a rule with operation type `version`, but it also collects and reports the detected version value to report as the discovered version of the app installed on the device when the rule evaluates to `true`. Only one rule with this type may be specified.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
+- `operator` (String) The operator for file or folder detection. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.)
+- `path` (String) The file or folder path to look up.
+
+
+<a id="nestedatt--win32_lob--rules--powershell_script"></a>
+### Nested Schema for `win32_lob.rules.powershell_script`
+
+Read-Only:
+
+- `comparison_value` (String) The script output comparison value. Do not specify a value if the rule is used for detection.
+- `display_name` (String) The display name for the rule. Do not specify this value if the rule is used for detection.
+- `enforce_signature_check` (Boolean) A value indicating whether a signature check is enforced.
+- `operation_type` (String) The script output comparison operation type. Use NotConfigured (the default value) if the rule is used for detection. / Contains all supported Powershell Script output detection type; possible values are: `notConfigured` (Not configured.), `string` (Output data type is string.), `dateTime` (Output data type is date time.), `integer` (Output data type is integer.), `float` (Output data type is float.), `version` (Output data type is version.), `boolean` (Output data type is boolean.)
+- `operator` (String) The script output operator. Use NotConfigured (the default value) if the rule is used for detection. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.)
+- `run_as_32_bit` (Boolean) A value indicating whether the script should run as 32-bit.
+- `run_as_account` (String) The execution context of the script. Do not specify this value if the rule is used for detection. Script detection rules will run in the same context as the associated app install context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context)
+- `script_content` (String) The base64-encoded script content.
+
+
+<a id="nestedatt--win32_lob--rules--product_code"></a>
+### Nested Schema for `win32_lob.rules.product_code`
+
+Read-Only:
+
+- `product_code` (String) The product code of the app.
+- `product_version` (String) The product version comparison value.
+- `product_version_operator` (String) The product version comparison operator. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.)
+
+
+<a id="nestedatt--win32_lob--rules--registry"></a>
+### Nested Schema for `win32_lob.rules.registry`
+
+Read-Only:
+
+- `check_32_bit_on_64_system` (Boolean) A value indicating whether to search the 32-bit registry on 64-bit systems.
+- `comparison_value` (String) The registry comparison value.
+- `key_path` (String) The full path of the registry entry containing the value to detect.
+- `operation_type` (String) The registry operation type. / A list of possible operations for rules used to make determinations about an application based on registry keys or values. Unless noted, the values can be used with either detection or requirement rules; possible values are: `notConfigured` (Default. Indicates that the rule does not have the operation type configured.), `exists` (Indicates that the rule evaluates whether the specified registry key or value exists.), `doesNotExist` (Indicates that the rule evaluates whether the specified registry key or value does not exist. It is the functional inverse of an equivalent rule that uses operation type `exists`.), `string` (Indicates that the rule compares the value read at the given registry value against a provided comparison value by string comparison.), `integer` (Indicates that the rule compares the value read at the given registry value against a provided comparison value by integer comparison.), `version` (Indicates that the rule compares the value read at the given registry value against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the value read at the given registry value is not discovered to be in version-compatible format, a string comparison will be used instead.), `appVersion` (Indicates that the rule compares the data read at the given registry value against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the data read at the given registry value is not discovered to be in a version-compatible format, a string comparison will be used instead. The rule will be resolved as not detected if the given registry value does not exist. This is similar to a rule with operation type `version`, but it also collects and reports the detected version value to report as the discovered version of the app installed on the device when the rule evaluates to `true`. Only one rule with this type may be specified.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)
+- `operator` (String) The operator for registry detection. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.)
+- `value_name` (String) The name of the registry value to detect.
+
 
 
 
@@ -1325,6 +1388,24 @@ Provider Note: v10_0 seems to be required and the only minimum OS version to be 
 Read-Only:
 
 - `id` (String) Key of the entity. This property is
+- `microsoft_store_for_business` (Attributes) A class that represents a contained app of a MicrosoftStoreForBusinessApp. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-microsoftstoreforbusinesscontainedapp?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows_universal_appx--committed_contained_apps--microsoft_store_for_business))
+- `windows_universal_app_x` (Attributes) A class that represents a contained app of a WindowsUniversalAppX app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsuniversalappxcontainedapp?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows_universal_appx--committed_contained_apps--windows_universal_app_x))
+
+<a id="nestedatt--windows_universal_appx--committed_contained_apps--microsoft_store_for_business"></a>
+### Nested Schema for `windows_universal_appx.committed_contained_apps.microsoft_store_for_business`
+
+Read-Only:
+
+- `app_user_model_id` (String) The app user model ID of the contained app of a MicrosoftStoreForBusinessApp.
+
+
+<a id="nestedatt--windows_universal_appx--committed_contained_apps--windows_universal_app_x"></a>
+### Nested Schema for `windows_universal_appx.committed_contained_apps.windows_universal_app_x`
+
+Read-Only:
+
+- `app_user_model_id` (String) The app user model ID of the contained app of a WindowsUniversalAppX app.
+
 
 
 <a id="nestedatt--windows_universal_appx--minimum_supported_operating_system"></a>

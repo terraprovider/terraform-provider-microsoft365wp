@@ -21,9 +21,23 @@ var (
 		TypeNameSuffix: "device_custom_attribute_shell_script",
 		SpecificSchema: deviceCustomAttributeShellScriptResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:                    "/deviceManagement/deviceCustomAttributeShellScripts",
-			ReadOptions:                deviceCustomAttributeShellScriptReadOptions,
-			WriteSubActions:            deviceCustomAttributeShellScriptWriteSubActions,
+			BaseUri: "/deviceManagement/deviceCustomAttributeShellScripts",
+			ReadOptions: generic.ReadOptions{
+				ODataExpand: "assignments",
+				DataSource: generic.DataSourceOptions{
+					NoIdFilterSupport: true,
+				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SubActions: []generic.WriteSubAction{
+					&generic.WriteSubActionAllInOne{
+						WriteSubActionBase: generic.WriteSubActionBase{
+							AttributesMap: map[string]string{"assignments": "deviceManagementScriptAssignments"},
+							UriSuffix:     "assign",
+						},
+					},
+				},
+			},
 			TerraformToGraphMiddleware: deviceCustomAttributeShellScriptTerraformToGraphMiddleware,
 		},
 	}
@@ -34,19 +48,6 @@ var (
 	DeviceCustomAttributeShellScriptPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&DeviceCustomAttributeShellScriptResource, "")
 )
-
-var deviceCustomAttributeShellScriptReadOptions = generic.ReadOptions{
-	ODataExpand: "assignments",
-}
-
-var deviceCustomAttributeShellScriptWriteSubActions = []generic.WriteSubAction{
-	&generic.WriteSubActionAllInOne{
-		WriteSubActionBase: generic.WriteSubActionBase{
-			AttributesMap: map[string]string{"assignments": "deviceManagementScriptAssignments"},
-			UriSuffix:     "assign",
-		},
-	},
-}
 
 func deviceCustomAttributeShellScriptTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	if params.IsUpdate {
