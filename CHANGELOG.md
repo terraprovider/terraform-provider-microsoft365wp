@@ -1,6 +1,18 @@
 # `microsoft365wp` Terraform Provider Changelog
 
 
+## 0.17.1 (2025-10-21)
+
+### fixed
+
+- authentication_methods_policy: ignore VerifiableCredentials
+- unified_role_management_policy: fix invisible state drift
+
+### changed
+
+- Update dependencies
+
+
 ## 0.17.0 (2025-07-08)
 
 ### added

@@ -73,10 +73,12 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 					MarkdownDescription: "Unique identifier for the identity or actor. For example, in the access reviews decisions API, this property might record the **id** of the principal, that is, the group, user, or application that's subject to review.",
 				},
 			},
+			PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
 			MarkdownDescription: "The identity who last modified the role setting. / Represents an identity of an _actor_. For example, an actor can be a user, device, or application. Multiple Microsoft Graph APIs share this resource and the data they return varies depending on the API.\n\nBase type of [userIdentity](useridentity.md). / https://learn.microsoft.com/en-us/graph/api/resources/identity?view=graph-rest-beta",
 		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 			MarkdownDescription: "The time when the role setting was last modified.",
 		},
 		"scope_id": schema.StringAttribute{
@@ -502,6 +504,7 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 					},
 				},
 			},
+			PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
 			MarkdownDescription: "The list of effective rules like approval rules and expiration rules evaluated based on inherited referenced rules. For example, if there is a tenant-wide policy to enforce enabling an approval rule, the effective rule will be to enable approval even if the policy has a rule to disable approval. Supports `$expand`. / An abstract type that defines the rules associated with role management policies. This abstract type is inherited by the following resources that define the various types of rules and their settings associated with role management policies. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta",
 		},
 		"rules": schema.SetNestedAttribute{
@@ -575,7 +578,9 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 															Attributes: map[string]schema.Attribute{ // userSet
 																"is_backup": schema.BoolAttribute{
 																	Optional:            true,
-																	MarkdownDescription: "For a user in an approval stage, this property indicates whether the user is a backup fallback approver.",
+																	PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+																	Computed:            true,
+																	MarkdownDescription: "For a user in an approval stage, this property indicates whether the user is a backup fallback approver. The _provider_ default value is `false`.",
 																},
 																"connected_organization_members": generic.OdataDerivedTypeNestedAttributeRs{
 																	DerivedType: "#microsoft.graph.connectedOrganizationMembers",
@@ -702,7 +707,9 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 															Attributes: map[string]schema.Attribute{ // userSet
 																"is_backup": schema.BoolAttribute{
 																	Optional:            true,
-																	MarkdownDescription: "For a user in an approval stage, this property indicates whether the user is a backup fallback approver.",
+																	PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+																	Computed:            true,
+																	MarkdownDescription: "For a user in an approval stage, this property indicates whether the user is a backup fallback approver. The _provider_ default value is `false`.",
 																},
 																"connected_organization_members": generic.OdataDerivedTypeNestedAttributeRs{
 																	DerivedType: "#microsoft.graph.connectedOrganizationMembers",

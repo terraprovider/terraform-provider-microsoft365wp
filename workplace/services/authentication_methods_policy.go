@@ -36,12 +36,14 @@ var (
 func authenticationMethodsPolicyGraphToTerraformMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.GraphToTerraformMiddlewareParams) generic.GraphToTerraformMiddlewareReturns {
 	amConfigsOrg, amConfigsOk := params.RawVal["authenticationMethodConfigurations"].([]any)
 	if amConfigsOk {
-		// remove entries of type federatedIdentityCredentialAuthenticationMethodConfiguration for now as the type has not yet been documented anywhere
+		// remove entries of types federatedIdentityCredentialAuthenticationMethodConfiguration, verifiableCredentialsAuthenticationMethodConfiguration
+		// for now as the types have not yet been documented anywhere
 		amConfigsNew := make([]any, 0)
 		for _, configAny := range amConfigsOrg {
 			if configMap, configMapOk := configAny.(map[string]any); configMapOk {
 				if odataType, odataTypeOk := configMap["@odata.type"].(string); odataTypeOk &&
-					odataType == "#microsoft.graph.federatedIdentityCredentialAuthenticationMethodConfiguration" {
+					(odataType == "#microsoft.graph.federatedIdentityCredentialAuthenticationMethodConfiguration" ||
+						odataType == "#microsoft.graph.verifiableCredentialsAuthenticationMethodConfiguration") {
 					// skip appending to new slice
 					continue
 				}

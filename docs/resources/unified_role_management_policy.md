@@ -49,7 +49,32 @@ data "microsoft365wp_unified_role_management_policy_assignment" "main" {
 locals {
   urm_policy = data.microsoft365wp_unified_role_management_policy_assignment.main.policy
   urm_policy_rules = [for r in local.urm_policy.rules :
-    r.id == "Enablement_Admin_Assignment" ? merge(r, { enablement = { enabled_rules = ["Justification"] } }) : r
+    merge(r, r.id == "Approval_EndUser_Assignment" ? {
+      approval = {
+        setting = {
+          is_approval_required                = true
+          is_approval_required_for_extension  = false
+          is_requestor_justification_required = true
+          approval_mode                       = "SingleStage"
+          approval_stages = [
+            {
+              approval_stage_time_out_in_days    = 1
+              escalation_approvers               = []
+              escalation_time_in_minutes         = 0
+              is_approver_justification_required = true
+              is_escalation_enabled              = false
+              primary_approvers = [
+                {
+                  group_members = {
+                    id = "298fded6-b252-4166-a473-f405e935f58d"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    } : {})
   ]
 }
 
@@ -143,7 +168,7 @@ It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#micr
 The `@odata.type` value `#microsoft.graph.groupMembers` indicates that this type identifies a collection of users in the tenant who are allowed as requestor, approver, or reviewer, who are the members of a specific group. / https://learn.microsoft.com/en-us/graph/api/resources/groupmembers?view=graph-rest-beta (see [below for nested schema](#nestedatt--rules--approval--setting--approval_stages--escalation_approvers--group_members))
 - `internal_sponsors` (Attributes) Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).
 It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.internalSponsors` indicates that a requesting user's connected organization internal sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with internalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an internal sponsor. / https://learn.microsoft.com/en-us/graph/api/resources/internalsponsors?view=graph-rest-beta (see [below for nested schema](#nestedatt--rules--approval--setting--approval_stages--escalation_approvers--internal_sponsors))
-- `is_backup` (Boolean) For a user in an approval stage, this property indicates whether the user is a backup fallback approver.
+- `is_backup` (Boolean) For a user in an approval stage, this property indicates whether the user is a backup fallback approver. The _provider_ default value is `false`.
 - `requestor_manager` (Attributes) Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).
 It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.requestorManager` indicates that a requesting user's manager is to be the approver. Include another approver When creating an access package assignment policy approval stage with requestorManager, in case the requesting user doesn't have a manager. Including another approver, such as a single user or group member, covers the case where the requesting user doesn't have a manager. / https://learn.microsoft.com/en-us/graph/api/resources/requestormanager?view=graph-rest-beta (see [below for nested schema](#nestedatt--rules--approval--setting--approval_stages--escalation_approvers--requestor_manager))
 - `single_user` (Attributes) Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The  `@odata.type` value `#microsoft.graph.singleUser` indicates that this userSet identifies a specific user in the tenant who will be allowed as a requestor, approver, or reviewer. / https://learn.microsoft.com/en-us/graph/api/resources/singleuser?view=graph-rest-beta (see [below for nested schema](#nestedatt--rules--approval--setting--approval_stages--escalation_approvers--single_user))
@@ -219,7 +244,7 @@ It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#micr
 The `@odata.type` value `#microsoft.graph.groupMembers` indicates that this type identifies a collection of users in the tenant who are allowed as requestor, approver, or reviewer, who are the members of a specific group. / https://learn.microsoft.com/en-us/graph/api/resources/groupmembers?view=graph-rest-beta (see [below for nested schema](#nestedatt--rules--approval--setting--approval_stages--primary_approvers--group_members))
 - `internal_sponsors` (Attributes) Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).
 It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.internalSponsors` indicates that a requesting user's connected organization internal sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with internalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an internal sponsor. / https://learn.microsoft.com/en-us/graph/api/resources/internalsponsors?view=graph-rest-beta (see [below for nested schema](#nestedatt--rules--approval--setting--approval_stages--primary_approvers--internal_sponsors))
-- `is_backup` (Boolean) For a user in an approval stage, this property indicates whether the user is a backup fallback approver.
+- `is_backup` (Boolean) For a user in an approval stage, this property indicates whether the user is a backup fallback approver. The _provider_ default value is `false`.
 - `requestor_manager` (Attributes) Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).
 It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.requestorManager` indicates that a requesting user's manager is to be the approver. Include another approver When creating an access package assignment policy approval stage with requestorManager, in case the requesting user doesn't have a manager. Including another approver, such as a single user or group member, covers the case where the requesting user doesn't have a manager. / https://learn.microsoft.com/en-us/graph/api/resources/requestormanager?view=graph-rest-beta (see [below for nested schema](#nestedatt--rules--approval--setting--approval_stages--primary_approvers--requestor_manager))
 - `single_user` (Attributes) Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The  `@odata.type` value `#microsoft.graph.singleUser` indicates that this userSet identifies a specific user in the tenant who will be allowed as a requestor, approver, or reviewer. / https://learn.microsoft.com/en-us/graph/api/resources/singleuser?view=graph-rest-beta (see [below for nested schema](#nestedatt--rules--approval--setting--approval_stages--primary_approvers--single_user))

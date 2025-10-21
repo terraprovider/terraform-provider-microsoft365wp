@@ -26,7 +26,32 @@ data "microsoft365wp_unified_role_management_policy_assignment" "main" {
 locals {
   urm_policy = data.microsoft365wp_unified_role_management_policy_assignment.main.policy
   urm_policy_rules = [for r in local.urm_policy.rules :
-    r.id == "Enablement_Admin_Assignment" ? merge(r, { enablement = { enabled_rules = ["Justification"] } }) : r
+    merge(r, r.id == "Approval_EndUser_Assignment" ? {
+      approval = {
+        setting = {
+          is_approval_required                = true
+          is_approval_required_for_extension  = false
+          is_requestor_justification_required = true
+          approval_mode                       = "SingleStage"
+          approval_stages = [
+            {
+              approval_stage_time_out_in_days    = 1
+              escalation_approvers               = []
+              escalation_time_in_minutes         = 0
+              is_approver_justification_required = true
+              is_escalation_enabled              = false
+              primary_approvers = [
+                {
+                  group_members = {
+                    id = "298fded6-b252-4166-a473-f405e935f58d"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    } : {})
   ]
 }
 
