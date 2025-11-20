@@ -81,6 +81,7 @@ func unknownValuePaths(ctx context.Context, path *tftypes.AttributePath, val tft
 // The unknown value paths are obtained from the State via a previous call to UnknownValuePaths.
 // Functionality is split between these 2 functions, rather than calling UnknownValuePaths from within this function,
 // so as to avoid unnecessary Cloud Control API calls to obtain the current ResourceModel.
+// NOTE: SetUnknownValuesFromResourceModel will most likely fail on set elements or if values are unknown on multiple levels!
 func SetUnknownValuesFromResourceModel(ctx context.Context, state *tfsdk.State, unknowns []*tftypes.AttributePath, val tftypes.Value) error {
 
 	src := tfsdk.State{

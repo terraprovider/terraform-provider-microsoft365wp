@@ -156,7 +156,6 @@ It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#micr
 
 Read-Only:
 
-- `description` (String) The name of the connected organization. Read only.
 - `id` (String) The ID of the connected organization in entitlement management.
 
 
@@ -169,7 +168,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the group in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the group in Microsoft Entra ID.
 
 
@@ -190,7 +188,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the user in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the user in Microsoft Entra ID.
 
 
@@ -223,7 +220,6 @@ It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#micr
 
 Read-Only:
 
-- `description` (String) The name of the connected organization. Read only.
 - `id` (String) The ID of the connected organization in entitlement management.
 
 
@@ -236,7 +232,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the group in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the group in Microsoft Entra ID.
 
 
@@ -257,7 +252,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the user in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the user in Microsoft Entra ID.
 
 
@@ -398,7 +392,6 @@ It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#micr
 
 Read-Only:
 
-- `description` (String) The name of the connected organization. Read only.
 - `id` (String) The ID of the connected organization in entitlement management.
 
 
@@ -411,7 +404,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the group in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the group in Microsoft Entra ID.
 
 
@@ -432,7 +424,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the user in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the user in Microsoft Entra ID.
 
 
@@ -465,7 +456,6 @@ It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#micr
 
 Read-Only:
 
-- `description` (String) The name of the connected organization. Read only.
 - `id` (String) The ID of the connected organization in entitlement management.
 
 
@@ -478,7 +468,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the group in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the group in Microsoft Entra ID.
 
 
@@ -499,7 +488,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the user in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the user in Microsoft Entra ID.
 
 

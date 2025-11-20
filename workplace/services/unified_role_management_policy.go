@@ -161,11 +161,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Computed: true,
 																		Attributes: map[string]schema.Attribute{ // connectedOrganizationMembers
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the connected organization. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Computed:            true,
 																				MarkdownDescription: "The ID of the connected organization in entitlement management.",
@@ -190,11 +185,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Computed: true,
 																		Attributes: map[string]schema.Attribute{ // groupMembers
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the group in Microsoft Entra ID. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Computed:            true,
 																				MarkdownDescription: "The ID of the group in Microsoft Entra ID.",
@@ -233,11 +223,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Computed: true,
 																		Attributes: map[string]schema.Attribute{ // singleUser
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the user in Microsoft Entra ID. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Computed:            true,
 																				MarkdownDescription: "The ID of the user in Microsoft Entra ID.",
@@ -286,11 +271,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Computed: true,
 																		Attributes: map[string]schema.Attribute{ // connectedOrganizationMembers
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the connected organization. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Computed:            true,
 																				MarkdownDescription: "The ID of the connected organization in entitlement management.",
@@ -315,11 +295,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Computed: true,
 																		Attributes: map[string]schema.Attribute{ // groupMembers
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the group in Microsoft Entra ID. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Computed:            true,
 																				MarkdownDescription: "The ID of the group in Microsoft Entra ID.",
@@ -358,11 +333,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Computed: true,
 																		Attributes: map[string]schema.Attribute{ // singleUser
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the user in Microsoft Entra ID. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Computed:            true,
 																				MarkdownDescription: "The ID of the user in Microsoft Entra ID.",
@@ -587,11 +557,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Optional: true,
 																		Attributes: map[string]schema.Attribute{ // connectedOrganizationMembers
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the connected organization. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Required:            true,
 																				MarkdownDescription: "The ID of the connected organization in entitlement management.",
@@ -616,11 +581,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Optional: true,
 																		Attributes: map[string]schema.Attribute{ // groupMembers
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the group in Microsoft Entra ID. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Required:            true,
 																				MarkdownDescription: "The ID of the group in Microsoft Entra ID.",
@@ -659,11 +619,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Optional: true,
 																		Attributes: map[string]schema.Attribute{ // singleUser
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the user in Microsoft Entra ID. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Required:            true,
 																				MarkdownDescription: "The ID of the user in Microsoft Entra ID.",
@@ -716,11 +671,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Optional: true,
 																		Attributes: map[string]schema.Attribute{ // connectedOrganizationMembers
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the connected organization. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Required:            true,
 																				MarkdownDescription: "The ID of the connected organization in entitlement management.",
@@ -745,11 +695,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Optional: true,
 																		Attributes: map[string]schema.Attribute{ // groupMembers
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the group in Microsoft Entra ID. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Required:            true,
 																				MarkdownDescription: "The ID of the group in Microsoft Entra ID.",
@@ -788,11 +733,6 @@ var unifiedRoleManagementPolicyResourceSchema = schema.Schema{
 																	SingleNestedAttribute: schema.SingleNestedAttribute{
 																		Optional: true,
 																		Attributes: map[string]schema.Attribute{ // singleUser
-																			"description": schema.StringAttribute{
-																				Computed:            true,
-																				PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-																				MarkdownDescription: "The name of the user in Microsoft Entra ID. Read only.",
-																			},
 																			"id": schema.StringAttribute{
 																				Required:            true,
 																				MarkdownDescription: "The ID of the user in Microsoft Entra ID.",

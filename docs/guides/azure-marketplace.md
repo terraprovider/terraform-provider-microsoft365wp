@@ -27,7 +27,7 @@ In order to purchase solutions from independent software vendors (ISV) such as T
 * The related items should appear on your Microsoft Azure invoice (Pay-As-You-Go or Enterprise Agreement) the month after we have reported your fees to Microsoft.
 * In the PDF invoice you will receive from Microsoft, all TerraProvider fees are lumped into an item called "SaaS". The related Publisher is "glueckkanja".
 
-<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/image.png" alt="Screenshot" width="563"><figcaption></figcaption></figure>
+<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/image (2).png" alt="Screenshot" width="563"><figcaption></figcaption></figure>
 
 -> For a more detailed cost breakdown of your base and additional user fees, please refer to the invoice in your Azure portal.
 
@@ -43,7 +43,7 @@ Subscriptions for TerraProvider are available based on an **annual** renewal int
 
 The following user segments are available:&#x20;
 
-<table data-header-hidden><thead><tr><th width="240.02162801098973">Plan</th><th width="244.07580174927114">Included Users</th><th></th></tr></thead><tbody><tr><td><strong>User Segment</strong></td><td><strong>Included Users in Base Fee</strong></td><td><strong>Maximum Total Users</strong></td></tr><tr><td>TerraProvider Enterprise (Y) 100</td><td>50</td><td>249</td></tr><tr><td>TerraProvider Enterprise (Y) 250</td><td>250</td><td>999</td></tr><tr><td>TerraProvider Enterprise (Y) 1000</td><td>1,000</td><td>2,499</td></tr><tr><td>TerraProvider Enterprise (Y) 2500</td><td>2,500</td><td>9,999</td></tr><tr><td>TerraProvider Enterprise (Y) 10000</td><td>10,000</td><td>unlimited</td></tr></tbody></table>
+<table data-header-hidden><thead><tr><th width="286.8955344315601">Plan</th><th width="244.07580174927114">Included Users</th><th></th></tr></thead><tbody><tr><td><strong>User Segment</strong></td><td><strong>Included Users in Base Fee</strong></td><td><strong>Maximum Total Users</strong></td></tr><tr><td>TerraProvider Enterprise (Y) 100</td><td>100</td><td>249</td></tr><tr><td>TerraProvider Enterprise (Y) 250</td><td>250</td><td>999</td></tr><tr><td>TerraProvider Enterprise (Y) 1000</td><td>1,000</td><td>2,499</td></tr><tr><td>TerraProvider Enterprise (Y) 2500</td><td>2,500</td><td>9,999</td></tr><tr><td>TerraProvider Enterprise (Y) 10000</td><td>10,000</td><td>unlimited</td></tr></tbody></table>
 
 For prices in Euro (EUR), please check out our [website](https://www.terraprovider.com/pricing/). For prices in _your_ currency, please directly refer to the **Marketplace** in the [Azure Portal](https://portal.azure.com/).
 
@@ -61,8 +61,18 @@ For prices in Euro (EUR), please check out our [website](https://www.terraprovid
 
 ### User Downgrades
 
-* Downgrading the amount of users is currently not possible without cancelling the subscription.
-* If you want to perform a downgrade, please [cancel](#cancellation) your current subscription and re-subscribe with the desired amount of users once the cancellation becomes effective.
+* You can **pre-register a reduction** of your licensed users for the **next renewal**, by navigating to your **TerraProvider subscription** in the [Azure SaaS portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceBlade/resourceType/Microsoft.SaaS%2Fresources) and by clicking "Open SaaS Account on publisher's site" (see screenshot below). This will re-direct you to our platform where the amount of users can be downgraded.
+
+<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/MASTER copy.jpg" alt="Screenshot"><figcaption></figcaption></figure>
+
+* The downgrade will become effective upon the next regular renewal of your subscription.
+* In case you change your mind and would like to change the user quantity or cancel the downgrade altogether, navigate back to your **TerraProvider subscription** and click **Cancel downgrade**.
+
+<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+### Change Plan
+
+If available on Azure Portal, the **Change Plan** action allows you to change your current outdated plan to the most recent version of the plan.
 
 ### **Recurring Billing**
 
@@ -87,26 +97,26 @@ In case you would like to test TerraProvider, please [get in contact with us](ht
 
 To  get started with your TerraProvider subscription, follow below steps:
 
-* Locate [TerraProvider](https://portal.azure.com/#view/Microsoft\_Azure\_Marketplace/GalleryItemDetailsBladeNopdl/id/glueckkanja-gabag.terraprovider-transactable-prod) on the **Marketplace** in your **Azure Portal**. In case we have extended a **Private Offer** to you or your MSP/distribution has extended a **Multiparty Offer (MPO)** to you, navigate to **Marketplace** in your **Azure Portal** and then to **Private Offer Management** to locate the Private Offer.
+* Locate [TerraProvider](https://portal.azure.com/#view/Microsoft_Azure_Marketplace/GalleryItemDetailsBladeNopdl/id/glueckkanja-gabag.terraprovider-transactable-prod) on the **Marketplace** in your **Azure Portal**. In case we have extended a **Private Offer** to you or your MSP/distribution has extended a **Multiparty Offer (MPO)** to you, navigate to **Marketplace** in your **Azure Portal** and then to **Private Offer Management** to locate the Private Offer.
   * More details on Private Offers and MPOs can be found in Microsoft's documentation.
     * [Private Offer](https://learn.microsoft.com/en-us/marketplace/private-offers-purchase)
     * [Multiparty Offer](https://www.youtube.com/watch?v=TANUlgLuVqI)
 * Click **Subscribe**.
 
-<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/image (3).png" alt=""><figcaption></figcaption></figure>
 
 * Create or select the **Resource group** you would like to deploy the subscription to.
 * Assign a descriptive **Name** to later identify your subscription.
 * We recommend to keep **Recurring billing** **On** so that you do not have to worry about an automatic termination of your subscription.
 * Click **Review + subscribe** and then **Subscribe** to deploy the **SaaS** resource to your **Resource group**.
 
-<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/image (4).png" alt=""><figcaption></figcaption></figure>
 
 -> The random order of **Base Fees** und **Additional Users** under the **Price** information is attributed to limitations of the Azure Marketplace. Later during the the enrolment process, we will provide you with transparent information on the expected licensing fees.
 
 * Once the deployment is complete, please navigate to our platform to complete the checkout. Therefore click **Configure account now**.
 
-<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/image (5).png" alt=""><figcaption></figcaption></figure>
 
 * After authenticating on our platform using your Microsoft credentials, you will be prompted for additional information, such as the desired total **User** amount and a **Technical contact**.
 

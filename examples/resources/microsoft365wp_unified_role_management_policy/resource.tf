@@ -45,6 +45,11 @@ locals {
                   group_members = {
                     id = "298fded6-b252-4166-a473-f405e935f58d"
                   }
+                },
+                {
+                  group_members = {
+                    id = "62e39046-aad3-4423-98e0-b486e3538aff"
+                  }
                 }
               ]
             }

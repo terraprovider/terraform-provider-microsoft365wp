@@ -1,6 +1,17 @@
 # `microsoft365wp` Terraform Provider Changelog
 
 
+## 0.17.2 (2025-11-20)
+
+### fixed
+
+- unified_role_management_policy: fix unknown value after create
+
+### changed
+
+- Update dependencies
+
+
 ## 0.17.1 (2025-10-21)
 
 ### fixed

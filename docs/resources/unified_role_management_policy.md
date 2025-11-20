@@ -68,6 +68,11 @@ locals {
                   group_members = {
                     id = "298fded6-b252-4166-a473-f405e935f58d"
                   }
+                },
+                {
+                  group_members = {
+                    id = "62e39046-aad3-4423-98e0-b486e3538aff"
+                  }
                 }
               ]
             }
@@ -182,10 +187,6 @@ Required:
 
 - `id` (String) The ID of the connected organization in entitlement management.
 
-Read-Only:
-
-- `description` (String) The name of the connected organization. Read only.
-
 
 <a id="nestedatt--rules--approval--setting--approval_stages--escalation_approvers--external_sponsors"></a>
 ### Nested Schema for `rules.approval.setting.approval_stages.escalation_approvers.external_sponsors`
@@ -197,10 +198,6 @@ Read-Only:
 Required:
 
 - `id` (String) The ID of the group in Microsoft Entra ID.
-
-Read-Only:
-
-- `description` (String) The name of the group in Microsoft Entra ID. Read only.
 
 
 <a id="nestedatt--rules--approval--setting--approval_stages--escalation_approvers--internal_sponsors"></a>
@@ -221,10 +218,6 @@ Optional:
 Required:
 
 - `id` (String) The ID of the user in Microsoft Entra ID.
-
-Read-Only:
-
-- `description` (String) The name of the user in Microsoft Entra ID. Read only.
 
 
 <a id="nestedatt--rules--approval--setting--approval_stages--escalation_approvers--target_user_sponsors"></a>
@@ -258,10 +251,6 @@ Required:
 
 - `id` (String) The ID of the connected organization in entitlement management.
 
-Read-Only:
-
-- `description` (String) The name of the connected organization. Read only.
-
 
 <a id="nestedatt--rules--approval--setting--approval_stages--primary_approvers--external_sponsors"></a>
 ### Nested Schema for `rules.approval.setting.approval_stages.primary_approvers.external_sponsors`
@@ -273,10 +262,6 @@ Read-Only:
 Required:
 
 - `id` (String) The ID of the group in Microsoft Entra ID.
-
-Read-Only:
-
-- `description` (String) The name of the group in Microsoft Entra ID. Read only.
 
 
 <a id="nestedatt--rules--approval--setting--approval_stages--primary_approvers--internal_sponsors"></a>
@@ -297,10 +282,6 @@ Optional:
 Required:
 
 - `id` (String) The ID of the user in Microsoft Entra ID.
-
-Read-Only:
-
-- `description` (String) The name of the user in Microsoft Entra ID. Read only.
 
 
 <a id="nestedatt--rules--approval--setting--approval_stages--primary_approvers--target_user_sponsors"></a>
@@ -431,7 +412,6 @@ It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#micr
 
 Read-Only:
 
-- `description` (String) The name of the connected organization. Read only.
 - `id` (String) The ID of the connected organization in entitlement management.
 
 
@@ -444,7 +424,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the group in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the group in Microsoft Entra ID.
 
 
@@ -465,7 +444,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the user in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the user in Microsoft Entra ID.
 
 
@@ -498,7 +476,6 @@ It's a subtype of [userSet](userset.md), in which the `@odata.type` value `#micr
 
 Read-Only:
 
-- `description` (String) The name of the connected organization. Read only.
 - `id` (String) The ID of the connected organization in entitlement management.
 
 
@@ -511,7 +488,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the group in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the group in Microsoft Entra ID.
 
 
@@ -532,7 +508,6 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) The name of the user in Microsoft Entra ID. Read only.
 - `id` (String) The ID of the user in Microsoft Entra ID.
 
 
