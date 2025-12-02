@@ -1,6 +1,17 @@
 # `microsoft365wp` Terraform Provider Changelog
 
 
+## 0.17.3 (2025-12-02)
+
+### added
+
+- administrative_unit
+
+### changed
+
+- Update dependencies
+
+
 ## 0.17.2 (2025-11-20)
 
 ### fixed

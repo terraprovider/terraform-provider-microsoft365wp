@@ -389,6 +389,8 @@ func (p *workplaceProvider) Configure(ctx context.Context, req provider.Configur
 // Defines the data sources implemented in the provider.
 func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		func() datasource.DataSource { return &services.AdministrativeUnitSingularDataSource },
+		func() datasource.DataSource { return &services.AdministrativeUnitPluralDataSource },
 		func() datasource.DataSource { return &services.AndroidManagedAppProtectionSingularDataSource },
 		func() datasource.DataSource { return &services.AndroidManagedAppProtectionPluralDataSource },
 		func() datasource.DataSource { return &services.ApplicationSingularDataSource },
@@ -532,6 +534,7 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 // Defines the resources implemented in the provider.
 func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		func() resource.Resource { return &services.AdministrativeUnitResource },
 		func() resource.Resource { return &services.AndroidManagedAppProtectionResource },
 		func() resource.Resource { return &services.AttributeSetResource },
 		func() resource.Resource { return &services.AuthenticationCombinationConfigurationResource },
