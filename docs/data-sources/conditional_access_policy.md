@@ -83,6 +83,7 @@ All the session controls inherit from [conditionalAccessSessionControl](conditio
 
 Read-Only:
 
+- `agent_id_risk_levels` (String) Agent identity risk levels included in the policy. This enumeration is multivalued. / Possible values are: `low`, `medium`, `high`, `unknownFutureValue`
 - `applications` (Attributes) Applications and user actions included in and excluded from the policy. Required. / Represents the applications and user actions included in and excluded from the conditional access policy. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessapplications?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--applications))
 - `authentication_flows` (Attributes) Authentication flows included in the policy scope. For more information, see [Conditional Access: Authentication flows](/entra/identity/conditional-access/concept-authentication-flows). / Represents the authentication flows in scope for the policy. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessauthenticationflows?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--authentication_flows))
 - `client_app_types` (Set of String) Client application types included in the policy. Required. <br/><br/> The `easUnsupported` enumeration member is deprecated in favor of `exchangeActiveSync`, which includes EAS supported and unsupported platforms. / Possible values are: `all`, `browser`, `mobileAppsAndDesktopClients`, `exchangeActiveSync`, `easSupported`, `other`, `unknownFutureValue`.
@@ -90,7 +91,7 @@ Read-Only:
 - `device_states` (Attributes) Device states in the policy. To be deprecated and removed. Use the **devices** property instead. / Represents device states in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessdevicestates?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--device_states))
 - `devices` (Attributes) Devices in the policy. / Represents devices in the scope of a [conditionalAccessTemplate](../resources/conditionalaccesstemplate.md) object. This resource is configured in the **conditionalAccessTemplate** resource > **details** property > **conditions** property > **devices** property. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessdevices?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--devices))
 - `insider_risk_levels` (String) Insider risk levels included in the policy. The / Possible values are: `minor`, `moderate`, `elevated`, `unknownFutureValue`
-- `locations` (Attributes) Locations included in and excluded from the policy. / Represents locations included in and excluded from the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesslocations?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--locations))
+- `locations` (Attributes) Locations included in and excluded from the policy. / Represents locations included in and excluded from the scope of a [conditional access policy](../resources/conditionalaccesspolicy.md). Locations can be [countries and regions](../resources/countrynamedlocation.md) or [IP addresses](../resources/ipnamedlocation.md). / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesslocations?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--locations))
 - `platforms` (Attributes) Platforms included in and excluded from the policy. / Platforms included in and excluded from the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessplatforms?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--platforms))
 - `service_principal_risk_levels` (Set of String) Service principal risk levels included in the policy. / Possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`.
 - `sign_in_risk_levels` (Set of String) Sign-in risk levels included in the policy. Required. / Possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`.
@@ -104,9 +105,11 @@ Read-Only:
 
 - `application_filter` (Attributes) Filter that defines the dynamic-application-syntax rule to include/exclude cloud applications. A filter can use custom security attributes to include/exclude applications. / Represents filter in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--applications--application_filter))
 - `exclude_applications` (Set of String) Can be one of the following: <li> The list of client IDs (**appId**) explicitly excluded from the policy.<li> `Office365` - For the list of apps included in `Office365`, see [Apps included in Conditional Access Office 365 app suite](/entra/identity/conditional-access/reference-office-365-application-contents) <li> `MicrosoftAdminPortals` - For more information, see [Conditional Access Target resources: Microsoft Admin Portals](/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals).
+- `global_secure_access` (Attributes) Represents traffic profile for Global Secure Access. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessglobalsecureaccess?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--applications--global_secure_access))
 - `include_applications` (Set of String) Can be one of the following: <li> The list of client IDs (**appId**) the policy applies to, unless explicitly excluded (in **excludeApplications**) <li> `All` <li> `Office365` - For the list of apps included in `Office365`, see [Apps included in Conditional Access Office 365 app suite](/entra/identity/conditional-access/reference-office-365-application-contents) <li> `MicrosoftAdminPortals` - For more information, see [Conditional Access Target resources: Microsoft Admin Portals](/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals).
 - `include_authentication_context_class_references` (Set of String) Authentication context class references include. Supported values are `c1` through `c25`.
 - `include_user_actions` (Set of String) User actions to include. Supported values are `urn:user:registersecurityinfo` and `urn:user:registerdevice`.
+- `network_access` (Attributes) Represents traffic profile for Global Secure Access. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessnetworkaccess?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--applications--network_access))
 
 <a id="nestedatt--conditions--applications--application_filter"></a>
 ### Nested Schema for `conditions.applications.application_filter`
@@ -115,6 +118,14 @@ Read-Only:
 
 - `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. / Possible values are: `include`, `exclude`
 - `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
+
+
+<a id="nestedatt--conditions--applications--global_secure_access"></a>
+### Nested Schema for `conditions.applications.global_secure_access`
+
+
+<a id="nestedatt--conditions--applications--network_access"></a>
+### Nested Schema for `conditions.applications.network_access`
 
 
 
@@ -131,9 +142,21 @@ Read-Only:
 
 Read-Only:
 
+- `agent_id_service_principal_filter` (Attributes) Filter that defines rules based on custom security attribute tags to include/exclude agent identities in the policy. / Represents filter in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--client_applications--agent_id_service_principal_filter))
+- `exclude_agent_id_service_principals` (Set of String) Agent identity object IDs excluded from the policy.
 - `exclude_service_principals` (Set of String) Service principal IDs excluded from the policy scope.
-- `include_service_principals` (Set of String) Service principal IDs included in the policy scope, or `ServicePrincipalsInMyTenant`.
+- `include_agent_id_service_principals` (Set of String) Agent identity object IDs included in the policy.
+- `include_service_principals` (Set of String) Service principal IDs included in the policy scope or `ServicePrincipalsInMyTenant`.
 - `service_principal_filter` (Attributes) Filter that defines the dynamic-servicePrincipal-syntax rule to include/exclude service principals. A filter can use custom security attributes to include/exclude service principals. / Represents filter in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--client_applications--service_principal_filter))
+
+<a id="nestedatt--conditions--client_applications--agent_id_service_principal_filter"></a>
+### Nested Schema for `conditions.client_applications.agent_id_service_principal_filter`
+
+Read-Only:
+
+- `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. / Possible values are: `include`, `exclude`
+- `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
+
 
 <a id="nestedatt--conditions--client_applications--service_principal_filter"></a>
 ### Nested Schema for `conditions.client_applications.service_principal_filter`
@@ -281,7 +304,7 @@ Read-Only:
 Read-Only:
 
 - `authentication_strength` (Attributes) The authentication strength required by the conditional access policy. Optional. / A collection of settings that define specific combinations of authentication methods and metadata. The authentication strength policy, when applied to a given scenario using Microsoft Entra Conditional Access, defines which authentication methods must be used to authenticate in that scenario. An authentication strength may be built-in or custom (defined by the tenant) and may or may not fulfill the requirements to grant an MFA claim. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta (see [below for nested schema](#nestedatt--grant_controls--authentication_strength))
-- `built_in_controls` (Set of String) List of values of built-in controls required by the policy. Possible values: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`. / Possible values are: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`.
+- `built_in_controls` (Set of String) List of values of built-in controls required by the policy. Possible values: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`. / Possible values are: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`, `riskRemediation`.
 - `custom_authentication_factors` (Set of String) List of custom controls IDs required by the policy. To learn more about custom control, see [Custom controls (preview)](/azure/active-directory/conditional-access/controls#custom-controls-preview).
 - `operator` (String) Defines the relationship of the grant controls. Possible values: `AND`, `OR`.
 - `terms_of_use` (Set of String) List of [terms of use](agreement.md) IDs required by the policy.
@@ -291,7 +314,7 @@ Read-Only:
 
 Read-Only:
 
-- `allowed_combinations` (Set of String) A collection of authentication method modes that are required be used to satify this authentication strength. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`
+- `allowed_combinations` (Set of String) A collection of authentication method modes that are required be used to satify this authentication strength. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`
 - `created_date_time` (String) The datetime when this policy was created.
 - `description` (String) The human-readable description of this policy.
 - `display_name` (String) The human-readable display name of this policy. <br><br>Supports `$filter` (`eq`, `ne`, `not` , and `in`).
@@ -311,6 +334,7 @@ Read-Only:
 - `cloud_app_security` (Attributes) Session control to apply cloud app security. / Session control used to enforce cloud app security checks. Inehrits from [Conditional Access Session Control](conditionalaccesssessioncontrol.md). / https://learn.microsoft.com/en-us/graph/api/resources/cloudappsecuritysessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--cloud_app_security))
 - `continuous_access_evaluation` (Attributes) Session control for continuous access evaluation settings. / Session control to control continuous access evaluation settings. / https://learn.microsoft.com/en-us/graph/api/resources/continuousaccessevaluationsessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--continuous_access_evaluation))
 - `disable_resilience_defaults` (Boolean) Session control that determines whether it's acceptable for Microsoft Entra ID to extend existing sessions based on information collected prior to an outage or not.
+- `global_secure_access_filtering_profile` (Attributes) Session control to link to Global Secure Access security profiles or filtering profiles. / Session control to link to a Global Secure Access security profile or filtering profile. / https://learn.microsoft.com/en-us/graph/api/resources/globalsecureaccessfilteringprofilesessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--global_secure_access_filtering_profile))
 - `persistent_browser` (Attributes) Session control to define whether to persist cookies or not. All apps should be selected for this session control to work correctly. / Session control to define whether to persist cookies or not. / https://learn.microsoft.com/en-us/graph/api/resources/persistentbrowsersessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--persistent_browser))
 - `secure_sign_in_session` (Attributes) Session control to require sign in sessions to be bound to a device. / Session control to require sign in sessions to be bound to a device. / https://learn.microsoft.com/en-us/graph/api/resources/securesigninsessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--secure_sign_in_session))
 - `sign_in_frequency` (Attributes) Session control to enforce signin frequency. / Session control to enforce sign-in frequency. / https://learn.microsoft.com/en-us/graph/api/resources/signinfrequencysessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--sign_in_frequency))
@@ -338,6 +362,15 @@ Read-Only:
 Read-Only:
 
 - `mode` (String) Specifies continuous access evaluation settings. The Use the `Prefer: include-unknown-enum-members` request header to get the following value(s) in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `strictLocation`. / Possible values are: `strictEnforcement`, `disabled`, `unknownFutureValue`, `strictLocation`
+
+
+<a id="nestedatt--session_controls--global_secure_access_filtering_profile"></a>
+### Nested Schema for `session_controls.global_secure_access_filtering_profile`
+
+Read-Only:
+
+- `is_enabled` (Boolean) Specifies whether the session control is enabled.
+- `profile_id` (String) Specifies the distinct identifier that is assigned to the security profile or filtering profile.
 
 
 <a id="nestedatt--session_controls--persistent_browser"></a>

@@ -45,14 +45,16 @@ var conditionalAccessPolicyResourceSchemaValidators = []resource.ConfigValidator
 
 var conditionalAccessPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // conditionalAccessPolicy
-		"id": schema.StringAttribute{
-			Computed:            true,
-			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "Specifies the identifier of a conditionalAccessPolicy object. Read-only.",
-		},
 		"conditions": schema.SingleNestedAttribute{
 			Required: true,
 			Attributes: map[string]schema.Attribute{ // conditionalAccessConditionSet
+				"agent_id_risk_levels": schema.StringAttribute{
+					Optional: true,
+					Validators: []validator.String{
+						wpvalidator.FlagEnumValues("low", "medium", "high", "unknownFutureValue"),
+					},
+					MarkdownDescription: "Agent identity risk levels included in the policy. This enumeration is multivalued. / Possible values are: `low`, `medium`, `high`, `unknownFutureValue`",
+				},
 				"applications": schema.SingleNestedAttribute{
 					Optional: true,
 					Attributes: map[string]schema.Attribute{ // conditionalAccessApplications
@@ -78,6 +80,12 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Computed:            true,
 							MarkdownDescription: "Can be one of the following: <li> The list of client IDs (**appId**) explicitly excluded from the policy.<li> `Office365` - For the list of apps included in `Office365`, see [Apps included in Conditional Access Office 365 app suite](/entra/identity/conditional-access/reference-office-365-application-contents) <li> `MicrosoftAdminPortals` - For more information, see [Conditional Access Target resources: Microsoft Admin Portals](/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals). The _provider_ default value is `[]`.",
 						},
+						"global_secure_access": schema.SingleNestedAttribute{
+							Optional:   true,
+							Attributes: map[string]schema.Attribute{ // conditionalAccessGlobalSecureAccess
+							},
+							MarkdownDescription: "Represents traffic profile for Global Secure Access. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessglobalsecureaccess?view=graph-rest-beta",
+						},
 						"include_applications": schema.SetAttribute{
 							ElementType:         types.StringType,
 							Optional:            true,
@@ -99,6 +107,12 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Computed:            true,
 							MarkdownDescription: "User actions to include. Supported values are `urn:user:registersecurityinfo` and `urn:user:registerdevice`. The _provider_ default value is `[]`.",
 						},
+						"network_access": schema.SingleNestedAttribute{
+							Optional:   true,
+							Attributes: map[string]schema.Attribute{ // conditionalAccessNetworkAccess
+							},
+							MarkdownDescription: "Represents traffic profile for Global Secure Access. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessnetworkaccess?view=graph-rest-beta",
+						},
 					},
 					MarkdownDescription: "Applications and user actions included in and excluded from the policy. Required. / Represents the applications and user actions included in and excluded from the conditional access policy. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessapplications?view=graph-rest-beta",
 				},
@@ -118,6 +132,28 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 				"client_applications": schema.SingleNestedAttribute{
 					Optional: true,
 					Attributes: map[string]schema.Attribute{ // conditionalAccessClientApplications
+						"agent_id_service_principal_filter": schema.SingleNestedAttribute{
+							Optional: true,
+							Attributes: map[string]schema.Attribute{ // conditionalAccessFilter
+								"mode": schema.StringAttribute{
+									Required:            true,
+									Validators:          []validator.String{stringvalidator.OneOf("include", "exclude")},
+									MarkdownDescription: "Mode to use for the filter. Possible values are `include` or `exclude`. / Possible values are: `include`, `exclude`",
+								},
+								"rule": schema.StringAttribute{
+									Required:            true,
+									MarkdownDescription: "Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)",
+								},
+							},
+							MarkdownDescription: "Filter that defines rules based on custom security attribute tags to include/exclude agent identities in the policy. / Represents filter in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta",
+						},
+						"exclude_agent_id_service_principals": schema.SetAttribute{
+							ElementType:         types.StringType,
+							Optional:            true,
+							PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+							Computed:            true,
+							MarkdownDescription: "Agent identity object IDs excluded from the policy. The _provider_ default value is `[]`.",
+						},
 						"exclude_service_principals": schema.SetAttribute{
 							ElementType:         types.StringType,
 							Optional:            true,
@@ -125,12 +161,19 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Computed:            true,
 							MarkdownDescription: "Service principal IDs excluded from the policy scope. The _provider_ default value is `[]`.",
 						},
+						"include_agent_id_service_principals": schema.SetAttribute{
+							ElementType:         types.StringType,
+							Optional:            true,
+							PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+							Computed:            true,
+							MarkdownDescription: "Agent identity object IDs included in the policy. The _provider_ default value is `[]`.",
+						},
 						"include_service_principals": schema.SetAttribute{
 							ElementType:         types.StringType,
 							Optional:            true,
 							PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 							Computed:            true,
-							MarkdownDescription: "Service principal IDs included in the policy scope, or `ServicePrincipalsInMyTenant`. The _provider_ default value is `[]`.",
+							MarkdownDescription: "Service principal IDs included in the policy scope or `ServicePrincipalsInMyTenant`. The _provider_ default value is `[]`.",
 						},
 						"service_principal_filter": schema.SingleNestedAttribute{
 							Optional: true,
@@ -256,7 +299,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							MarkdownDescription: "Location IDs in scope of policy unless explicitly excluded, `All`, or `AllTrusted`. The _provider_ default value is `[]`.",
 						},
 					},
-					MarkdownDescription: "Locations included in and excluded from the policy. / Represents locations included in and excluded from the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesslocations?view=graph-rest-beta",
+					MarkdownDescription: "Locations included in and excluded from the policy. / Represents locations included in and excluded from the scope of a [conditional access policy](../resources/conditionalaccesspolicy.md). Locations can be [countries and regions](../resources/countrynamedlocation.md) or [IP addresses](../resources/ipnamedlocation.md). / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesslocations?view=graph-rest-beta",
 				},
 				"platforms": schema.SingleNestedAttribute{
 					Optional: true,
@@ -503,12 +546,12 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 					Optional:    true,
 					Validators: []validator.Set{
 						setvalidator.ValueStringsAre(
-							stringvalidator.OneOf("block", "mfa", "compliantDevice", "domainJoinedDevice", "approvedApplication", "compliantApplication", "passwordChange", "unknownFutureValue"),
+							stringvalidator.OneOf("block", "mfa", "compliantDevice", "domainJoinedDevice", "approvedApplication", "compliantApplication", "passwordChange", "unknownFutureValue", "riskRemediation"),
 						),
 					},
 					PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "List of values of built-in controls required by the policy. Possible values: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`. / Possible values are: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`. The _provider_ default value is `[]`.",
+					MarkdownDescription: "List of values of built-in controls required by the policy. Possible values: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`. / Possible values are: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`, `riskRemediation`. The _provider_ default value is `[]`.",
 				},
 				"custom_authentication_factors": schema.SetAttribute{
 					ElementType:         types.StringType,
@@ -541,11 +584,11 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Computed:    true,
 							Validators: []validator.Set{
 								setvalidator.ValueStringsAre(
-									wpvalidator.FlagEnumValues("password", "voice", "hardwareOath", "softwareOath", "sms", "fido2", "windowsHelloForBusiness", "microsoftAuthenticatorPush", "deviceBasedPush", "temporaryAccessPassOneTime", "temporaryAccessPassMultiUse", "email", "x509CertificateSingleFactor", "x509CertificateMultiFactor", "federatedSingleFactor", "federatedMultiFactor", "unknownFutureValue"),
+									wpvalidator.FlagEnumValues("password", "voice", "hardwareOath", "softwareOath", "sms", "fido2", "windowsHelloForBusiness", "microsoftAuthenticatorPush", "deviceBasedPush", "temporaryAccessPassOneTime", "temporaryAccessPassMultiUse", "email", "x509CertificateSingleFactor", "x509CertificateMultiFactor", "federatedSingleFactor", "federatedMultiFactor", "unknownFutureValue", "qrCodePin"),
 								),
 							},
 							PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
-							MarkdownDescription: "A collection of authentication method modes that are required be used to satify this authentication strength. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`",
+							MarkdownDescription: "A collection of authentication method modes that are required be used to satify this authentication strength. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`",
 						},
 						"created_date_time": schema.StringAttribute{
 							Computed:            true,
@@ -588,6 +631,11 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 				},
 			},
 			MarkdownDescription: "Specifies the grant controls that must be fulfilled to pass the policy. / Represents grant controls that must be fulfilled to pass the policy. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessgrantcontrols?view=graph-rest-beta",
+		},
+		"id": schema.StringAttribute{
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "Specifies the identifier of a conditionalAccessPolicy object. Read-only.",
 		},
 		"session_controls": schema.SingleNestedAttribute{
 			Optional: true,
@@ -640,6 +688,22 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
 					Computed:            true,
 					MarkdownDescription: "Session control that determines whether it's acceptable for Microsoft Entra ID to extend existing sessions based on information collected prior to an outage or not. The _provider_ default value is `false`.",
+				},
+				"global_secure_access_filtering_profile": schema.SingleNestedAttribute{
+					Optional: true,
+					Attributes: map[string]schema.Attribute{ // globalSecureAccessFilteringProfileSessionControl
+						"is_enabled": schema.BoolAttribute{
+							Optional:            true,
+							MarkdownDescription: "Specifies whether the session control is enabled.",
+						},
+						"profile_id": schema.StringAttribute{
+							Optional:            true,
+							PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+							Computed:            true,
+							MarkdownDescription: "Specifies the distinct identifier that is assigned to the security profile or filtering profile. The _provider_ default value is `\"\"`.",
+						},
+					},
+					MarkdownDescription: "Session control to link to Global Secure Access security profiles or filtering profiles. / Session control to link to a Global Secure Access security profile or filtering profile. / https://learn.microsoft.com/en-us/graph/api/resources/globalsecureaccessfilteringprofilesessioncontrol?view=graph-rest-beta",
 				},
 				"persistent_browser": schema.SingleNestedAttribute{
 					Optional: true,

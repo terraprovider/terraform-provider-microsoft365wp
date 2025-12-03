@@ -1,6 +1,13 @@
 # `microsoft365wp` Terraform Provider Changelog
 
 
+## 0.17.4 (2025-12-03)
+
+### changed
+
+- conditional_access_policy: update
+
+
 ## 0.17.3 (2025-12-02)
 
 ### added
