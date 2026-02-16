@@ -5,7 +5,7 @@ subcategory: "MS Graph: Conditional access"
 
 # microsoft365wp_authentication_context_class_reference (Resource)
 
-Represents a Microsoft Entra authentication context class reference. Authentication context class references are custom values that define a Conditional Access authentication requirement. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationcontextclassreference?view=graph-rest-beta
+Represents a Microsoft Entra authentication context class reference. Authentication context class references are custom values that define a Conditional Access authentication requirement. For more information, see [Developer guide to Conditional Access authentication context](https://learn.microsoft.com/en-us/entra/identity-platform/developer-guide-conditional-access-authentication-context). <br/> Also see [Microsoft docs for authenticationContextClassReference](https://learn.microsoft.com/en-us/graph/api/resources/authenticationcontextclassreference?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -49,5 +49,5 @@ resource "microsoft365wp_authentication_context_class_reference" "test" {
 
 ### Optional
 
-- `description` (String) A short explanation of the policies that are enforced by authenticationContextClassReference. This value should be used to provide secondary text to describe the authentication context class reference when building user facing admin experiences. For example, selection UX. The _provider_ default value is `""`.
-- `is_available` (Boolean) Indicates whether the authenticationContextClassReference has been published by the security admin and is ready for use by apps. When it's set to `false`, it shouldn't be shown in selection UX used to tag resources with authentication context class values. It will still be shown in the Conditional Access policy authoring experience. <br/> Supports `$filter` (`eq`). The _provider_ default value is `false`.
+- `description` (String) A short explanation of the policies that are enforced by authenticationContextClassReference. This value should be used to provide secondary text to describe the authentication context class reference when building user facing admin experiences. For example, selection UX. <br/> The _provider_ default value is `""`.
+- `is_available` (Boolean) Indicates whether the authenticationContextClassReference has been published by the security admin and is ready for use by apps. When it's set to `false`, it shouldn't be shown in selection UX used to tag resources with authentication context class values. It will still be shown in the Conditional Access policy authoring experience. <br/> Supports `$filter` (`eq`). <br/> The _provider_ default value is `false`.

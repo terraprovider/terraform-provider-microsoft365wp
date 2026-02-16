@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
@@ -63,7 +63,7 @@ var unifiedRoleDefinitionResourceSchema = schema.Schema{
 				wpvalidator.FlagEnumValues("user", "servicePrincipal", "group", "unknownFutureValue"),
 			},
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "Types of principals that can be assigned the role. Read-only. The This is a multi-valued enumeration that can contain up to three values as a comma-separated string. For example, `user, group`. Supports `$filter` (`eq`). / Possible values are: `user`, `servicePrincipal`, `group`, `unknownFutureValue`",
+			MarkdownDescription: "Types of principals that can be assigned the role. Read-only. This is a multi-valued enumeration that can contain up to three values as a comma-separated string. For example, `user, group`. Supports `$filter` (`eq`). <br/> _Provider_ allowed values are: `user`, `servicePrincipal`, `group`, `unknownFutureValue`.",
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
@@ -84,9 +84,9 @@ var unifiedRoleDefinitionResourceSchema = schema.Schema{
 		},
 		"is_privileged": schema.BoolAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 			Computed:            true,
-			MarkdownDescription: "Flag indicating if the role is privileged. Microsoft Entra ID defines a role as privileged if it contains at least one sensitive resource action in the **rolePermissions** and **allowedResourceActions** objects. Applies only for actions in the `microsoft.directory` resource namespace. Read-only. Supports `$filter` (`eq`). The _provider_ default value is `false`.",
+			MarkdownDescription: "Flag indicating if the role is privileged. Microsoft Entra ID defines a role as privileged if it contains at least one sensitive resource action in the **rolePermissions** and **allowedResourceActions** objects. Applies only for actions in the `microsoft.directory` resource namespace. Read-only. Supports `$filter` (`eq`). <br/> The _provider_ default value is `false`.",
 		},
 		"role_permissions": schema.SetNestedAttribute{
 			Required: true,
@@ -104,7 +104,7 @@ var unifiedRoleDefinitionResourceSchema = schema.Schema{
 					},
 				},
 			},
-			MarkdownDescription: "List of permissions included in the role. Read-only when **isBuiltIn** is `true`. Required. / Represents a collection of allowed resource actions and the conditions that must be met for the action to be effective. Resource actions are tasks that can be performed on a resource. For example, the application resource supports create, update, delete, and reset password resource actions. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolepermission?view=graph-rest-beta",
+			MarkdownDescription: "List of permissions included in the role. Read-only when **isBuiltIn** is `true`. Required. / Represents a collection of allowed resource actions and the conditions that must be met for the action to be effective. Resource actions are tasks that can be performed on a resource. For example, the application resource supports create, update, delete, and reset password resource actions. Also see [Microsoft docs for unifiedRolePermission](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolepermission?view=graph-rest-beta). <br> ",
 		},
 		"template_id": schema.StringAttribute{
 			Computed: true,
@@ -131,8 +131,8 @@ var unifiedRoleDefinitionResourceSchema = schema.Schema{
 				},
 			},
 			PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
-			MarkdownDescription: "Read-only collection of role definitions that the given role definition inherits from. Only Microsoft Entra built-in roles support this attribute.",
+			MarkdownDescription: "Read-only collection of role definitions that the given role definition inherits from. Only Microsoft Entra built-in roles support this attribute. <br> ",
 		},
 	},
-	MarkdownDescription: "Represents a collection of permissions listing the operations, such as read, write, and delete, that can be performed by an RBAC provider, as part of Microsoft 365 RBAC [role management](rolemanagement.md).\n\nThe following RBAC providers are currently supported: / https://learn.microsoft.com/en-us/graph/api/resources/unifiedroledefinition?view=graph-rest-beta ||| MS Graph: Role management",
+	MarkdownDescription: "Represents a collection of permissions listing the operations, such as read, write, and delete, that can be performed by an RBAC provider, as part of Microsoft 365 RBAC [role management](rolemanagement.md).\n\nThe following RBAC providers are currently supported:\n\nAlso see [Microsoft docs for unifiedRoleDefinition](https://learn.microsoft.com/en-us/graph/api/resources/unifiedroledefinition?view=graph-rest-beta). ||| MS Graph: Role management",
 }

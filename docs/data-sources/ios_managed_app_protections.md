@@ -5,7 +5,7 @@ subcategory: "MS Graph: App management"
 
 # microsoft365wp_ios_managed_app_protections (Data Source)
 
-Policy used to configure detailed management settings targeted to specific security groups and for a specified set of apps on an iOS device / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-iosmanagedappprotection?view=graph-rest-beta
+Policy used to configure detailed management settings targeted to specific security groups and for a specified set of apps on an iOS device <br/> Also see [Microsoft docs for iosManagedAppProtection](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-iosmanagedappprotection?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -82,5 +82,5 @@ Read-Only:
 - `display_name` (String) Policy display name.
 - `id` (String) Key of the entity.
 - `last_modified_date_time` (String) Last time the policy was modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>
 - `version` (String) Version of the entity.

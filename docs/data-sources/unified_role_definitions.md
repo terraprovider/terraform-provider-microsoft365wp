@@ -7,7 +7,9 @@ subcategory: "MS Graph: Role management"
 
 Represents a collection of permissions listing the operations, such as read, write, and delete, that can be performed by an RBAC provider, as part of Microsoft 365 RBAC [role management](rolemanagement.md).
 
-The following RBAC providers are currently supported: / https://learn.microsoft.com/en-us/graph/api/resources/unifiedroledefinition?view=graph-rest-beta
+The following RBAC providers are currently supported:
+
+Also see [Microsoft docs for unifiedRoleDefinition](https://learn.microsoft.com/en-us/graph/api/resources/unifiedroledefinition?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -80,10 +82,10 @@ output "microsoft365wp_unified_role_definitions" {
 
 Read-Only:
 
-- `allowed_principal_types` (String) Types of principals that can be assigned the role. The This is a multi-valued enumeration that can contain up to three values as a comma-separated string. For example, `user, group`. Supports `$filter` (`eq`). / Possible values are: `user`, `servicePrincipal`, `group`, `unknownFutureValue`
+- `allowed_principal_types` (String) Types of principals that can be assigned the role. This is a multi-valued enumeration that can contain up to three values as a comma-separated string. For example, `user, group`. Supports `$filter` (`eq`). <br/> _Provider_ allowed values are: `user`, `servicePrincipal`, `group`, `unknownFutureValue`.
 - `display_name` (String) The display name for the unifiedRoleDefinition. Read-only when **isBuiltIn** is `true`. Required.  Supports `$filter` (`eq` and `startsWith`).
 - `id` (String) The unique identifier for the unifiedRoleDefinition. Key, not nullable,  Supports `$filter` (`eq` operator only).
 - `is_built_in` (Boolean) Flag indicating if the unifiedRoleDefinition is part of the default set included with the product or custom.  Supports `$filter` (`eq`).
 - `is_enabled` (Boolean) Flag indicating if the role is enabled for assignment. If false the role is not available for assignment. Read-only when **isBuiltIn** is `true`.
-- `is_privileged` (Boolean) Flag indicating if the role is privileged. Microsoft Entra ID defines a role as privileged if it contains at least one sensitive resource action in the **rolePermissions** and **allowedResourceActions** objects. Applies only for actions in the `microsoft.directory` resource namespace. Supports `$filter` (`eq`).
+- `is_privileged` (Boolean) Flag indicating if the role is privileged. Microsoft Entra ID defines a role as privileged if it contains at least one sensitive resource action in the **rolePermissions** and **allowedResourceActions** objects. Applies only for actions in the `microsoft.directory` resource namespace. Supports `$filter` (`eq`). <br/>
 - `version` (String) Indicates the version of the unifiedRoleDefinition object. Read-only when **isBuiltIn** is `true`.

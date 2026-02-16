@@ -5,7 +5,7 @@ subcategory: "MS Graph: Onboarding"
 
 # microsoft365wp_device_enrollment_configuration (Resource)
 
-The Base Class of Device Enrollment Configuration / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceenrollmentconfiguration?view=graph-rest-beta
+The Base Class of Device Enrollment Configuration <br/> Also see [Microsoft docs for deviceEnrollmentConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceenrollmentconfiguration?view=graph-rest-beta).
 
 ## Provider Notes
 
@@ -162,15 +162,15 @@ resource "microsoft365wp_device_enrollment_configuration" "windows_hello_for_bus
 ### Optional
 
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
-- `description` (String) The description of the device enrollment configuration. The _provider_ default value is `""`.
-- `device_enrollment_limit` (Attributes) Device Enrollment Configuration that restricts the number of devices a user can enroll / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentlimitconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--device_enrollment_limit))
+- `description` (String) The description of the device enrollment configuration <br/> The _provider_ default value is `""`.
+- `device_enrollment_limit` (Attributes) Device Enrollment Configuration that restricts the number of devices a user can enroll. Also see [Microsoft docs for deviceEnrollmentLimitConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentlimitconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--device_enrollment_limit))
 - `display_name` (String) The display name of the device enrollment configuration
-- `platform_restrictions` (Attributes) Default Device Enrollment Platform Restrictions Configuration that restricts the types of devices a user can enroll / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestrictionsconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--platform_restrictions))
+- `platform_restrictions` (Attributes) Default Device Enrollment Platform Restrictions Configuration that restricts the types of devices a user can enroll. Also see [Microsoft docs for deviceEnrollmentPlatformRestrictionsConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestrictionsconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--platform_restrictions))
 - `priority` (Number) Priority is used when a user exists in multiple groups that are assigned enrollment configuration. Users are subject only to the configuration with the lowest priority value.
-- `role_scope_tag_ids` (Set of String) . The _provider_ default value is `["0"]`.
-- `single_platform_restriction` (Attributes) Device Enrollment Configuration that restricts the types of devices a user can enroll for a single platform / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestrictionconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--single_platform_restriction))
-- `windows10_esp` (Attributes) Windows 10 Enrollment Status Page Configuration / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-windows10enrollmentcompletionpageconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10_esp))
-- `windows_hello_for_business` (Attributes) Windows Hello for Business settings lets users access their devices using a gesture, such as biometric authentication, or a PIN. Configure settings for enrolled Windows 10, Windows 10 Mobile and later. / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentwindowshelloforbusinessconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows_hello_for_business))
+- `role_scope_tag_ids` (Set of String) The _provider_ default value is `["0"]`.
+- `single_platform_restriction` (Attributes) Device Enrollment Configuration that restricts the types of devices a user can enroll for a single platform. Also see [Microsoft docs for deviceEnrollmentPlatformRestrictionConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestrictionconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--single_platform_restriction))
+- `windows10_esp` (Attributes) Windows 10 Enrollment Status Page Configuration. Also see [Microsoft docs for windows10EnrollmentCompletionPageConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-windows10enrollmentcompletionpageconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows10_esp))
+- `windows_hello_for_business` (Attributes) Windows Hello for Business settings lets users access their devices using a gesture, such as biometric authentication, or a PIN. Configure settings for enrolled Windows 10, Windows 10 Mobile and later. Also see [Microsoft docs for deviceEnrollmentWindowsHelloForBusinessConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentwindowshelloforbusinessconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows_hello_for_business))
 
 ### Read-Only
 
@@ -184,19 +184,19 @@ resource "microsoft365wp_device_enrollment_configuration" "windows_hello_for_bus
 
 Required:
 
-- `target` (Attributes) Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target))
+- `target` (Attributes) Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta). (see [below for nested schema](#nestedatt--assignments--target))
 
 <a id="nestedatt--assignments--target"></a>
 ### Nested Schema for `assignments.target`
 
 Optional:
 
-- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_devices))
-- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
-- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
+- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. Also see [Microsoft docs for allDevicesAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_devices))
+- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. Also see [Microsoft docs for allLicensedUsersAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
+- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. Also see [Microsoft docs for exclusionGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The ID of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
-- `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter. <br/> _Provider_ allowed values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
+- `group` (Attributes) Represents an assignment to a group. Also see [Microsoft docs for groupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
 ### Nested Schema for `assignments.target.all_devices`
@@ -237,23 +237,23 @@ Required:
 
 Optional:
 
-- `android_for_work_restriction` (Attributes) Indicates restrictions for Android For Work platform. / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--platform_restrictions--android_for_work_restriction))
-- `android_restriction` (Attributes) Indicates restrictions for Android platform. / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--platform_restrictions--android_restriction))
-- `ios_restriction` (Attributes) Indicates restrictions for IOS platform. / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--platform_restrictions--ios_restriction))
-- `macos_restriction` (Attributes) Indicates restrictions for MacOS platform. / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--platform_restrictions--macos_restriction))
-- `windows_restriction` (Attributes) Indicates restrictions for Windows platform. / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--platform_restrictions--windows_restriction))
+- `android_for_work_restriction` (Attributes) Indicates restrictions for Android For Work platform. / Platform specific enrollment restrictions. Also see [Microsoft docs for deviceEnrollmentPlatformRestriction](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--platform_restrictions--android_for_work_restriction))
+- `android_restriction` (Attributes) Indicates restrictions for Android platform. / Platform specific enrollment restrictions. Also see [Microsoft docs for deviceEnrollmentPlatformRestriction](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--platform_restrictions--android_restriction))
+- `ios_restriction` (Attributes) Indicates restrictions for IOS platform. / Platform specific enrollment restrictions. Also see [Microsoft docs for deviceEnrollmentPlatformRestriction](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--platform_restrictions--ios_restriction))
+- `macos_restriction` (Attributes) Indicates restrictions for MacOS platform. / Platform specific enrollment restrictions. Also see [Microsoft docs for deviceEnrollmentPlatformRestriction](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--platform_restrictions--macos_restriction))
+- `windows_restriction` (Attributes) Indicates restrictions for Windows platform. / Platform specific enrollment restrictions. Also see [Microsoft docs for deviceEnrollmentPlatformRestriction](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--platform_restrictions--windows_restriction))
 
 <a id="nestedatt--platform_restrictions--android_for_work_restriction"></a>
 ### Nested Schema for `platform_restrictions.android_for_work_restriction`
 
 Optional:
 
-- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. The _provider_ default value is `[]`.
-- `blocked_skus` (Set of String) Collection of blocked Skus. The _provider_ default value is `[]`.
-- `os_maximum_version` (String) Max OS version supported. The _provider_ default value is `""`.
-- `os_minimum_version` (String) Min OS version supported. The _provider_ default value is `""`.
-- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling. The _provider_ default value is `false`.
-- `platform_blocked` (Boolean) Block the platform from enrolling. The _provider_ default value is `false`.
+- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. <br/> The _provider_ default value is `[]`.
+- `blocked_skus` (Set of String) Collection of blocked Skus. <br/> The _provider_ default value is `[]`.
+- `os_maximum_version` (String) Max OS version supported <br/> The _provider_ default value is `""`.
+- `os_minimum_version` (String) Min OS version supported <br/> The _provider_ default value is `""`.
+- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling <br/> The _provider_ default value is `false`.
+- `platform_blocked` (Boolean) Block the platform from enrolling <br/> The _provider_ default value is `false`.
 
 
 <a id="nestedatt--platform_restrictions--android_restriction"></a>
@@ -261,12 +261,12 @@ Optional:
 
 Optional:
 
-- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. The _provider_ default value is `[]`.
-- `blocked_skus` (Set of String) Collection of blocked Skus. The _provider_ default value is `[]`.
-- `os_maximum_version` (String) Max OS version supported. The _provider_ default value is `""`.
-- `os_minimum_version` (String) Min OS version supported. The _provider_ default value is `""`.
-- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling. The _provider_ default value is `false`.
-- `platform_blocked` (Boolean) Block the platform from enrolling. The _provider_ default value is `false`.
+- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. <br/> The _provider_ default value is `[]`.
+- `blocked_skus` (Set of String) Collection of blocked Skus. <br/> The _provider_ default value is `[]`.
+- `os_maximum_version` (String) Max OS version supported <br/> The _provider_ default value is `""`.
+- `os_minimum_version` (String) Min OS version supported <br/> The _provider_ default value is `""`.
+- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling <br/> The _provider_ default value is `false`.
+- `platform_blocked` (Boolean) Block the platform from enrolling <br/> The _provider_ default value is `false`.
 
 
 <a id="nestedatt--platform_restrictions--ios_restriction"></a>
@@ -274,12 +274,12 @@ Optional:
 
 Optional:
 
-- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. The _provider_ default value is `[]`.
-- `blocked_skus` (Set of String) Collection of blocked Skus. The _provider_ default value is `[]`.
-- `os_maximum_version` (String) Max OS version supported. The _provider_ default value is `""`.
-- `os_minimum_version` (String) Min OS version supported. The _provider_ default value is `""`.
-- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling. The _provider_ default value is `false`.
-- `platform_blocked` (Boolean) Block the platform from enrolling. The _provider_ default value is `false`.
+- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. <br/> The _provider_ default value is `[]`.
+- `blocked_skus` (Set of String) Collection of blocked Skus. <br/> The _provider_ default value is `[]`.
+- `os_maximum_version` (String) Max OS version supported <br/> The _provider_ default value is `""`.
+- `os_minimum_version` (String) Min OS version supported <br/> The _provider_ default value is `""`.
+- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling <br/> The _provider_ default value is `false`.
+- `platform_blocked` (Boolean) Block the platform from enrolling <br/> The _provider_ default value is `false`.
 
 
 <a id="nestedatt--platform_restrictions--macos_restriction"></a>
@@ -287,12 +287,12 @@ Optional:
 
 Optional:
 
-- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. The _provider_ default value is `[]`.
-- `blocked_skus` (Set of String) Collection of blocked Skus. The _provider_ default value is `[]`.
-- `os_maximum_version` (String) Max OS version supported. The _provider_ default value is `""`.
-- `os_minimum_version` (String) Min OS version supported. The _provider_ default value is `""`.
-- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling. The _provider_ default value is `false`.
-- `platform_blocked` (Boolean) Block the platform from enrolling. The _provider_ default value is `false`.
+- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. <br/> The _provider_ default value is `[]`.
+- `blocked_skus` (Set of String) Collection of blocked Skus. <br/> The _provider_ default value is `[]`.
+- `os_maximum_version` (String) Max OS version supported <br/> The _provider_ default value is `""`.
+- `os_minimum_version` (String) Min OS version supported <br/> The _provider_ default value is `""`.
+- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling <br/> The _provider_ default value is `false`.
+- `platform_blocked` (Boolean) Block the platform from enrolling <br/> The _provider_ default value is `false`.
 
 
 <a id="nestedatt--platform_restrictions--windows_restriction"></a>
@@ -300,12 +300,12 @@ Optional:
 
 Optional:
 
-- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. The _provider_ default value is `[]`.
-- `blocked_skus` (Set of String) Collection of blocked Skus. The _provider_ default value is `[]`.
-- `os_maximum_version` (String) Max OS version supported. The _provider_ default value is `""`.
-- `os_minimum_version` (String) Min OS version supported. The _provider_ default value is `""`.
-- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling. The _provider_ default value is `false`.
-- `platform_blocked` (Boolean) Block the platform from enrolling. The _provider_ default value is `false`.
+- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. <br/> The _provider_ default value is `[]`.
+- `blocked_skus` (Set of String) Collection of blocked Skus. <br/> The _provider_ default value is `[]`.
+- `os_maximum_version` (String) Max OS version supported <br/> The _provider_ default value is `""`.
+- `os_minimum_version` (String) Min OS version supported <br/> The _provider_ default value is `""`.
+- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling <br/> The _provider_ default value is `false`.
+- `platform_blocked` (Boolean) Block the platform from enrolling <br/> The _provider_ default value is `false`.
 
 
 
@@ -314,20 +314,20 @@ Optional:
 
 Required:
 
-- `platform_restriction` (Attributes) Restrictions based on platform, platform operating system version, and device ownership / Platform specific enrollment restrictions / https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta (see [below for nested schema](#nestedatt--single_platform_restriction--platform_restriction))
-- `platform_type` (String) Type of platform for which this restriction applies. / This enum indicates the platform type for which the enrollment restriction applies; possible values are: `allPlatforms` (Indicates that the enrollment configuration applies to all platforms), `ios` (Indicates that the enrollment configuration applies only to iOS/iPadOS devices), `windows` (Indicates that the enrollment configuration applies only to Windows devices), `windowsPhone` (Indicates that the enrollment configuration applies only to Windows Phone devices), `android` (Indicates that the enrollment configuration applies only to Android devices), `androidForWork` (Indicates that the enrollment configuration applies only to Android for Work devices), `mac` (Indicates that the enrollment configuration applies only to macOS devices), `linux` (Indicates that the enrollment configuration applies only to Linux devices), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use)
+- `platform_restriction` (Attributes) Restrictions based on platform, platform operating system version, and device ownership / Platform specific enrollment restrictions. Also see [Microsoft docs for deviceEnrollmentPlatformRestriction](https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-deviceenrollmentplatformrestriction?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--single_platform_restriction--platform_restriction))
+- `platform_type` (String) Type of platform for which this restriction applies. / This enum indicates the platform type for which the enrollment restriction applies. <br/> _Provider_ allowed values are: `allPlatforms` (Indicates that the enrollment configuration applies to all platforms), `ios` (Indicates that the enrollment configuration applies only to iOS/iPadOS devices), `windows` (Indicates that the enrollment configuration applies only to Windows devices), `windowsPhone` (Indicates that the enrollment configuration applies only to Windows Phone devices), `android` (Indicates that the enrollment configuration applies only to Android devices), `androidForWork` (Indicates that the enrollment configuration applies only to Android for Work devices), `mac` (Indicates that the enrollment configuration applies only to macOS devices), `linux` (Indicates that the enrollment configuration applies only to Linux devices), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use).
 
 <a id="nestedatt--single_platform_restriction--platform_restriction"></a>
 ### Nested Schema for `single_platform_restriction.platform_restriction`
 
 Optional:
 
-- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. The _provider_ default value is `[]`.
-- `blocked_skus` (Set of String) Collection of blocked Skus. The _provider_ default value is `[]`.
-- `os_maximum_version` (String) Max OS version supported. The _provider_ default value is `""`.
-- `os_minimum_version` (String) Min OS version supported. The _provider_ default value is `""`.
-- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling. The _provider_ default value is `false`.
-- `platform_blocked` (Boolean) Block the platform from enrolling. The _provider_ default value is `false`.
+- `blocked_manufacturers` (Set of String) Collection of blocked Manufacturers. <br/> The _provider_ default value is `[]`.
+- `blocked_skus` (Set of String) Collection of blocked Skus. <br/> The _provider_ default value is `[]`.
+- `os_maximum_version` (String) Max OS version supported <br/> The _provider_ default value is `""`.
+- `os_minimum_version` (String) Min OS version supported <br/> The _provider_ default value is `""`.
+- `personal_device_enrollment_blocked` (Boolean) Block personally owned devices from enrolling <br/> The _provider_ default value is `false`.
+- `platform_blocked` (Boolean) Block the platform from enrolling <br/> The _provider_ default value is `false`.
 
 
 
@@ -336,16 +336,16 @@ Optional:
 
 Optional:
 
-- `allow_device_reset_on_install_failure` (Boolean) When TRUE, allows device reset on installation failure. When false, reset is blocked. The default is false. The _provider_ default value is `false`.
-- `allow_device_use_on_install_failure` (Boolean) When TRUE, allows the user to continue using the device on installation failure. When false, blocks the user on installation failure. The default is false. The _provider_ default value is `false`.
-- `allow_log_collection_on_install_failure` (Boolean) When TRUE, allows log collection on installation failure. When false, log collection is not allowed. The default is false. The _provider_ default value is `true`.
-- `block_device_setup_retry_by_user` (Boolean) When TRUE, blocks user from retrying the setup on installation failure. When false, user is allowed to retry. The default is false. The _provider_ default value is `false`.
-- `custom_error_message` (String) The custom error message to show upon installation failure. Max length is 10000. example: "Setup could not be completed. Please try again or contact your support person for help.". The _provider_ default value is `"Setup could not be completed. Please try again or contact your support person for help."`.
-- `disable_user_status_tracking_after_first_user` (Boolean) When TRUE, disables showing installation progress for first user post enrollment. When false, enables showing progress. The default is false. The _provider_ default value is `true`.
-- `install_progress_timeout_in_minutes` (Number) The installation progress timeout in minutes. Default is 60 minutes. The _provider_ default value is `60`.
-- `selected_mobile_app_ids` (Set of String) Selected applications to track the installation status. It is in the form of an array of GUIDs. The _provider_ default value is `[]`.
-- `show_installation_progress` (Boolean) When TRUE, shows installation progress to user. When false, hides installation progress. The default is false. The _provider_ default value is `true`.
-- `track_install_progress_for_autopilot_only` (Boolean) When TRUE, installation progress is tracked for only Autopilot enrollment scenarios. When false, other scenarios are tracked as well. The default is false. The _provider_ default value is `true`.
+- `allow_device_reset_on_install_failure` (Boolean) When TRUE, allows device reset on installation failure. When false, reset is blocked. The default is false. <br/> The _provider_ default value is `false`.
+- `allow_device_use_on_install_failure` (Boolean) When TRUE, allows the user to continue using the device on installation failure. When false, blocks the user on installation failure. The default is false. <br/> The _provider_ default value is `false`.
+- `allow_log_collection_on_install_failure` (Boolean) When TRUE, allows log collection on installation failure. When false, log collection is not allowed. The default is false. <br/> The _provider_ default value is `true`.
+- `block_device_setup_retry_by_user` (Boolean) When TRUE, blocks user from retrying the setup on installation failure. When false, user is allowed to retry. The default is false. <br/> The _provider_ default value is `false`.
+- `custom_error_message` (String) The custom error message to show upon installation failure. Max length is 10000. example: "Setup could not be completed. Please try again or contact your support person for help." <br/> The _provider_ default value is `"Setup could not be completed. Please try again or contact your support person for help."`.
+- `disable_user_status_tracking_after_first_user` (Boolean) When TRUE, disables showing installation progress for first user post enrollment. When false, enables showing progress. The default is false. <br/> The _provider_ default value is `true`.
+- `install_progress_timeout_in_minutes` (Number) The installation progress timeout in minutes. Default is 60 minutes. <br/> The _provider_ default value is `60`.
+- `selected_mobile_app_ids` (Set of String) Selected applications to track the installation status. It is in the form of an array of GUIDs. <br/> The _provider_ default value is `[]`.
+- `show_installation_progress` (Boolean) When TRUE, shows installation progress to user. When false, hides installation progress. The default is false. <br/> The _provider_ default value is `true`.
+- `track_install_progress_for_autopilot_only` (Boolean) When TRUE, installation progress is tracked for only Autopilot enrollment scenarios. When false, other scenarios are tracked as well. The default is false. <br/> The _provider_ default value is `true`.
 
 
 <a id="nestedatt--windows_hello_for_business"></a>
@@ -353,17 +353,17 @@ Optional:
 
 Optional:
 
-- `enhanced_biometrics_state` (String) Controls the ability to use the anti-spoofing features for facial recognition on devices which support it. If set to disabled, anti-spoofing features are not allowed. If set to Not Configured, the user can choose whether they want to use anti-spoofing. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `"notConfigured"`.
-- `enhanced_sign_in_security` (Number) Setting to configure Enhanced sign-in security. Default is Not Configured. The _provider_ default value is `0`.
-- `pin_expiration_in_days` (Number) Controls the period of time (in days) that a PIN can be used before the system requires the user to change it. This must be set between 0 and 730, inclusive. If set to 0, the user's PIN will never expire. The _provider_ default value is `0`.
-- `pin_lowercase_characters_usage` (String) Controls the ability to use lowercase letters in the Windows Hello for Business PIN.  Allowed permits the use of lowercase letter(s), whereas Required ensures they are present. If set to Not Allowed, lowercase letters will not be permitted. / Windows Hello for Business pin usage options; possible values are: `allowed` (Allowed the usage of certain pin rule), `required` (Enforce the usage of certain pin rule), `disallowed` (Forbit the usage of certain pin rule). The _provider_ default value is `"disallowed"`.
-- `pin_maximum_length` (Number) Controls the maximum number of characters allowed for the Windows Hello for Business PIN. This value must be between 4 and 127, inclusive. This value must be greater than or equal to the value set for the minimum PIN. The _provider_ default value is `127`.
-- `pin_minimum_length` (Number) Controls the minimum number of characters required for the Windows Hello for Business PIN.  This value must be between 4 and 127, inclusive, and less than or equal to the value set for the maximum PIN. The _provider_ default value is `4`.
-- `pin_previous_block_count` (Number) Controls the ability to prevent users from using past PINs. This must be set between 0 and 50, inclusive, and the current PIN of the user is included in that count. If set to 0, previous PINs are not stored. PIN history is not preserved through a PIN reset. The _provider_ default value is `0`.
-- `pin_special_characters_usage` (String) Controls the ability to use special characters in the Windows Hello for Business PIN.  Allowed permits the use of special character(s), whereas Required ensures they are present. If set to Not Allowed, special character(s) will not be permitted. / Windows Hello for Business pin usage options; possible values are: `allowed` (Allowed the usage of certain pin rule), `required` (Enforce the usage of certain pin rule), `disallowed` (Forbit the usage of certain pin rule). The _provider_ default value is `"disallowed"`.
-- `pin_uppercase_characters_usage` (String) Controls the ability to use uppercase letters in the Windows Hello for Business PIN.  Allowed permits the use of uppercase letter(s), whereas Required ensures they are present. If set to Not Allowed, uppercase letters will not be permitted. / Windows Hello for Business pin usage options; possible values are: `allowed` (Allowed the usage of certain pin rule), `required` (Enforce the usage of certain pin rule), `disallowed` (Forbit the usage of certain pin rule). The _provider_ default value is `"disallowed"`.
-- `remote_passport_enabled` (Boolean) Controls the use of Remote Windows Hello for Business. Remote Windows Hello for Business provides the ability for a portable, registered device to be usable as a companion for desktop authentication. The desktop must be Azure AD joined and the companion device must have a Windows Hello for Business PIN. The _provider_ default value is `true`.
-- `security_device_required` (Boolean) Controls whether to require a Trusted Platform Module (TPM) for provisioning Windows Hello for Business. A TPM provides an additional security benefit in that data stored on it cannot be used on other devices. If set to False, all devices can provision Windows Hello for Business even if there is not a usable TPM. The _provider_ default value is `false`.
-- `security_key_for_sign_in` (String) Security key for Sign In provides the capacity for remotely turning ON/OFF Windows Hello Sercurity Keyl Not configured will honor configurations done on the clinet. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `"notConfigured"`.
-- `state` (String) Controls whether to allow the device to be configured for Windows Hello for Business. If set to disabled, the user cannot provision Windows Hello for Business except on Azure Active Directory joined mobile phones if otherwise required. If set to Not Configured, Intune will not override client defaults. / Possible values of a property; possible values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `"enabled"`.
-- `unlock_with_biometrics_enabled` (Boolean) Controls the use of biometric gestures, such as face and fingerprint, as an alternative to the Windows Hello for Business PIN.  If set to False, biometric gestures are not allowed. Users must still configure a PIN as a backup in case of failures. The _provider_ default value is `true`.
+- `enhanced_biometrics_state` (String) Controls the ability to use the anti-spoofing features for facial recognition on devices which support it. If set to disabled, anti-spoofing features are not allowed. If set to Not Configured, the user can choose whether they want to use anti-spoofing. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `"notConfigured"`.
+- `enhanced_sign_in_security` (Number) Setting to configure Enhanced sign-in security. Default is Not Configured <br/> The _provider_ default value is `0`.
+- `pin_expiration_in_days` (Number) Controls the period of time (in days) that a PIN can be used before the system requires the user to change it. This must be set between 0 and 730, inclusive. If set to 0, the user's PIN will never expire <br/> The _provider_ default value is `0`.
+- `pin_lowercase_characters_usage` (String) Controls the ability to use lowercase letters in the Windows Hello for Business PIN.  Allowed permits the use of lowercase letter(s), whereas Required ensures they are present. If set to Not Allowed, lowercase letters will not be permitted. / Windows Hello for Business pin usage options. <br/> _Provider_ allowed values are: `allowed` (Allowed the usage of certain pin rule), `required` (Enforce the usage of certain pin rule), `disallowed` (Forbit the usage of certain pin rule). The _provider_ default value is `"disallowed"`.
+- `pin_maximum_length` (Number) Controls the maximum number of characters allowed for the Windows Hello for Business PIN. This value must be between 4 and 127, inclusive. This value must be greater than or equal to the value set for the minimum PIN. <br/> The _provider_ default value is `127`.
+- `pin_minimum_length` (Number) Controls the minimum number of characters required for the Windows Hello for Business PIN.  This value must be between 4 and 127, inclusive, and less than or equal to the value set for the maximum PIN. <br/> The _provider_ default value is `4`.
+- `pin_previous_block_count` (Number) Controls the ability to prevent users from using past PINs. This must be set between 0 and 50, inclusive, and the current PIN of the user is included in that count. If set to 0, previous PINs are not stored. PIN history is not preserved through a PIN reset. <br/> The _provider_ default value is `0`.
+- `pin_special_characters_usage` (String) Controls the ability to use special characters in the Windows Hello for Business PIN.  Allowed permits the use of special character(s), whereas Required ensures they are present. If set to Not Allowed, special character(s) will not be permitted. / Windows Hello for Business pin usage options. <br/> _Provider_ allowed values are: `allowed` (Allowed the usage of certain pin rule), `required` (Enforce the usage of certain pin rule), `disallowed` (Forbit the usage of certain pin rule). The _provider_ default value is `"disallowed"`.
+- `pin_uppercase_characters_usage` (String) Controls the ability to use uppercase letters in the Windows Hello for Business PIN.  Allowed permits the use of uppercase letter(s), whereas Required ensures they are present. If set to Not Allowed, uppercase letters will not be permitted. / Windows Hello for Business pin usage options. <br/> _Provider_ allowed values are: `allowed` (Allowed the usage of certain pin rule), `required` (Enforce the usage of certain pin rule), `disallowed` (Forbit the usage of certain pin rule). The _provider_ default value is `"disallowed"`.
+- `remote_passport_enabled` (Boolean) Controls the use of Remote Windows Hello for Business. Remote Windows Hello for Business provides the ability for a portable, registered device to be usable as a companion for desktop authentication. The desktop must be Azure AD joined and the companion device must have a Windows Hello for Business PIN. <br/> The _provider_ default value is `true`.
+- `security_device_required` (Boolean) Controls whether to require a Trusted Platform Module (TPM) for provisioning Windows Hello for Business. A TPM provides an additional security benefit in that data stored on it cannot be used on other devices. If set to False, all devices can provision Windows Hello for Business even if there is not a usable TPM. <br/> The _provider_ default value is `false`.
+- `security_key_for_sign_in` (String) Security key for Sign In provides the capacity for remotely turning ON/OFF Windows Hello Sercurity Keyl Not configured will honor configurations done on the clinet. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `"notConfigured"`.
+- `state` (String) Controls whether to allow the device to be configured for Windows Hello for Business. If set to disabled, the user cannot provision Windows Hello for Business except on Azure Active Directory joined mobile phones if otherwise required. If set to Not Configured, Intune will not override client defaults. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `"enabled"`.
+- `unlock_with_biometrics_enabled` (Boolean) Controls the use of biometric gestures, such as face and fingerprint, as an alternative to the Windows Hello for Business PIN.  If set to False, biometric gestures are not allowed. Users must still configure a PIN as a backup in case of failures. <br/> The _provider_ default value is `true`.

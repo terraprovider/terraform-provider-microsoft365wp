@@ -13,7 +13,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
-func GetFwValueFromAny(ctx context.Context, diags *diag.Diagnostics, schema *rsschema.Schema, path path.Path, valueAny any) attr.Value {
+func GetFwTypedValueFromAny[T attr.Value](ctx context.Context, diags *diag.Diagnostics, schema *rsschema.Schema, path path.Path, defaultValueRaw any) T {
+
+	fwAttrValue := GetFwAttrValueFromAny(ctx, diags, schema, path, defaultValueRaw)
+	if diags.HasError() {
+		return *new(T)
+	}
+
+	fwTypedValue, ok := fwAttrValue.(T)
+	if !ok {
+		diags.AddError("GetFwTypedValueFromAny", fmt.Sprintf("defaultValuePlanModify: fwTypedValue is not %T but %T", *new(T), fwAttrValue))
+	}
+
+	return fwTypedValue
+}
+
+func GetFwAttrValueFromAny(ctx context.Context, diags *diag.Diagnostics, schema *rsschema.Schema, path path.Path, valueAny any) attr.Value {
 
 	typeFw, diags2 := schema.TypeAtPath(ctx, path)
 	diags.Append(diags2...)
@@ -21,22 +36,22 @@ func GetFwValueFromAny(ctx context.Context, diags *diag.Diagnostics, schema *rss
 		return nil
 	}
 
-	valueTf, err := getFwValueFromAnyInner(ctx, schema, path, valueAny)
+	tfValue, err := getFwAttrValueFromAnyInner(ctx, schema, path, valueAny)
 	if err != nil {
-		diags.AddError("getFwValueFromAny", fmt.Sprintf("Unable to get valueTf from raw for %s: %s", valueAny, err.Error()))
+		diags.AddError("GetFwAttrValueFromAny", fmt.Sprintf("Unable to get tfValue from raw for %s: %s", valueAny, err.Error()))
 		return nil
 	}
 
-	valueFw, err := typeFw.ValueFromTerraform(ctx, valueTf)
+	fwAttrValue, err := typeFw.ValueFromTerraform(ctx, tfValue)
 	if err != nil {
-		diags.AddError("getFwValueFromAny", fmt.Sprintf("Unable to get valueFw from valueTf for %s: %s", valueAny, err.Error()))
+		diags.AddError("GetFwAttrValueFromAny", fmt.Sprintf("Unable to get fwAttrValue from valueTf for %s: %s", valueAny, err.Error()))
 		return nil
 	}
 
-	return valueFw
+	return fwAttrValue
 }
 
-func getFwValueFromAnyInner(ctx context.Context, schema *rsschema.Schema, path path.Path, valueAny any) (tftypes.Value, error) {
+func getFwAttrValueFromAnyInner(ctx context.Context, schema *rsschema.Schema, path path.Path, valueAny any) (tftypes.Value, error) {
 	// As github.com/hashicorp/terraform-plugin-framework/internal/reflect can create objects only from structs but not
 	// from map[string]any, we use a simplified form of ToFromGraphTranslator.TerraformFromRaw here
 
@@ -82,7 +97,7 @@ func getFwValueFromAnyInner(ctx context.Context, schema *rsschema.Schema, path p
 				path = path.AtListIndex(i)
 			}
 
-			valueTf, err := getFwValueFromAnyInner(ctx, schema, path, v)
+			valueTf, err := getFwAttrValueFromAnyInner(ctx, schema, path, v)
 			if err != nil {
 				return tftypes.Value{}, err
 			}
@@ -110,7 +125,7 @@ func getFwValueFromAnyInner(ctx context.Context, schema *rsschema.Schema, path p
 				path = path.AtMapKey(k)
 			}
 
-			val, err := getFwValueFromAnyInner(ctx, schema, path, v)
+			val, err := getFwAttrValueFromAnyInner(ctx, schema, path, v)
 			if err != nil {
 				return tftypes.Value{}, err
 			}

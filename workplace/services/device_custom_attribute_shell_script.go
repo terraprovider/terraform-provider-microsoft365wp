@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
@@ -76,13 +76,13 @@ var deviceCustomAttributeShellScriptResourceSchema = schema.Schema{
 				stringvalidator.OneOf("integer", "string", "dateTime"),
 			},
 			PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
-			MarkdownDescription: "The expected type of the custom attribute's value. / Represents the expected type for a macOS custom attribute script value; possible values are: `integer` (Indicates the value for a custom attribute script is an integer.), `string` (Indicates the value for a custom attribute script is a string.), `dateTime` (Indicates the value for a custom attribute script is a date conforming to ISO 8601.)",
+			MarkdownDescription: "The expected type of the custom attribute's value. / Represents the expected type for a macOS custom attribute script value. <br/> _Provider_ allowed values are: `integer` (Indicates the value for a custom attribute script is an integer.), `string` (Indicates the value for a custom attribute script is a string.), `dateTime` (Indicates the value for a custom attribute script is a date conforming to ISO 8601.).",
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: "Optional description for the device management script. The _provider_ default value is `\"\"`.",
+			MarkdownDescription: "Optional description for the device management script. <br/> The _provider_ default value is `\"\"`.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -101,16 +101,18 @@ var deviceCustomAttributeShellScriptResourceSchema = schema.Schema{
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tag IDs for this PowerShellScript instance. The _provider_ default value is `[\"0\"]`.",
+			MarkdownDescription: "List of Scope Tag IDs for this PowerShellScript instance. <br/> The _provider_ default value is `[\"0\"]`.",
 		},
 		"run_as_account": schema.StringAttribute{
-			Optional:            true,
-			Validators:          []validator.String{stringvalidator.OneOf("system", "user")},
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("system")},
+			Optional:   true,
+			Validators: []validator.String{stringvalidator.OneOf("system", "user")},
+			PlanModifiers: []planmodifier.String{
+				wpdefaultvaluemodifier.StringDefaultValue("system"),
+			},
 			Computed:            true,
-			MarkdownDescription: "Indicates the type of execution context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context). The _provider_ default value is `\"system\"`.",
+			MarkdownDescription: "Indicates the type of execution context. / Indicates the type of execution context the app runs in. <br/> _Provider_ allowed values are: `system` (System context), `user` (User context). The _provider_ default value is `\"system\"`.",
 		},
 		"script_content": schema.StringAttribute{
 			Required:            true,
@@ -119,5 +121,5 @@ var deviceCustomAttributeShellScriptResourceSchema = schema.Schema{
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: "Represents a custom attribute script for macOS. / https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecustomattributeshellscript?view=graph-rest-beta ||| MS Graph: Device management",
+	MarkdownDescription: "Represents a custom attribute script for macOS. <br/> Also see [Microsoft docs for deviceCustomAttributeShellScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecustomattributeshellscript?view=graph-rest-beta). ||| MS Graph: Device management",
 }

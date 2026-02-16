@@ -5,7 +5,7 @@ subcategory: "MS Graph: Device configuration"
 
 # microsoft365wp_device_configurations (Data Source)
 
-Device Configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta
+Device Configuration. <br/> Also see [Microsoft docs for deviceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -96,7 +96,7 @@ Read-Only:
 - `macos_device_features` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.macOSDeviceFeaturesConfiguration` (using e.g. `if x.macos_device_features != null`). (see [below for nested schema](#nestedatt--device_configurations--macos_device_features))
 - `macos_extensions` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.macOSExtensionsConfiguration` (using e.g. `if x.macos_extensions != null`). (see [below for nested schema](#nestedatt--device_configurations--macos_extensions))
 - `macos_software_update` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.macOSSoftwareUpdateConfiguration` (using e.g. `if x.macos_software_update != null`). (see [below for nested schema](#nestedatt--device_configurations--macos_software_update))
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>
 - `version` (Number) Version of the device configuration.
 - `windows10_general` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windows10GeneralConfiguration` (using e.g. `if x.windows10_general != null`). (see [below for nested schema](#nestedatt--device_configurations--windows10_general))
 - `windows_health_monitoring` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windowsHealthMonitoringConfiguration` (using e.g. `if x.windows_health_monitoring != null`). (see [below for nested schema](#nestedatt--device_configurations--windows_health_monitoring))

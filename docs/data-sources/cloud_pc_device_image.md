@@ -5,7 +5,7 @@ subcategory: "MS Graph: Cloud PC"
 
 # microsoft365wp_cloud_pc_device_image (Data Source)
 
-Represents the image resource on a Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdeviceimage?view=graph-rest-beta
+Represents the image resource on a Cloud PC. <br/> Also see [Microsoft docs for cloudPcDeviceImage](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdeviceimage?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -67,20 +67,20 @@ output "microsoft365wp_cloud_pc_device_image" {
 - `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
 - `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
 - `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
-- `operating_system` (String) The operating system of the image. For example, `Windows 10 Enterprise`.
+- `operating_system` (String) The operating system of the image. For example, `Windows 11 Enterprise`.
 - `os_build_number` (String) The OS build version of the image. For example, `1909`.
-- `os_status` (String) The OS status of this image. / Possible values are: `supported`, `supportedWithWarning`, `unknown`, `unknownFutureValue`
-- `status` (String) The status of the image on the Cloud PC. / Possible values are: `pending`, `ready`, `failed`, `unknownFutureValue`, `warning`
+- `os_status` (String) The OS status of this image. <br/> _Provider_ allowed values are: `supported`, `supportedWithWarning`, `unknown`, `unknownFutureValue`.
+- `status` (String) The status of the image on the Cloud PC. <br/> _Provider_ allowed values are: `pending`, `ready`, `failed`, `unknownFutureValue`, `warning`.
 
 ### Read-Only
 
 - `display_name` (String) The display name of the associated device image. The device image display name and the version are used to uniquely identify the Cloud PC device image.
-- `error_code` (String) The error code of the status of the image that indicates why the upload failed, if applicable. Use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `vmAlreadyAzureAdJoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`, `sourceImageWithDataDiskNotSupported`, `sourceImageWithDiskEncryptionSetNotSupported`. / Possible values are: `internalServerError`, `sourceImageNotFound`, `osVersionNotSupported`, `sourceImageInvalid`, `sourceImageNotGeneralized`, `unknownFutureValue`, `vmAlreadyAzureAdjoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`, `sourceImageWithDataDiskNotSupported`, `sourceImageWithDiskEncryptionSetNotSupported`
+- `error_code` (String) The error code of the status of the image that indicates why the upload failed, if applicable. <br/> _Provider_ allowed values are: `internalServerError`, `sourceImageNotFound`, `osVersionNotSupported`, `sourceImageInvalid`, `sourceImageNotGeneralized`, `unknownFutureValue`, `vmAlreadyAzureAdjoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`, `sourceImageWithDataDiskNotSupported`, `sourceImageWithDiskEncryptionSetNotSupported`, `sourceImageWithAzureDiskEncryptionNotSupported`, `fSLogixInstalledSourceImageNotSupported`, `startMenuAppLimitExceeded`.
 - `expiration_date` (String) The date when the image became unavailable.
 - `last_modified_date_time` (String) The data and time when the image was last modified. The timestamp represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`.
 - `os_version_number` (String) The operating system version of this image. For example, `10.0.22000.296`.
 - `scope_ids` (Set of String)
-- `size_in_gb` (Number) sizeInGB
+- `size_in_gb` (Number) The size of the image in GB. For example, `64`.
 - `source_image_resource_id` (String) The unique identifier (ID) of the source image resource on Azure. The required ID format is: "/subscriptions/{subscription-id}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/images/{imageName}".
-- `status_details` (String) Possible values are: `internalServerError`, `sourceImageNotFound`, `osVersionNotSupported`, `sourceImageInvalid`, `sourceImageNotGeneralized`, `unknownFutureValue`, `vmAlreadyAzureAdjoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`
+- `status_details` (String) _Provider_ allowed values are: `internalServerError`, `sourceImageNotFound`, `osVersionNotSupported`, `sourceImageInvalid`, `sourceImageNotGeneralized`, `unknownFutureValue`, `vmAlreadyAzureAdjoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`.
 - `version` (String) The image version. For example, `0.0.1` and `1.5.13`.

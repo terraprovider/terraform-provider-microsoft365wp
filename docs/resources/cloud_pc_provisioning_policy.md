@@ -5,7 +5,7 @@ subcategory: "MS Graph: Cloud PC"
 
 # microsoft365wp_cloud_pc_provisioning_policy (Resource)
 
-Represents a Cloud PC provisioning policy. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicy?view=graph-rest-beta
+Represents a Cloud PC provisioning policy. <br/> Also see [Microsoft docs for cloudPcProvisioningPolicy](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicy?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -55,7 +55,7 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_dedicated" {
   }
 
   domain_join_configurations = [{
-    region_group = "europeUnion"
+    region_group = "germany"
     region_name  = "automatic"
   }]
 
@@ -87,7 +87,7 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_shared" {
   }
 
   domain_join_configurations = [{
-    region_group = "europeUnion"
+    region_group = "germany"
     region_name  = "automatic"
   }]
 
@@ -111,47 +111,55 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_shared" {
 
 - `display_name` (String) The display name for the provisioning policy.
 - `image_display_name` (String) The display name of the operating system image that is used for provisioning. For example, `Windows 11 Preview + Microsoft 365 Apps 23H2 23H2`. Supports `$filter`, `$select`, and `$orderBy`.
-- `image_id` (String) The unique identifier that represents an operating system image that is used for provisioning new Cloud PCs. The format for a gallery type image is: {publisherName_offerName_skuName}. Supported values for each of the parameters are:<ul><li>publisher: `Microsoftwindowsdesktop`</li> <li>offer: `windows-ent-cpc`</li> <li>sku: `21h1-ent-cpc-m365`, `21h1-ent-cpc-os`, `20h2-ent-cpc-m365`, `20h2-ent-cpc-os`, `20h1-ent-cpc-m365`, `20h1-ent-cpc-os`, `19h2-ent-cpc-m365`, and `19h2-ent-cpc-os`</li></ul> Supports `$filter`, `$select`, and `$orderBy`.
+- `image_id` (String) The unique identifier that represents an operating system image that is used for provisioning new Cloud PCs. The format for a gallery type image is: {publisherName_offerName_skuName}. Supported values for each of the parameters are: <br/> - publisher: `Microsoftwindowsdesktop` <br/> - offer: `windows-ent-cpc` <br/> - sku: `21h1-ent-cpc-m365`, `21h1-ent-cpc-os`, `20h2-ent-cpc-m365`, `20h2-ent-cpc-os`, `20h1-ent-cpc-m365`, `20h1-ent-cpc-os`, `19h2-ent-cpc-m365`, and `19h2-ent-cpc-os` <br/> Supports `$filter`, `$select`, and `$orderBy`.
 
 ### Optional
 
 - `alternate_resource_url` (String) The URL of the alternate resource that links to this provisioning policy. Read-only.
-- `assignments` (Attributes Set) A defined collection of provisioning policy assignments. Represents the set of Microsoft 365 groups and security groups in Microsoft Entra ID that have provisioning policy assigned. Returned only on `$expand`. For an example about how to get the assignments relationship, see [Get cloudPcProvisioningPolicy](../api/cloudpcprovisioningpolicy-get.md). / Represents a defined collection of provisioning policy assignments. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicyassignment?view=graph-rest-beta. The _provider_ default value is `[]`. (see [below for nested schema](#nestedatt--assignments))
-- `autopatch` (Attributes) Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. The settings take effect when the tenant enrolls in Autopatch and the **managedType** of the **microsoftManagedDesktop** property is set as `starterManaged`. Supports `$select`. / Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicyautopatch?view=graph-rest-beta (see [below for nested schema](#nestedatt--autopatch))
-- `autopilot_configuration` (Attributes) The specific settings for Windows Autopilot that enable Windows 365 customers to experience it on Cloud PC. Supports `$select`. / Represents specific settings for Windows Autopilot that enable Windows 365 customers to experience it on Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcautopilotconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--autopilot_configuration))
+- `assignments` (Attributes Set) A defined collection of provisioning policy assignments. Represents the set of Microsoft 365 groups and security groups in Microsoft Entra ID that have provisioning policy assigned. Returned only on `$expand`. For an example about how to get the assignments relationship, see [Get cloudPcProvisioningPolicy](https://learn.microsoft.com/en-us/graph/api/cloudpcprovisioningpolicy-get?view=graph-rest-beta). / Represents a defined collection of provisioning policy assignments. Also see [Microsoft docs for cloudPcProvisioningPolicyAssignment](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicyassignment?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> (see [below for nested schema](#nestedatt--assignments))
+- `autopatch` (Attributes) Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. The settings take effect when the tenant enrolls in Autopatch and the **managedType** of the **microsoftManagedDesktop** property is set as `starterManaged`. Supports `$select`. / Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. Also see [Microsoft docs for cloudPcProvisioningPolicyAutopatch](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicyautopatch?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--autopatch))
+- `autopilot_configuration` (Attributes) The specific settings for Windows Autopilot that enable Windows 365 customers to experience it on Cloud PC. Supports `$select`. / Represents specific settings for Windows Autopilot that enable Windows 365 customers to experience it on Cloud PC. Also see [Microsoft docs for cloudPcAutopilotConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcautopilotconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--autopilot_configuration))
 - `cloud_pc_group_display_name` (String) The display name of the Cloud PC group that the Cloud PCs reside in. Read-only.
 - `cloud_pc_naming_template` (String) The template used to name Cloud PCs provisioned using this policy. The template can contain custom text and replacement tokens, including `%USERNAME:x%` and `%RAND:x%`, which represent the user's name and a randomly generated number, respectively. For example, `CPC-%USERNAME:4%-%RAND:5%` means that the name of the Cloud PC starts with `CPC-`, followed by a four-character username, a `-` character, and then five random characters. The total length of the text generated by the template can't exceed 15 characters. Supports `$filter`, `$select`, and `$orderby`.
-- `description` (String) The provisioning policy description. Supports `$filter`, `$select`, and `$orderBy`. The _provider_ default value is `""`.
-- `domain_join_configurations` (Attributes Set) Specifies a list ordered by priority on how Cloud PCs join Microsoft Entra ID (Azure AD). Supports `$select`. / Represents a defined configuration of how a provisioned Cloud PC device joins to Microsoft Entra ID. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdomainjoinconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--domain_join_configurations))
-- `enable_single_sign_on` (Boolean) `True` if single sign-on can access the provisioned Cloud PC. `False` indicates that the provisioned Cloud PC doesn't support this feature. The default value is `false`. Windows 365 users can use single sign-on to authenticate to Microsoft Entra ID with passwordless options (for example, FIDO keys) to access their Cloud PC. Optional. The _provider_ default value is `false`.
+- `description` (String) The provisioning policy description. Supports `$filter`, `$select`, and `$orderBy`. <br/> The _provider_ default value is `""`.
+- `domain_join_configurations` (Attributes Set) Specifies a list ordered by priority on how Cloud PCs join Microsoft Entra ID (Azure AD). Supports `$select`. / Represents a defined configuration of how a provisioned Cloud PC device joins to Microsoft Entra ID. Also see [Microsoft docs for cloudPcDomainJoinConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdomainjoinconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--domain_join_configurations))
+- `enable_single_sign_on` (Boolean) `True` if single sign-on can access the provisioned Cloud PC. `False` indicates that the provisioned Cloud PC doesn't support this feature. The default value is `false`. Windows 365 users can use single sign-on to authenticate to Microsoft Entra ID with passwordless options (for example, FIDO keys) to access their Cloud PC. Optional. <br/> The _provider_ default value is `false`.
 - `grace_period_in_hours` (Number) The number of hours to wait before reprovisioning/deprovisioning happens. Read-only.
-- `image_type` (String) The type of operating system image (custom or gallery) that is used for provisioning on Cloud PCs. The default value is `gallery`. Supports $filter, $select, and $orderBy. / Possible values are: `gallery`, `custom`, `unknownFutureValue`. The _provider_ default value is `"gallery"`.
+- `image_type` (String) The type of operating system image (custom or gallery) that is used for provisioning on Cloud PCs. The default value is `gallery`. Supports $filter, $select, and $orderBy. <br/> _Provider_ allowed values are: `gallery`, `custom`, `unknownFutureValue`. The _provider_ default value is `"gallery"`.
 - `local_admin_enabled` (Boolean) When `true`, the local admin is enabled for Cloud PCs; `false` indicates that the local admin isn't enabled for Cloud PCs. The default value is `false`. Supports `$filter`, `$select`, and `$orderBy`.
-- `managed_by` (String) Indicates the service that manages the provisioning policy. The default value is `windows365`. Use the `Prefer: include-unknown-enum-members` request header to get the following value in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `rpaBox`. Supports `$filter`, `$select`, and `$orderBy`. / Possible values are: `windows365`, `devBox`, `unknownFutureValue`, `rpaBox`. The _provider_ default value is `"windows365"`.
-- `microsoft_managed_desktop` (Attributes) The specific settings to **microsoftManagedDesktop** that enables Microsoft Managed Desktop customers to get device managed experience for Cloud PC. To enable **microsoftManagedDesktop** to provide more value, an admin needs to specify certain settings in it. Supports `$filter`, `$select`, and `$orderBy`. / Represents specific settings for the Microsoft Managed Desktop that enables customers to get a managed device experience for a Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/microsoftmanageddesktop?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--microsoft_managed_desktop))
-- `provisioning_type` (String) Specifies the type of licenses to be used when provisioning Cloud PCs using this policy. The possible values are `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`. Use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `sharedByUser`, `sharedByEntraGroup`. The `shared` member is deprecated and will stop returning on April 30, 2027; going forward, use the `sharedByUser` member. For example, a `dedicated` service plan can be assigned to only one user and provision only one Cloud PC. The `shared` and `sharedByUser` plans require customers to purchase a shared service plan. Each shared license purchased can enable up to three Cloud PCs, with only one user signed in at a time. The `sharedByEntraGroup` plan also requires the purchase of a shared service plan. Each shared license under this plan can enable one Cloud PC, which is shared for the group according to the assignments of this policy. By default, the license type is `dedicated` if the **provisioningType** isn't specified when you create the **cloudPcProvisioningPolicy**. You can't change this property after the **cloudPcProvisioningPolicy** is created. / Possible values are: `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`
-- `scope_ids` (Set of String) . The _provider_ default value is `["0"]`.
-- `windows_setting` (Attributes) Indicates a specific Windows setting to configure during the creation of Cloud PCs for this provisioning policy. Supports `$select`. / Represents a specific Windows setting to configure during the creation of Cloud PCs for a provisioning policy. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcwindowssetting?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows_setting))
+- `managed_by` (String) Indicates the service that manages the provisioning policy. The default value is `windows365`. Supports `$filter`, `$select`, and `$orderBy`. <br/> _Provider_ allowed values are: `windows365`, `devBox`, `unknownFutureValue`, `rpaBox`, `microsoft365Opal`, `microsoft365BizChat`. The _provider_ default value is `"windows365"`.
+- `microsoft_managed_desktop` (Attributes) The specific settings to **microsoftManagedDesktop** that enables Microsoft Managed Desktop customers to get device managed experience for Cloud PC. To enable **microsoftManagedDesktop** to provide more value, an admin needs to specify certain settings in it. Supports `$filter`, `$select`, and `$orderBy`. / Represents specific settings for the Microsoft Managed Desktop that enables customers to get a managed device experience for a Cloud PC. Also see [Microsoft docs for microsoftManagedDesktop](https://learn.microsoft.com/en-us/graph/api/resources/microsoftmanageddesktop?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--microsoft_managed_desktop))
+- `provisioning_type` (String) Specifies the type of licenses to be used when provisioning Cloud PCs using this policy. The possible values are `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`, `reserve`. The `shared` member is deprecated and will stop returning on April 30, 2027; going forward, use the `sharedByUser` member. For example, a `dedicated` service plan can be assigned to only one user and provision only one Cloud PC. The `shared` and `sharedByUser` plans require customers to purchase a shared service plan. Each shared license purchased can enable up to three Cloud PCs, with only one user signed in at a time. The `sharedByEntraGroup` plan also requires the purchase of a shared service plan. Each shared license under this plan can enable one Cloud PC, which is shared for the group according to the assignments of this policy. By default, the license type is `dedicated` if the **provisioningType** isn't specified when you create the **cloudPcProvisioningPolicy**. You can't change this property after the **cloudPcProvisioningPolicy** is created. <br/> _Provider_ allowed values are: `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`, `reserve`.
+- `scope_ids` (Set of String) The _provider_ default value is `["0"]`.
+- `user_experience_type` (String) Specifies the type of cloud object the end user can access. `cloudPc` indicates that the end user can access the entire desktop. `cloudApp` indicates that the end user can only access apps published under this provisioning policy. The type can't be changed once the provisioning policy is created. If not specified during creation, the default value is `cloudPc`. When `cloudApp` is selected, the **provisioningType** must be `sharedByEntraGroup`. Supports `$filter`, `$select`, `$orderBy`. <br/> _Provider_ allowed values are: `cloudPc`, `cloudApp`, `unknownFutureValue`.
+- `user_settings_persistence_configuration` (Attributes) Indicates specific settings that enable the persistence of user application settings between Cloud PC sessions. The default value is `null`. This feature is only available for Cloud PC provisioning policies of type `sharedByEntraGroup`. Supports `$select`. / Indicates the user settings persistence configuration when you create Cloud PCs for this [provisioning policy](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicy?view=graph-rest-beta). Also see [Microsoft docs for cloudPcUserSettingsPersistenceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistenceconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--user_settings_persistence_configuration))
+- `windows_setting` (Attributes) Indicates a specific Windows setting to configure during the creation of Cloud PCs for this provisioning policy. Supports `$select`. / Represents a specific Windows setting to configure during the creation of Cloud PCs for a provisioning policy. Also see [Microsoft docs for cloudPcWindowsSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcwindowssetting?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows_setting))
 
 ### Read-Only
 
+- `created_by` (String) The unique ID of the user who created this policy. For example, `5ccb8d35-dd04-473e-a287-69bb4473208b`. Read-only. Supports `$select`.
+- `created_date_time` (String) The timestamp when this provisioning policy was created. The timestamp type represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Read-only. Supports `$select` and `$orderBy`.
 - `id` (String) The unique identifier associated with the provisioning policy. This ID is auto populated during the creation of a new provisioning policy. Read-only. Supports `$filter`, `$select`, and `$orderBy`.
+- `last_modified_by` (String) The unique ID of the user who last updated this policy. For example, `5ccb8d35-dd04-473e-a287-69bb4473208b`. Read-only. Supports `$select`.
+- `last_modified_date_time` (String) The timestamp when this provisioning policy was last modified. The timestamp type represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Read-only. Supports `$select` and `$orderBy`.
 
 <a id="nestedatt--assignments"></a>
 ### Nested Schema for `assignments`
 
 Required:
 
-- `target` (Attributes) The assignment target for the provisioning policy. Currently, the only target supported for this policy is a user group. For details, see [cloudPcManagementGroupAssignmentTarget](cloudpcmanagementgroupassignmenttarget.md). / Represents an abstract base type for assignment targets.
+- `target` (Attributes) The assignment target for the provisioning policy. Currently, the only target supported for this policy is a user group. For details, see [cloudPcManagementGroupAssignmentTarget](cloudpcmanagementgroupassignmenttarget.md). / Represents an abstract base type for assignment targets. Also see [Microsoft docs for cloudPcManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcmanagementassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target))
 
-Base type of [cloudPcManagementGroupAssignmentTarget](cloudpcmanagementgroupassignmenttarget.md). / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target))
+Read-Only:
+
+- `user_settings_persistence_detail` (Attributes) The assignment targeted user settings persistence for the provisioning policy. It allows user application data and Windows settings to be saved and applied between sessions. / Represents the configuration that indicates whether Cloud PC user settings persistence is enabled. When enabled, Windows 365 saves user-specific application data in a central cloud storage location and reconnects the user to that storage upon each connection. Also see [Microsoft docs for cloudPCUserSettingsPersistenceDetail](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistencedetail?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--user_settings_persistence_detail))
 
 <a id="nestedatt--assignments--target"></a>
 ### Nested Schema for `assignments.target`
 
 Optional:
 
-- `group` (Attributes) Complex type that represents the assignment target group. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcmanagementgroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
+- `group` (Attributes) Complex type that represents the assignment target group. Also see [Microsoft docs for cloudPcManagementGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcmanagementgroupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--group"></a>
 ### Nested Schema for `assignments.target.group`
@@ -168,6 +176,15 @@ Optional:
 
 
 
+<a id="nestedatt--assignments--user_settings_persistence_detail"></a>
+### Nested Schema for `assignments.user_settings_persistence_detail`
+
+Read-Only:
+
+- `grace_period_end_date_time` (String) Indicates the grace period end time when user settings persistence exceeds the available quota. If usage exceeds the available quota when the grace period expires, the system automatically deletes the profile with the oldest last attached timestamp. The timestamp type represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Read-only.
+- `id` (String) Indicates the unique identifier for the Cloud PC user settings persistence configuration for a single policy collection. Required. Read-only.
+
+
 
 <a id="nestedatt--autopatch"></a>
 ### Nested Schema for `autopatch`
@@ -182,7 +199,7 @@ Optional:
 
 Required:
 
-- `application_timeout_in_minutes` (Number) Indicates the number of minutes allowed for the Autopilot application to apply the device preparation profile (DPP) configurations to the device. If the Autopilot application doesn't finish within the specified time (**applicationTimeoutInMinutes**), the application error is added to the **statusDetail** property of the [cloudPC](../resources/cloudpc.md) object. The supported value is an integer between 10 and 360. Required.
+- `application_timeout_in_minutes` (Number) Indicates the number of minutes allowed for the Autopilot application to apply the device preparation profile (DPP) configurations to the device. If the Autopilot application doesn't finish within the specified time (**applicationTimeoutInMinutes**), the application error is added to the **statusDetail** property of the [cloudPC](https://learn.microsoft.com/en-us/graph/api/resources/cloudpc?view=graph-rest-beta) object. The supported value is an integer between `30` and `360`. Required.
 - `device_preparation_profile_id` (String) The unique identifier (ID) of the Autopilot device preparation profile (DPP) that links a Windows Autopilot device preparation policy to ensure that devices are ready for users after provisioning. Required.
 - `on_failure_device_access_denied` (Boolean) Indicates whether the access to the device is allowed when the application of Autopilot device preparation profile (DPP) configurations fails or times out. If `true`, the **status** of the device is `failed` and the device is unable to access; otherwise, the **status** of the device is `provisionedWithWarnings` and the device is allowed to access. The default value is `false`. Required.
 
@@ -192,11 +209,15 @@ Required:
 
 Optional:
 
-- `domain_join_type` (String) Specifies the method by which the provisioned Cloud PC joins Microsoft Entra ID. If you choose the `hybridAzureADJoin` type, only provide a value for the **onPremisesConnectionId** property and leave the **regionName** property empty. If you choose the `azureADJoin` type, provide a value for either the **onPremisesConnectionId** or the **regionName** property. / Possible values are: `azureADJoin`, `hybridAzureADJoin`, `unknownFutureValue`. The _provider_ default value is `"azureADJoin"`.
+- `domain_join_type` (String) Specifies the method by which the provisioned Cloud PC joins Microsoft Entra ID. If you choose the `hybridAzureADJoin` type, only provide a value for the **onPremisesConnectionId** property and leave the **regionName** property empty. If you choose the `azureADJoin` type, provide a value for either the **onPremisesConnectionId** or the **regionName** property. <br/> _Provider_ allowed values are: `azureADJoin`, `hybridAzureADJoin`, `unknownFutureValue`. The _provider_ default value is `"azureADJoin"`.
 - `on_premises_connection_id` (String) The Azure network connection ID that matches the virtual network IT admins want the provisioning policy to use when they create Cloud PCs. You can use this property in both domain join types: _Azure AD joined_ or _Hybrid Microsoft Entra joined_. If you enter an **onPremisesConnectionId**, leave the **regionName** property empty.
-- `region_group` (String) The logical geographic group this region belongs to. Multiple regions can belong to one region group. A customer can select a **regionGroup** when they provision a Cloud PC, and the Cloud PC is put in one of the regions in the group based on resource status. For example, the Europe region group contains the Northern Europe and Western Europe regions. Use the `Prefer: include-unknown-enum-members` request header to get the following values in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`. Read-only. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`
+- `region_group` (String) The logical geographic group this region belongs to. Multiple regions can belong to one region group. A customer can select a **regionGroup** when they provision a Cloud PC, and the Cloud PC is put in one of the regions in the group based on resource status. For example, the Europe region group contains the Northern Europe and Western Europe regions. Read-only. <br/> Represents the logical geographic group that a region belongs to for Microsoft-hosted network for backup Cloud PCs. Multiple regions can belong to one region group. <br/> This is an evolvable enumeration. <br/> _Provider_ allowed values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`, `singapore`, `hongKong`, `ireland`, `sweden`, `poland`, `italy`, `spain`, `netherlands`, `brazil`, `israel`, `automatic`, `indonesia`, `taiwan`, `malaysia`, `newZealand`, `austria`, `denmark`, `belgium`, `kenya`.
 - `region_name` (String) The supported Azure region where the IT admin wants the provisioning policy to create Cloud PCs. The underlying virtual network is created and managed by the Windows 365 service. This can only be entered if the IT admin chooses Microsoft Entra joined as the domain join type. If you enter a **regionName**, leave the **onPremisesConnectionId** property empty.
-- `type` (String) Possible values are: `azureADJoin`, `hybridAzureADJoin`, `unknownFutureValue`. The _provider_ default value is `"azureADJoin"`.
+- `type` (String) _Provider_ allowed values are: `azureADJoin`, `hybridAzureADJoin`, `unknownFutureValue`. The _provider_ default value is `"azureADJoin"`.
+
+Read-Only:
+
+- `geographic_location_type` (String) The geographic location where the region is located. Read-only. <br/> Represents the geographic location where a region is located for Microsoft-hosted network for backup Cloud PCs. <br/> This is an evolvable enumeration. <br/> _Provider_ allowed values are: `default`, `asia`, `australasia`, `canada`, `europe`, `india`, `africa`, `usCentral`, `usEast`, `usWest`, `southAmerica`, `middleEast`, `centralAmerica`, `usGovernment`, `unknownFutureValue`, `mexico`.
 
 
 <a id="nestedatt--microsoft_managed_desktop"></a>
@@ -204,9 +225,18 @@ Optional:
 
 Optional:
 
-- `managed_type` (String) Indicates the provisioning policy associated with Microsoft Managed Desktop settings. The default value is `notManaged`. / Possible values are: `notManaged`, `premiumManaged`, `standardManaged`, `starterManaged`, `unknownFutureValue`. The _provider_ default value is `"notManaged"`.
-- `profile` (String) The name of the Microsoft Managed Desktop profile that the Windows 365 Cloud PC is associated with. The _provider_ default value is `""`.
-- `type` (String) Possible values are: `notManaged`, `premiumManaged`, `standardManaged`, `starterManaged`, `unknownFutureValue`. The _provider_ default value is `"notManaged"`.
+- `managed_type` (String) Indicates the provisioning policy associated with Microsoft Managed Desktop settings. The default value is `notManaged`. <br/> _Provider_ allowed values are: `notManaged`, `premiumManaged`, `standardManaged`, `starterManaged`, `unknownFutureValue`. The _provider_ default value is `"notManaged"`.
+- `profile` (String) The name of the Microsoft Managed Desktop profile that the Windows 365 Cloud PC is associated with. <br/> The _provider_ default value is `""`.
+- `type` (String) _Provider_ allowed values are: `notManaged`, `premiumManaged`, `standardManaged`, `starterManaged`, `unknownFutureValue`. The _provider_ default value is `"notManaged"`.
+
+
+<a id="nestedatt--user_settings_persistence_configuration"></a>
+### Nested Schema for `user_settings_persistence_configuration`
+
+Optional:
+
+- `user_settings_persistence_enabled` (Boolean) Indicates whether user application settings are persisted between Cloud PC sessions. The default value is `false`. When `true`, user settings persistence is enabled, and Windows 365 automatically saves any user-specific application data in a central cloud storage location. Anytime the user connects to a Cloud PC within this provisioning policy, Windows 365 reconnects the user to that persisted storage. When `false`, this feature isn't used. The persistent storage can only be accessed by Cloud PC; IT admins can't access it. <br/> The _provider_ default value is `false`.
+- `user_settings_persistence_storage_size_category` (String) Indicates the storage size for persisting user application settings. The default value is `fourGB`. <br/> _Provider_ allowed values are: `fourGB`, `eightGB`, `sixteenGB`, `thirtyTwoGB`, `sixtyFourGB`, `unknownFutureValue`.
 
 
 <a id="nestedatt--windows_setting"></a>

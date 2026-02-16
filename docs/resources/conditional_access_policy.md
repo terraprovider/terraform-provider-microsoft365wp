@@ -5,7 +5,7 @@ subcategory: "MS Graph: Conditional access"
 
 # microsoft365wp_conditional_access_policy (Resource)
 
-Represents a Microsoft Entra Conditional Access policy. Conditional access policies are custom rules that define an access scenario. For more information, see the [Conditional access documentation](/azure/active-directory/conditional-access/). / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta
+Represents a Microsoft Entra Conditional Access policy. Conditional access policies are custom rules that define an access scenario. For more information, see the [Conditional access documentation](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/). <br/> Also see [Microsoft docs for conditionalAccessPolicy](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -119,15 +119,15 @@ resource "microsoft365wp_conditional_access_policy" "test_combined" {
 
 ### Required
 
-- `conditions` (Attributes) Specifies the rules that must be met for the policy to apply. Required. / Represents the type of conditions that govern when the policy applies. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessconditionset?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions))
+- `conditions` (Attributes) Specifies the rules that must be met for the policy to apply. Required. / Represents the type of conditions that govern when the policy applies. Also see [Microsoft docs for conditionalAccessConditionSet](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessconditionset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions))
 - `display_name` (String) Specifies a display name for the conditionalAccessPolicy object.
 
 ### Optional
 
-- `grant_controls` (Attributes) Specifies the grant controls that must be fulfilled to pass the policy. / Represents grant controls that must be fulfilled to pass the policy. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessgrantcontrols?view=graph-rest-beta (see [below for nested schema](#nestedatt--grant_controls))
+- `grant_controls` (Attributes) Specifies the grant controls that must be fulfilled to pass the policy. / Represents grant controls that must be fulfilled to pass the policy. Also see [Microsoft docs for conditionalAccessGrantControls](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessgrantcontrols?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--grant_controls))
 - `session_controls` (Attributes) Specifies the session controls that are enforced after sign-in. / Represents session controls that are enforced after sign-in.
-All the session controls inherit from [conditionalAccessSessionControl](conditionalaccesssessioncontrol.md). / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesssessioncontrols?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls))
-- `state` (String) Specifies the state of the conditionalAccessPolicy object. Required. / Possible values are: `enabled`, `disabled`, `enabledForReportingButNotEnforced`. The _provider_ default value is `"enabledForReportingButNotEnforced"`.
+All the session controls inherit from [conditionalAccessSessionControl](conditionalaccesssessioncontrol.md). Also see [Microsoft docs for conditionalAccessSessionControls](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesssessioncontrols?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--session_controls))
+- `state` (String) Specifies the state of the conditionalAccessPolicy object. Required. <br/> _Provider_ allowed values are: `enabled`, `disabled`, `enabledForReportingButNotEnforced`. The _provider_ default value is `"enabledForReportingButNotEnforced"`.
 
 ### Read-Only
 
@@ -139,41 +139,41 @@ All the session controls inherit from [conditionalAccessSessionControl](conditio
 
 Optional:
 
-- `agent_id_risk_levels` (String) Agent identity risk levels included in the policy. This enumeration is multivalued. / Possible values are: `low`, `medium`, `high`, `unknownFutureValue`
-- `applications` (Attributes) Applications and user actions included in and excluded from the policy. Required. / Represents the applications and user actions included in and excluded from the conditional access policy. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessapplications?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--applications))
-- `authentication_flows` (Attributes) Authentication flows included in the policy scope. For more information, see [Conditional Access: Authentication flows](/entra/identity/conditional-access/concept-authentication-flows). / Represents the authentication flows in scope for the policy. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessauthenticationflows?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--authentication_flows))
-- `client_app_types` (Set of String) Client application types included in the policy. Required. <br/><br/> The `easUnsupported` enumeration member is deprecated in favor of `exchangeActiveSync`, which includes EAS supported and unsupported platforms. / Possible values are: `all`, `browser`, `mobileAppsAndDesktopClients`, `exchangeActiveSync`, `easSupported`, `other`, `unknownFutureValue`. The _provider_ default value is `["all"]`.
-- `client_applications` (Attributes) Client applications (service principals and workload identities) included in and excluded from the policy. Either **users** or **clientApplications** is required. / Represents client applications (service principals and workload identities) included in and excluded from the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessclientapplications?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--client_applications))
-- `device_states` (Attributes) Device states in the policy. To be deprecated and removed. Use the **devices** property instead. / Represents device states in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessdevicestates?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--device_states))
-- `devices` (Attributes) Devices in the policy. / Represents devices in the scope of a [conditionalAccessTemplate](../resources/conditionalaccesstemplate.md) object. This resource is configured in the **conditionalAccessTemplate** resource > **details** property > **conditions** property > **devices** property. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessdevices?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--devices))
-- `insider_risk_levels` (String) Insider risk levels included in the policy. The / Possible values are: `minor`, `moderate`, `elevated`, `unknownFutureValue`
-- `locations` (Attributes) Locations included in and excluded from the policy. / Represents locations included in and excluded from the scope of a [conditional access policy](../resources/conditionalaccesspolicy.md). Locations can be [countries and regions](../resources/countrynamedlocation.md) or [IP addresses](../resources/ipnamedlocation.md). / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesslocations?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--locations))
-- `platforms` (Attributes) Platforms included in and excluded from the policy. / Platforms included in and excluded from the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessplatforms?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--platforms))
-- `service_principal_risk_levels` (Set of String) Service principal risk levels included in the policy. / Possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.
-- `sign_in_risk_levels` (Set of String) Sign-in risk levels included in the policy. Required. / Possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.
-- `user_risk_levels` (Set of String) User risk levels included in the policy. Required. / Possible values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.
-- `users` (Attributes) Users, groups, and roles included in and excluded from the policy. Either **users** or **clientApplications** is required. / Represents users, groups, and roles included in and excluded from the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessusers?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users))
+- `agent_id_risk_levels` (String) Agent identity risk levels included in the policy. This enumeration is multivalued. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `unknownFutureValue`.
+- `applications` (Attributes) Applications and user actions included in and excluded from the policy. Required. / Represents the applications and user actions included in and excluded from the conditional access policy. Also see [Microsoft docs for conditionalAccessApplications](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessapplications?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--applications))
+- `authentication_flows` (Attributes) Authentication flows included in the policy scope. For more information, see [Conditional Access: Authentication flows](https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-authentication-flows). / Represents the authentication flows in scope for the policy. Also see [Microsoft docs for conditionalAccessAuthenticationFlows](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessauthenticationflows?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--authentication_flows))
+- `client_app_types` (Set of String) Client application types included in the policy. Required. <br/> The `easUnsupported` enumeration member is deprecated in favor of `exchangeActiveSync`, which includes EAS supported and unsupported platforms. <br/> _Provider_ allowed values are: `all`, `browser`, `mobileAppsAndDesktopClients`, `exchangeActiveSync`, `easSupported`, `other`, `unknownFutureValue`. The _provider_ default value is `["all"]`.
+- `client_applications` (Attributes) Client applications (service principals and workload identities) included in and excluded from the policy. Either **users** or **clientApplications** is required. / Represents client applications (service principals and workload identities) included in and excluded from the policy scope. Also see [Microsoft docs for conditionalAccessClientApplications](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessclientapplications?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--client_applications))
+- `device_states` (Attributes) Device states in the policy. To be deprecated and removed. Use the **devices** property instead. / Represents device states in the policy scope. Also see [Microsoft docs for conditionalAccessDeviceStates](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessdevicestates?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--device_states))
+- `devices` (Attributes) Devices in the policy. / Represents devices in the scope of a [conditionalAccessTemplate](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesstemplate?view=graph-rest-beta) object. This resource is configured in the **conditionalAccessTemplate** resource > **details** property > **conditions** property > **devices** property. Also see [Microsoft docs for conditionalAccessDevices](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessdevices?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--devices))
+- `insider_risk_levels` (String) Insider risk levels included in the policy. <br/> _Provider_ allowed values are: `minor`, `moderate`, `elevated`, `unknownFutureValue`.
+- `locations` (Attributes) Locations included in and excluded from the policy. / Represents locations included in and excluded from the scope of a [conditional access policy](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta). Locations can be [countries and regions](https://learn.microsoft.com/en-us/graph/api/resources/countrynamedlocation?view=graph-rest-beta) or [IP addresses](https://learn.microsoft.com/en-us/graph/api/resources/ipnamedlocation?view=graph-rest-beta). Also see [Microsoft docs for conditionalAccessLocations](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesslocations?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--locations))
+- `platforms` (Attributes) Platforms included in and excluded from the policy. / Platforms included in and excluded from the policy scope. Also see [Microsoft docs for conditionalAccessPlatforms](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessplatforms?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--platforms))
+- `service_principal_risk_levels` (Set of String) Service principal risk levels included in the policy. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.
+- `sign_in_risk_levels` (Set of String) Sign-in risk levels included in the policy. Required. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.
+- `user_risk_levels` (Set of String) User risk levels included in the policy. Required. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.
+- `users` (Attributes) Users, groups, and roles included in and excluded from the policy. Either **users** or **clientApplications** is required. / Represents users, groups, and roles included in and excluded from the policy scope. Also see [Microsoft docs for conditionalAccessUsers](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessusers?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--users))
 
 <a id="nestedatt--conditions--applications"></a>
 ### Nested Schema for `conditions.applications`
 
 Optional:
 
-- `application_filter` (Attributes) Filter that defines the dynamic-application-syntax rule to include/exclude cloud applications. A filter can use custom security attributes to include/exclude applications. / Represents filter in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--applications--application_filter))
-- `exclude_applications` (Set of String) Can be one of the following: <li> The list of client IDs (**appId**) explicitly excluded from the policy.<li> `Office365` - For the list of apps included in `Office365`, see [Apps included in Conditional Access Office 365 app suite](/entra/identity/conditional-access/reference-office-365-application-contents) <li> `MicrosoftAdminPortals` - For more information, see [Conditional Access Target resources: Microsoft Admin Portals](/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals). The _provider_ default value is `[]`.
-- `global_secure_access` (Attributes) Represents traffic profile for Global Secure Access. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessglobalsecureaccess?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--applications--global_secure_access))
-- `include_applications` (Set of String) Can be one of the following: <li> The list of client IDs (**appId**) the policy applies to, unless explicitly excluded (in **excludeApplications**) <li> `All` <li> `Office365` - For the list of apps included in `Office365`, see [Apps included in Conditional Access Office 365 app suite](/entra/identity/conditional-access/reference-office-365-application-contents) <li> `MicrosoftAdminPortals` - For more information, see [Conditional Access Target resources: Microsoft Admin Portals](/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals). The _provider_ default value is `[]`.
-- `include_authentication_context_class_references` (Set of String) Authentication context class references include. Supported values are `c1` through `c25`. The _provider_ default value is `[]`.
-- `include_user_actions` (Set of String) User actions to include. Supported values are `urn:user:registersecurityinfo` and `urn:user:registerdevice`. The _provider_ default value is `[]`.
-- `network_access` (Attributes) Represents traffic profile for Global Secure Access. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessnetworkaccess?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--applications--network_access))
+- `application_filter` (Attributes) Filter that defines the dynamic-application-syntax rule to include/exclude cloud applications. A filter can use custom security attributes to include/exclude applications. / Represents filter in the policy scope. Also see [Microsoft docs for conditionalAccessFilter](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--applications--application_filter))
+- `exclude_applications` (Set of String) Can be one of the following: <br/> - The list of client IDs (**appId**) explicitly excluded from the policy. <br/> - `Office365` - For the list of apps included in `Office365`, see [Apps included in Conditional Access Office 365 app suite](https://learn.microsoft.com/en-us/entra/identity/conditional-access/reference-office-365-application-contents) <br/> - `MicrosoftAdminPortals` - For more information, see [Conditional Access Target resources: Microsoft Admin Portals](https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals) <br/> The _provider_ default value is `[]`.
+- `global_secure_access` (Attributes) Represents traffic profile for Global Secure Access. Also see [Microsoft docs for conditionalAccessGlobalSecureAccess](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessglobalsecureaccess?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--applications--global_secure_access))
+- `include_applications` (Set of String) Can be one of the following: <br/> - The list of client IDs (**appId**) the policy applies to, unless explicitly excluded (in **excludeApplications**) <br/> - `All` <br/> - `Office365` - For the list of apps included in `Office365`, see [Apps included in Conditional Access Office 365 app suite](https://learn.microsoft.com/en-us/entra/identity/conditional-access/reference-office-365-application-contents) <br/> - `MicrosoftAdminPortals` - For more information, see [Conditional Access Target resources: Microsoft Admin Portals](https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals) <br/> The _provider_ default value is `[]`.
+- `include_authentication_context_class_references` (Set of String) Authentication context class references include. Supported values are `c1` through `c25`. <br/> The _provider_ default value is `[]`.
+- `include_user_actions` (Set of String) User actions to include. Supported values are `urn:user:registersecurityinfo` and `urn:user:registerdevice` <br/> The _provider_ default value is `[]`.
+- `network_access` (Attributes) Represents traffic profile for Global Secure Access. Also see [Microsoft docs for conditionalAccessNetworkAccess](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessnetworkaccess?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--applications--network_access))
 
 <a id="nestedatt--conditions--applications--application_filter"></a>
 ### Nested Schema for `conditions.applications.application_filter`
 
 Required:
 
-- `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. / Possible values are: `include`, `exclude`
-- `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
+- `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. <br/> _Provider_ allowed values are: `include`, `exclude`.
+- `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
 
 
 <a id="nestedatt--conditions--applications--global_secure_access"></a>
@@ -190,7 +190,7 @@ Required:
 
 Required:
 
-- `transfer_methods` (String) Represents the transfer methods in scope for the policy. The / Possible values are: `none`, `deviceCodeFlow`, `authenticationTransfer`, `unknownFutureValue`
+- `transfer_methods` (String) Represents the transfer methods in scope for the policy. <br/> _Provider_ allowed values are: `none`, `deviceCodeFlow`, `authenticationTransfer`, `unknownFutureValue`.
 
 
 <a id="nestedatt--conditions--client_applications"></a>
@@ -198,20 +198,20 @@ Required:
 
 Optional:
 
-- `agent_id_service_principal_filter` (Attributes) Filter that defines rules based on custom security attribute tags to include/exclude agent identities in the policy. / Represents filter in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--client_applications--agent_id_service_principal_filter))
-- `exclude_agent_id_service_principals` (Set of String) Agent identity object IDs excluded from the policy. The _provider_ default value is `[]`.
-- `exclude_service_principals` (Set of String) Service principal IDs excluded from the policy scope. The _provider_ default value is `[]`.
-- `include_agent_id_service_principals` (Set of String) Agent identity object IDs included in the policy. The _provider_ default value is `[]`.
-- `include_service_principals` (Set of String) Service principal IDs included in the policy scope or `ServicePrincipalsInMyTenant`. The _provider_ default value is `[]`.
-- `service_principal_filter` (Attributes) Filter that defines the dynamic-servicePrincipal-syntax rule to include/exclude service principals. A filter can use custom security attributes to include/exclude service principals. / Represents filter in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--client_applications--service_principal_filter))
+- `agent_id_service_principal_filter` (Attributes) Filter that defines rules based on custom security attribute tags to include/exclude agent identities in the policy. / Represents filter in the policy scope. Also see [Microsoft docs for conditionalAccessFilter](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--client_applications--agent_id_service_principal_filter))
+- `exclude_agent_id_service_principals` (Set of String) Agent identity object IDs excluded from the policy. <br/> The _provider_ default value is `[]`.
+- `exclude_service_principals` (Set of String) Service principal IDs excluded from the policy scope. <br/> The _provider_ default value is `[]`.
+- `include_agent_id_service_principals` (Set of String) Agent identity object IDs included in the policy. <br/> The _provider_ default value is `[]`.
+- `include_service_principals` (Set of String) Service principal IDs included in the policy scope or `ServicePrincipalsInMyTenant`. <br/> The _provider_ default value is `[]`.
+- `service_principal_filter` (Attributes) Filter that defines the dynamic-servicePrincipal-syntax rule to include/exclude service principals. A filter can use custom security attributes to include/exclude service principals. / Represents filter in the policy scope. Also see [Microsoft docs for conditionalAccessFilter](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--client_applications--service_principal_filter))
 
 <a id="nestedatt--conditions--client_applications--agent_id_service_principal_filter"></a>
 ### Nested Schema for `conditions.client_applications.agent_id_service_principal_filter`
 
 Required:
 
-- `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. / Possible values are: `include`, `exclude`
-- `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
+- `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. <br/> _Provider_ allowed values are: `include`, `exclude`.
+- `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
 
 
 <a id="nestedatt--conditions--client_applications--service_principal_filter"></a>
@@ -219,8 +219,8 @@ Required:
 
 Required:
 
-- `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. / Possible values are: `include`, `exclude`
-- `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
+- `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. <br/> _Provider_ allowed values are: `include`, `exclude`.
+- `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
 
 
 
@@ -229,8 +229,8 @@ Required:
 
 Optional:
 
-- `exclude_states` (Set of String) States excluded from the scope of the policy. Possible values: `Compliant`, `DomainJoined`. The _provider_ default value is `[]`.
-- `include_states` (Set of String) States in the scope of the policy. `All` is the only allowed value. The _provider_ default value is `[]`.
+- `exclude_states` (Set of String) States excluded from the scope of the policy. Possible values: `Compliant`, `DomainJoined`. <br/> The _provider_ default value is `[]`.
+- `include_states` (Set of String) States in the scope of the policy. `All` is the only allowed value. <br/> The _provider_ default value is `[]`.
 
 
 <a id="nestedatt--conditions--devices"></a>
@@ -238,19 +238,19 @@ Optional:
 
 Optional:
 
-- `device_filter` (Attributes) Filter that defines the dynamic-device-syntax rule to include/exclude devices. A filter can use device properties (such as extension attributes) to include/exclude them. Cannot be set if **includeDevices** or **excludeDevices** is set. / Represents filter in the policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--devices--device_filter))
-- `exclude_device_states` (Set of String) . The _provider_ default value is `[]`.
-- `exclude_devices` (Set of String) States excluded from the scope of the policy. Possible values: `Compliant`, `DomainJoined`. Cannot be set if **deviceFIlter** is set. The _provider_ default value is `[]`.
-- `include_device_states` (Set of String) . The _provider_ default value is `[]`.
-- `include_devices` (Set of String) States in the scope of the policy. `All` is the only allowed value. Cannot be set if **deviceFilter** is set. The _provider_ default value is `[]`.
+- `device_filter` (Attributes) Filter that defines the dynamic-device-syntax rule to include/exclude devices. A filter can use device properties (such as extension attributes) to include/exclude them. Cannot be set if **includeDevices** or **excludeDevices** is set. / Represents filter in the policy scope. Also see [Microsoft docs for conditionalAccessFilter](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--devices--device_filter))
+- `exclude_device_states` (Set of String) The _provider_ default value is `[]`.
+- `exclude_devices` (Set of String) States excluded from the scope of the policy. Possible values: `Compliant`, `DomainJoined`. Cannot be set if **deviceFIlter** is set. <br/> The _provider_ default value is `[]`.
+- `include_device_states` (Set of String) The _provider_ default value is `[]`.
+- `include_devices` (Set of String) States in the scope of the policy. `All` is the only allowed value. Cannot be set if **deviceFilter** is set. <br/> The _provider_ default value is `[]`.
 
 <a id="nestedatt--conditions--devices--device_filter"></a>
 ### Nested Schema for `conditions.devices.device_filter`
 
 Required:
 
-- `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. / Possible values are: `include`, `exclude`
-- `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
+- `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. <br/> _Provider_ allowed values are: `include`, `exclude`.
+- `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
 
 
 
@@ -259,8 +259,8 @@ Required:
 
 Optional:
 
-- `exclude_locations` (Set of String) Location IDs excluded from scope of policy. The _provider_ default value is `[]`.
-- `include_locations` (Set of String) Location IDs in scope of policy unless explicitly excluded, `All`, or `AllTrusted`. The _provider_ default value is `[]`.
+- `exclude_locations` (Set of String) Location IDs excluded from scope of policy. <br/> The _provider_ default value is `[]`.
+- `include_locations` (Set of String) Location IDs in scope of policy unless explicitly excluded, `All`, or `AllTrusted`. <br/> The _provider_ default value is `[]`.
 
 
 <a id="nestedatt--conditions--platforms"></a>
@@ -268,11 +268,11 @@ Optional:
 
 Required:
 
-- `include_platforms` (Set of String) linux``. / Possible values are: `android`, `iOS`, `windows`, `windowsPhone`, `macOS`, `all`, `unknownFutureValue`, `linux`
+- `include_platforms` (Set of String) linux``. <br/> _Provider_ allowed values are: `android`, `iOS`, `windows`, `windowsPhone`, `macOS`, `all`, `unknownFutureValue`, `linux`.
 
 Optional:
 
-- `exclude_platforms` (Set of String) Possible values are: `android`, `iOS`, `windows`, `windowsPhone`, `macOS`, `all`, `unknownFutureValue`, `linux`. The _provider_ default value is `[]`.
+- `exclude_platforms` (Set of String) _Provider_ allowed values are: `android`, `iOS`, `windows`, `windowsPhone`, `macOS`, `all`, `unknownFutureValue`, `linux`. The _provider_ default value is `[]`.
 
 
 <a id="nestedatt--conditions--users"></a>
@@ -280,36 +280,34 @@ Optional:
 
 Optional:
 
-- `exclude_groups` (Set of String) Group IDs excluded from scope of policy. The _provider_ default value is `[]`.
-- `exclude_guests_or_external_users` (Attributes) Internal guests or external users excluded from the policy scope. Optionally populated. / Represents internal guests and external users in a policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessguestsorexternalusers?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users))
-- `exclude_roles` (Set of String) Role IDs excluded from scope of policy. The _provider_ default value is `[]`.
-- `exclude_users` (Set of String) User IDs excluded from scope of policy and/or `GuestsOrExternalUsers`. The _provider_ default value is `[]`.
-- `include_groups` (Set of String) Group IDs in scope of policy unless explicitly excluded. The _provider_ default value is `[]`.
-- `include_guests_or_external_users` (Attributes) Internal guests or external users included in the policy scope. Optionally populated. / Represents internal guests and external users in a policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessguestsorexternalusers?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users))
-- `include_roles` (Set of String) Role IDs in scope of policy unless explicitly excluded. The _provider_ default value is `[]`.
-- `include_users` (Set of String) User IDs in scope of policy unless explicitly excluded, `None`, `All`, or `GuestsOrExternalUsers`. The _provider_ default value is `[]`.
+- `exclude_groups` (Set of String) Group IDs excluded from scope of policy. <br/> The _provider_ default value is `[]`.
+- `exclude_guests_or_external_users` (Attributes) Internal guests or external users excluded from the policy scope. Optionally populated. / Represents internal guests and external users in a policy scope. Also see [Microsoft docs for conditionalAccessGuestsOrExternalUsers](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessguestsorexternalusers?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users))
+- `exclude_roles` (Set of String) Role IDs excluded from scope of policy. <br/> The _provider_ default value is `[]`.
+- `exclude_users` (Set of String) User IDs excluded from scope of policy and/or `GuestsOrExternalUsers`. <br/> The _provider_ default value is `[]`.
+- `include_groups` (Set of String) Group IDs in scope of policy unless explicitly excluded. <br/> The _provider_ default value is `[]`.
+- `include_guests_or_external_users` (Attributes) Internal guests or external users included in the policy scope. Optionally populated. / Represents internal guests and external users in a policy scope. Also see [Microsoft docs for conditionalAccessGuestsOrExternalUsers](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessguestsorexternalusers?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users))
+- `include_roles` (Set of String) Role IDs in scope of policy unless explicitly excluded. <br/> The _provider_ default value is `[]`.
+- `include_users` (Set of String) User IDs in scope of policy unless explicitly excluded, `None`, `All`, or `GuestsOrExternalUsers`. <br/> The _provider_ default value is `[]`.
 
 <a id="nestedatt--conditions--users--exclude_guests_or_external_users"></a>
 ### Nested Schema for `conditions.users.exclude_guests_or_external_users`
 
 Required:
 
-- `guest_or_external_user_types` (String) Indicates internal guests or external user types, and is a multi-valued property. / Possible values are: `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue`
+- `guest_or_external_user_types` (String) Indicates internal guests or external user types, and is a multi-valued property. <br/> _Provider_ allowed values are: `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue`.
 
 Optional:
 
-- `external_tenants` (Attributes) The tenant IDs of the selected types of external users. Either all B2B tenant or a collection of tenant IDs. External tenants can be specified only when the property **guestOrExternalUserTypes** isn't `null` or an empty String. / An abstract type that represents external tenants in a policy scope.
-
-Base type of [conditionalAccessAllExternalTenants](../resources/conditionalaccessallexternaltenants.md) and [conditionalAccessEnumeratedExternalTenants](conditionalaccessenumeratedexternaltenants.md). / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessexternaltenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants))
+- `external_tenants` (Attributes) The tenant IDs of the selected types of external users. Either all B2B tenant or a collection of tenant IDs. External tenants can be specified only when the property **guestOrExternalUserTypes** isn't `null` or an empty String. / An abstract type that represents external tenants in a policy scope. Also see [Microsoft docs for conditionalAccessExternalTenants](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessexternaltenants?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants))
 
 <a id="nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants"></a>
 ### Nested Schema for `conditions.users.exclude_guests_or_external_users.external_tenants`
 
 Optional:
 
-- `all` (Attributes) Represents all external tenants in a policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessallexternaltenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--all))
-- `enumerated` (Attributes) Represents a list of external tenants in a policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessenumeratedexternaltenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--enumerated))
-- `membership_kind` (String) The membership kind. The `enumerated` member references an [conditionalAccessEnumeratedExternalTenants](conditionalaccessenumeratedexternaltenants.md) object. / Possible values are: `all`, `enumerated`, `unknownFutureValue`
+- `all` (Attributes) Represents all external tenants in a policy scope. Also see [Microsoft docs for conditionalAccessAllExternalTenants](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessallexternaltenants?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--all))
+- `enumerated` (Attributes) Represents a list of external tenants in a policy scope. Also see [Microsoft docs for conditionalAccessEnumeratedExternalTenants](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessenumeratedexternaltenants?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--enumerated))
+- `membership_kind` (String) The membership kind. The `enumerated` member references an [conditionalAccessEnumeratedExternalTenants](conditionalaccessenumeratedexternaltenants.md) object. <br/> _Provider_ allowed values are: `all`, `enumerated`, `unknownFutureValue`.
 
 <a id="nestedatt--conditions--users--exclude_guests_or_external_users--external_tenants--all"></a>
 ### Nested Schema for `conditions.users.exclude_guests_or_external_users.external_tenants.all`
@@ -330,22 +328,20 @@ Required:
 
 Required:
 
-- `guest_or_external_user_types` (String) Indicates internal guests or external user types, and is a multi-valued property. / Possible values are: `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue`
+- `guest_or_external_user_types` (String) Indicates internal guests or external user types, and is a multi-valued property. <br/> _Provider_ allowed values are: `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue`.
 
 Optional:
 
-- `external_tenants` (Attributes) The tenant IDs of the selected types of external users. Either all B2B tenant or a collection of tenant IDs. External tenants can be specified only when the property **guestOrExternalUserTypes** isn't `null` or an empty String. / An abstract type that represents external tenants in a policy scope.
-
-Base type of [conditionalAccessAllExternalTenants](../resources/conditionalaccessallexternaltenants.md) and [conditionalAccessEnumeratedExternalTenants](conditionalaccessenumeratedexternaltenants.md). / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessexternaltenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--external_tenants))
+- `external_tenants` (Attributes) The tenant IDs of the selected types of external users. Either all B2B tenant or a collection of tenant IDs. External tenants can be specified only when the property **guestOrExternalUserTypes** isn't `null` or an empty String. / An abstract type that represents external tenants in a policy scope. Also see [Microsoft docs for conditionalAccessExternalTenants](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessexternaltenants?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--external_tenants))
 
 <a id="nestedatt--conditions--users--include_guests_or_external_users--external_tenants"></a>
 ### Nested Schema for `conditions.users.include_guests_or_external_users.external_tenants`
 
 Optional:
 
-- `all` (Attributes) Represents all external tenants in a policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessallexternaltenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--external_tenants--all))
-- `enumerated` (Attributes) Represents a list of external tenants in a policy scope. / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessenumeratedexternaltenants?view=graph-rest-beta (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--external_tenants--enumerated))
-- `membership_kind` (String) The membership kind. The `enumerated` member references an [conditionalAccessEnumeratedExternalTenants](conditionalaccessenumeratedexternaltenants.md) object. / Possible values are: `all`, `enumerated`, `unknownFutureValue`
+- `all` (Attributes) Represents all external tenants in a policy scope. Also see [Microsoft docs for conditionalAccessAllExternalTenants](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessallexternaltenants?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--external_tenants--all))
+- `enumerated` (Attributes) Represents a list of external tenants in a policy scope. Also see [Microsoft docs for conditionalAccessEnumeratedExternalTenants](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessenumeratedexternaltenants?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--users--include_guests_or_external_users--external_tenants--enumerated))
+- `membership_kind` (String) The membership kind. The `enumerated` member references an [conditionalAccessEnumeratedExternalTenants](conditionalaccessenumeratedexternaltenants.md) object. <br/> _Provider_ allowed values are: `all`, `enumerated`, `unknownFutureValue`.
 
 <a id="nestedatt--conditions--users--include_guests_or_external_users--external_tenants--all"></a>
 ### Nested Schema for `conditions.users.include_guests_or_external_users.external_tenants.all`
@@ -372,10 +368,10 @@ Required:
 
 Optional:
 
-- `authentication_strength` (Attributes) The authentication strength required by the conditional access policy. Optional. / A collection of settings that define specific combinations of authentication methods and metadata. The authentication strength policy, when applied to a given scenario using Microsoft Entra Conditional Access, defines which authentication methods must be used to authenticate in that scenario. An authentication strength may be built-in or custom (defined by the tenant) and may or may not fulfill the requirements to grant an MFA claim. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta (see [below for nested schema](#nestedatt--grant_controls--authentication_strength))
-- `built_in_controls` (Set of String) List of values of built-in controls required by the policy. Possible values: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`. / Possible values are: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`, `riskRemediation`. The _provider_ default value is `[]`.
-- `custom_authentication_factors` (Set of String) List of custom controls IDs required by the policy. To learn more about custom control, see [Custom controls (preview)](/azure/active-directory/conditional-access/controls#custom-controls-preview). The _provider_ default value is `[]`.
-- `terms_of_use` (Set of String) List of [terms of use](agreement.md) IDs required by the policy. The _provider_ default value is `[]`.
+- `authentication_strength` (Attributes) The authentication strength required by the conditional access policy. Optional. / A collection of settings that define specific combinations of authentication methods and metadata. The authentication strength policy, when applied to a given scenario using Microsoft Entra Conditional Access, defines which authentication methods must be used to authenticate in that scenario. An authentication strength may be built-in or custom (defined by the tenant) and may or may not fulfill the requirements to grant an MFA claim. Also see [Microsoft docs for authenticationStrengthPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--grant_controls--authentication_strength))
+- `built_in_controls` (Set of String) List of values of built-in controls required by the policy. Possible values: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`, `riskRemediation`. Use the `Prefer: include-unknown-enum-members` request header to get the following value in this evolvable enum: `riskRemediation`. <br/> _Provider_ allowed values are: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`, `riskRemediation`. The _provider_ default value is `[]`.
+- `custom_authentication_factors` (Set of String) List of custom controls IDs required by the policy. For more information, see [Custom controls](https://learn.microsoft.com/en-us/entra/identity/conditional-access/controls). <br/> The _provider_ default value is `[]`.
+- `terms_of_use` (Set of String) List of [terms of use](https://learn.microsoft.com/en-us/graph/api/resources/agreement) IDs required by the policy. <br/> The _provider_ default value is `[]`.
 
 <a id="nestedatt--grant_controls--authentication_strength"></a>
 ### Nested Schema for `grant_controls.authentication_strength`
@@ -386,13 +382,13 @@ Required:
 
 Read-Only:
 
-- `allowed_combinations` (Set of String) A collection of authentication method modes that are required be used to satify this authentication strength. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`
+- `allowed_combinations` (Set of String) A collection of authentication method modes that are required be used to satify this authentication strength. <br/> _Provider_ allowed values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`.
 - `created_date_time` (String) The datetime when this policy was created.
 - `description` (String) The human-readable description of this policy.
-- `display_name` (String) The human-readable display name of this policy. <br><br>Supports `$filter` (`eq`, `ne`, `not` , and `in`).
+- `display_name` (String) The human-readable display name of this policy. <br/> Supports `$filter` (`eq`, `ne`, `not` , and `in`).
 - `modified_date_time` (String) The datetime when this policy was last modified.
-- `policy_type` (String) A descriptor of whether this policy is built into Microsoft Entra Conditional Access or created by an admin for the tenant. The <br><br>Supports `$filter` (`eq`, `ne`, `not` , and `in`). / Possible values are: `builtIn`, `custom`, `unknownFutureValue`
-- `requirements_satisfied` (String) A descriptor of whether this authentication strength grants the MFA claim upon successful satisfaction. The / Possible values are: `none`, `mfa`, `unknownFutureValue`
+- `policy_type` (String) A descriptor of whether this policy is built into Microsoft Entra Conditional Access or created by an admin for the tenant. <br/> Supports `$filter` (`eq`, `ne`, `not` , and `in`). <br/> _Provider_ allowed values are: `builtIn`, `custom`, `unknownFutureValue`.
+- `requirements_satisfied` (String) A descriptor of whether this authentication strength grants the MFA claim upon successful satisfaction. <br/> _Provider_ allowed values are: `none`, `mfa`, `unknownFutureValue`.
 
 
 
@@ -401,14 +397,14 @@ Read-Only:
 
 Optional:
 
-- `application_enforced_restrictions` (Attributes) Session control to enforce application restrictions. Only Exchange Online and Sharepoint Online support this session control. / Session control to enforce application restrictions. Inherit from [Conditional Access Session Control](conditionalaccesssessioncontrol.md). / https://learn.microsoft.com/en-us/graph/api/resources/applicationenforcedrestrictionssessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--application_enforced_restrictions))
-- `cloud_app_security` (Attributes) Session control to apply cloud app security. / Session control used to enforce cloud app security checks. Inehrits from [Conditional Access Session Control](conditionalaccesssessioncontrol.md). / https://learn.microsoft.com/en-us/graph/api/resources/cloudappsecuritysessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--cloud_app_security))
-- `continuous_access_evaluation` (Attributes) Session control for continuous access evaluation settings. / Session control to control continuous access evaluation settings. / https://learn.microsoft.com/en-us/graph/api/resources/continuousaccessevaluationsessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--continuous_access_evaluation))
-- `disable_resilience_defaults` (Boolean) Session control that determines whether it's acceptable for Microsoft Entra ID to extend existing sessions based on information collected prior to an outage or not. The _provider_ default value is `false`.
-- `global_secure_access_filtering_profile` (Attributes) Session control to link to Global Secure Access security profiles or filtering profiles. / Session control to link to a Global Secure Access security profile or filtering profile. / https://learn.microsoft.com/en-us/graph/api/resources/globalsecureaccessfilteringprofilesessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--global_secure_access_filtering_profile))
-- `persistent_browser` (Attributes) Session control to define whether to persist cookies or not. All apps should be selected for this session control to work correctly. / Session control to define whether to persist cookies or not. / https://learn.microsoft.com/en-us/graph/api/resources/persistentbrowsersessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--persistent_browser))
-- `secure_sign_in_session` (Attributes) Session control to require sign in sessions to be bound to a device. / Session control to require sign in sessions to be bound to a device. / https://learn.microsoft.com/en-us/graph/api/resources/securesigninsessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--secure_sign_in_session))
-- `sign_in_frequency` (Attributes) Session control to enforce signin frequency. / Session control to enforce sign-in frequency. / https://learn.microsoft.com/en-us/graph/api/resources/signinfrequencysessioncontrol?view=graph-rest-beta (see [below for nested schema](#nestedatt--session_controls--sign_in_frequency))
+- `application_enforced_restrictions` (Attributes) Session control to enforce application restrictions. Only Exchange Online and Sharepoint Online support this session control. / Session control to enforce application restrictions. Inherit from [Conditional Access Session Control](conditionalaccesssessioncontrol.md). Also see [Microsoft docs for applicationEnforcedRestrictionsSessionControl](https://learn.microsoft.com/en-us/graph/api/resources/applicationenforcedrestrictionssessioncontrol?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--session_controls--application_enforced_restrictions))
+- `cloud_app_security` (Attributes) Session control to apply cloud app security. / Session control used to enforce cloud app security checks. Inehrits from [Conditional Access Session Control](conditionalaccesssessioncontrol.md). Also see [Microsoft docs for cloudAppSecuritySessionControl](https://learn.microsoft.com/en-us/graph/api/resources/cloudappsecuritysessioncontrol?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--session_controls--cloud_app_security))
+- `continuous_access_evaluation` (Attributes) Session control for continuous access evaluation settings. / Session control to control continuous access evaluation settings. Also see [Microsoft docs for continuousAccessEvaluationSessionControl](https://learn.microsoft.com/en-us/graph/api/resources/continuousaccessevaluationsessioncontrol?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--session_controls--continuous_access_evaluation))
+- `disable_resilience_defaults` (Boolean) Session control that determines whether it's acceptable for Microsoft Entra ID to extend existing sessions based on information collected prior to an outage or not. <br/> The _provider_ default value is `false`.
+- `global_secure_access_filtering_profile` (Attributes) Session control to link to Global Secure Access security profiles or filtering profiles. / Session control to link to a Global Secure Access security profile or filtering profile. Also see [Microsoft docs for globalSecureAccessFilteringProfileSessionControl](https://learn.microsoft.com/en-us/graph/api/resources/globalsecureaccessfilteringprofilesessioncontrol?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--session_controls--global_secure_access_filtering_profile))
+- `persistent_browser` (Attributes) Session control to define whether to persist cookies or not. All apps should be selected for this session control to work correctly. / Session control to define whether to persist cookies or not. Also see [Microsoft docs for persistentBrowserSessionControl](https://learn.microsoft.com/en-us/graph/api/resources/persistentbrowsersessioncontrol?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--session_controls--persistent_browser))
+- `secure_sign_in_session` (Attributes) Session control to require sign in sessions to be bound to a device. / Session control to require sign in sessions to be bound to a device. Also see [Microsoft docs for secureSignInSessionControl](https://learn.microsoft.com/en-us/graph/api/resources/securesigninsessioncontrol?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--session_controls--secure_sign_in_session))
+- `sign_in_frequency` (Attributes) Session control to enforce signin frequency. / Session control to enforce sign-in frequency. Also see [Microsoft docs for signInFrequencySessionControl](https://learn.microsoft.com/en-us/graph/api/resources/signinfrequencysessioncontrol?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--session_controls--sign_in_frequency))
 
 <a id="nestedatt--session_controls--application_enforced_restrictions"></a>
 ### Nested Schema for `session_controls.application_enforced_restrictions`
@@ -423,7 +419,7 @@ Optional:
 
 Optional:
 
-- `cloud_app_security_type` (String) To learn more about these values, [Deploy Conditional Access App Control for featured apps](/cloud-app-security/proxy-deployment-aad#step-1--configure-your-idp-to-work-with-cloud-app-security). / Possible values are: `mcasConfigured`, `monitorOnly`, `blockDownloads`, `unknownFutureValue`
+- `cloud_app_security_type` (String) To learn more about these values, [Deploy Conditional Access App Control for featured apps](https://learn.microsoft.com/en-us/cloud-app-security/proxy-deployment-aad#step-1--configure-your-idp-to-work-with-cloud-app-security). <br/> _Provider_ allowed values are: `mcasConfigured`, `monitorOnly`, `blockDownloads`, `unknownFutureValue`.
 - `is_enabled` (Boolean) Specifies whether the session control is enabled.
 
 
@@ -432,7 +428,7 @@ Optional:
 
 Optional:
 
-- `mode` (String) Specifies continuous access evaluation settings. The Use the `Prefer: include-unknown-enum-members` request header to get the following value(s) in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `strictLocation`. / Possible values are: `strictEnforcement`, `disabled`, `unknownFutureValue`, `strictLocation`
+- `mode` (String) Specifies continuous access evaluation settings. <br/> _Provider_ allowed values are: `strictEnforcement`, `disabled`, `unknownFutureValue`, `strictLocation`.
 
 
 <a id="nestedatt--session_controls--global_secure_access_filtering_profile"></a>
@@ -441,7 +437,7 @@ Optional:
 Optional:
 
 - `is_enabled` (Boolean) Specifies whether the session control is enabled.
-- `profile_id` (String) Specifies the distinct identifier that is assigned to the security profile or filtering profile. The _provider_ default value is `""`.
+- `profile_id` (String) Specifies the distinct identifier that is assigned to the security profile or filtering profile. <br/> The _provider_ default value is `""`.
 
 
 <a id="nestedatt--session_controls--persistent_browser"></a>
@@ -450,7 +446,7 @@ Optional:
 Optional:
 
 - `is_enabled` (Boolean) Specifies whether the session control is enabled.
-- `mode` (String) Possible values are: `always`, `never`
+- `mode` (String) _Provider_ allowed values are: `always`, `never`.
 
 
 <a id="nestedatt--session_controls--secure_sign_in_session"></a>
@@ -466,8 +462,8 @@ Optional:
 
 Optional:
 
-- `authentication_type` (String) The possible values are `primaryAndSecondaryAuthentication`, `secondaryAuthentication`, `unknownFutureValue`. This property isn't required when using **frequencyInterval** with the value of `timeBased`. / Possible values are: `primaryAndSecondaryAuthentication`, `secondaryAuthentication`, `unknownFutureValue`
-- `frequency_interval` (String) The possible values are `timeBased`, `everyTime`, `unknownFutureValue`. Sign-in frequency of `everyTime` is available for risky users, risky sign-ins, Intune device enrollment, any application, authentication context, and user actions. For more information, see [Require reauthentication every time](https://aka.ms/RequireReauthentication). / Possible values are: `timeBased`, `everyTime`, `unknownFutureValue`
+- `authentication_type` (String) The possible values are `primaryAndSecondaryAuthentication`, `secondaryAuthentication`, `unknownFutureValue`. This property isn't required when using **frequencyInterval** with the value of `timeBased`. <br/> _Provider_ allowed values are: `primaryAndSecondaryAuthentication`, `secondaryAuthentication`, `unknownFutureValue`.
+- `frequency_interval` (String) The possible values are `timeBased`, `everyTime`, `unknownFutureValue`. Sign-in frequency of `everyTime` is available for risky users, risky sign-ins, Intune device enrollment, any application, authentication context, and user actions. For more information, see [Require reauthentication every time](https://aka.ms/RequireReauthentication). <br/> _Provider_ allowed values are: `timeBased`, `everyTime`, `unknownFutureValue`.
 - `is_enabled` (Boolean) Specifies whether the session control is enabled.
-- `type` (String) or `null` if **frequencyInterval** is `everyTime` . / Possible values are: `days`, `hours`
+- `type` (String) if **frequencyInterval** is `everyTime` . <br/> _Provider_ allowed values are: `days`, `hours`.
 - `value` (Number) The number of `days` or `hours`.

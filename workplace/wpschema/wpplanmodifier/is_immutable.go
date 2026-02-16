@@ -63,7 +63,7 @@ func (pm IsImmutable) planModifyImpl(ctx context.Context, diags *diag.Diagnostic
 	}
 
 	if pm.OnlyIfCurrentValueIs != nil {
-		onlyIfCurrentValueIsFw := wpschemautil.GetFwValueFromAny(ctx, diags, &schema, path, pm.OnlyIfCurrentValueIs)
+		onlyIfCurrentValueIsFw := wpschemautil.GetFwAttrValueFromAny(ctx, diags, &schema, path, pm.OnlyIfCurrentValueIs)
 		if diags.HasError() {
 			return
 		}

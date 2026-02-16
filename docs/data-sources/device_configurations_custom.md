@@ -5,9 +5,9 @@ subcategory: "MS Graph: Device configuration"
 
 # microsoft365wp_device_configurations_custom (Data Source)
 
-Device Configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta
+Device Configuration. <br/> Also see [Microsoft docs for deviceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta).
 
-Provider Note: When using values of type `base64`, `string` or `string_xml` the write permission `DeviceManagementConfiguration.ReadWrite.All` is required also for plan operations. This is due to the fact that values of these types are saved encrypted in MS Graph and need to be retrieved using the special MS Graph action `getOmaSettingPlainTextValue` (which requires write permissions) when reading. Also see https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-deviceconfiguration-getomasettingplaintextvalue
+_Provider_ Note: When using values of type `base64`, `string` or `string_xml` the write permission `DeviceManagementConfiguration.ReadWrite.All` is required also for plan operations. This is due to the fact that values of these types are saved encrypted in MS Graph and need to be retrieved using the special MS Graph action `getOmaSettingPlainTextValue` (which requires write permissions) when reading. Also see https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-deviceconfiguration-getomasettingplaintextvalue
 
 ## Documentation Disclaimer
 
@@ -84,7 +84,7 @@ Read-Only:
 - `display_name` (String) Admin provided name of the device configuration.
 - `id` (String) Key of the entity.
 - `last_modified_date_time` (String) DateTime the object was last modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>
 - `version` (Number) Version of the device configuration.
 - `windows10` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windows10CustomConfiguration` (using e.g. `if x.windows10 != null`). (see [below for nested schema](#nestedatt--device_configurations_custom--windows10))
 

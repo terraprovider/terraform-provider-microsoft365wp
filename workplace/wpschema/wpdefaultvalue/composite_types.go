@@ -2,72 +2,80 @@ package wpdefaultvalue
 
 import (
 	"context"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpschemautil"
 
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	rsschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/defaults"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 //
-// ObjectDefaultValue / objectDefaultValueAttributePlanModifier
+// ObjectDefaultValue / objectDefaultValue
 //
 
-type objectDefaultValueAttributePlanModifier struct {
-	defaultValueAttributePlanModifier
-	defaultValueRaw map[string]any
+var _ DefaultValueWithInit = &objectDefaultValue{}
+
+type objectDefaultValue struct {
+	defaultValueBase
+	defaultValFw types.Object
 }
 
-// ATTENTION: Plan modifiers on the nested object's attributes will overwrite any attribute set here!
-// For background see note at top of commong.go.
-func ObjectDefaultValue(defaultValueRaw map[string]any) planmodifier.Object {
-	return objectDefaultValueAttributePlanModifier{defaultValueRaw: defaultValueRaw}
+func ObjectDefaultValue(defaultValueRaw map[string]any) defaults.Object {
+	return &objectDefaultValue{defaultValueBase: defaultValueBase{defaultValRaw: defaultValueRaw}}
 }
 
-func ObjectDefaultValueEmpty() planmodifier.Object {
-	return ObjectDefaultValue(map[string]any{})
+func (d *objectDefaultValue) Init(ctx context.Context, diags *diag.Diagnostics, schema *rsschema.Schema, path path.Path) {
+	d.defaultValFw = wpschemautil.GetFwTypedValueFromAny[types.Object](ctx, diags, schema, path, d.defaultValRaw)
 }
 
-func (attributePlanModifier objectDefaultValueAttributePlanModifier) PlanModifyObject(ctx context.Context, request planmodifier.ObjectRequest, response *planmodifier.ObjectResponse) {
-	defaultValuePlanModify(ctx, &response.Diagnostics, request.Config.Schema.(rsschema.Schema), request.Path, request.ConfigValue, attributePlanModifier.defaultValueRaw, &response.PlanValue)
-}
-
-//
-// ListDefaultValue / listDefaultValueAttributePlanModifier
-//
-
-type listDefaultValueAttributePlanModifier struct {
-	defaultValueAttributePlanModifier
-	defaultValueRaw []any
-}
-
-func ListDefaultValue(defaultValueRaw []any) planmodifier.List {
-	return listDefaultValueAttributePlanModifier{defaultValueRaw: defaultValueRaw}
-}
-
-func ListDefaultValueEmpty() planmodifier.List {
-	return ListDefaultValue([]any{})
-}
-
-func (attributePlanModifier listDefaultValueAttributePlanModifier) PlanModifyList(ctx context.Context, request planmodifier.ListRequest, response *planmodifier.ListResponse) {
-	defaultValuePlanModify(ctx, &response.Diagnostics, request.Config.Schema.(rsschema.Schema), request.Path, request.ConfigValue, attributePlanModifier.defaultValueRaw, &response.PlanValue)
+func (d objectDefaultValue) DefaultObject(ctx context.Context, req defaults.ObjectRequest, resp *defaults.ObjectResponse) {
+	resp.PlanValue = d.defaultValFw
 }
 
 //
-// SetDefaultValue / setDefaultValueAttributePlanModifier
+// SetDefaultValue / setDefaultValue
 //
 
-type setDefaultValueAttributePlanModifier struct {
-	defaultValueAttributePlanModifier
-	defaultValueRaw []any
+var _ DefaultValueWithInit = &setDefaultValue{}
+
+type setDefaultValue struct {
+	defaultValueBase
+	defaultValFw types.Set
 }
 
-func SetDefaultValue(defaultValueRaw []any) planmodifier.Set {
-	return setDefaultValueAttributePlanModifier{defaultValueRaw: defaultValueRaw}
+func SetDefaultValue(defaultValueRaw []any) defaults.Set {
+	return &setDefaultValue{defaultValueBase: defaultValueBase{defaultValRaw: defaultValueRaw}}
 }
 
-func SetDefaultValueEmpty() planmodifier.Set {
-	return SetDefaultValue([]any{})
+func (d *setDefaultValue) Init(ctx context.Context, diags *diag.Diagnostics, schema *rsschema.Schema, path path.Path) {
+	d.defaultValFw = wpschemautil.GetFwTypedValueFromAny[types.Set](ctx, diags, schema, path, d.defaultValRaw)
 }
 
-func (attributePlanModifier setDefaultValueAttributePlanModifier) PlanModifySet(ctx context.Context, request planmodifier.SetRequest, response *planmodifier.SetResponse) {
-	defaultValuePlanModify(ctx, &response.Diagnostics, request.Config.Schema.(rsschema.Schema), request.Path, request.ConfigValue, attributePlanModifier.defaultValueRaw, &response.PlanValue)
+func (d setDefaultValue) DefaultSet(ctx context.Context, req defaults.SetRequest, resp *defaults.SetResponse) {
+	resp.PlanValue = d.defaultValFw
+}
+
+//
+// ListDefaultValue / listDefaultValue
+//
+
+var _ DefaultValueWithInit = &listDefaultValue{}
+
+type listDefaultValue struct {
+	defaultValueBase
+	defaultValFw types.List
+}
+
+func ListDefaultValue(defaultValueRaw []any) defaults.List {
+	return &listDefaultValue{defaultValueBase: defaultValueBase{defaultValRaw: defaultValueRaw}}
+}
+
+func (d *listDefaultValue) Init(ctx context.Context, diags *diag.Diagnostics, schema *rsschema.Schema, path path.Path) {
+	d.defaultValFw = wpschemautil.GetFwTypedValueFromAny[types.List](ctx, diags, schema, path, d.defaultValRaw)
+}
+
+func (d listDefaultValue) DefaultList(ctx context.Context, req defaults.ListRequest, resp *defaults.ListResponse) {
+	resp.PlanValue = d.defaultValFw
 }

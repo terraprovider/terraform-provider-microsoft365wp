@@ -5,13 +5,9 @@ subcategory: "MS Graph: Directory management"
 
 # microsoft365wp_administrative_units (Data Source)
 
-An administrative unit provides a conceptual container for user, group, and device directory objects. With administrative units, a company administrator can now delegate administrative responsibilities to manage the users, groups, and devices contained within or scoped to an administrative unit to a regional or departmental administrator. For more information about administrative units, see [Administrative units in Microsoft Entra ID](/entra/identity/role-based-access-control/administrative-units).
+An administrative unit provides a conceptual container for user, group, and device directory objects. With administrative units, a company administrator can now delegate administrative responsibilities to manage the users, groups, and devices contained within or scoped to an administrative unit to a regional or departmental administrator. For more information about administrative units, see [Administrative units in Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/administrative-units). <br/> Also see [Microsoft docs for administrativeUnit](https://learn.microsoft.com/en-us/graph/api/resources/administrativeunit?view=graph-rest-beta).
 
-This resource is an open type that allows other properties to be passed in.
-
-This resource supports: / https://learn.microsoft.com/en-us/graph/api/resources/administrativeunit?view=graph-rest-beta
-
-Provider Note: This resource is only provided as an enhanced version of `azuread_administrative_unit` supporting the attribute `is_member_management_restricted`. Use `azuread_administrative_unit_member` and `azuread_administrative_unit_role_member` to modify membership as it is not planned to add further functionality here.
+_Provider_ Note: This resource is only provided as an enhanced version of `azuread_administrative_unit` supporting the attribute `is_member_management_restricted`. Use `azuread_administrative_unit_member` and `azuread_administrative_unit_role_member` to modify membership as it is not planned to add further functionality here.
 
 ## Documentation Disclaimer
 
@@ -71,8 +67,8 @@ output "microsoft365wp_administrative_units" {
 
 - `exclude_ids` (Set of String) Exclude entities with these ids (using OData `$filter`).
 - `include_ids` (Set of String) Only return entities with these ids (using OData `$filter`).
-- `is_member_management_restricted` (Boolean) `true` if members of this administrative unit should be treated as sensitive, which requires specific permissions to manage. If not set, and the default behavior is false. Use this property to define administrative units with roles that don't inherit from tenant-level administrators, and where the management of individual member objects is limited to administrators scoped to a restricted management administrative unit. This property is immutable and can't be changed later. <br/><br/> For more information on how to work with restricted management administrative units, see [Restricted management administrative units in Microsoft Entra ID](/entra/identity/role-based-access-control/admin-units-restricted-management).
-- `membership_type` (String) Indicates the membership type for the administrative unit. The If not set, and the default behavior is assigned.
+- `is_member_management_restricted` (Boolean) `true` if members of this administrative unit should be treated as sensitive, which requires specific permissions to manage. If not set, and the default behavior is false. Use this property to define administrative units with roles that don't inherit from tenant-level administrators, and where the management of individual member objects is limited to administrators scoped to a restricted management administrative unit. This property is immutable and can't be changed later. <br/> For more information on how to work with restricted management administrative units, see [Restricted management administrative units in Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/admin-units-restricted-management).
+- `membership_type` (String) Indicates the membership type for the administrative unit. If not set, and the default behavior is assigned.
 - `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
 - `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
 - `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
@@ -88,5 +84,5 @@ Read-Only:
 
 - `display_name` (String) Display name for the administrative unit. Maximum length is 256 characters. Supports `$filter` (`eq`, `ne`, `not`, `ge`, `le`, `in`, `startsWith`, and `eq` on `null` values), `$search`, and `$orderby`.
 - `id` (String) Unique identifier for the administrative unit. Supports `$filter` (`eq`).
-- `is_member_management_restricted` (Boolean) `true` if members of this administrative unit should be treated as sensitive, which requires specific permissions to manage. If not set, and the default behavior is false. Use this property to define administrative units with roles that don't inherit from tenant-level administrators, and where the management of individual member objects is limited to administrators scoped to a restricted management administrative unit. This property is immutable and can't be changed later. <br/><br/> For more information on how to work with restricted management administrative units, see [Restricted management administrative units in Microsoft Entra ID](/entra/identity/role-based-access-control/admin-units-restricted-management).
-- `membership_type` (String) Indicates the membership type for the administrative unit. The If not set, and the default behavior is assigned.
+- `is_member_management_restricted` (Boolean) `true` if members of this administrative unit should be treated as sensitive, which requires specific permissions to manage. If not set, and the default behavior is false. Use this property to define administrative units with roles that don't inherit from tenant-level administrators, and where the management of individual member objects is limited to administrators scoped to a restricted management administrative unit. This property is immutable and can't be changed later. <br/> For more information on how to work with restricted management administrative units, see [Restricted management administrative units in Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/admin-units-restricted-management).
+- `membership_type` (String) Indicates the membership type for the administrative unit. If not set, and the default behavior is assigned.

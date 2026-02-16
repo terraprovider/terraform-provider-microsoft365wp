@@ -76,18 +76,18 @@ var subscribedSkuResourceSchema = schema.Schema{
 					MarkdownDescription: "The number of units that are in warning status. When the subscription of the service SKU has expired, the customer has a grace period to renew their subscription before it's canceled (moved to a `suspended` state).",
 				},
 			},
-			MarkdownDescription: "Information about the number and status of prepaid licenses. / The **prepaidUnits** property of the [subscribedSku](subscribedsku.md) entity is of type **licenseUnitsDetail**. For more information on the progression states of a subscription, see [What if my subscription expires?](/microsoft-365/commerce/subscriptions/what-if-my-subscription-expires?view=o365-worldwide&preserve-view=true) / https://learn.microsoft.com/en-us/graph/api/resources/licenseunitsdetail?view=graph-rest-beta",
+			MarkdownDescription: "Information about the number and status of prepaid licenses. / The **prepaidUnits** property of the [subscribedSku](subscribedsku.md) entity is of type **licenseUnitsDetail**. For more information on the progression states of a subscription, see [What if my subscription expires?](https://learn.microsoft.com/en-us/microsoft-365/commerce/subscriptions/what-if-my-subscription-expires?view=o365-worldwide&preserve-view=true). Also see [Microsoft docs for licenseUnitsDetail](https://learn.microsoft.com/en-us/graph/api/resources/licenseunitsdetail?view=graph-rest-beta). <br> ",
 		},
 		"service_plans": schema.SetNestedAttribute{
 			NestedObject: schema.NestedAttributeObject{
 				Attributes: map[string]schema.Attribute{ // servicePlanInfo
 					"applies_to": schema.StringAttribute{
 						Optional:            true,
-						MarkdownDescription: "The object the service plan can be assigned to. The possible values are: <br/>`User` - service plan can be assigned to individual users.<br/>`Company` - service plan can be assigned to the entire tenant.",
+						MarkdownDescription: "The object the service plan can be assigned to. The possible values are: <br/> `User` - service plan can be assigned to individual users. <br/> `Company` - service plan can be assigned to the entire tenant.",
 					},
 					"provisioning_status": schema.StringAttribute{
 						Optional:            true,
-						MarkdownDescription: "The provisioning status of the service plan. The possible values are:<br/>`Success` - Service is fully provisioned.<br/>`Disabled` - Service is disabled.<br/>`Error` - The service plan isn't provisioned and is in an error state.<br/>`PendingInput` - The service isn't provisioned and is awaiting service confirmation.<br/>`PendingActivation` - The service is provisioned but requires explicit activation by an administrator (for example, Intune_O365 service plan)<br/>`PendingProvisioning` - Microsoft has added a new service to the product SKU and it isn't activated in the tenant.",
+						MarkdownDescription: "The provisioning status of the service plan. The possible values are: <br/> `Success` - Service is fully provisioned. <br/> `Disabled` - Service is disabled. <br/> `Error` - The service plan isn't provisioned and is in an error state. <br/> `PendingInput` - The service isn't provisioned and is awaiting service confirmation. <br/> `PendingActivation` - The service is provisioned but requires explicit activation by an administrator (for example, Intune_O365 service plan) <br/> `PendingProvisioning` - Microsoft has added a new service to the product SKU and it isn't activated in the tenant.",
 					},
 					"service_plan_id": schema.StringAttribute{
 						Optional:            true,
@@ -99,7 +99,7 @@ var subscribedSkuResourceSchema = schema.Schema{
 					},
 				},
 			},
-			MarkdownDescription: "Information about the service plans that are available with the SKU. Not nullable / Contains information about a service plan associated with a subscribed SKU. The **servicePlans** property of the [subscribedSku](subscribedsku.md) entity is a collection of **servicePlanInfo**. / https://learn.microsoft.com/en-us/graph/api/resources/serviceplaninfo?view=graph-rest-beta",
+			MarkdownDescription: "Information about the service plans that are available with the SKU. Not nullable / Contains information about a service plan associated with a subscribed SKU. The **servicePlans** property of the [subscribedSku](subscribedsku.md) entity is a collection of **servicePlanInfo**. Also see [Microsoft docs for servicePlanInfo](https://learn.microsoft.com/en-us/graph/api/resources/serviceplaninfo?view=graph-rest-beta). <br> ",
 		},
 		"sku_id": schema.StringAttribute{
 			Optional:            true,
@@ -107,13 +107,13 @@ var subscribedSkuResourceSchema = schema.Schema{
 		},
 		"sku_part_number": schema.StringAttribute{
 			Optional:            true,
-			MarkdownDescription: "The SKU part number; for example, `AAD_PREMIUM` or `RMSBASIC`. To get a list of commercial subscriptions that an organization has acquired, see [List subscribedSkus](../api/subscribedsku-list.md).",
+			MarkdownDescription: "The SKU part number; for example, `AAD_PREMIUM` or `RMSBASIC`. To get a list of commercial subscriptions that an organization has acquired, see [List subscribedSkus](https://learn.microsoft.com/en-us/graph/api/subscribedsku-list?view=graph-rest-beta).",
 		},
 		"subscription_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
-			MarkdownDescription: "A list of all [subscription IDs](../resources/companysubscription.md) associated with this SKU.",
+			MarkdownDescription: "A list of all [subscription IDs](https://learn.microsoft.com/en-us/graph/api/resources/companysubscription?view=graph-rest-beta) associated with this SKU.",
 		},
 	},
-	MarkdownDescription: "Represents information about a service SKU that a company is subscribed to. Use the values of **skuId** and **servicePlans** > **servicePlanId** to assign licenses to unassigned users and groups through the [user: assignLicense](../api/user-assignlicense.md) and [group: assignLicense](../api/group-assignlicense.md) APIs respectively.\n\nFor more information about subscriptions and licenses, see [Subscriptions, licenses, accounts, and tenants for Microsoft's cloud offerings](/microsoft-365/enterprise/subscriptions-licenses-accounts-and-tenants-for-microsoft-cloud-offerings). / https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta\n\nProvider Note: Please note that MS Graph does currently (as of 2025-07) not support OData filtering on this endpoint. ||| MS Graph: Licenses and subscriptions",
+	MarkdownDescription: "Represents information about a service SKU that a company is subscribed to. Use the values of **skuId** and **servicePlans** > **servicePlanId** to assign licenses to unassigned users and groups through the [user: assignLicense](https://learn.microsoft.com/en-us/graph/api/user-assignlicense?view=graph-rest-beta) and [group: assignLicense](https://learn.microsoft.com/en-us/graph/api/group-assignlicense?view=graph-rest-beta) APIs respectively.\n\nFor more information about subscriptions and licenses, see [Subscriptions, licenses, accounts, and tenants for Microsoft's cloud offerings](https://learn.microsoft.com/en-us/microsoft-365/enterprise/subscriptions-licenses-accounts-and-tenants-for-microsoft-cloud-offerings).\n\nAlso see [Microsoft docs for subscribedSku](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta).\n\n_Provider_ Note: Please note that MS Graph does currently (as of 2025-07) not support OData filtering on this endpoint. ||| MS Graph: Licenses and subscriptions",
 }

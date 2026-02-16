@@ -5,11 +5,13 @@ subcategory: "MS Graph: Licenses and subscriptions"
 
 # microsoft365wp_subscribed_skus (Data Source)
 
-Represents information about a service SKU that a company is subscribed to. Use the values of **skuId** and **servicePlans** > **servicePlanId** to assign licenses to unassigned users and groups through the [user: assignLicense](../api/user-assignlicense.md) and [group: assignLicense](../api/group-assignlicense.md) APIs respectively.
+Represents information about a service SKU that a company is subscribed to. Use the values of **skuId** and **servicePlans** > **servicePlanId** to assign licenses to unassigned users and groups through the [user: assignLicense](https://learn.microsoft.com/en-us/graph/api/user-assignlicense?view=graph-rest-beta) and [group: assignLicense](https://learn.microsoft.com/en-us/graph/api/group-assignlicense?view=graph-rest-beta) APIs respectively.
 
-For more information about subscriptions and licenses, see [Subscriptions, licenses, accounts, and tenants for Microsoft's cloud offerings](/microsoft-365/enterprise/subscriptions-licenses-accounts-and-tenants-for-microsoft-cloud-offerings). / https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta
+For more information about subscriptions and licenses, see [Subscriptions, licenses, accounts, and tenants for Microsoft's cloud offerings](https://learn.microsoft.com/en-us/microsoft-365/enterprise/subscriptions-licenses-accounts-and-tenants-for-microsoft-cloud-offerings).
 
-Provider Note: Please note that MS Graph does currently (as of 2025-07) not support OData filtering on this endpoint.
+Also see [Microsoft docs for subscribedSku](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta).
+
+_Provider_ Note: Please note that MS Graph does currently (as of 2025-07) not support OData filtering on this endpoint.
 
 ## Documentation Disclaimer
 
@@ -79,4 +81,4 @@ Read-Only:
 - `capability_status` (String) `Enabled` indicates that the **prepaidUnits** property has at least one unit that is enabled. `LockedOut` indicates that the customer canceled their subscription.
 - `id` (String) The unique identifier for the subscribed SKU object. Key, not nullable.
 - `sku_id` (String) The unique identifier (GUID) for the service SKU.
-- `sku_part_number` (String) The SKU part number; for example, `AAD_PREMIUM` or `RMSBASIC`. To get a list of commercial subscriptions that an organization has acquired, see [List subscribedSkus](../api/subscribedsku-list.md).
+- `sku_part_number` (String) The SKU part number; for example, `AAD_PREMIUM` or `RMSBASIC`. To get a list of commercial subscriptions that an organization has acquired, see [List subscribedSkus](https://learn.microsoft.com/en-us/graph/api/subscribedsku-list?view=graph-rest-beta).

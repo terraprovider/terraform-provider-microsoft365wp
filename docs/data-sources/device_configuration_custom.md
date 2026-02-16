@@ -5,9 +5,9 @@ subcategory: "MS Graph: Device configuration"
 
 # microsoft365wp_device_configuration_custom (Data Source)
 
-Device Configuration. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta
+Device Configuration. <br/> Also see [Microsoft docs for deviceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta).
 
-Provider Note: When using values of type `base64`, `string` or `string_xml` the write permission `DeviceManagementConfiguration.ReadWrite.All` is required also for plan operations. This is due to the fact that values of these types are saved encrypted in MS Graph and need to be retrieved using the special MS Graph action `getOmaSettingPlainTextValue` (which requires write permissions) when reading. Also see https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-deviceconfiguration-getomasettingplaintextvalue
+_Provider_ Note: When using values of type `base64`, `string` or `string_xml` the write permission `DeviceManagementConfiguration.ReadWrite.All` is required also for plan operations. This is due to the fact that values of these types are saved encrypted in MS Graph and need to be retrieved using the special MS Graph action `getOmaSettingPlainTextValue` (which requires write permissions) when reading. Also see https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-deviceconfiguration-getomasettingplaintextvalue
 
 ## Documentation Disclaimer
 
@@ -75,34 +75,34 @@ output "microsoft365wp_device_configuration_custom" {
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `created_date_time` (String) DateTime the object was created.
 - `description` (String) Admin provided description of the Device Configuration.
-- `device_management_applicability_rule_device_mode` (Attributes) The device mode applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruledevicemode?view=graph-rest-beta (see [below for nested schema](#nestedatt--device_management_applicability_rule_device_mode))
-- `device_management_applicability_rule_os_edition` (Attributes) The OS edition applicability for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruleosedition?view=graph-rest-beta (see [below for nested schema](#nestedatt--device_management_applicability_rule_os_edition))
-- `device_management_applicability_rule_os_version` (Attributes) The OS version applicability rule for this Policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruleosversion?view=graph-rest-beta (see [below for nested schema](#nestedatt--device_management_applicability_rule_os_version))
+- `device_management_applicability_rule_device_mode` (Attributes) The device mode applicability rule for this Policy. / Also see [Microsoft docs for deviceManagementApplicabilityRuleDeviceMode](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruledevicemode?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--device_management_applicability_rule_device_mode))
+- `device_management_applicability_rule_os_edition` (Attributes) The OS edition applicability for this Policy. / Also see [Microsoft docs for deviceManagementApplicabilityRuleOsEdition](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruleosedition?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--device_management_applicability_rule_os_edition))
+- `device_management_applicability_rule_os_version` (Attributes) The OS version applicability rule for this Policy. / Also see [Microsoft docs for deviceManagementApplicabilityRuleOsVersion](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicemanagementapplicabilityruleosversion?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--device_management_applicability_rule_os_version))
 - `display_name` (String) Admin provided name of the device configuration.
 - `last_modified_date_time` (String) DateTime the object was last modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>
 - `supports_scope_tags` (Boolean) Indicates whether or not the underlying Device Configuration supports the assignment of scope tags. Assigning to the ScopeTags property is not allowed when this value is false and entities will not be visible to scoped users. This occurs for Legacy policies created in Silverlight and can be resolved by deleting and recreating the policy in the Azure Portal. This property is
 - `version` (Number) Version of the device configuration.
-- `windows10` (Attributes) This topic provides descriptions of the declared methods, properties and relationships exposed by the windows10CustomConfiguration resource. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windows10customconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10))
+- `windows10` (Attributes) This topic provides descriptions of the declared methods, properties and relationships exposed by the windows10CustomConfiguration resource. Also see [Microsoft docs for windows10CustomConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windows10customconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows10))
 
 <a id="nestedatt--assignments"></a>
 ### Nested Schema for `assignments`
 
 Read-Only:
 
-- `target` (Attributes) Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target))
+- `target` (Attributes) Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta). (see [below for nested schema](#nestedatt--assignments--target))
 
 <a id="nestedatt--assignments--target"></a>
 ### Nested Schema for `assignments.target`
 
 Read-Only:
 
-- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_devices))
-- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
-- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
+- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. Also see [Microsoft docs for allDevicesAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_devices))
+- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. Also see [Microsoft docs for allLicensedUsersAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
+- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. Also see [Microsoft docs for exclusionGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The ID of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.).
-- `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter. <br/> _Provider_ allowed values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.).
+- `group` (Attributes) Represents an assignment to a group. Also see [Microsoft docs for groupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
 ### Nested Schema for `assignments.target.all_devices`
@@ -135,9 +135,9 @@ Read-Only:
 
 Read-Only:
 
-- `device_mode` (String) Applicability rule for device mode. / Windows 10 Device Mode type; possible values are: `standardConfiguration` (Standard Configuration), `sModeConfiguration` (S Mode Configuration)
+- `device_mode` (String) Applicability rule for device mode. / Windows 10 Device Mode type. <br/> _Provider_ allowed values are: `standardConfiguration` (Standard Configuration), `sModeConfiguration` (S Mode Configuration).
 - `name` (String) Name for object.
-- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)
+- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration. <br/> _Provider_ allowed values are: `include` (Include), `exclude` (Exclude).
 
 
 <a id="nestedatt--device_management_applicability_rule_os_edition"></a>
@@ -146,8 +146,8 @@ Read-Only:
 Read-Only:
 
 - `name` (String) Name for object.
-- `os_edition_types` (Set of String) Applicability rule OS edition type. / Windows 10 Edition type; possible values are: `windows10Enterprise` (Windows 10 Enterprise), `windows10EnterpriseN` (Windows 10 EnterpriseN), `windows10Education` (Windows 10 Education), `windows10EducationN` (Windows 10 EducationN), `windows10MobileEnterprise` (Windows 10 Mobile Enterprise), `windows10HolographicEnterprise` (Windows 10 Holographic Enterprise), `windows10Professional` (Windows 10 Professional), `windows10ProfessionalN` (Windows 10 ProfessionalN), `windows10ProfessionalEducation` (Windows 10 Professional Education), `windows10ProfessionalEducationN` (Windows 10 Professional EducationN), `windows10ProfessionalWorkstation` (Windows 10 Professional for Workstations), `windows10ProfessionalWorkstationN` (Windows 10 Professional for Workstations N), `notConfigured` (NotConfigured), `windows10Home` (Windows 10 Home), `windows10HomeChina` (Windows 10 Home China), `windows10HomeN` (Windows 10 Home N), `windows10HomeSingleLanguage` (Windows 10 Home Single Language), `windows10Mobile` (Windows 10 Mobile), `windows10IoTCore` (Windows 10 IoT Core), `windows10IoTCoreCommercial` (Windows 10 IoT Core Commercial)
-- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)
+- `os_edition_types` (Set of String) Applicability rule OS edition type. / Windows 10 Edition type. <br/> _Provider_ allowed values are: `windows10Enterprise` (Windows 10 Enterprise), `windows10EnterpriseN` (Windows 10 EnterpriseN), `windows10Education` (Windows 10 Education), `windows10EducationN` (Windows 10 EducationN), `windows10MobileEnterprise` (Windows 10 Mobile Enterprise), `windows10HolographicEnterprise` (Windows 10 Holographic Enterprise), `windows10Professional` (Windows 10 Professional), `windows10ProfessionalN` (Windows 10 ProfessionalN), `windows10ProfessionalEducation` (Windows 10 Professional Education), `windows10ProfessionalEducationN` (Windows 10 Professional EducationN), `windows10ProfessionalWorkstation` (Windows 10 Professional for Workstations), `windows10ProfessionalWorkstationN` (Windows 10 Professional for Workstations N), `notConfigured` (NotConfigured), `windows10Home` (Windows 10 Home), `windows10HomeChina` (Windows 10 Home China), `windows10HomeN` (Windows 10 Home N), `windows10HomeSingleLanguage` (Windows 10 Home Single Language), `windows10Mobile` (Windows 10 Mobile), `windows10IoTCore` (Windows 10 IoT Core), `windows10IoTCoreCommercial` (Windows 10 IoT Core Commercial).
+- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration. <br/> _Provider_ allowed values are: `include` (Include), `exclude` (Exclude).
 
 
 <a id="nestedatt--device_management_applicability_rule_os_version"></a>
@@ -158,7 +158,7 @@ Read-Only:
 - `max_os_version` (String) Max OS version for Applicability Rule.
 - `min_os_version` (String) Min OS version for Applicability Rule.
 - `name` (String) Name for object.
-- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration; possible values are: `include` (Include), `exclude` (Exclude)
+- `rule_type` (String) Applicability Rule type. / Supported Applicability rule types for Device Configuration. <br/> _Provider_ allowed values are: `include` (Include), `exclude` (Exclude).
 
 
 <a id="nestedatt--windows10"></a>
@@ -166,23 +166,23 @@ Read-Only:
 
 Read-Only:
 
-- `oma_settings` (Attributes Set) OMA settings. This collection can contain a maximum of 1000 elements. / OMA Settings definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasetting?view=graph-rest-beta. (see [below for nested schema](#nestedatt--windows10--oma_settings))
+- `oma_settings` (Attributes Set) OMA settings. This collection can contain a maximum of 1000 elements. / OMA Settings definition. Also see [Microsoft docs for omaSetting](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasetting?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--windows10--oma_settings))
 
 <a id="nestedatt--windows10--oma_settings"></a>
 ### Nested Schema for `windows10.oma_settings`
 
 Read-Only:
 
-- `base64` (Attributes) OMA Settings Base64 definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingbase64?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10--oma_settings--base64))
-- `boolean` (Attributes) OMA Settings Boolean definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingboolean?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10--oma_settings--boolean))
-- `date_time` (Attributes) OMA Settings DateTime definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingdatetime?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10--oma_settings--date_time))
+- `base64` (Attributes) OMA Settings Base64 definition. Also see [Microsoft docs for omaSettingBase64](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingbase64?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows10--oma_settings--base64))
+- `boolean` (Attributes) OMA Settings Boolean definition. Also see [Microsoft docs for omaSettingBoolean](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingboolean?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows10--oma_settings--boolean))
+- `date_time` (Attributes) OMA Settings DateTime definition. Also see [Microsoft docs for omaSettingDateTime](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingdatetime?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows10--oma_settings--date_time))
 - `description` (String) Description.
 - `display_name` (String) Display Name.
-- `floating_point` (Attributes) OMA Settings Floating Point definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingfloatingpoint?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10--oma_settings--floating_point))
-- `integer` (Attributes) OMA Settings Integer definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettinginteger?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10--oma_settings--integer))
+- `floating_point` (Attributes) OMA Settings Floating Point definition. Also see [Microsoft docs for omaSettingFloatingPoint](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingfloatingpoint?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows10--oma_settings--floating_point))
+- `integer` (Attributes) OMA Settings Integer definition. Also see [Microsoft docs for omaSettingInteger](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettinginteger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows10--oma_settings--integer))
 - `oma_uri` (String) OMA.
-- `string` (Attributes) OMA Settings String definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingstring?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10--oma_settings--string))
-- `string_xml` (Attributes) OMA Settings StringXML definition. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingstringxml?view=graph-rest-beta (see [below for nested schema](#nestedatt--windows10--oma_settings--string_xml))
+- `string` (Attributes) OMA Settings String definition. Also see [Microsoft docs for omaSettingString](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingstring?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows10--oma_settings--string))
+- `string_xml` (Attributes) OMA Settings StringXML definition. Also see [Microsoft docs for omaSettingStringXml](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-omasettingstringxml?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows10--oma_settings--string_xml))
 
 <a id="nestedatt--windows10--oma_settings--base64"></a>
 ### Nested Schema for `windows10.oma_settings.base64`

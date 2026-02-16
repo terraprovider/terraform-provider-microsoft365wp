@@ -5,7 +5,7 @@ subcategory: "MS Graph: Software updates"
 
 # microsoft365wp_windows_driver_update_profiles (Data Source)
 
-Windows Driver Update Profile / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofile?view=graph-rest-beta
+Windows Driver Update Profile <br/> Also see [Microsoft docs for windowsDriverUpdateProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofile?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -73,4 +73,4 @@ Read-Only:
 - `display_name` (String) The display name for the profile.
 - `id` (String) The Intune policy id.
 - `last_modified_date_time` (String) The date time that the profile was last modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Driver Update entity.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Driver Update entity. <br/>

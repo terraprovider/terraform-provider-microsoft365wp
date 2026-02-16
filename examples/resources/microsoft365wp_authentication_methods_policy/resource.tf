@@ -37,12 +37,6 @@ resource "microsoft365wp_authentication_methods_policy" "singleton" {
     },
 
     {
-      id          = "QRCodePin"
-      qr_code_pin = {}
-      state       = "disabled"
-    },
-
-    {
       id                    = "TemporaryAccessPass"
       temporary_access_pass = {}
       state                 = "enabled"
@@ -76,6 +70,18 @@ resource "microsoft365wp_authentication_methods_policy" "singleton" {
       id               = "X509Certificate"
       x509_certificate = {}
       state            = "disabled"
+    },
+
+    {
+      id          = "QRCodePin"
+      qr_code_pin = {}
+      state       = "disabled"
+    },
+
+    {
+      id                     = "VerifiableCredentials"
+      verifiable_credentials = {}
+      state                  = "disabled"
     },
 
   ]

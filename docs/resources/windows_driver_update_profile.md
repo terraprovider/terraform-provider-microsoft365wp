@@ -5,7 +5,7 @@ subcategory: "MS Graph: Software updates"
 
 # microsoft365wp_windows_driver_update_profile (Resource)
 
-Windows Driver Update Profile / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofile?view=graph-rest-beta
+Windows Driver Update Profile <br/> Also see [Microsoft docs for windowsDriverUpdateProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofile?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -60,23 +60,23 @@ resource "microsoft365wp_windows_driver_update_profile" "manual" {
 
 ### Required
 
-- `approval_type` (String) Driver update profile approval type. For example, manual or automatic approval. / An enum type to represent approval type of a driver update profile; possible values are: `manual` (This indicates a driver and firmware profile needs to be approved manually.), `automatic` (This indicates a driver and firmware profile is approved automatically.)
+- `approval_type` (String) Driver update profile approval type. For example, manual or automatic approval. / An enum type to represent approval type of a driver update profile. <br/> _Provider_ allowed values are: `manual` (This indicates a driver and firmware profile needs to be approved manually.), `automatic` (This indicates a driver and firmware profile is approved automatically.).
 - `display_name` (String) The display name for the profile.
 
 ### Optional
 
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `deployment_deferral_in_days` (Number) Deployment deferral settings in days, only applicable when ApprovalType is set to automatic approval.
-- `description` (String) The description of the profile which is specified by the user. The _provider_ default value is `""`.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Driver Update entity. The _provider_ default value is `["0"]`.
+- `description` (String) The description of the profile which is specified by the user. <br/> The _provider_ default value is `""`.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Driver Update entity. <br/> The _provider_ default value is `["0"]`.
 
 ### Read-Only
 
 - `created_date_time` (String) The date time that the profile was created.
 - `device_reporting` (Number) Number of devices reporting for this profile
-- `driver_inventories` (Attributes Set) Driver inventories for this profile. / A new entity to represent driver inventories. / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateinventory?view=graph-rest-beta (see [below for nested schema](#nestedatt--driver_inventories))
+- `driver_inventories` (Attributes Set) Driver inventories for this profile. / A new entity to represent driver inventories. Also see [Microsoft docs for windowsDriverUpdateInventory](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateinventory?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--driver_inventories))
 - `id` (String) The Intune policy id.
-- `inventory_sync_status` (Attributes) Driver inventory sync status for this profile. / A complex type to store the status of a driver and firmware profile inventory sync. The status includes the last successful sync date time and the state of the last sync. / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofileinventorysyncstatus?view=graph-rest-beta (see [below for nested schema](#nestedatt--inventory_sync_status))
+- `inventory_sync_status` (Attributes) Driver inventory sync status for this profile. / A complex type to store the status of a driver and firmware profile inventory sync. The status includes the last successful sync date time and the state of the last sync. Also see [Microsoft docs for windowsDriverUpdateProfileInventorySyncStatus](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofileinventorysyncstatus?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--inventory_sync_status))
 - `last_modified_date_time` (String) The date time that the profile was last modified.
 - `new_updates` (Number) Number of new driver updates available for this profile.
 
@@ -85,19 +85,19 @@ resource "microsoft365wp_windows_driver_update_profile" "manual" {
 
 Required:
 
-- `target` (Attributes) Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target))
+- `target` (Attributes) Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta). (see [below for nested schema](#nestedatt--assignments--target))
 
 <a id="nestedatt--assignments--target"></a>
 ### Nested Schema for `assignments.target`
 
 Optional:
 
-- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_devices))
-- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
-- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
+- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. Also see [Microsoft docs for allDevicesAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_devices))
+- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. Also see [Microsoft docs for allLicensedUsersAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
+- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. Also see [Microsoft docs for exclusionGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The ID of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
-- `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter. <br/> _Provider_ allowed values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
+- `group` (Attributes) Represents an assignment to a group. Also see [Microsoft docs for groupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
 ### Nested Schema for `assignments.target.all_devices`
@@ -131,8 +131,8 @@ Required:
 Read-Only:
 
 - `applicable_device_count` (Number) The number of devices for which this driver is applicable.
-- `approval_status` (String) The approval status for this driver. / An enum type to represent approval status of a driver; possible values are: `needsReview` (This indicates a driver needs IT admin's review.), `declined` (This indicates IT admin has declined a driver.), `approved` (This indicates IT admin has approved a driver.), `suspended` (This indicates IT admin has suspended a driver.)
-- `category` (String) The category for this driver. / An enum type to represent which category a driver belongs to; possible values are: `recommended` (This indicates a driver is recommended by Microsoft.), `previouslyApproved` (This indicates a driver was recommended by Microsoft and IT admin has taken some approval action on it.), `other` (This indicates a driver is never recommended by Microsoft.)
+- `approval_status` (String) The approval status for this driver. / An enum type to represent approval status of a driver. <br/> _Provider_ allowed values are: `needsReview` (This indicates a driver needs IT admin's review.), `declined` (This indicates IT admin has declined a driver.), `approved` (This indicates IT admin has approved a driver.), `suspended` (This indicates IT admin has suspended a driver.).
+- `category` (String) The category for this driver. / An enum type to represent which category a driver belongs to. <br/> _Provider_ allowed values are: `recommended` (This indicates a driver is recommended by Microsoft.), `previouslyApproved` (This indicates a driver was recommended by Microsoft and IT admin has taken some approval action on it.), `other` (This indicates a driver is never recommended by Microsoft.).
 - `deploy_date_time` (String) The date time when a driver should be deployed if approvalStatus is approved.
 - `driver_class` (String) The class of the driver.
 - `id` (String) The id of the driver.
@@ -147,5 +147,5 @@ Read-Only:
 
 Read-Only:
 
-- `driver_inventory_sync_state` (String) The state of the latest sync. / Windows DnF update inventory sync state; possible values are: `pending` (Pending sync.), `success` (Successful sync.), `failure` (Failed sync.)
+- `driver_inventory_sync_state` (String) The state of the latest sync. / Windows DnF update inventory sync state. <br/> _Provider_ allowed values are: `pending` (Pending sync.), `success` (Successful sync.), `failure` (Failed sync.).
 - `last_successful_sync_date_time` (String) The last successful sync date and time in UTC.

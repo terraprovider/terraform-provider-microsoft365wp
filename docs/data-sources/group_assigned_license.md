@@ -5,9 +5,9 @@ subcategory: "MS Graph: Licenses and subscriptions"
 
 # microsoft365wp_group_assigned_license (Data Source)
 
-Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. / https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta
+Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. <br/> Also see [Microsoft docs for assignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta).
 
-Provider Note: To import this resource, an ID consisting of `group_id` and `sku_id` being joined by a forward slash (`/`) must be used.
+_Provider_ Note: To import this resource, an ID consisting of `group_id` and `sku_id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 
@@ -71,8 +71,8 @@ output "microsoft365wp_group_assigned_license" {
 
 ### Optional
 
-- `sku_id` (String) The unique identifier for the SKU. Corresponds to the **skuId** from [subscribedSkus](../resources/subscribedsku.md) or [companySubscription](../resources/companysubscription.md).
+- `sku_id` (String) The unique identifier for the SKU. Corresponds to the **skuId** from [subscribedSkus](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta) or [companySubscription](https://learn.microsoft.com/en-us/graph/api/resources/companysubscription?view=graph-rest-beta).
 
 ### Read-Only
 
-- `disabled_plans` (Set of String) A collection of the unique identifiers for plans that have been disabled. IDs are available in **servicePlans** > **servicePlanId** in the tenant's [subscribedSkus](../resources/subscribedsku.md) or **serviceStatus** > **servicePlanId** in the tenant's [companySubscription](../resources/subscribedsku.md).
+- `disabled_plans` (Set of String) A collection of the unique identifiers for plans that have been disabled. IDs are available in **servicePlans** > **servicePlanId** in the tenant's [subscribedSkus](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta) or **serviceStatus** > **servicePlanId** in the tenant's [companySubscription](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta). <br/>

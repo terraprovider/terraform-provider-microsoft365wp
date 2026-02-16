@@ -5,9 +5,9 @@ subcategory: "MS Graph: Authentication"
 
 # microsoft365wp_authentication_combination_configurations (Data Source)
 
-Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta
+Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: <br/> Also see [Microsoft docs for authenticationCombinationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta).
 
-Provider Note: To import this resource, an ID consisting of `authentication_strength_policy_id` and `id` being joined by a forward slash (`/`) must be used.
+_Provider_ Note: To import this resource, an ID consisting of `authentication_strength_policy_id` and `id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 
@@ -39,7 +39,7 @@ further restrictions on what functionality may be used in practice.
 
 ### Required
 
-- `authentication_strength_policy_id` (String) Provider Note: ID of the authentication strength policy that this resource belongs to. Required.
+- `authentication_strength_policy_id` (String) _Provider_ Note: ID of the authentication strength policy that this resource belongs to. Required.
 
 ### Optional
 

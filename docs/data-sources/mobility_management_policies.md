@@ -5,9 +5,9 @@ subcategory: "MS Graph: App management"
 
 # microsoft365wp_mobility_management_policies (Data Source)
 
-In Microsoft Entra ID, a mobility management policy represents an autoenrollment configuration for a mobility management (MDM or MAM) application. These policies are only applicable to devices based on Windows 10 OS and its derivatives (Surface Hub, HoloLens etc.). [Autoenrollment](/windows/client-management/mdm/azure-ad-and-microsoft-intune-automatic-mdm-enrollment-in-the-new-portal) enables organizations to automatically enroll devices into their chosen mobility management application as part of [Microsoft Entra join](/azure/active-directory/devices/concept-azure-ad-join) or [Microsoft Entra register](/azure/active-directory/devices/concept-azure-ad-register) process on Windows 10 devices. / https://learn.microsoft.com/en-us/graph/api/resources/mobilitymanagementpolicy?view=graph-rest-beta
+In Microsoft Entra ID, a mobility management policy represents an autoenrollment configuration for a mobility management (MDM or MAM) application. These policies are only applicable to devices based on Windows 10 OS and its derivatives such as Surface Hub and HoloLens. [Autoenrollment](https://learn.microsoft.com/en-us/windows/client-management/azure-ad-and-microsoft-intune-automatic-mdm-enrollment-in-the-new-portal) automatically enrolls Windows 10 devices into mobility management applications during [Microsoft Entra join](https://learn.microsoft.com/en-us/entra/identity/devices/concept-directory-join) or [Microsoft Entra register](https://learn.microsoft.com/en-us/entra/identity/devices/concept-device-registration) processes. <br/> Also see [Microsoft docs for mobilityManagementPolicy](https://learn.microsoft.com/en-us/graph/api/resources/mobilitymanagementpolicy?view=graph-rest-beta).
 
-Provider Note: Please note that MS Graph does currently (as of 2025-02) not allow to update (or even read) this entity using
+_Provider_ Note: Please note that MS Graph does currently (as of 2025-02) not allow to update (or even read) this entity using
 application permissions but only using work or school account delegated permissions (also see
 https://learn.microsoft.com/en-us/graph/api/mobiledevicemanagementpolicies-get?view=graph-rest-beta#permissions).
 
@@ -68,7 +68,7 @@ output "microsoft365wp_mobility_management_policies_app" {
 
 ### Required
 
-- `policy_type` (String) Provider Note: Type of policy - must either be `device` or `app`
+- `policy_type` (String) _Provider_ Note: Type of policy - must either be `device` or `app`
 
 ### Optional
 

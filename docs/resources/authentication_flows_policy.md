@@ -5,7 +5,7 @@ subcategory: "MS Graph: Policies"
 
 # microsoft365wp_authentication_flows_policy (Resource)
 
-Represents the [policy configuration of self-service sign-up experience](../resources/selfservicesignupauthenticationflowconfiguration.md) at a tenant level that lets external users request to sign up for approval. It contains information about the ID, display name, and description, and indicates whether self-service sign up is enabled for the policy. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationflowspolicy?view=graph-rest-beta
+Represents the [policy configuration of self-service sign-up experience](https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta) at a tenant level that lets external users request to sign up for approval. It contains information about the ID, display name, and description, and indicates whether self-service sign up is enabled for the policy. <br/> Also see [Microsoft docs for authenticationFlowsPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authenticationflowspolicy?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -44,7 +44,7 @@ resource "microsoft365wp_authentication_flows_policy" "singleton" {
 
 ### Optional
 
-- `self_service_sign_up` (Attributes) Contains [selfServiceSignUpAuthenticationFlowConfiguration](../resources/selfservicesignupauthenticationflowconfiguration.md) settings that convey whether self-service sign-up is enabled or disabled. This property isn't a key. Optional. Read-only. / Represents the configurations related to self-service sign-up. / https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--self_service_sign_up))
+- `self_service_sign_up` (Attributes) Contains [selfServiceSignUpAuthenticationFlowConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta) settings that convey whether self-service sign-up is enabled or disabled. This property isn't a key. Optional. Read-only. / Represents the configurations related to self-service sign-up. Also see [Microsoft docs for selfServiceSignUpAuthenticationFlowConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{"is_enabled":false}`. <br> (see [below for nested schema](#nestedatt--self_service_sign_up))
 
 ### Read-Only
 
@@ -57,4 +57,4 @@ resource "microsoft365wp_authentication_flows_policy" "singleton" {
 
 Optional:
 
-- `is_enabled` (Boolean) Indicates whether self-service sign-up flow is enabled or disabled. The default value is `false`. This property isn't a key. Required. The _provider_ default value is `false`.
+- `is_enabled` (Boolean) Indicates whether self-service sign-up flow is enabled or disabled. The default value is `false`. This property isn't a key. Required. <br/> The _provider_ default value is `false`.

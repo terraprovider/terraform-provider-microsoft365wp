@@ -5,7 +5,7 @@ subcategory: "MS Graph: Software updates"
 
 # microsoft365wp_windows_feature_update_profiles (Data Source)
 
-Windows Feature Update Profile / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsfeatureupdateprofile?view=graph-rest-beta
+Windows Feature Update Profile <br/> Also see [Microsoft docs for windowsFeatureUpdateProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsfeatureupdateprofile?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -73,4 +73,4 @@ Read-Only:
 - `display_name` (String) The display name of the profile.
 - `id` (String) The Identifier of the entity.
 - `last_modified_date_time` (String) The date time that the profile was last modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Feature Update entity.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Feature Update entity. <br/>

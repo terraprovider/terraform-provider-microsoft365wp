@@ -79,8 +79,8 @@ var cloudPcGalleryImageResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				stringvalidator.OneOf("supported", "supportedWithWarning", "notSupported", "unknownFutureValue"),
 			},
-			MarkdownDescription: "The status of the gallery image on the Cloud PC. The default value is `supported`. Read-only. / Possible values are: `supported`, `supportedWithWarning`, `notSupported`, `unknownFutureValue`",
+			MarkdownDescription: "The status of the gallery image on the Cloud PC. The default value is `supported`. Read-only. <br/> _Provider_ allowed values are: `supported`, `supportedWithWarning`, `notSupported`, `unknownFutureValue`.",
 		},
 	},
-	MarkdownDescription: "Represents the gallery image resource of the current organization that can be used to provision a Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcgalleryimage?view=graph-rest-beta ||| MS Graph: Cloud PC",
+	MarkdownDescription: "Represents the gallery image resource of the current organization that can be used to provision a Cloud PC. <br/> Also see [Microsoft docs for cloudPcGalleryImage](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcgalleryimage?view=graph-rest-beta). ||| MS Graph: Cloud PC",
 }

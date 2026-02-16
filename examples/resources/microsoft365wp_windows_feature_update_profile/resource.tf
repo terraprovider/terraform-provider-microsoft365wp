@@ -17,13 +17,12 @@ export ARM_CLIENT_SECRET='...'
 locals {
   # take 25th of current month, add 10 days, and then take 1st of that month (i.e. take 1st of next month)
   start_date = formatdate("YYYY-MM-01'T'00:00:00Z", timeadd(formatdate("YYYY-MM-25'T'00:00:00Z", plantimestamp()), "240h"))
-  end_date   = formatdate("YYYY-MM-15'T'00:00:00Z", local.start_date)
 }
 
 resource "microsoft365wp_windows_feature_update_profile" "test_immediate" {
   display_name = "TF Test Immediate"
 
-  feature_update_version = "Windows 10, version 22H2"
+  feature_update_version = "Windows 11, version 25H2"
   rollout_settings       = {}
 
   assignments = [
@@ -31,13 +30,11 @@ resource "microsoft365wp_windows_feature_update_profile" "test_immediate" {
   ]
 }
 
-resource "microsoft365wp_windows_feature_update_profile" "test_graduate" {
-  display_name = "TF Test Graduate"
+resource "microsoft365wp_windows_feature_update_profile" "test_on_date" {
+  display_name = "TF Test On Specific Date"
 
-  feature_update_version = "Windows 10, version 22H2"
+  feature_update_version = "Windows 11, version 25H2"
   rollout_settings = {
     offer_start_date_time_in_utc = local.start_date
-    offer_end_date_time_in_utc   = local.end_date
-    offer_interval_in_days       = 3
   }
 }

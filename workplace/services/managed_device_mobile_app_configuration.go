@@ -2,7 +2,7 @@ package services
 
 import (
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
@@ -59,9 +59,9 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: "Admin provided description of the Device Configuration. The _provider_ default value is `\"\"`.",
+			MarkdownDescription: "Admin provided description of the Device Configuration. <br/> The _provider_ default value is `\"\"`.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -75,9 +75,9 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tags for this App configuration entity. The _provider_ default value is `[\"0\"]`.",
+			MarkdownDescription: "List of Scope Tags for this App configuration entity. <br/> The _provider_ default value is `[\"0\"]`.",
 		},
 		"targeted_mobile_apps": schema.SetAttribute{
 			ElementType:         types.StringType,
@@ -102,9 +102,9 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 					},
 					"connected_apps_enabled": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Setting to specify whether to allow ConnectedApps experience for this app. The _provider_ default value is `false`.",
+						MarkdownDescription: "Setting to specify whether to allow ConnectedApps experience for this app. <br/> The _provider_ default value is `false`.",
 					},
 					"package_id": schema.StringAttribute{
 						Required:            true,
@@ -124,7 +124,7 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("prompt", "autoGrant", "autoDeny"),
 									},
-									MarkdownDescription: "Type of Android permission action. / Android action taken when an app requests a dangerous permission; possible values are: `prompt`, `autoGrant`, `autoDeny`",
+									MarkdownDescription: "Type of Android permission action. / Android action taken when an app requests a dangerous permission. <br/> _Provider_ allowed values are: `prompt`, `autoGrant`, `autoDeny`.",
 								},
 								"permission": schema.StringAttribute{
 									Optional:            true,
@@ -132,20 +132,20 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						MarkdownDescription: "List of Android app permissions and corresponding permission actions. / Mapping between an Android app permission and the action Android should take when that permission is requested. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidpermissionaction?view=graph-rest-beta",
+						MarkdownDescription: "List of Android app permissions and corresponding permission actions. / Mapping between an Android app permission and the action Android should take when that permission is requested. Also see [Microsoft docs for androidPermissionAction](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidpermissionaction?view=graph-rest-beta). <br> ",
 					},
 					"profile_applicability": schema.StringAttribute{
 						Required: true,
 						Validators: []validator.String{
 							stringvalidator.OneOf("default", "androidWorkProfile", "androidDeviceOwner"),
 						},
-						MarkdownDescription: "Android Enterprise profile applicability (AndroidWorkProfile, DeviceOwner, or default (applies to both)). / Android profile applicability; possible values are: `default`, `androidWorkProfile`, `androidDeviceOwner`",
+						MarkdownDescription: "Android Enterprise profile applicability (AndroidWorkProfile, DeviceOwner, or default (applies to both)). / Android profile applicability. <br/> _Provider_ allowed values are: `default`, `androidWorkProfile`, `androidDeviceOwner`.",
 					},
 				},
 				Validators: []validator.Object{
 					managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator,
 				},
-				MarkdownDescription: "Contains properties, inherited properties and actions for Android Enterprise mobile app configurations. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidmanagedstoreappconfiguration?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties, inherited properties and actions for Android Enterprise mobile app configurations. Also see [Microsoft docs for androidManagedStoreAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidmanagedstoreappconfiguration?view=graph-rest-beta). <br> ",
 			},
 		},
 		"ios": generic.OdataDerivedTypeNestedAttributeRs{
@@ -171,7 +171,7 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("stringType", "integerType", "realType", "booleanType", "tokenType"),
 									},
-									MarkdownDescription: "app configuration key type. / App configuration key types; possible values are: `stringType`, `integerType`, `realType`, `booleanType`, `tokenType`",
+									MarkdownDescription: "app configuration key type. / App configuration key types. <br/> _Provider_ allowed values are: `stringType`, `integerType`, `realType`, `booleanType`, `tokenType`.",
 								},
 								"app_config_key_value": schema.StringAttribute{
 									Required:            true,
@@ -179,17 +179,17 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						MarkdownDescription: "app configuration setting items. / Contains properties for App configuration setting item. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-appconfigurationsettingitem?view=graph-rest-beta",
+						MarkdownDescription: "app configuration setting items. / Contains properties for App configuration setting item. Also see [Microsoft docs for appConfigurationSettingItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-appconfigurationsettingitem?view=graph-rest-beta). <br> ",
 					},
 				},
 				Validators: []validator.Object{
 					managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator,
 				},
-				MarkdownDescription: "Contains properties, inherited properties and actions for iOS mobile app configurations. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosmobileappconfiguration?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties, inherited properties and actions for iOS mobile app configurations. Also see [Microsoft docs for iosMobileAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosmobileappconfiguration?view=graph-rest-beta). <br> ",
 			},
 		},
 	},
-	MarkdownDescription: "An abstract class for Mobile app configuration for enrolled devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-manageddevicemobileappconfiguration?view=graph-rest-beta ||| MS Graph: App management",
+	MarkdownDescription: "An abstract class for Mobile app configuration for enrolled devices. <br/> Also see [Microsoft docs for managedDeviceMobileAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-manageddevicemobileappconfiguration?view=graph-rest-beta). ||| MS Graph: App management",
 }
 
 var managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator = objectvalidator.ExactlyOneOf(

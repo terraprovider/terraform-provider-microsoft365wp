@@ -5,9 +5,9 @@ subcategory: "MS Graph: Entra ID"
 
 # microsoft365wp_user (Data Source)
 
-Represents an Azure Active Directory user object. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-user?view=graph-rest-beta
+Represents an Azure Active Directory user object. <br/> Also see [Microsoft docs for user](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-user?view=graph-rest-beta).
 
-Provider Note: This data source is only provided as a companion to `azuread_user` to allow for OData filtering. It is not planned to add more attributes or even provide a resource for this entity.
+_Provider_ Note: This data source is only provided as a companion to `azuread_user` to allow for OData filtering. It is not planned to add more attributes or even provide a resource for this entity.
 
 ## Documentation Disclaimer
 
@@ -72,7 +72,7 @@ output "microsoft365wp_user" {
 
 ### Read-Only
 
-- `assigned_licenses` (Attributes Set) Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. / https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta (see [below for nested schema](#nestedatt--assigned_licenses))
+- `assigned_licenses` (Attributes Set) Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. Also see [Microsoft docs for assignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assigned_licenses))
 - `display_name` (String)
 
 <a id="nestedatt--assigned_licenses"></a>
@@ -80,5 +80,5 @@ output "microsoft365wp_user" {
 
 Read-Only:
 
-- `disabled_plans` (Set of String) A collection of the unique identifiers for plans that have been disabled. IDs are available in **servicePlans** > **servicePlanId** in the tenant's [subscribedSkus](../resources/subscribedsku.md) or **serviceStatus** > **servicePlanId** in the tenant's [companySubscription](../resources/subscribedsku.md).
-- `sku_id` (String) The unique identifier for the SKU. Corresponds to the **skuId** from [subscribedSkus](../resources/subscribedsku.md) or [companySubscription](../resources/companysubscription.md).
+- `disabled_plans` (Set of String) A collection of the unique identifiers for plans that have been disabled. IDs are available in **servicePlans** > **servicePlanId** in the tenant's [subscribedSkus](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta) or **serviceStatus** > **servicePlanId** in the tenant's [companySubscription](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta).
+- `sku_id` (String) The unique identifier for the SKU. Corresponds to the **skuId** from [subscribedSkus](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta) or [companySubscription](https://learn.microsoft.com/en-us/graph/api/resources/companysubscription?view=graph-rest-beta).

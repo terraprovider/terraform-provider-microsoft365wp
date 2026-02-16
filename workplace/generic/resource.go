@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"sync"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -30,6 +31,8 @@ type GenericResource struct {
 	SpecificConfigValidators []resource.ConfigValidator
 	AccessParams             AccessParams
 
+	initSchemaOnce sync.Once
+
 	serializationMutex sync.Mutex
 }
 
@@ -38,14 +41,17 @@ func (r *GenericResource) Metadata(_ context.Context, req resource.MetadataReque
 	resp.TypeName = fmt.Sprintf("%s_%s", req.ProviderTypeName, r.TypeNameSuffix)
 }
 
+// Defines the schema for the resource.
+func (r *GenericResource) Schema(ctx context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	r.initSchemaOnce.Do(func() {
+		wpdefaultvalue.Init(ctx, &resp.Diagnostics, &r.SpecificSchema)
+	})
+	resp.Schema = r.SpecificSchema
+}
+
 // Adds the provider configured MSGraph client to the resource.
 func (r *GenericResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	r.AccessParams.InitializeGuarded(req.ProviderData)
-}
-
-// Defines the schema for the resource.
-func (r *GenericResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
-	resp.Schema = r.SpecificSchema
 }
 
 func (r *GenericResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {

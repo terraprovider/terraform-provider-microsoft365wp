@@ -5,7 +5,7 @@ subcategory: "MS Graph: App management"
 
 # microsoft365wp_targeted_managed_app_configurations (Data Source)
 
-Configuration used to deliver a set of custom settings as-is to all users in the targeted security group / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-targetedmanagedappconfiguration?view=graph-rest-beta
+Configuration used to deliver a set of custom settings as-is to all users in the targeted security group <br/> Also see [Microsoft docs for targetedManagedAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-targetedmanagedappconfiguration?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -82,5 +82,5 @@ Read-Only:
 - `display_name` (String) Policy display name.
 - `id` (String) Key of the entity.
 - `last_modified_date_time` (String) Last time the policy was modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>
 - `version` (String) Version of the entity.

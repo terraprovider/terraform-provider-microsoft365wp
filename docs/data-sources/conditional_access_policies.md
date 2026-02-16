@@ -5,7 +5,7 @@ subcategory: "MS Graph: Conditional access"
 
 # microsoft365wp_conditional_access_policies (Data Source)
 
-Represents a Microsoft Entra Conditional Access policy. Conditional access policies are custom rules that define an access scenario. For more information, see the [Conditional access documentation](/azure/active-directory/conditional-access/). / https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta
+Represents a Microsoft Entra Conditional Access policy. Conditional access policies are custom rules that define an access scenario. For more information, see the [Conditional access documentation](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/). <br/> Also see [Microsoft docs for conditionalAccessPolicy](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 

@@ -7,7 +7,9 @@ subcategory: "MS Graph: Lifecycle workflows"
 
 Represents workflows created using Lifecycle Workflows. Workflows, when triggered by execution conditions, automate parts of the lifecycle management process using tasks. These tasks can either be built-in tasks, or a custom task can be called using the custom task extension which integrate with Azure Logic Apps.
 
-You can create up to 100 workflows in a tenant. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta
+You can create up to 100 workflows in a tenant.
+
+Also see [Microsoft docs for identityGovernance.workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -78,12 +80,12 @@ output "microsoft365wp_identity_governance_workflows" {
 
 Read-Only:
 
-- `category` (String) The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. The Required.<br><br>Supports `$filter`(`eq`,`ne`) and `$orderby` / Possible values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`
-- `created_date_time` (String) When the `workflow` was created.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
-- `deleted_date_time` (String) When the workflow was deleted.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
-- `display_name` (String) The display name of the `workflow`. Required.<br><br>Supports `$filter`(`eq`, `ne`) and `orderby`.
-- `id` (String) Identifier used for individually addressing a specific workflow.<br><br>Supports `$filter`(`eq`, `ne`) and `$orderby`.
-- `is_enabled` (Boolean) Whether the workflow is enabled or disabled. If this setting is `true`, the workflow can be run on demand or on schedule when **isSchedulingEnabled** is `true`. Optional. Defaults to `true`.<br><br>Supports `$filter`(`eq`, `ne`) and `orderBy`.
-- `is_scheduling_enabled` (Boolean) If `true`, the Lifecycle Workflow engine executes the workflow based on the schedule defined by [tenant settings](identitygovernance-lifecyclemanagementsettings.md). Cannot be `true` for a disabled workflow (where **isEnabled** is `false`). Optional. Defaults to `false`.<br><br>Supports `$filter`(`eq`, `ne`) and `orderBy`.
-- `last_modified_date_time` (String) The date time when the `workflow` was last modified.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
-- `version` (Number) The current version number of the workflow. Value is 1 when the workflow is first created.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
+- `category` (String) The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. Required. <br/> Supports `$filter`(`eq`,`ne`) and `$orderby` <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.
+- `created_date_time` (String) When the `workflow` was created. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
+- `deleted_date_time` (String) When the workflow was deleted. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
+- `display_name` (String) The display name of the `workflow`. Required. <br/> Supports `$filter`(`eq`, `ne`) and `orderby`.
+- `id` (String) Identifier used for individually addressing a specific workflow. <br/> Supports `$filter`(`eq`, `ne`) and `$orderby`.
+- `is_enabled` (Boolean) Whether the workflow is enabled or disabled. If this setting is `true`, the workflow can be run on demand or on schedule when **isSchedulingEnabled** is `true`. Optional. Defaults to `true`. <br/> Supports `$filter`(`eq`, `ne`) and `orderBy`. <br/>
+- `is_scheduling_enabled` (Boolean) If `true`, the Lifecycle Workflow engine executes the workflow based on the schedule defined by [tenant settings](identitygovernance-lifecyclemanagementsettings.md). Cannot be `true` for a disabled workflow (where **isEnabled** is `false`). Optional. Defaults to `false`. <br/> Supports `$filter`(`eq`, `ne`) and `orderBy`. <br/>
+- `last_modified_date_time` (String) The date time when the `workflow` was last modified. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
+- `version` (Number) The current version number of the workflow. Value is 1 when the workflow is first created. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.

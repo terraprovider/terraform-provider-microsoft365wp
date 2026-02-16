@@ -5,7 +5,7 @@ subcategory: "MS Graph: Cloud PC"
 
 # microsoft365wp_cloud_pc_gallery_images (Data Source)
 
-Represents the gallery image resource of the current organization that can be used to provision a Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcgalleryimage?view=graph-rest-beta
+Represents the gallery image resource of the current organization that can be used to provision a Cloud PC. <br/> Also see [Microsoft docs for cloudPcGalleryImage](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcgalleryimage?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -85,7 +85,7 @@ output "microsoft365wp_cloud_pc_gallery_images_win11_m365_supported" {
 - `offer_name` (String) The offer name of this gallery image that is passed to ARM to retrieve the image resource.
 - `publisher_name` (String) The publisher name of this gallery image that is passed to ARM to retrieve the image resource.
 - `sku_name` (String) The SKU name of this image that is passed to ARM to retrieve the image resource.
-- `status` (String) The status of the gallery image on the Cloud PC. / Possible values are: `supported`, `supportedWithWarning`, `notSupported`, `unknownFutureValue`
+- `status` (String) The status of the gallery image on the Cloud PC. <br/> _Provider_ allowed values are: `supported`, `supportedWithWarning`, `notSupported`, `unknownFutureValue`.
 
 ### Read-Only
 
@@ -104,4 +104,4 @@ Read-Only:
 - `publisher_name` (String) The publisher name of this gallery image that is passed to ARM to retrieve the image resource.
 - `sku_name` (String) The SKU name of this image that is passed to ARM to retrieve the image resource.
 - `start_date` (String) The date when the Cloud PC image is available for provisioning new Cloud PCs. For example, `2022-09-20`.
-- `status` (String) The status of the gallery image on the Cloud PC. / Possible values are: `supported`, `supportedWithWarning`, `notSupported`, `unknownFutureValue`
+- `status` (String) The status of the gallery image on the Cloud PC. <br/> _Provider_ allowed values are: `supported`, `supportedWithWarning`, `notSupported`, `unknownFutureValue`.

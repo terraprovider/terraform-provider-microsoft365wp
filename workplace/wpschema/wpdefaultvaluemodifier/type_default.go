@@ -1,4 +1,4 @@
-package wpdefaultvalue
+package wpdefaultvaluemodifier
 
 import (
 	"context"

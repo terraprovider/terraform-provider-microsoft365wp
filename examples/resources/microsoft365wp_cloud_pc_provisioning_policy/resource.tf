@@ -37,7 +37,7 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_dedicated" {
   }
 
   domain_join_configurations = [{
-    region_group = "europeUnion"
+    region_group = "germany"
     region_name  = "automatic"
   }]
 
@@ -69,7 +69,7 @@ resource "microsoft365wp_cloud_pc_provisioning_policy" "test_shared" {
   }
 
   domain_join_configurations = [{
-    region_group = "europeUnion"
+    region_group = "germany"
     region_name  = "automatic"
   }]
 

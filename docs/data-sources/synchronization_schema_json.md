@@ -7,9 +7,11 @@ subcategory: "MS Graph: Synchronization"
 
 Defines what objects are synchronized and how they are synchronized. The synchronization schema contains most of the setup information for a particular synchronization job. Typically, you customize some of the [attribute mappings](synchronization-attributemapping.md), or add a [scoping filter](synchronization-filter.md) to synchronize only objects that satisfy a certain condition.
 
-The following sections describe the high-level components of the synchronization schema. / https://learn.microsoft.com/en-us/graph/api/resources/synchronization-synchronizationschema?view=graph-rest-beta
+The following sections describe the high-level components of the synchronization schema. For more information, see [Understand the Microsoft Entra schema](https://learn.microsoft.com/en-us/entra/identity/hybrid/cloud-sync/concept-attributes) and [Attribute mapping - Active Directory to Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity/hybrid/cloud-sync/how-to-attribute-mapping).
 
-Provider Note: To import this resource, an ID consisting of `service_principal_id` and `id` being joined by a forward slash (`/`) must be used.
+Also see [Microsoft docs for synchronizationSchema](https://learn.microsoft.com/en-us/graph/api/resources/synchronization-synchronizationschema?view=graph-rest-beta).
+
+_Provider_ Note: To import this resource, an ID consisting of `service_principal_id` and `id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 
@@ -68,7 +70,7 @@ output "microsoft365wp_synchronization_schema_json" {
 
 ### Required
 
-- `service_principal_id` (String) Provider Note: ID of the service principal that this synchronization schema belongs to. Required.
+- `service_principal_id` (String) _Provider_ Note: ID of the service principal that this synchronization schema belongs to. Required.
 
 ### Optional
 

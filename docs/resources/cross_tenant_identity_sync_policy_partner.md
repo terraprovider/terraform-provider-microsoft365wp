@@ -5,7 +5,7 @@ subcategory: "MS Graph: Cross-tenant access"
 
 # microsoft365wp_cross_tenant_identity_sync_policy_partner (Resource)
 
-Defines the cross-tenant policy for synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users from one tenant to another. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta
+Defines the cross-tenant policy for synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users from one tenant to another. <br/> Also see [Microsoft docs for crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -48,11 +48,16 @@ resource "microsoft365wp_cross_tenant_identity_sync_policy_partner" "test" {
 ### Required
 
 - `tenant_id` (String)
-- `user_sync_inbound` (Attributes) Defines whether users can be synchronized from the partner tenant. Key. / Defines whether users can be synchronized from the partner tenant. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta (see [below for nested schema](#nestedatt--user_sync_inbound))
+- `user_sync_inbound` (Attributes) Defines whether users can be synchronized from the partner tenant. Key. / Defines whether users can be synchronized from the partner tenant. Also see [Microsoft docs for crossTenantUserSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--user_sync_inbound))
 
 ### Optional
 
 - `display_name` (String) Display name for the cross-tenant user synchronization policy. Use the name of the partner Microsoft Entra tenant to easily identify the policy. Optional.
+- `group_sync_inbound` (Attributes) Defines whether groups can be synchronized from a partner tenant. Key. / Defines whether groups can be synchronized from a partner tenant, as defined in the **groupSyncInbound** property of [crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crossTenantIdentitySyncPolicyPartner?view=graph-rest-beta) object. Also see [Microsoft docs for crossTenantGroupSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantgroupsyncinbound?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--group_sync_inbound))
+
+### Read-Only
+
+- `deleted_date_time` (String) Shows the last date and time the policy was deleted.
 
 <a id="nestedatt--user_sync_inbound"></a>
 ### Nested Schema for `user_sync_inbound`
@@ -60,3 +65,11 @@ resource "microsoft365wp_cross_tenant_identity_sync_policy_partner" "test" {
 Required:
 
 - `is_sync_allowed` (Boolean) Defines whether user objects should be synchronized from the partner tenant. `false` causes any current user synchronization from the source tenant to the target tenant to stop. This property has no impact on existing users who have already been synchronized.
+
+
+<a id="nestedatt--group_sync_inbound"></a>
+### Nested Schema for `group_sync_inbound`
+
+Optional:
+
+- `is_sync_allowed` (Boolean) Defines whether group objects should be synchronized from the partner tenant. `false` stops any current group synchronization from the source tenant to the target tenant. This property has no impact on existing groups that were synchronized. <br/> The _provider_ default value is `false`.

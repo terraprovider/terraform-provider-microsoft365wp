@@ -5,7 +5,7 @@ subcategory: "MS Graph: Device management"
 
 # microsoft365wp_device_custom_attribute_shell_scripts (Data Source)
 
-Represents a custom attribute script for macOS. / https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecustomattributeshellscript?view=graph-rest-beta
+Represents a custom attribute script for macOS. <br/> Also see [Microsoft docs for deviceCustomAttributeShellScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecustomattributeshellscript?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -79,4 +79,4 @@ Read-Only:
 - `display_name` (String) Name of the device management script.
 - `id` (String) Unique Identifier for the custom attribute entity.
 - `last_modified_date_time` (String) The date and time the device management script was last modified. This property is
-- `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for this PowerShellScript instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for this PowerShellScript instance. <br/>

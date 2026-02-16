@@ -5,9 +5,9 @@ subcategory: "MS Graph: App management"
 
 # microsoft365wp_mobile_apps (Data Source)
 
-An abstract class containing the base properties for Intune mobile apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileapp?view=graph-rest-beta
+An abstract class containing the base properties for Intune mobile apps. <br/> Also see [Microsoft docs for mobileApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileapp?view=graph-rest-beta).
 
-Provider Note: There have been reports about OpenTofu crashing (with a panic) when trying to generate configuration using `-generate-config-out=...`. Unfortunately this happens inside the code of OpenTofu itself and is not easily diagnoseable from outside or changeable from the provider. A workaround might be to instead use Terraform for generating the config (as it seems to work well for it) - the result should be fully compatible and usable also with OpenTofu.
+_Provider_ Note: There have been reports about OpenTofu crashing (with a panic) when trying to generate configuration using `-generate-config-out=...`. Unfortunately this happens inside the code of OpenTofu itself and is not easily diagnoseable from outside or changeable from the provider. A workaround might be to instead use Terraform for generating the config (as it seems to work well for it) - the result should be fully compatible and usable also with OpenTofu.
 
 ## Documentation Disclaimer
 
@@ -104,7 +104,7 @@ Read-Only:
 - `managed_android_store` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.managedAndroidStoreApp` (using e.g. `if x.managed_android_store != null`). (see [below for nested schema](#nestedatt--mobile_apps--managed_android_store))
 - `managed_ios_lob` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.managedIOSLobApp` (using e.g. `if x.managed_ios_lob != null`). (see [below for nested schema](#nestedatt--mobile_apps--managed_ios_lob))
 - `managed_ios_store` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.managedIOSStoreApp` (using e.g. `if x.managed_ios_store != null`). (see [below for nested schema](#nestedatt--mobile_apps--managed_ios_store))
-- `role_scope_tag_ids` (Set of String) List of scope tag ids for this mobile app.
+- `role_scope_tag_ids` (Set of String) List of scope tag ids for this mobile app. <br/>
 - `web_link` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.webApp` (using e.g. `if x.web_link != null`). (see [below for nested schema](#nestedatt--mobile_apps--web_link))
 - `win32_lob` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.win32LobApp` (using e.g. `if x.win32_lob != null`). (see [below for nested schema](#nestedatt--mobile_apps--win32_lob))
 - `windows_ms_edge` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windowsMicrosoftEdgeApp` (using e.g. `if x.windows_ms_edge != null`). (see [below for nested schema](#nestedatt--mobile_apps--windows_ms_edge))

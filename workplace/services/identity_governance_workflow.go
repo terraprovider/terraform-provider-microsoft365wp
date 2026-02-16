@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
@@ -54,22 +54,22 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				stringvalidator.OneOf("joiner", "leaver", "unknownFutureValue", "mover"),
 			},
-			MarkdownDescription: "The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. The Required.<br><br>Supports `$filter`(`eq`,`ne`) and `$orderby` / Possible values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`",
+			MarkdownDescription: "The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. Required. <br/> Supports `$filter`(`eq`,`ne`) and `$orderby` <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "When the `workflow` was created.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.",
+			MarkdownDescription: "When the `workflow` was created. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.",
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: "The description of the `workflow`. Optional. The _provider_ default value is `\"\"`.",
+			MarkdownDescription: "The description of the `workflow`. Optional. <br/> The _provider_ default value is `\"\"`.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
-			MarkdownDescription: "The display name of the `workflow`. Required.<br><br>Supports `$filter`(`eq`, `ne`) and `orderby`.",
+			MarkdownDescription: "The display name of the `workflow`. Required. <br/> Supports `$filter`(`eq`, `ne`) and `orderby`.",
 		},
 		"execution_conditions": schema.SingleNestedAttribute{
 			Required: true,
@@ -83,7 +83,7 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 						Validators: []validator.Object{
 							identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionConditionsValidator,
 						},
-						MarkdownDescription: "Represents the execution condition of a [lifecycle workflow](../resources/identitygovernance-workflow.md) running on-demand only instead of by schedule. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-ondemandexecutiononly?view=graph-rest-beta",
+						MarkdownDescription: "Represents the execution condition of a [lifecycle workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) running on-demand only instead of by schedule. Also see [Microsoft docs for identityGovernance.onDemandExecutionOnly](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-ondemandexecutiononly?view=graph-rest-beta). <br> ",
 					},
 				},
 				"trigger_and_scope_based_conditions": generic.OdataDerivedTypeNestedAttributeRs{
@@ -105,15 +105,15 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 														Attributes: map[string]schema.Attribute{ // group
 															"id": schema.StringAttribute{
 																Required:            true,
-																MarkdownDescription: "The unique identifier for the group. <br><br>Returned by default. Key. Not nullable. Read-only. <br><br>Supports `$filter` (`eq`, `ne`, `not`, `in`).",
+																MarkdownDescription: "The unique identifier for the group. <br/> Returned by default. Key. Not nullable. Read-only. <br/> Supports `$filter` (`eq`, `ne`, `not`, `in`).",
 															},
 														},
 													},
-													MarkdownDescription: "The specific group a user is interacting with in a [membershipChangeTrigger](identitygovernance-membershipchangetrigger.md) workflow. / Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group. This resource is an open type that allows other properties to be passed in.\n\nFor performance reasons, the [create](../api/group-post-groups.md), [get](../api/group-get.md), and [list](../api/group-list.md) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option.\n\nThis resource supports: / https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta",
+													MarkdownDescription: "The specific group a user is interacting with in a [membershipChangeTrigger](identitygovernance-membershipchangetrigger.md) workflow. <br/> Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group. <br/> For performance reasons, the [create](https://learn.microsoft.com/en-us/graph/api/group-post-groups?view=graph-rest-beta), [get](https://learn.microsoft.com/en-us/graph/api/group-get?view=graph-rest-beta), and [list](https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-beta) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option. Also see [Microsoft docs for group](https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta). <br> ",
 												},
 											},
 											Validators:          []validator.Object{identityGovernanceWorkflowSubjectSetValidator},
-											MarkdownDescription: "Defines the group that is the scope of a lifecycle workflow [membershipChangeTrigger](../resources/identitygovernance-membershipchangetrigger.md) configuration. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-groupbasedsubjectset?view=graph-rest-beta",
+											MarkdownDescription: "Defines the group that is the scope of a lifecycle workflow [membershipChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-membershipchangetrigger?view=graph-rest-beta) configuration. Also see [Microsoft docs for identityGovernance.groupBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-groupbasedsubjectset?view=graph-rest-beta). <br> ",
 										},
 									},
 									"rule": generic.OdataDerivedTypeNestedAttributeRs{
@@ -127,11 +127,11 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 												},
 											},
 											Validators:          []validator.Object{identityGovernanceWorkflowSubjectSetValidator},
-											MarkdownDescription: "Specifies the rules to define the subjects that are the scope of a lifecycle workflow [triggerAndScopeBasedConditions](../resources/identitygovernance-triggerandscopebasedconditions.md) configuration. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-rulebasedsubjectset?view=graph-rest-beta",
+											MarkdownDescription: "Specifies the rules to define the subjects that are the scope of a lifecycle workflow [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) configuration. Also see [Microsoft docs for identityGovernance.ruleBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-rulebasedsubjectset?view=graph-rest-beta). <br> ",
 										},
 									},
 								},
-								MarkdownDescription: "Defines who the workflow runs for. / A shared object that is used in entitlement management access package assignment policies, role management policies, and lifecycle workflows.\n\nThis object is an abstract base type from which the following resources are derived: / https://learn.microsoft.com/en-us/graph/api/resources/subjectset?view=graph-rest-beta",
+								MarkdownDescription: "Defines who the workflow runs for. <br/> A shared object that is used in entitlement management access package assignment policies, role management policies, and lifecycle workflows. <br/> This object is an abstract base type from which the following resources are derived:. Also see [Microsoft docs for subjectSet](https://learn.microsoft.com/en-us/graph/api/resources/subjectset?view=graph-rest-beta). <br> ",
 							},
 							"trigger": schema.SingleNestedAttribute{
 								Required: true,
@@ -147,17 +147,17 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 														Attributes: map[string]schema.Attribute{ // identityGovernance.triggerAttribute
 															"name": schema.StringAttribute{
 																Required:            true,
-																MarkdownDescription: "The name of the trigger attribute that is changed to trigger an [attributeChangeTrigger](../resources/identitygovernance-attributechangetrigger.md) workflow.",
+																MarkdownDescription: "The name of the trigger attribute that is changed to trigger an [attributeChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-attributechangetrigger?view=graph-rest-beta) workflow.",
 															},
 														},
 													},
-													MarkdownDescription: "The trigger attribute being changed that triggers the workflowexecutiontrigger of a workflow.) / Defines the trigger attribute, which is changed to activate a workflow using an [attributeChangeTrigger](../resources/identitygovernance-attributechangetrigger.md). / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerattribute?view=graph-rest-beta",
+													MarkdownDescription: "The trigger attribute being changed that triggers the workflowexecutiontrigger of a workflow.) / Defines the trigger attribute, which is changed to activate a workflow using an [attributeChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-attributechangetrigger?view=graph-rest-beta). Also see [Microsoft docs for identityGovernance.triggerAttribute](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerattribute?view=graph-rest-beta). <br> ",
 												},
 											},
 											Validators: []validator.Object{
 												identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionTriggerValidator,
 											},
-											MarkdownDescription: "Represents changes in user attributes that trigger the execution of workload conditions for a user. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-attributechangetrigger?view=graph-rest-beta",
+											MarkdownDescription: "Represents changes in user attributes that trigger the execution of workload conditions for a user. Also see [Microsoft docs for identityGovernance.attributeChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-attributechangetrigger?view=graph-rest-beta). <br> ",
 										},
 									},
 									"membership_change": generic.OdataDerivedTypeNestedAttributeRs{
@@ -170,13 +170,13 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 													Validators: []validator.String{
 														stringvalidator.OneOf("add", "remove", "unknownFutureValue"),
 													},
-													MarkdownDescription: "Defines what change that happens to the workflow group to trigger the [workflowExecutionTrigger](../resources/identitygovernance-workflowexecutiontrigger.md). / Possible values are: `add`, `remove`, `unknownFutureValue`",
+													MarkdownDescription: "Defines what change that happens to the workflow group to trigger the [workflowExecutionTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutiontrigger?view=graph-rest-beta). <br/> _Provider_ allowed values are: `add`, `remove`, `unknownFutureValue`.",
 												},
 											},
 											Validators: []validator.Object{
 												identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionTriggerValidator,
 											},
-											MarkdownDescription: "Represents the change in group membership that triggers the execution conditions of a workflow for a user. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-membershipchangetrigger?view=graph-rest-beta",
+											MarkdownDescription: "Represents the change in group membership that triggers the execution conditions of a workflow for a user. Also see [Microsoft docs for identityGovernance.membershipChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-membershipchangetrigger?view=graph-rest-beta). <br> ",
 										},
 									},
 									"time_based_attribute": generic.OdataDerivedTypeNestedAttributeRs{
@@ -193,43 +193,73 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 													Validators: []validator.String{
 														stringvalidator.OneOf("employeeHireDate", "employeeLeaveDateTime", "unknownFutureValue", "createdDateTime"),
 													},
-													MarkdownDescription: "Determines which time-based identity property to reference. The / Possible values are: `employeeHireDate`, `employeeLeaveDateTime`, `unknownFutureValue`, `createdDateTime`",
+													MarkdownDescription: "Determines which time-based identity property to reference. <br/> _Provider_ allowed values are: `employeeHireDate`, `employeeLeaveDateTime`, `unknownFutureValue`, `createdDateTime`.",
 												},
 											},
 											Validators: []validator.Object{
 												identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionTriggerValidator,
 											},
-											MarkdownDescription: "Trigger based on a time-based attribute for initiating the execution of a [lifecycle workflow](../resources/identitygovernance-workflow.md). The combination of scope and trigger conditions determines when a workflow is executed and on which identities. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetrigger?view=graph-rest-beta",
+											MarkdownDescription: "Trigger based on a time-based attribute for initiating the execution of a [lifecycle workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta). The combination of scope and trigger conditions determines when a workflow is executed and on which identities. Also see [Microsoft docs for identityGovernance.timeBasedAttributeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetrigger?view=graph-rest-beta). <br> ",
+										},
+									},
+									"user_inactivity": generic.OdataDerivedTypeNestedAttributeRs{
+										DerivedType: "#microsoft.graph.identityGovernance.userInactivityTrigger",
+										SingleNestedAttribute: schema.SingleNestedAttribute{
+											Optional: true,
+											Attributes: map[string]schema.Attribute{ // identityGovernance.userInactivityTrigger
+												"inactivity_period_in_days": schema.Int64Attribute{
+													Required:            true,
+													MarkdownDescription: "The number of days a user must be inactive before triggering workflow execution.",
+												},
+											},
+											Validators: []validator.Object{
+												identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionTriggerValidator,
+											},
+											MarkdownDescription: "Represents a trigger based on user inactivity that initiates workflow execution for a user. Also see [Microsoft docs for identityGovernance.userInactivityTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-userinactivitytrigger?view=graph-rest-beta). <br> ",
 										},
 									},
 								},
-								MarkdownDescription: "What triggers a workflow to run. / The workflowExecutionTrigger type represents the workflow execution trigger when the [workflow runs on schedule](../resources/identitygovernance-triggerandscopebasedconditions.md). Inherited by the following derived types: / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutiontrigger?view=graph-rest-beta",
+								MarkdownDescription: "What triggers a workflow to run. / The workflowExecutionTrigger type represents the workflow execution trigger when the [workflow runs on schedule](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta). Inherited by the following derived types:. Also see [Microsoft docs for identityGovernance.workflowExecutionTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutiontrigger?view=graph-rest-beta). <br> ",
 							},
 						},
 						Validators: []validator.Object{
 							identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionConditionsValidator,
 						},
-						MarkdownDescription: "Represents a lifecycle workflow running by schedule, who it runs for, and what triggers the workflow to run. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta",
+						MarkdownDescription: "Represents a lifecycle workflow running by schedule, who it runs for, and what triggers the workflow to run. Also see [Microsoft docs for identityGovernance.triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta). <br> ",
 					},
 				},
 			},
-			MarkdownDescription: "Conditions describing when to execute the workflow and the criteria to identify in-scope subject set. Required. / The workflowExecutionConditions type notes the workflow execution conditions in [workflowTemplate](../resources/identitygovernance-workflowtemplate.md) and [workflowBase](../resources/identitygovernance-workflowbase.md) objects. Execution conditions define when a workflow runs and rules that identify the users that are the target of the workflow. The following types are derived from this abstract type: / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutionconditions?view=graph-rest-beta",
+			MarkdownDescription: "Conditions describing when to execute the workflow and the criteria to identify in-scope subject set. Required. / The workflowExecutionConditions type notes the workflow execution conditions in [workflowTemplate](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowtemplate?view=graph-rest-beta) and [workflowBase](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowbase?view=graph-rest-beta) objects. Execution conditions define when a workflow runs and rules that identify the users that are the target of the workflow. Also see [Microsoft docs for identityGovernance.workflowExecutionConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutionconditions?view=graph-rest-beta). <br> ",
 		},
 		"is_enabled": schema.BoolAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 			Computed:            true,
-			MarkdownDescription: "Whether the workflow is enabled or disabled. If this setting is `true`, the workflow can be run on demand or on schedule when **isSchedulingEnabled** is `true`. Optional. Defaults to `true`.<br><br>Supports `$filter`(`eq`, `ne`) and `orderBy`. The _provider_ default value is `false`.",
+			MarkdownDescription: "Whether the workflow is enabled or disabled. If this setting is `true`, the workflow can be run on demand or on schedule when **isSchedulingEnabled** is `true`. Optional. Defaults to `true`. <br/> Supports `$filter`(`eq`, `ne`) and `orderBy`. <br/> The _provider_ default value is `false`.",
 		},
 		"is_scheduling_enabled": schema.BoolAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 			Computed:            true,
-			MarkdownDescription: "If `true`, the Lifecycle Workflow engine executes the workflow based on the schedule defined by [tenant settings](identitygovernance-lifecyclemanagementsettings.md). Cannot be `true` for a disabled workflow (where **isEnabled** is `false`). Optional. Defaults to `false`.<br><br>Supports `$filter`(`eq`, `ne`) and `orderBy`. The _provider_ default value is `false`.",
+			MarkdownDescription: "If `true`, the Lifecycle Workflow engine executes the workflow based on the schedule defined by [tenant settings](identitygovernance-lifecyclemanagementsettings.md). Cannot be `true` for a disabled workflow (where **isEnabled** is `false`). Optional. Defaults to `false`. <br/> Supports `$filter`(`eq`, `ne`) and `orderBy`. <br/> The _provider_ default value is `false`.",
 		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
-			MarkdownDescription: "The date time when the `workflow` was last modified.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.",
+			MarkdownDescription: "The date time when the `workflow` was last modified. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.",
+		},
+		"administration_scope_targets": schema.SetNestedAttribute{
+			Optional: true,
+			NestedObject: schema.NestedAttributeObject{
+				Attributes: map[string]schema.Attribute{ // directoryObject
+					"id": schema.StringAttribute{
+						Required:            true,
+						MarkdownDescription: "The unique identifier for the object. For example, 12345678-9abc-def0-1234-56789abcde. The value of the **id** property is often but not exclusively in the form of a GUID; treat it as an opaque identifier and do not rely on it being a GUID. Key. Not nullable. Read-only.",
+					},
+				},
+			},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+			Computed:            true,
+			MarkdownDescription: "The [administrative units](https://learn.microsoft.com/en-us/graph/api/resources/administrativeunit?view=graph-rest-beta) in the scope of the workflow. Optional. <br/> Supports `$expand`. <br/> Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 		"created_by": schema.SingleNestedAttribute{
 			Computed: true,
@@ -240,7 +270,7 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-			MarkdownDescription: "The unique identifier of the Microsoft Entra user that created the [workflow](../resources/identitygovernance-workflow.md) object.<br><br>Supports `$filter`(`eq`, `ne`) and `$expand`. / Represents an Azure Active Directory user object. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-user?view=graph-rest-beta",
+			MarkdownDescription: "The unique identifier of the Microsoft Entra user that created the [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) object. <br/> Supports `$filter`(`eq`, `ne`) and `$expand`. <br/> Represents an Azure Active Directory user object. Also see [Microsoft docs for user](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-user?view=graph-rest-beta). <br> ",
 		},
 		"last_modified_by": schema.SingleNestedAttribute{
 			Computed: true,
@@ -250,7 +280,7 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 					MarkdownDescription: "The user identifier.",
 				},
 			},
-			MarkdownDescription: "The user who last modified the [workflow](../resources/identitygovernance-workflow.md) object.<br><br>Supports `$filter`(`eq`, `ne`) and `$expand`. / Represents an Azure Active Directory user object. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-user?view=graph-rest-beta",
+			MarkdownDescription: "The user who last modified the [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) object. <br/> Supports `$filter`(`eq`, `ne`) and `$expand`. <br/> Represents an Azure Active Directory user object. Also see [Microsoft docs for user](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-user?view=graph-rest-beta). <br> ",
 		},
 		"tasks": schema.ListNestedAttribute{
 			Optional: true,
@@ -275,28 +305,28 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Key value pair for storing custom settings / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta. The _provider_ default value is `[]`.",
+						MarkdownDescription: "Key value pair for storing custom settings. Also see [Microsoft docs for keyValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
 					"category": schema.StringAttribute{
 						Required: true,
 						Validators: []validator.String{
 							wpvalidator.FlagEnumValues("joiner", "leaver", "unknownFutureValue", "mover"),
 						},
-						MarkdownDescription: "Possible values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`",
+						MarkdownDescription: "_Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.",
 					},
 					"continue_on_error": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: ". The _provider_ default value is `false`.",
+						MarkdownDescription: "The _provider_ default value is `false`.",
 					},
 					"description": schema.StringAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+						PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 						Computed:            true,
-						MarkdownDescription: ". The _provider_ default value is `\"\"`.",
+						MarkdownDescription: "The _provider_ default value is `\"\"`.",
 					},
 					"display_name": schema.StringAttribute{
 						Required:            true,
@@ -314,29 +344,29 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 					},
 				},
 			},
-			PlanModifiers:       []planmodifier.List{wpdefaultvalue.ListDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Represents the configured tasks to execute and their execution sequence within a [workflow](../resources/identitygovernance-workflow.md) object. Required. / Represents a task, such as a piece of work or personal item, that can be tracked and completed. A **task** is always contained in a [base task list](basetasklist.md).\n\nThis resource supports the following: / https://learn.microsoft.com/en-us/graph/api/resources/task?view=graph-rest-beta. The _provider_ default value is `[]`.",
+			MarkdownDescription: "Represents the configured tasks to execute and their execution sequence within a [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) object. Required. / Represents a task, such as a piece of work or personal item, that can be tracked and completed. A **task** is always contained in a [base task list](basetasklist.md). Also see [Microsoft docs for identityGovernance.task](https://learn.microsoft.com/en-us/graph/api/resources/task?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 		"deleted_date_time": schema.StringAttribute{
 			Computed:            true,
-			MarkdownDescription: "When the workflow was deleted.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.",
+			MarkdownDescription: "When the workflow was deleted. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.",
 		},
 		"id": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "Identifier used for individually addressing a specific workflow.<br><br>Supports `$filter`(`eq`, `ne`) and `$orderby`.",
+			MarkdownDescription: "Identifier used for individually addressing a specific workflow. <br/> Supports `$filter`(`eq`, `ne`) and `$orderby`.",
 		},
 		"next_schedule_run_date_time": schema.StringAttribute{
 			Computed:            true,
-			MarkdownDescription: "The date time when the `workflow` is expected to run next based on the schedule interval, if there are any users matching the execution conditions. <br><br>Supports `$filter`(`lt`,`gt`) and `$orderby`.",
+			MarkdownDescription: "The date time when the `workflow` is expected to run next based on the schedule interval, if there are any users matching the execution conditions. <br/> Supports `$filter`(`lt`,`gt`) and `$orderby`.",
 		},
 		"version": schema.Int64Attribute{
 			Computed:            true,
-			MarkdownDescription: "The current version number of the workflow. Value is 1 when the workflow is first created.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.",
+			MarkdownDescription: "The current version number of the workflow. Value is 1 when the workflow is first created. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.",
 		},
 	},
-	MarkdownDescription: "Represents workflows created using Lifecycle Workflows. Workflows, when triggered by execution conditions, automate parts of the lifecycle management process using tasks. These tasks can either be built-in tasks, or a custom task can be called using the custom task extension which integrate with Azure Logic Apps.\n\nYou can create up to 100 workflows in a tenant. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta ||| MS Graph: Lifecycle workflows",
+	MarkdownDescription: "Represents workflows created using Lifecycle Workflows. Workflows, when triggered by execution conditions, automate parts of the lifecycle management process using tasks. These tasks can either be built-in tasks, or a custom task can be called using the custom task extension which integrate with Azure Logic Apps.\n\nYou can create up to 100 workflows in a tenant.\n\nAlso see [Microsoft docs for identityGovernance.workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta). ||| MS Graph: Lifecycle workflows",
 }
 
 var identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionConditionsValidator = objectvalidator.ExactlyOneOf(
@@ -353,4 +383,5 @@ var identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionTriggerValidato
 	path.MatchRelative().AtParent().AtName("attribute_change"),
 	path.MatchRelative().AtParent().AtName("membership_change"),
 	path.MatchRelative().AtParent().AtName("time_based_attribute"),
+	path.MatchRelative().AtParent().AtName("user_inactivity"),
 )

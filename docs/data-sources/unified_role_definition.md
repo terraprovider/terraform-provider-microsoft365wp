@@ -7,7 +7,9 @@ subcategory: "MS Graph: Role management"
 
 Represents a collection of permissions listing the operations, such as read, write, and delete, that can be performed by an RBAC provider, as part of Microsoft 365 RBAC [role management](rolemanagement.md).
 
-The following RBAC providers are currently supported: / https://learn.microsoft.com/en-us/graph/api/resources/unifiedroledefinition?view=graph-rest-beta
+The following RBAC providers are currently supported:
+
+Also see [Microsoft docs for unifiedRoleDefinition](https://learn.microsoft.com/en-us/graph/api/resources/unifiedroledefinition?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -81,13 +83,13 @@ output "microsoft365wp_unified_role_definition_2" {
 
 ### Read-Only
 
-- `allowed_principal_types` (String) Types of principals that can be assigned the role. The This is a multi-valued enumeration that can contain up to three values as a comma-separated string. For example, `user, group`. Supports `$filter` (`eq`). / Possible values are: `user`, `servicePrincipal`, `group`, `unknownFutureValue`
+- `allowed_principal_types` (String) Types of principals that can be assigned the role. This is a multi-valued enumeration that can contain up to three values as a comma-separated string. For example, `user, group`. Supports `$filter` (`eq`). <br/> _Provider_ allowed values are: `user`, `servicePrincipal`, `group`, `unknownFutureValue`.
 - `description` (String) The description for the unifiedRoleDefinition. Read-only when **isBuiltIn** is `true`.
-- `inherits_permissions_from` (Attributes Set) Read-only collection of role definitions that the given role definition inherits from. Only Microsoft Entra built-in roles support this attribute. (see [below for nested schema](#nestedatt--inherits_permissions_from))
+- `inherits_permissions_from` (Attributes Set) Read-only collection of role definitions that the given role definition inherits from. Only Microsoft Entra built-in roles support this attribute. <br> (see [below for nested schema](#nestedatt--inherits_permissions_from))
 - `is_built_in` (Boolean) Flag indicating if the unifiedRoleDefinition is part of the default set included with the product or custom.  Supports `$filter` (`eq`).
 - `is_enabled` (Boolean) Flag indicating if the role is enabled for assignment. If false the role is not available for assignment. Read-only when **isBuiltIn** is `true`.
-- `is_privileged` (Boolean) Flag indicating if the role is privileged. Microsoft Entra ID defines a role as privileged if it contains at least one sensitive resource action in the **rolePermissions** and **allowedResourceActions** objects. Applies only for actions in the `microsoft.directory` resource namespace. Supports `$filter` (`eq`).
-- `role_permissions` (Attributes Set) List of permissions included in the role. Read-only when **isBuiltIn** is `true`. Required. / Represents a collection of allowed resource actions and the conditions that must be met for the action to be effective. Resource actions are tasks that can be performed on a resource. For example, the application resource supports create, update, delete, and reset password resource actions. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolepermission?view=graph-rest-beta (see [below for nested schema](#nestedatt--role_permissions))
+- `is_privileged` (Boolean) Flag indicating if the role is privileged. Microsoft Entra ID defines a role as privileged if it contains at least one sensitive resource action in the **rolePermissions** and **allowedResourceActions** objects. Applies only for actions in the `microsoft.directory` resource namespace. Supports `$filter` (`eq`). <br/>
+- `role_permissions` (Attributes Set) List of permissions included in the role. Read-only when **isBuiltIn** is `true`. Required. / Represents a collection of allowed resource actions and the conditions that must be met for the action to be effective. Resource actions are tasks that can be performed on a resource. For example, the application resource supports create, update, delete, and reset password resource actions. Also see [Microsoft docs for unifiedRolePermission](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolepermission?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--role_permissions))
 - `template_id` (String) Custom template identifier that can be set when isBuiltIn is `false`. This identifier is typically used if one needs an identifier to be the same across different directories. Read-only when **isBuiltIn** is `true`.
 - `version` (String) Indicates the version of the unifiedRoleDefinition object. Read-only when **isBuiltIn** is `true`.
 

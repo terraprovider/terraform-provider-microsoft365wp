@@ -5,7 +5,7 @@ subcategory: "MS Graph: Entitlement management"
 
 # microsoft365wp_connected_organization (Data Source)
 
-In [Microsoft Entra entitlement management](entitlementmanagement-overview.md), a connected organization is a reference to a directory or domain of another organization whose users can request access. / https://learn.microsoft.com/en-us/graph/api/resources/connectedorganization?view=graph-rest-beta
+In [Microsoft Entra entitlement management](entitlementmanagement-overview.md), a connected organization is a reference to a directory or domain of another organization whose users can request access. <br/> Also see [Microsoft docs for connectedOrganization](https://learn.microsoft.com/en-us/graph/api/resources/connectedorganization?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -73,17 +73,13 @@ output "microsoft365wp_connected_organization" {
 - `created_date_time` (String) The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`.
 - `description` (String) The description of the connected organization.
 - `display_name` (String) The display name of the connected organization. Supports `$filter` (`eq`).
-- `external_sponsors` (Attributes Set) Nullable. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:
-
-This resource supports: / https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta. (see [below for nested schema](#nestedatt--external_sponsors))
+- `external_sponsors` (Attributes Set) Nullable. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--external_sponsors))
 - `id` (String) The ID of this resource.
-- `identity_sources` (Attributes Set) The identity sources in this connected organization, one of [azureActiveDirectoryTenant](azureactivedirectorytenant.md), [crossCloudAzureActiveDirectoryTenant](crosscloudazureactivedirectorytenant.md), [domainIdentitySource](domainidentitysource.md), [externalDomainFederation](externaldomainfederation.md), or [socialIdentitySource](socialidentitysource.md). Nullable. Supports `$select` and `$filter`(`eq`). To filter by the derived types, you must declare the resource using its full OData cast, for example, `$filter=identitySources/any(is:is/microsoft.graph.azureActiveDirectoryTenant/tenantId eq 'bcfdfff4-cbc3-43f2-9000-ba7b7515054f')`. / The subtypes of this type, [azureActiveDirectoryTenant](azureactivedirectorytenant.md), [crossCloudAzureActiveDirectoryTenant](crosscloudazureactivedirectorytenant.md), [domainIdentitySource](domainidentitysource.md), [externalDomainFederation](externaldomainfederation.md), and [socialIdentitySource](socialidentitysource.md) are used in the identity sources of a [connectedOrganization](connectedOrganization.md). / https://learn.microsoft.com/en-us/graph/api/resources/identitysource?view=graph-rest-beta. (see [below for nested schema](#nestedatt--identity_sources))
-- `internal_sponsors` (Attributes Set) Nullable. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:
-
-This resource supports: / https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta. (see [below for nested schema](#nestedatt--internal_sponsors))
+- `identity_sources` (Attributes Set) The identity sources in this connected organization, one of [azureActiveDirectoryTenant](azureactivedirectorytenant.md), [crossCloudAzureActiveDirectoryTenant](crosscloudazureactivedirectorytenant.md), [domainIdentitySource](domainidentitysource.md), [externalDomainFederation](externaldomainfederation.md), or [socialIdentitySource](socialidentitysource.md). Nullable. Supports `$select` and `$filter`(`eq`). To filter by the derived types, you must declare the resource using its full OData cast, for example, `$filter=identitySources/any(is:is/microsoft.graph.azureActiveDirectoryTenant/tenantId eq 'bcfdfff4-cbc3-43f2-9000-ba7b7515054f')`. / The subtypes of this type, [azureActiveDirectoryTenant](azureactivedirectorytenant.md), [crossCloudAzureActiveDirectoryTenant](crosscloudazureactivedirectorytenant.md), [domainIdentitySource](domainidentitysource.md), [externalDomainFederation](externaldomainfederation.md), and [socialIdentitySource](socialidentitysource.md) are used in the identity sources of a [connectedOrganization](connectedOrganization.md). Also see [Microsoft docs for identitySource](https://learn.microsoft.com/en-us/graph/api/resources/identitysource?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--identity_sources))
+- `internal_sponsors` (Attributes Set) Nullable. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--internal_sponsors))
 - `modified_by` (String) UPN of the user who last modified this resource.
 - `modified_date_time` (String) The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`.
-- `state` (String) The state of a connected organization defines whether assignment policies with requestor scope type `AllConfiguredConnectedOrganizationSubjects` are applicable or not. / Possible values are: `configured`, `proposed`, `unknownFutureValue`.
+- `state` (String) The state of a connected organization defines whether assignment policies with requestor scope type `AllConfiguredConnectedOrganizationSubjects` are applicable or not. <br/> _Provider_ allowed values are: `configured`, `proposed`, `unknownFutureValue`.
 
 <a id="nestedatt--external_sponsors"></a>
 ### Nested Schema for `external_sponsors`
@@ -98,11 +94,11 @@ Read-Only:
 
 Read-Only:
 
-- `azure_active_directory_tenant` (Attributes) Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.azureActiveDirectoryTenant` indicates that this type identifies another Microsoft Entra tenant as an identity source for a connected organization. / https://learn.microsoft.com/en-us/graph/api/resources/azureactivedirectorytenant?view=graph-rest-beta (see [below for nested schema](#nestedatt--identity_sources--azure_active_directory_tenant))
-- `cross_cloud_azure_active_directory_tenant` (Attributes) Used in the identity sources of a [connectedOrganization](connectedOrganization.md) object. The `@odata.type` value `#microsoft.graph.crossCloudAzureActiveDirectoryTenant` indicates that this type identifies another Microsoft Entra tenant in a different cloud as an identity source for a connected organization. / https://learn.microsoft.com/en-us/graph/api/resources/crosscloudazureactivedirectorytenant?view=graph-rest-beta (see [below for nested schema](#nestedatt--identity_sources--cross_cloud_azure_active_directory_tenant))
-- `domain_identity_source` (Attributes) Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.domainIdentitySource` indicates that this type identifies a domain as an identity source for a connected organization. / https://learn.microsoft.com/en-us/graph/api/resources/domainidentitysource?view=graph-rest-beta (see [below for nested schema](#nestedatt--identity_sources--domain_identity_source))
-- `external_domain_federation` (Attributes) Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.externalDomainFederation` indicates that this type identifies a domain with a configured identity provider as an identity source for a connected organization. / https://learn.microsoft.com/en-us/graph/api/resources/externaldomainfederation?view=graph-rest-beta (see [below for nested schema](#nestedatt--identity_sources--external_domain_federation))
-- `social_identity_source` (Attributes) Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.socialIdentitySource` identifies a social identity as an identity source for a connected organization. / https://learn.microsoft.com/en-us/graph/api/resources/socialidentitysource?view=graph-rest-beta (see [below for nested schema](#nestedatt--identity_sources--social_identity_source))
+- `azure_active_directory_tenant` (Attributes) Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.azureActiveDirectoryTenant` indicates that this type identifies another Microsoft Entra tenant as an identity source for a connected organization. Also see [Microsoft docs for azureActiveDirectoryTenant](https://learn.microsoft.com/en-us/graph/api/resources/azureactivedirectorytenant?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--identity_sources--azure_active_directory_tenant))
+- `cross_cloud_azure_active_directory_tenant` (Attributes) Used in the identity sources of a [connectedOrganization](connectedOrganization.md) object. The `@odata.type` value `#microsoft.graph.crossCloudAzureActiveDirectoryTenant` indicates that this type identifies another Microsoft Entra tenant in a different cloud as an identity source for a connected organization. Also see [Microsoft docs for crossCloudAzureActiveDirectoryTenant](https://learn.microsoft.com/en-us/graph/api/resources/crosscloudazureactivedirectorytenant?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--identity_sources--cross_cloud_azure_active_directory_tenant))
+- `domain_identity_source` (Attributes) Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.domainIdentitySource` indicates that this type identifies a domain as an identity source for a connected organization. Also see [Microsoft docs for domainIdentitySource](https://learn.microsoft.com/en-us/graph/api/resources/domainidentitysource?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--identity_sources--domain_identity_source))
+- `external_domain_federation` (Attributes) Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.externalDomainFederation` indicates that this type identifies a domain with a configured identity provider as an identity source for a connected organization. Also see [Microsoft docs for externalDomainFederation](https://learn.microsoft.com/en-us/graph/api/resources/externaldomainfederation?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--identity_sources--external_domain_federation))
+- `social_identity_source` (Attributes) Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.socialIdentitySource` identifies a social identity as an identity source for a connected organization. Also see [Microsoft docs for socialIdentitySource](https://learn.microsoft.com/en-us/graph/api/resources/socialidentitysource?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--identity_sources--social_identity_source))
 
 <a id="nestedatt--identity_sources--azure_active_directory_tenant"></a>
 ### Nested Schema for `identity_sources.azure_active_directory_tenant`
@@ -128,8 +124,8 @@ Read-Only:
 
 Read-Only:
 
-- `display_name` (String) The name of the identity source, typically also the domain name. Read only.
-- `domain_name` (String) The domain name. Read only.
+- `display_name` (String) The name of the identity source, typically also the domain name.
+- `domain_name` (String) The domain name.
 
 
 <a id="nestedatt--identity_sources--external_domain_federation"></a>
@@ -148,7 +144,7 @@ Read-Only:
 Read-Only:
 
 - `display_name` (String) The name of the identity source. Typically the same value as the **socialIdentitySourceType**.
-- `social_identity_source_type` (String) The / Possible values are: `facebook`, `unknownFutureValue`
+- `social_identity_source_type` (String) _Provider_ allowed values are: `facebook`, `unknownFutureValue`.
 
 
 

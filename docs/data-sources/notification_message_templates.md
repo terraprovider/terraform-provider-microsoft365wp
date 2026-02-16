@@ -5,7 +5,7 @@ subcategory: "MS Graph: Device management"
 
 # microsoft365wp_notification_message_templates (Data Source)
 
-Notification messages are messages that are sent to end users who are determined to be not-compliant with the compliance policies defined by the administrator. Administrators choose notifications and configure them in the Intune Admin Console using the compliance policy creation page under the “Actions for non-compliance” section. Use the notificationMessageTemplate object to create your own custom notifications for administrators to choose while configuring actions for non-compliance. / https://learn.microsoft.com/en-us/graph/api/resources/intune-notification-notificationmessagetemplate?view=graph-rest-beta
+Notification messages are messages that are sent to end users who are determined to be not-compliant with the compliance policies defined by the administrator. Administrators choose notifications and configure them in the Intune Admin Console using the compliance policy creation page under the “Actions for non-compliance” section. Use the notificationMessageTemplate object to create your own custom notifications for administrators to choose while configuring actions for non-compliance. <br/> Also see [Microsoft docs for notificationMessageTemplate](https://learn.microsoft.com/en-us/graph/api/resources/intune-notification-notificationmessagetemplate?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -81,4 +81,4 @@ Read-Only:
 - `display_name` (String) Display name for the Notification Message Template.
 - `id` (String) Key of the entity.
 - `last_modified_date_time` (String) DateTime the object was last modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>

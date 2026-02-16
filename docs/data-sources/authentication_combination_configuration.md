@@ -5,9 +5,9 @@ subcategory: "MS Graph: Authentication"
 
 # microsoft365wp_authentication_combination_configuration (Data Source)
 
-Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta
+Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: <br/> Also see [Microsoft docs for authenticationCombinationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta).
 
-Provider Note: To import this resource, an ID consisting of `authentication_strength_policy_id` and `id` being joined by a forward slash (`/`) must be used.
+_Provider_ Note: To import this resource, an ID consisting of `authentication_strength_policy_id` and `id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 
@@ -39,7 +39,7 @@ further restrictions on what functionality may be used in practice.
 
 ### Required
 
-- `authentication_strength_policy_id` (String) Provider Note: ID of the authentication strength policy that this resource belongs to. Required.
+- `authentication_strength_policy_id` (String) _Provider_ Note: ID of the authentication strength policy that this resource belongs to. Required.
 
 ### Optional
 
@@ -50,18 +50,16 @@ further restrictions on what functionality may be used in practice.
 
 ### Read-Only
 
-- `applies_to_combinations` (Set of String) Which authentication method combinations this configuration applies to. Must be an **allowedCombinations** object defined for the [authenticationStrengthPolicy](../resources/authenticationstrengthpolicy.md). For **fido2combinationConfigurations** use `"fido2"`, for **x509certificatecombinationconfiguration** use `"x509CertificateSingleFactor"` or `"x509CertificateMultiFactor"`. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`.
-- `fido2` (Attributes) Configuration to require specific FIDO2 key types in an authentication strength. An administrator may use this entity to specify which Authenticator Attestations GUIDs (AAGUIDs) are allowed, as part of certain authentication method combinations, in an [authentication strength](authenticationstrengthpolicy.md).
-
-Inherits and derived from [authenticationCombinationConfiguration](../resources/authenticationcombinationconfiguration.md). / https://learn.microsoft.com/en-us/graph/api/resources/fido2combinationconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--fido2))
-- `x509_certificate` (Attributes) Configuration to require specific certificate properties. You can use this entity to specify the certificate issuer or policy OID that are allowed, as part of certificate-based authentication, in an [authentication strength policy](authenticationstrengthpolicy.md). / https://learn.microsoft.com/en-us/graph/api/resources/x509certificatecombinationconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--x509_certificate))
+- `applies_to_combinations` (Set of String) Which authentication method combinations this configuration applies to. Must be an **allowedCombinations** object defined for the [authenticationStrengthPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta). For **fido2combinationConfigurations** use `"fido2"`, for **x509certificatecombinationconfiguration** use `"x509CertificateSingleFactor"` or `"x509CertificateMultiFactor"`. <br/> _Provider_ allowed values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`.
+- `fido2` (Attributes) Configuration to require specific FIDO2 key types in an authentication strength. An administrator may use this entity to specify which Authenticator Attestations GUIDs (AAGUIDs) are allowed, as part of certain authentication method combinations, in an [authentication strength](authenticationstrengthpolicy.md). Also see [Microsoft docs for fido2CombinationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/fido2combinationconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--fido2))
+- `x509_certificate` (Attributes) Configuration to require specific certificate properties. You can use this entity to specify the certificate issuer or policy OID that are allowed, as part of certificate-based authentication, in an [authentication strength policy](authenticationstrengthpolicy.md). Also see [Microsoft docs for x509CertificateCombinationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/x509certificatecombinationconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--x509_certificate))
 
 <a id="nestedatt--fido2"></a>
 ### Nested Schema for `fido2`
 
 Read-Only:
 
-- `allowed_aaguids` (Set of String) A list of AAGUIDs allowed to be used as part of the specified authentication method combinations.
+- `allowed_aaguids` (Set of String) A list of AAGUIDs allowed to be used as part of the specified authentication method combinations. <br/>
 
 
 <a id="nestedatt--x509_certificate"></a>
@@ -69,5 +67,5 @@ Read-Only:
 
 Read-Only:
 
-- `allowed_issuer_skis` (Set of String) A list of allowed subject key identifier values.
-- `allowed_policy_oids` (Set of String) A list of allowed policy OIDs.
+- `allowed_issuer_skis` (Set of String) A list of allowed subject key identifier values. <br/>
+- `allowed_policy_oids` (Set of String) A list of allowed policy OIDs. <br/>

@@ -5,9 +5,9 @@ subcategory: "MS Graph: Corporate enrollment"
 
 # microsoft365wp_azure_ad_windows_autopilot_deployment_profiles (Data Source)
 
-Windows Autopilot Deployment Profile / https://learn.microsoft.com/en-us/graph/api/resources/intune-enrollment-azureadwindowsautopilotdeploymentprofile?view=graph-rest-beta
+Windows Autopilot Deployment Profile <br/> Also see [Microsoft docs for azureADWindowsAutopilotDeploymentProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-enrollment-azureadwindowsautopilotdeploymentprofile?view=graph-rest-beta).
 
-Provider Note: For this resource MS Graph requires for assignments to be individually created or deleted. Therefore we use the separate resource type `microsoft365wp_azure_ad_windows_autopilot_deployment_profile_assignment` for them.
+_Provider_ Note: For this resource MS Graph requires for assignments to be individually created or deleted. Therefore we use the separate resource type `microsoft365wp_azure_ad_windows_autopilot_deployment_profile_assignment` for them.
 
 ## Documentation Disclaimer
 
@@ -98,4 +98,4 @@ Read-Only:
 - `display_name` (String) The display name of the deployment profile. Max allowed length is 200 chars. Returned by default. Supports: $select, $top, $skip, $orderby. $Search and $filter are not supported.
 - `id` (String) Profile Key
 - `last_modified_date_time` (String) The date and time of when the deployment profile was last modified. The value cannot be updated manually and is automatically populated when any changes are made to the profile. The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 would look like this: '2014-01-01T00:00:00Z'. Supports: $select, $top, $skip. $Search, $orderBy and $filter are not supported
-- `role_scope_tag_ids` (Set of String) List of role scope tags for the deployment profile.
+- `role_scope_tag_ids` (Set of String) List of role scope tags for the deployment profile. <br/>

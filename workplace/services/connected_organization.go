@@ -2,7 +2,7 @@ package services
 
 import (
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
@@ -117,7 +117,7 @@ var connectedOrganizationResourceSchema = schema.Schema{
 								},
 							},
 							Validators:          []validator.Object{connectedOrganizationIdentitySourceValidator},
-							MarkdownDescription: "Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.azureActiveDirectoryTenant` indicates that this type identifies another Microsoft Entra tenant as an identity source for a connected organization. / https://learn.microsoft.com/en-us/graph/api/resources/azureactivedirectorytenant?view=graph-rest-beta",
+							MarkdownDescription: "Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.azureActiveDirectoryTenant` indicates that this type identifies another Microsoft Entra tenant as an identity source for a connected organization. Also see [Microsoft docs for azureActiveDirectoryTenant](https://learn.microsoft.com/en-us/graph/api/resources/azureactivedirectorytenant?view=graph-rest-beta). <br> ",
 						},
 					},
 					"cross_cloud_azure_active_directory_tenant": generic.OdataDerivedTypeNestedAttributeRs{
@@ -142,7 +142,7 @@ var connectedOrganizationResourceSchema = schema.Schema{
 								},
 							},
 							Validators:          []validator.Object{connectedOrganizationIdentitySourceValidator},
-							MarkdownDescription: "Used in the identity sources of a [connectedOrganization](connectedOrganization.md) object. The `@odata.type` value `#microsoft.graph.crossCloudAzureActiveDirectoryTenant` indicates that this type identifies another Microsoft Entra tenant in a different cloud as an identity source for a connected organization. / https://learn.microsoft.com/en-us/graph/api/resources/crosscloudazureactivedirectorytenant?view=graph-rest-beta",
+							MarkdownDescription: "Used in the identity sources of a [connectedOrganization](connectedOrganization.md) object. The `@odata.type` value `#microsoft.graph.crossCloudAzureActiveDirectoryTenant` indicates that this type identifies another Microsoft Entra tenant in a different cloud as an identity source for a connected organization. Also see [Microsoft docs for crossCloudAzureActiveDirectoryTenant](https://learn.microsoft.com/en-us/graph/api/resources/crosscloudazureactivedirectorytenant?view=graph-rest-beta). <br> ",
 						},
 					},
 					"domain_identity_source": generic.OdataDerivedTypeNestedAttributeRs{
@@ -153,16 +153,16 @@ var connectedOrganizationResourceSchema = schema.Schema{
 								"display_name": schema.StringAttribute{
 									Required:            true,
 									PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
-									MarkdownDescription: "The name of the identity source, typically also the domain name. Read only.",
+									MarkdownDescription: "The name of the identity source, typically also the domain name. Read-only.",
 								},
 								"domain_name": schema.StringAttribute{
 									Required:            true,
 									PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
-									MarkdownDescription: "The domain name. Read only.",
+									MarkdownDescription: "The domain name. Read-only.",
 								},
 							},
 							Validators:          []validator.Object{connectedOrganizationIdentitySourceValidator},
-							MarkdownDescription: "Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.domainIdentitySource` indicates that this type identifies a domain as an identity source for a connected organization. / https://learn.microsoft.com/en-us/graph/api/resources/domainidentitysource?view=graph-rest-beta",
+							MarkdownDescription: "Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.domainIdentitySource` indicates that this type identifies a domain as an identity source for a connected organization. Also see [Microsoft docs for domainIdentitySource](https://learn.microsoft.com/en-us/graph/api/resources/domainidentitysource?view=graph-rest-beta). <br> ",
 						},
 					},
 					"external_domain_federation": generic.OdataDerivedTypeNestedAttributeRs{
@@ -187,7 +187,7 @@ var connectedOrganizationResourceSchema = schema.Schema{
 								},
 							},
 							Validators:          []validator.Object{connectedOrganizationIdentitySourceValidator},
-							MarkdownDescription: "Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.externalDomainFederation` indicates that this type identifies a domain with a configured identity provider as an identity source for a connected organization. / https://learn.microsoft.com/en-us/graph/api/resources/externaldomainfederation?view=graph-rest-beta",
+							MarkdownDescription: "Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.externalDomainFederation` indicates that this type identifies a domain with a configured identity provider as an identity source for a connected organization. Also see [Microsoft docs for externalDomainFederation](https://learn.microsoft.com/en-us/graph/api/resources/externaldomainfederation?view=graph-rest-beta). <br> ",
 						},
 					},
 					"social_identity_source": generic.OdataDerivedTypeNestedAttributeRs{
@@ -206,18 +206,18 @@ var connectedOrganizationResourceSchema = schema.Schema{
 										stringvalidator.OneOf("facebook", "unknownFutureValue"),
 									},
 									PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
-									MarkdownDescription: "The / Possible values are: `facebook`, `unknownFutureValue`",
+									MarkdownDescription: "_Provider_ allowed values are: `facebook`, `unknownFutureValue`.",
 								},
 							},
 							Validators:          []validator.Object{connectedOrganizationIdentitySourceValidator},
-							MarkdownDescription: "Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.socialIdentitySource` identifies a social identity as an identity source for a connected organization. / https://learn.microsoft.com/en-us/graph/api/resources/socialidentitysource?view=graph-rest-beta",
+							MarkdownDescription: "Used in the identity sources of an [connectedOrganization](connectedOrganization.md). The `@odata.type` value `#microsoft.graph.socialIdentitySource` identifies a social identity as an identity source for a connected organization. Also see [Microsoft docs for socialIdentitySource](https://learn.microsoft.com/en-us/graph/api/resources/socialidentitysource?view=graph-rest-beta). <br> ",
 						},
 					},
 				},
 			},
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "The identity sources in this connected organization, one of [azureActiveDirectoryTenant](azureactivedirectorytenant.md), [crossCloudAzureActiveDirectoryTenant](crosscloudazureactivedirectorytenant.md), [domainIdentitySource](domainidentitysource.md), [externalDomainFederation](externaldomainfederation.md), or [socialIdentitySource](socialidentitysource.md). Read-only. Nullable. Supports `$select` and `$filter`(`eq`). To filter by the derived types, you must declare the resource using its full OData cast, for example, `$filter=identitySources/any(is:is/microsoft.graph.azureActiveDirectoryTenant/tenantId eq 'bcfdfff4-cbc3-43f2-9000-ba7b7515054f')`. / The subtypes of this type, [azureActiveDirectoryTenant](azureactivedirectorytenant.md), [crossCloudAzureActiveDirectoryTenant](crosscloudazureactivedirectorytenant.md), [domainIdentitySource](domainidentitysource.md), [externalDomainFederation](externaldomainfederation.md), and [socialIdentitySource](socialidentitysource.md) are used in the identity sources of a [connectedOrganization](connectedOrganization.md). / https://learn.microsoft.com/en-us/graph/api/resources/identitysource?view=graph-rest-beta. The _provider_ default value is `[]`.",
+			MarkdownDescription: "The identity sources in this connected organization, one of [azureActiveDirectoryTenant](azureactivedirectorytenant.md), [crossCloudAzureActiveDirectoryTenant](crosscloudazureactivedirectorytenant.md), [domainIdentitySource](domainidentitysource.md), [externalDomainFederation](externaldomainfederation.md), or [socialIdentitySource](socialidentitysource.md). Read-only. Nullable. Supports `$select` and `$filter`(`eq`). To filter by the derived types, you must declare the resource using its full OData cast, for example, `$filter=identitySources/any(is:is/microsoft.graph.azureActiveDirectoryTenant/tenantId eq 'bcfdfff4-cbc3-43f2-9000-ba7b7515054f')`. / The subtypes of this type, [azureActiveDirectoryTenant](azureactivedirectorytenant.md), [crossCloudAzureActiveDirectoryTenant](crosscloudazureactivedirectorytenant.md), [domainIdentitySource](domainidentitysource.md), [externalDomainFederation](externaldomainfederation.md), and [socialIdentitySource](socialidentitysource.md) are used in the identity sources of a [connectedOrganization](connectedOrganization.md). Also see [Microsoft docs for identitySource](https://learn.microsoft.com/en-us/graph/api/resources/identitysource?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 		"modified_by": schema.StringAttribute{
 			Computed:            true,
@@ -232,30 +232,32 @@ var connectedOrganizationResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				stringvalidator.OneOf("configured", "proposed", "unknownFutureValue"),
 			},
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("configured")},
+			PlanModifiers: []planmodifier.String{
+				wpdefaultvaluemodifier.StringDefaultValue("configured"),
+			},
 			Computed:            true,
-			MarkdownDescription: "The state of a connected organization defines whether assignment policies with requestor scope type `AllConfiguredConnectedOrganizationSubjects` are applicable or not. / Possible values are: `configured`, `proposed`, `unknownFutureValue`. The _provider_ default value is `\"configured\"`.",
+			MarkdownDescription: "The state of a connected organization defines whether assignment policies with requestor scope type `AllConfiguredConnectedOrganizationSubjects` are applicable or not. <br/> _Provider_ allowed values are: `configured`, `proposed`, `unknownFutureValue`. The _provider_ default value is `\"configured\"`.",
 		},
 		"external_sponsors": schema.SetNestedAttribute{
 			Optional: true,
 			NestedObject: schema.NestedAttributeObject{
 				Attributes: connectedOrganizationDirectoryObjectAttributes,
 			},
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Nullable. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:\n\nThis resource supports: / https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta. The _provider_ default value is `[]`.",
+			MarkdownDescription: "Nullable. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 		"internal_sponsors": schema.SetNestedAttribute{
 			Optional: true,
 			NestedObject: schema.NestedAttributeObject{
 				Attributes: connectedOrganizationDirectoryObjectAttributes,
 			},
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Nullable. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:\n\nThis resource supports: / https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta. The _provider_ default value is `[]`.",
+			MarkdownDescription: "Nullable. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 	},
-	MarkdownDescription: "In [Microsoft Entra entitlement management](entitlementmanagement-overview.md), a connected organization is a reference to a directory or domain of another organization whose users can request access. / https://learn.microsoft.com/en-us/graph/api/resources/connectedorganization?view=graph-rest-beta ||| MS Graph: Entitlement management",
+	MarkdownDescription: "In [Microsoft Entra entitlement management](entitlementmanagement-overview.md), a connected organization is a reference to a directory or domain of another organization whose users can request access. <br/> Also see [Microsoft docs for connectedOrganization](https://learn.microsoft.com/en-us/graph/api/resources/connectedorganization?view=graph-rest-beta). ||| MS Graph: Entitlement management",
 }
 
 var connectedOrganizationIdentitySourceValidator = objectvalidator.ExactlyOneOf(

@@ -5,7 +5,7 @@ subcategory: "MS Graph: Corporate enrollment"
 
 # microsoft365wp_azure_ad_windows_autopilot_deployment_profile_assignments (Data Source)
 
-Provider Note: To import this resource, an ID consisting of `azure_ad_windows_autopilot_deployment_profile_id` and `id` being joined by a forward slash (`/`) must be used.
+_Provider_ Note: To import this resource, an ID consisting of `azure_ad_windows_autopilot_deployment_profile_id` and `id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 

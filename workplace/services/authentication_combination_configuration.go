@@ -2,7 +2,7 @@ package services
 
 import (
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
@@ -43,7 +43,7 @@ var authenticationCombinationConfigurationResourceSchema = schema.Schema{
 		"authentication_strength_policy_id": schema.StringAttribute{
 			Required:            true,
 			PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
-			MarkdownDescription: "Provider Note: ID of the authentication strength policy that this resource belongs to. Required.",
+			MarkdownDescription: "_Provider_ Note: ID of the authentication strength policy that this resource belongs to. Required.",
 		},
 		"id": schema.StringAttribute{
 			Computed:            true,
@@ -58,9 +58,9 @@ var authenticationCombinationConfigurationResourceSchema = schema.Schema{
 					wpvalidator.FlagEnumValues("password", "voice", "hardwareOath", "softwareOath", "sms", "fido2", "windowsHelloForBusiness", "microsoftAuthenticatorPush", "deviceBasedPush", "temporaryAccessPassOneTime", "temporaryAccessPassMultiUse", "email", "x509CertificateSingleFactor", "x509CertificateMultiFactor", "federatedSingleFactor", "federatedMultiFactor", "unknownFutureValue", "qrCodePin"),
 				),
 			},
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Which authentication method combinations this configuration applies to. Must be an **allowedCombinations** object defined for the [authenticationStrengthPolicy](../resources/authenticationstrengthpolicy.md). For **fido2combinationConfigurations** use `\"fido2\"`, for **x509certificatecombinationconfiguration** use `\"x509CertificateSingleFactor\"` or `\"x509CertificateMultiFactor\"`. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`. The _provider_ default value is `[]`.",
+			MarkdownDescription: "Which authentication method combinations this configuration applies to. Must be an **allowedCombinations** object defined for the [authenticationStrengthPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta). For **fido2combinationConfigurations** use `\"fido2\"`, for **x509certificatecombinationconfiguration** use `\"x509CertificateSingleFactor\"` or `\"x509CertificateMultiFactor\"`. <br/> _Provider_ allowed values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`. The _provider_ default value is `[]`.",
 		},
 		"fido2": generic.OdataDerivedTypeNestedAttributeRs{
 			DerivedType: "#microsoft.graph.fido2CombinationConfiguration",
@@ -70,16 +70,16 @@ var authenticationCombinationConfigurationResourceSchema = schema.Schema{
 					"allowed_aaguids": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 						Computed:            true,
 						Description:         `allowedAAGUIDs`, // custom MS Graph attribute name
-						MarkdownDescription: "A list of AAGUIDs allowed to be used as part of the specified authentication method combinations. The _provider_ default value is `[]`.",
+						MarkdownDescription: "A list of AAGUIDs allowed to be used as part of the specified authentication method combinations. <br/> The _provider_ default value is `[]`.",
 					},
 				},
 				Validators: []validator.Object{
 					authenticationCombinationConfigurationAuthenticationCombinationConfigurationValidator,
 				},
-				MarkdownDescription: "Configuration to require specific FIDO2 key types in an authentication strength. An administrator may use this entity to specify which Authenticator Attestations GUIDs (AAGUIDs) are allowed, as part of certain authentication method combinations, in an [authentication strength](authenticationstrengthpolicy.md).\n\nInherits and derived from [authenticationCombinationConfiguration](../resources/authenticationcombinationconfiguration.md). / https://learn.microsoft.com/en-us/graph/api/resources/fido2combinationconfiguration?view=graph-rest-beta",
+				MarkdownDescription: "Configuration to require specific FIDO2 key types in an authentication strength. An administrator may use this entity to specify which Authenticator Attestations GUIDs (AAGUIDs) are allowed, as part of certain authentication method combinations, in an [authentication strength](authenticationstrengthpolicy.md). Also see [Microsoft docs for fido2CombinationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/fido2combinationconfiguration?view=graph-rest-beta). <br> ",
 			},
 		},
 		"x509_certificate": generic.OdataDerivedTypeNestedAttributeRs{
@@ -90,27 +90,27 @@ var authenticationCombinationConfigurationResourceSchema = schema.Schema{
 					"allowed_issuer_skis": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "A list of allowed subject key identifier values. The _provider_ default value is `[]`.",
+						MarkdownDescription: "A list of allowed subject key identifier values. <br/> The _provider_ default value is `[]`.",
 					},
 					"allowed_policy_oids": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 						Computed:            true,
 						Description:         `allowedPolicyOIDs`, // custom MS Graph attribute name
-						MarkdownDescription: "A list of allowed policy OIDs. The _provider_ default value is `[]`.",
+						MarkdownDescription: "A list of allowed policy OIDs. <br/> The _provider_ default value is `[]`.",
 					},
 				},
 				Validators: []validator.Object{
 					authenticationCombinationConfigurationAuthenticationCombinationConfigurationValidator,
 				},
-				MarkdownDescription: "Configuration to require specific certificate properties. You can use this entity to specify the certificate issuer or policy OID that are allowed, as part of certificate-based authentication, in an [authentication strength policy](authenticationstrengthpolicy.md). / https://learn.microsoft.com/en-us/graph/api/resources/x509certificatecombinationconfiguration?view=graph-rest-beta",
+				MarkdownDescription: "Configuration to require specific certificate properties. You can use this entity to specify the certificate issuer or policy OID that are allowed, as part of certificate-based authentication, in an [authentication strength policy](authenticationstrengthpolicy.md). Also see [Microsoft docs for x509CertificateCombinationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/x509certificatecombinationconfiguration?view=graph-rest-beta). <br> ",
 			},
 		},
 	},
-	MarkdownDescription: "Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta\n\nProvider Note: To import this resource, an ID consisting of `authentication_strength_policy_id` and `id` being joined by a forward slash (`/`) must be used. ||| MS Graph: Authentication",
+	MarkdownDescription: "Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: <br/> Also see [Microsoft docs for authenticationCombinationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta).\n\n_Provider_ Note: To import this resource, an ID consisting of `authentication_strength_policy_id` and `id` being joined by a forward slash (`/`) must be used. ||| MS Graph: Authentication",
 }
 
 var authenticationCombinationConfigurationAuthenticationCombinationConfigurationValidator = objectvalidator.ExactlyOneOf(

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
@@ -76,10 +76,10 @@ var notificationMessageTemplateResourceSchema = schema.Schema{
 				wpvalidator.FlagEnumValues("none", "includeCompanyLogo", "includeCompanyName", "includeContactInformation", "includeCompanyPortalLink", "includeDeviceDetails", "unknownFutureValue"),
 			},
 			PlanModifiers: []planmodifier.String{
-				wpdefaultvalue.StringDefaultValue("includeCompanyLogo,includeCompanyName,includeContactInformation"),
+				wpdefaultvaluemodifier.StringDefaultValue("includeCompanyLogo,includeCompanyName,includeContactInformation"),
 			},
 			Computed:            true,
-			MarkdownDescription: "The Message Template Branding Options. Branding is defined in the Intune Admin Console. / Branding Options for the Message Template. Branding is defined in the Intune Admin Console; possible values are: `none` (Indicates that no branding options are set in the message template.), `includeCompanyLogo` (Indicates to include company logo in the message template.), `includeCompanyName` (Indicates to include company name in the message template.), `includeContactInformation` (Indicates to include contact information in the message template.), `includeCompanyPortalLink` (Indicates to include company portal website link in the message template.), `includeDeviceDetails` (Indicates to include device details in the message template.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `\"includeCompanyLogo,includeCompanyName,includeContactInformation\"`.",
+			MarkdownDescription: "The Message Template Branding Options. Branding is defined in the Intune Admin Console. / Branding Options for the Message Template. Branding is defined in the Intune Admin Console. <br/> _Provider_ allowed values are: `none` (Indicates that no branding options are set in the message template.), `includeCompanyLogo` (Indicates to include company logo in the message template.), `includeCompanyName` (Indicates to include company name in the message template.), `includeContactInformation` (Indicates to include contact information in the message template.), `includeCompanyPortalLink` (Indicates to include company portal website link in the message template.), `includeDeviceDetails` (Indicates to include device details in the message template.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `\"includeCompanyLogo,includeCompanyName,includeContactInformation\"`.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -93,9 +93,9 @@ var notificationMessageTemplateResourceSchema = schema.Schema{
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tags for this Entity instance. The _provider_ default value is `[\"0\"]`.",
+			MarkdownDescription: "List of Scope Tags for this Entity instance. <br/> The _provider_ default value is `[\"0\"]`.",
 		},
 		"localized_notification_messages": schema.SetNestedAttribute{
 			Optional: true,
@@ -121,10 +121,10 @@ var notificationMessageTemplateResourceSchema = schema.Schema{
 					},
 				},
 			},
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "The list of localized messages for this Notification Message Template. / The text content of a Notification Message Template for the specified locale. / https://learn.microsoft.com/en-us/graph/api/resources/intune-notification-localizednotificationmessage?view=graph-rest-beta. The _provider_ default value is `[]`.",
+			MarkdownDescription: "The list of localized messages for this Notification Message Template. / The text content of a Notification Message Template for the specified locale. Also see [Microsoft docs for localizedNotificationMessage](https://learn.microsoft.com/en-us/graph/api/resources/intune-notification-localizednotificationmessage?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 	},
-	MarkdownDescription: "Notification messages are messages that are sent to end users who are determined to be not-compliant with the compliance policies defined by the administrator. Administrators choose notifications and configure them in the Intune Admin Console using the compliance policy creation page under the “Actions for non-compliance” section. Use the notificationMessageTemplate object to create your own custom notifications for administrators to choose while configuring actions for non-compliance. / https://learn.microsoft.com/en-us/graph/api/resources/intune-notification-notificationmessagetemplate?view=graph-rest-beta ||| MS Graph: Device management",
+	MarkdownDescription: "Notification messages are messages that are sent to end users who are determined to be not-compliant with the compliance policies defined by the administrator. Administrators choose notifications and configure them in the Intune Admin Console using the compliance policy creation page under the “Actions for non-compliance” section. Use the notificationMessageTemplate object to create your own custom notifications for administrators to choose while configuring actions for non-compliance. <br/> Also see [Microsoft docs for notificationMessageTemplate](https://learn.microsoft.com/en-us/graph/api/resources/intune-notification-notificationmessagetemplate?view=graph-rest-beta). ||| MS Graph: Device management",
 }

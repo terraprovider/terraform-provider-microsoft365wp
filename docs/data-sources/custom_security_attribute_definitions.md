@@ -7,7 +7,9 @@ subcategory: "MS Graph: Custom security attributes"
 
 Represents the schema of a custom security attribute (key-value pair). For example, the custom security attribute name, description, data type, and allowed values.
 
-You can define up to 500 active objects in a tenant. The **customSecurityAttributeDefinition** object can't be renamed or deleted, but it can be deactivated by using the [Update customSecurityAttributeDefinition](../api/customsecurityattributedefinition-update.md) operation. Must be part of an [attributeSet](../resources/attributeset.md). / https://learn.microsoft.com/en-us/graph/api/resources/customsecurityattributedefinition?view=graph-rest-beta
+You can define up to 500 active objects in a tenant. The **customSecurityAttributeDefinition** object can't be renamed or deleted, but it can be deactivated by using the [Update customSecurityAttributeDefinition](https://learn.microsoft.com/en-us/graph/api/customsecurityattributedefinition-update?view=graph-rest-beta) operation. Must be part of an [attributeSet](https://learn.microsoft.com/en-us/graph/api/resources/attributeset?view=graph-rest-beta).
+
+Also see [Microsoft docs for customSecurityAttributeDefinition](https://learn.microsoft.com/en-us/graph/api/resources/customsecurityattributedefinition?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -71,7 +73,7 @@ output "microsoft365wp_custom_security_attribute_definitions" {
 - `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
 - `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
 - `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
-- `status` (String) Specifies whether the custom security attribute is active or deactivated. Acceptable values are: `Available` and `Deprecated`. Can be changed later.
+- `status` (String) Specifies whether the custom security attribute is active or deactivated. Acceptable values are: `Available` and `Deprecated`. Can be changed later. <br/>
 - `type` (String) Data type for the custom security attribute values. Supported types are: `Boolean`, `Integer`, and `String`. Cannot be changed later.
 
 ### Read-Only
@@ -86,5 +88,5 @@ Read-Only:
 - `attribute_set` (String) Name of the attribute set. Case insensitive.
 - `id` (String) Identifier of the custom security attribute, which is a combination of the attribute set name and the custom security attribute name separated by an underscore (`attributeSet`_`name`). The **id** property is auto generated and cannot be set. Case insensitive.
 - `name` (String) Name of the custom security attribute. Must be unique within an attribute set. Can be up to 32 characters long and include Unicode characters. Cannot contain spaces or special characters. Cannot be changed later. Case insensitive.
-- `status` (String) Specifies whether the custom security attribute is active or deactivated. Acceptable values are: `Available` and `Deprecated`. Can be changed later.
+- `status` (String) Specifies whether the custom security attribute is active or deactivated. Acceptable values are: `Available` and `Deprecated`. Can be changed later. <br/>
 - `type` (String) Data type for the custom security attribute values. Supported types are: `Boolean`, `Integer`, and `String`. Cannot be changed later.

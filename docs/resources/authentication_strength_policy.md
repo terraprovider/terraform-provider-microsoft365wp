@@ -5,9 +5,9 @@ subcategory: "MS Graph: Authentication"
 
 # microsoft365wp_authentication_strength_policy (Resource)
 
-A collection of settings that define specific combinations of authentication methods and metadata. The authentication strength policy, when applied to a given scenario using Microsoft Entra Conditional Access, defines which authentication methods must be used to authenticate in that scenario. An authentication strength may be built-in or custom (defined by the tenant) and may or may not fulfill the requirements to grant an MFA claim. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta
+A collection of settings that define specific combinations of authentication methods and metadata. The authentication strength policy, when applied to a given scenario using Microsoft Entra Conditional Access, defines which authentication methods must be used to authenticate in that scenario. An authentication strength may be built-in or custom (defined by the tenant) and may or may not fulfill the requirements to grant an MFA claim. <br/> Also see [Microsoft docs for authenticationStrengthPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta).
 
-Provider Note: Use the separate resource `microsoft365wp_authentication_combination_configuration` to create combination configurations for an authentication strength policy.
+_Provider_ Note: Use the separate resource `microsoft365wp_authentication_combination_configuration` to create combination configurations for an authentication strength policy.
 
 ## Documentation Disclaimer
 
@@ -62,21 +62,21 @@ resource "microsoft365wp_authentication_combination_configuration" "test" {
 
 ### Required
 
-- `allowed_combinations` (Set of String) A collection of authentication method modes that are required be used to satify this authentication strength. / Possible values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`
-- `display_name` (String) The human-readable display name of this policy. <br><br>Supports `$filter` (`eq`, `ne`, `not` , and `in`).
+- `allowed_combinations` (Set of String) A collection of authentication method modes that are required be used to satify this authentication strength. <br/> _Provider_ allowed values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`.
+- `display_name` (String) The human-readable display name of this policy. <br/> Supports `$filter` (`eq`, `ne`, `not` , and `in`).
 
 ### Optional
 
-- `description` (String) The human-readable description of this policy. The _provider_ default value is `""`.
+- `description` (String) The human-readable description of this policy. <br/> The _provider_ default value is `""`.
 
 ### Read-Only
 
-- `combination_configurations` (Attributes Set) Settings that may be used to require specific types or instances of an authentication method to be used when authenticating with a specified combination of authentication methods. / Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: / https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--combination_configurations))
+- `combination_configurations` (Attributes Set) Settings that may be used to require specific types or instances of an authentication method to be used when authenticating with a specified combination of authentication methods. / Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations:. Also see [Microsoft docs for authenticationCombinationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--combination_configurations))
 - `created_date_time` (String) The datetime when this policy was created.
 - `id` (String) The system-generated identifier for this mode.
 - `modified_date_time` (String) The datetime when this policy was last modified.
-- `policy_type` (String) A descriptor of whether this policy is built into Microsoft Entra Conditional Access or created by an admin for the tenant. The <br><br>Supports `$filter` (`eq`, `ne`, `not` , and `in`). / Possible values are: `builtIn`, `custom`, `unknownFutureValue`
-- `requirements_satisfied` (String) A descriptor of whether this authentication strength grants the MFA claim upon successful satisfaction. The / Possible values are: `none`, `mfa`, `unknownFutureValue`
+- `policy_type` (String) A descriptor of whether this policy is built into Microsoft Entra Conditional Access or created by an admin for the tenant. <br/> Supports `$filter` (`eq`, `ne`, `not` , and `in`). <br/> _Provider_ allowed values are: `builtIn`, `custom`, `unknownFutureValue`.
+- `requirements_satisfied` (String) A descriptor of whether this authentication strength grants the MFA claim upon successful satisfaction. <br/> _Provider_ allowed values are: `none`, `mfa`, `unknownFutureValue`.
 
 <a id="nestedatt--combination_configurations"></a>
 ### Nested Schema for `combination_configurations`

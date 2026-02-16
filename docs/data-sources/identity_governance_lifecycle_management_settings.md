@@ -5,7 +5,7 @@ subcategory: "MS Graph: Lifecycle workflows"
 
 # microsoft365wp_identity_governance_lifecycle_management_settings (Data Source)
 
-The settings of Microsoft Entra Lifecycle Workflows in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclemanagementsettings?view=graph-rest-beta
+The settings of Microsoft Entra Lifecycle Workflows in the tenant. <br/> Also see [Microsoft docs for identityGovernance.lifecycleManagementSettings](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclemanagementsettings?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -62,14 +62,14 @@ output "microsoft365wp_identity_governance_lifecycle_management_settings" {
 
 ### Read-Only
 
-- `email_settings` (Attributes) Defines the settings for emails sent out from email-specific [tasks](../resources/identitygovernance-task.md) within workflows. Accepts 2 parameters<br><br>senderDomain- Defines the domain of who is sending the email. <br>useCompanyBranding- A Boolean value that defines if company branding is to be used with the email. / Defines the settings for emails sent from Lifecycle workflow [tasks](identitygovernance-task.md). Allows you to use a verified custom [domain](domain.md) and [organizationalBranding](organizationalbranding.md) with emails sent out via workflow tasks. / https://learn.microsoft.com/en-us/graph/api/resources/emailsettings?view=graph-rest-beta. (see [below for nested schema](#nestedatt--email_settings))
+- `email_settings` (Attributes) Defines the settings for emails sent out from email-specific [tasks](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-task?view=graph-rest-beta) within workflows. Accepts 2 parameters <br/> senderDomain- Defines the domain of who is sending the email. <br/> useCompanyBranding- A Boolean value that defines if company branding is to be used with the email. <br/> Defines the settings for emails sent from Lifecycle workflow [tasks](identitygovernance-task.md). Allows you to use a verified custom [domain](domain.md) and [organizationalBranding](organizationalbranding.md) with emails sent out via workflow tasks. Also see [Microsoft docs for emailSettings](https://learn.microsoft.com/en-us/graph/api/resources/emailsettings?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--email_settings))
 - `id` (String) The ID of this resource.
-- `workflow_schedule_interval_in_hours` (Number) The interval in hours at which all [workflows](../resources/identitygovernance-workflow.md) running in the tenant should be scheduled for execution. This interval has a minimum value of 1 and a maximum value of 24. hours.
+- `workflow_schedule_interval_in_hours` (Number) The interval in hours at which all [workflows](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) running in the tenant should be scheduled for execution. This interval has a minimum value of 1 and a maximum value of 24. hours. <br/>
 
 <a id="nestedatt--email_settings"></a>
 ### Nested Schema for `email_settings`
 
 Read-Only:
 
-- `sender_domain` (String) Specifies the [domain](domain.md) that should be used when sending email notifications. This domain must be [verified](../api/domain-verify.md) in order to be used. We recommend that you use a domain that has the appropriate DNS records to facilitate email validation, like SPF, DKIM, DMARC, and MX, because this then complies with the [RFC compliance](https://www.ietf.org/rfc/rfc2142.txt) for sending and receiving email. For details, see [Learn more about Exchange Online Email Routing](/exchange/mail-flow-best-practices/mail-flow-best-practices).
-- `use_company_branding` (Boolean) Specifies if the organization’s banner logo should be included in email notifications. The banner logo will replace the Microsoft logo at the top of the email notification. If `true` the banner logo will be taken from the tenant’s [branding settings](organizationalbranding.md). This value can only be set to `true` if the [organizationalBranding](organizationalbranding.md) **bannerLogo** property is set.
+- `sender_domain` (String) Specifies the [domain](domain.md) that should be used when sending email notifications. This domain must be [verified](https://learn.microsoft.com/en-us/graph/api/domain-verify?view=graph-rest-beta) in order to be used. We recommend that you use a domain that has the appropriate DNS records to facilitate email validation, like SPF, DKIM, DMARC, and MX, because this then complies with the [RFC compliance](https://www.ietf.org/rfc/rfc2142.txt) for sending and receiving email. For details, see [Learn more about Exchange Online Email Routing](https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/mail-flow-best-practices). <br/>
+- `use_company_branding` (Boolean) Specifies if the organization’s banner logo should be included in email notifications. The banner logo will replace the Microsoft logo at the top of the email notification. If `true` the banner logo will be taken from the tenant’s [branding settings](organizationalbranding.md). This value can only be set to `true` if the [organizationalBranding](organizationalbranding.md) **bannerLogo** property is set. <br/>

@@ -5,7 +5,7 @@ subcategory: "MS Graph: Role management"
 
 # microsoft365wp_unified_role_management_policy_assignments (Data Source)
 
-The assignment of a role management policy to a [role definition](../resources/unifiedroledefinition.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyassignment?view=graph-rest-beta
+The assignment of a role management policy to a [role definition](https://learn.microsoft.com/en-us/graph/api/resources/unifiedroledefinition?view=graph-rest-beta) object. <br/> Also see [Microsoft docs for unifiedRoleManagementPolicyAssignment](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyassignment?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 

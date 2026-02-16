@@ -5,7 +5,7 @@ subcategory: "MS Graph: Onboarding"
 
 # microsoft365wp_device_enrollment_configurations (Data Source)
 
-The Base Class of Device Enrollment Configuration / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceenrollmentconfiguration?view=graph-rest-beta
+The Base Class of Device Enrollment Configuration <br/> Also see [Microsoft docs for deviceEnrollmentConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceenrollmentconfiguration?view=graph-rest-beta).
 
 ## Provider Notes
 
@@ -107,7 +107,7 @@ Read-Only:
 - `id` (String) Unique Identifier for the account
 - `last_modified_date_time` (String) Last modified date time in UTC of the device enrollment configuration
 - `platform_restrictions` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration` (using e.g. `if x.platform_restrictions != null`). (see [below for nested schema](#nestedatt--device_enrollment_configurations--platform_restrictions))
-- `role_scope_tag_ids` (Set of String) .
+- `role_scope_tag_ids` (Set of String)
 - `single_platform_restriction` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration` (using e.g. `if x.single_platform_restriction != null`). (see [below for nested schema](#nestedatt--device_enrollment_configurations--single_platform_restriction))
 - `version` (Number) The version of the device enrollment configuration
 - `windows10_esp` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windows10EnrollmentCompletionPageConfiguration` (using e.g. `if x.windows10_esp != null`). (see [below for nested schema](#nestedatt--device_enrollment_configurations--windows10_esp))

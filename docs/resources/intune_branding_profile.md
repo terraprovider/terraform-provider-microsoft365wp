@@ -5,9 +5,9 @@ subcategory: "MS Graph: Mobile app management (MAM)"
 
 # microsoft365wp_intune_branding_profile (Resource)
 
-This entity contains data which is used in customizing the tenant level appearance of the Company Portal applications as well as the end user web portal. / https://learn.microsoft.com/en-us/graph/api/resources/intune-wip-intunebrandingprofile?view=graph-rest-beta
+This entity contains data which is used in customizing the tenant level appearance of the Company Portal applications as well as the end user web portal. <br/> Also see [Microsoft docs for intuneBrandingProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-wip-intunebrandingprofile?view=graph-rest-beta).
 
-Provider Note: There have been **nonspecific errors reported when trying to _assign_ with application permissions** (even though the MS docs state that it should be possible)! Empty `assignments` or using delegated permissions both seemed to work in our tests, though.
+_Provider_ Note: There have been **nonspecific errors reported when trying to _assign_ with application permissions** (even though the MS docs state that it should be possible)! Empty `assignments` or using delegated permissions both seemed to work in our tests, though.
 
 ## Documentation Disclaimer
 
@@ -75,33 +75,31 @@ resource "microsoft365wp_intune_branding_profile" "test" {
 ### Optional
 
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
-- `company_portal_blocked_actions` (Attributes Set) Collection of blocked actions on the company portal as per platform and device ownership types. / Blocked actions on the company portal as per platform and device ownership types / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-companyportalblockedaction?view=graph-rest-beta  
-Provider Note: The _provider_ default value is `[{"action":"remove,"owner_type":"company","platform":"windows10AndLater"}]`. (see [below for nested schema](#nestedatt--company_portal_blocked_actions))
-- `contact_it_email_address` (String) E-mail address of the person/organization responsible for IT support. The _provider_ default value is `""`.
-- `contact_it_name` (String) Name of the person/organization responsible for IT support. The _provider_ default value is `""`.
-- `contact_it_notes` (String) Text comments regarding the person/organization responsible for IT support. The _provider_ default value is `""`.
-- `contact_it_phone_number` (String) Phone number of the person/organization responsible for IT support. The _provider_ default value is `""`.
-- `custom_can_see_privacy_message` (String) Text comments regarding what the admin has access to on the device. The _provider_ default value is `""`.
-- `custom_cant_see_privacy_message` (String) Text comments regarding what the admin doesn't have access to on the device. The _provider_ default value is `""`.
-- `disable_device_category_selection` (Boolean) Boolean that indicates if Device Category Selection will be shown in Company Portal. The _provider_ default value is `false`.
-- `enrollment_availability` (String) Customized device enrollment flow displayed to the end user . / Options available for enrollment flow customization; possible values are: `availableWithPrompts` (Device enrollment flow is shown to the end user with guided enrollment prompts), `availableWithoutPrompts` (Device enrollment flow is available to the end user without guided enrollment prompts), `unavailable` (Device enrollment flow is unavailable to the enduser). The _provider_ default value is `"availableWithPrompts"`.
-- `is_factory_reset_disabled` (Boolean) Boolean that represents whether the adminsistrator has disabled the 'Factory Reset' action on corporate owned devices. The _provider_ default value is `false`.
-- `is_remove_device_disabled` (Boolean) Boolean that represents whether the adminsistrator has disabled the 'Remove Device' action on corporate owned devices. The _provider_ default value is `false`.
-- `landing_page_customized_image` (Attributes) Customized image displayed in Company Portal apps landing page / Contains properties for a generic mime content. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta (see [below for nested schema](#nestedatt--landing_page_customized_image))
-- `light_background_logo` (Attributes) Logo image displayed in Company Portal apps which have a light background behind the logo / Contains properties for a generic mime content. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta (see [below for nested schema](#nestedatt--light_background_logo))
-- `online_support_site_name` (String) Display name of the company/organization’s IT helpdesk site. The _provider_ default value is `""`.
-- `online_support_site_url` (String) URL to the company/organization’s IT helpdesk site. The _provider_ default value is `""`.
-- `profile_description` (String) Description of the profile. The _provider_ default value is `""`.
-- `role_scope_tag_ids` (Set of String) List of scope tags assigned to the branding profile. The _provider_ default value is `["0"]`.
-- `send_device_ownership_change_push_notification` (Boolean) Boolean that indicates if a push notification is sent to users when their device ownership type changes from personal to corporate. The _provider_ default value is `true`.
-- `show_azure_ad_enterprise_apps` (Boolean) Boolean that indicates if AzureAD Enterprise Apps will be shown in Company Portal. The _provider_ default value is `false`.
-- `show_configuration_manager_apps` (Boolean) Boolean that indicates if Configuration Manager Apps will be shown in Company Portal. The _provider_ default value is `true`.
-- `show_display_name_next_to_logo` (Boolean) Boolean that represents whether the administrator-supplied display name will be shown next to the logo image or not. The _provider_ default value is `true`.
-- `show_logo` (Boolean) Boolean that represents whether the administrator-supplied logo images are shown or not. The _provider_ default value is `false`.
-- `show_office_web_apps` (Boolean) Boolean that indicates if Office WebApps will be shown in Company Portal. The _provider_ default value is `false`.
-- `theme_color` (Attributes) Primary theme color used in the Company Portal applications and web portal / Color in RGB. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-rgbcolor?view=graph-rest-beta  
-Provider Note: The _provider_ default value is `{"r":0,"g":114,"b":198}`. (see [below for nested schema](#nestedatt--theme_color))
-- `theme_color_logo` (Attributes) Logo image displayed in Company Portal apps which have a theme color background behind the logo / Contains properties for a generic mime content. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta (see [below for nested schema](#nestedatt--theme_color_logo))
+- `company_portal_blocked_actions` (Attributes Set) Collection of blocked actions on the company portal as per platform and device ownership types. / Blocked actions on the company portal as per platform and device ownership types. Also see [Microsoft docs for companyPortalBlockedAction](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-companyportalblockedaction?view=graph-rest-beta). <br/> The _provider_ default value is `[{"action":"remove","owner_type":"company","platform":"windows10AndLater"}]`. <br> (see [below for nested schema](#nestedatt--company_portal_blocked_actions))
+- `contact_it_email_address` (String) E-mail address of the person/organization responsible for IT support <br/> The _provider_ default value is `""`.
+- `contact_it_name` (String) Name of the person/organization responsible for IT support <br/> The _provider_ default value is `""`.
+- `contact_it_notes` (String) Text comments regarding the person/organization responsible for IT support <br/> The _provider_ default value is `""`.
+- `contact_it_phone_number` (String) Phone number of the person/organization responsible for IT support <br/> The _provider_ default value is `""`.
+- `custom_can_see_privacy_message` (String) Text comments regarding what the admin has access to on the device <br/> The _provider_ default value is `""`.
+- `custom_cant_see_privacy_message` (String) Text comments regarding what the admin doesn't have access to on the device <br/> The _provider_ default value is `""`.
+- `disable_device_category_selection` (Boolean) Boolean that indicates if Device Category Selection will be shown in Company Portal <br/> The _provider_ default value is `false`.
+- `enrollment_availability` (String) Customized device enrollment flow displayed to the end user . / Options available for enrollment flow customization. <br/> _Provider_ allowed values are: `availableWithPrompts` (Device enrollment flow is shown to the end user with guided enrollment prompts), `availableWithoutPrompts` (Device enrollment flow is available to the end user without guided enrollment prompts), `unavailable` (Device enrollment flow is unavailable to the enduser). The _provider_ default value is `"availableWithPrompts"`.
+- `is_factory_reset_disabled` (Boolean) Boolean that represents whether the adminsistrator has disabled the 'Factory Reset' action on corporate owned devices. <br/> The _provider_ default value is `false`.
+- `is_remove_device_disabled` (Boolean) Boolean that represents whether the adminsistrator has disabled the 'Remove Device' action on corporate owned devices. <br/> The _provider_ default value is `false`.
+- `landing_page_customized_image` (Attributes) Customized image displayed in Company Portal apps landing page / Contains properties for a generic mime content. Also see [Microsoft docs for mimeContent](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--landing_page_customized_image))
+- `light_background_logo` (Attributes) Logo image displayed in Company Portal apps which have a light background behind the logo / Contains properties for a generic mime content. Also see [Microsoft docs for mimeContent](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--light_background_logo))
+- `online_support_site_name` (String) Display name of the company/organization’s IT helpdesk site <br/> The _provider_ default value is `""`.
+- `online_support_site_url` (String) URL to the company/organization’s IT helpdesk site <br/> The _provider_ default value is `""`.
+- `profile_description` (String) Description of the profile <br/> The _provider_ default value is `""`.
+- `role_scope_tag_ids` (Set of String) List of scope tags assigned to the branding profile <br/> The _provider_ default value is `["0"]`.
+- `send_device_ownership_change_push_notification` (Boolean) Boolean that indicates if a push notification is sent to users when their device ownership type changes from personal to corporate <br/> The _provider_ default value is `true`.
+- `show_azure_ad_enterprise_apps` (Boolean) Boolean that indicates if AzureAD Enterprise Apps will be shown in Company Portal <br/> The _provider_ default value is `false`.
+- `show_configuration_manager_apps` (Boolean) Boolean that indicates if Configuration Manager Apps will be shown in Company Portal <br/> The _provider_ default value is `true`.
+- `show_display_name_next_to_logo` (Boolean) Boolean that represents whether the administrator-supplied display name will be shown next to the logo image or not <br/> The _provider_ default value is `true`.
+- `show_logo` (Boolean) Boolean that represents whether the administrator-supplied logo images are shown or not <br/> The _provider_ default value is `false`.
+- `show_office_web_apps` (Boolean) Boolean that indicates if Office WebApps will be shown in Company Portal <br/> The _provider_ default value is `false`.
+- `theme_color` (Attributes) Primary theme color used in the Company Portal applications and web portal / Color in RGB. Also see [Microsoft docs for rgbColor](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-rgbcolor?view=graph-rest-beta). <br/> The _provider_ default value is `{"r":0,"g":114,"b":198}`. <br> (see [below for nested schema](#nestedatt--theme_color))
+- `theme_color_logo` (Attributes) Logo image displayed in Company Portal apps which have a theme color background behind the logo / Contains properties for a generic mime content. Also see [Microsoft docs for mimeContent](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--theme_color_logo))
 
 ### Read-Only
 
@@ -115,19 +113,19 @@ Provider Note: The _provider_ default value is `{"r":0,"g":114,"b":198}`. (see [
 
 Required:
 
-- `target` (Attributes) Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target))
+- `target` (Attributes) Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta). (see [below for nested schema](#nestedatt--assignments--target))
 
 <a id="nestedatt--assignments--target"></a>
 ### Nested Schema for `assignments.target`
 
 Optional:
 
-- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_devices))
-- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
-- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
+- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. Also see [Microsoft docs for allDevicesAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_devices))
+- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. Also see [Microsoft docs for allLicensedUsersAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
+- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. Also see [Microsoft docs for exclusionGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The ID of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
-- `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter. <br/> _Provider_ allowed values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
+- `group` (Attributes) Represents an assignment to a group. Also see [Microsoft docs for groupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
 ### Nested Schema for `assignments.target.all_devices`
@@ -160,9 +158,9 @@ Required:
 
 Required:
 
-- `action` (String) Device Action. / Action on a device that can be executed in the Company Portal; possible values are: `unknown` (Unknown device action), `remove` (Remove device from Company Portal), `reset` (Reset device enrolled in Company Portal)
-- `owner_type` (String) Device ownership type. / Owner type of device; possible values are: `unknown` (Unknown.), `company` (Owned by company.), `personal` (Owned by person.)
-- `platform` (String) Device OS/Platform. / Supported platform types; possible values are: `android` (Indicates device platform type is android.), `androidForWork` (Indicates device platform type is android for work.), `iOS` (Indicates device platform type is iOS.), `macOS` (Indicates device platform type is macOS.), `windowsPhone81` (Indicates device platform type is WindowsPhone 8.1.), `windows81AndLater` (Indicates device platform type is Windows 8.1 and later.), `windows10AndLater` (Indicates device platform type is Windows 10 and later.), `androidWorkProfile` (Indicates device platform type is Android Work Profile.), `unknown` (This is the default value when device platform type resolution fails), `androidAOSP` (Indicates device platform type is Android AOSP.), `androidMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for android devices.), `iOSMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for iOS devices.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.), `windowsMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for Windows devices.)
+- `action` (String) Device Action. / Action on a device that can be executed in the Company Portal. <br/> _Provider_ allowed values are: `unknown` (Unknown device action), `remove` (Remove device from Company Portal), `reset` (Reset device enrolled in Company Portal).
+- `owner_type` (String) Device ownership type. / Owner type of device. <br/> _Provider_ allowed values are: `unknown` (Unknown.), `company` (Owned by company.), `personal` (Owned by person.).
+- `platform` (String) Device OS/Platform. / Supported platform types. <br/> _Provider_ allowed values are: `android` (Indicates device platform type is android.), `androidForWork` (Indicates device platform type is android for work.), `iOS` (Indicates device platform type is iOS.), `macOS` (Indicates device platform type is macOS.), `windowsPhone81` (Indicates device platform type is WindowsPhone 8.1.), `windows81AndLater` (Indicates device platform type is Windows 8.1 and later.), `windows10AndLater` (Indicates device platform type is Windows 10 and later.), `androidWorkProfile` (Indicates device platform type is Android Work Profile.), `unknown` (This is the default value when device platform type resolution fails), `androidAOSP` (Indicates device platform type is Android AOSP.), `androidMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for android devices.), `iOSMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for iOS devices.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.), `windowsMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for Windows devices.).
 
 
 <a id="nestedatt--landing_page_customized_image"></a>

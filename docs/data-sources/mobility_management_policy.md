@@ -5,9 +5,9 @@ subcategory: "MS Graph: App management"
 
 # microsoft365wp_mobility_management_policy (Data Source)
 
-In Microsoft Entra ID, a mobility management policy represents an autoenrollment configuration for a mobility management (MDM or MAM) application. These policies are only applicable to devices based on Windows 10 OS and its derivatives (Surface Hub, HoloLens etc.). [Autoenrollment](/windows/client-management/mdm/azure-ad-and-microsoft-intune-automatic-mdm-enrollment-in-the-new-portal) enables organizations to automatically enroll devices into their chosen mobility management application as part of [Microsoft Entra join](/azure/active-directory/devices/concept-azure-ad-join) or [Microsoft Entra register](/azure/active-directory/devices/concept-azure-ad-register) process on Windows 10 devices. / https://learn.microsoft.com/en-us/graph/api/resources/mobilitymanagementpolicy?view=graph-rest-beta
+In Microsoft Entra ID, a mobility management policy represents an autoenrollment configuration for a mobility management (MDM or MAM) application. These policies are only applicable to devices based on Windows 10 OS and its derivatives such as Surface Hub and HoloLens. [Autoenrollment](https://learn.microsoft.com/en-us/windows/client-management/azure-ad-and-microsoft-intune-automatic-mdm-enrollment-in-the-new-portal) automatically enrolls Windows 10 devices into mobility management applications during [Microsoft Entra join](https://learn.microsoft.com/en-us/entra/identity/devices/concept-directory-join) or [Microsoft Entra register](https://learn.microsoft.com/en-us/entra/identity/devices/concept-device-registration) processes. <br/> Also see [Microsoft docs for mobilityManagementPolicy](https://learn.microsoft.com/en-us/graph/api/resources/mobilitymanagementpolicy?view=graph-rest-beta).
 
-Provider Note: Please note that MS Graph does currently (as of 2025-02) not allow to update (or even read) this entity using
+_Provider_ Note: Please note that MS Graph does currently (as of 2025-02) not allow to update (or even read) this entity using
 application permissions but only using work or school account delegated permissions (also see
 https://learn.microsoft.com/en-us/graph/api/mobiledevicemanagementpolicies-get?view=graph-rest-beta#permissions).
 
@@ -72,7 +72,7 @@ output "microsoft365wp_mobility_management_policy_app" {
 
 ### Required
 
-- `policy_type` (String) Provider Note: Type of policy - must either be `device` or `app`
+- `policy_type` (String) _Provider_ Note: Type of policy - must either be `device` or `app`
 
 ### Optional
 
@@ -83,18 +83,14 @@ output "microsoft365wp_mobility_management_policy_app" {
 
 ### Read-Only
 
-- `applies_to` (String) Indicates the user scope of the mobility management policy. / Possible values are: `none`, `all`, `selected`, `unknownFutureValue`.  
-Provider Note: Please note that this attribute's value must be `selected` if `included_groups` contains any entries.
+- `applies_to` (String) Indicates the user scope of the mobility management policy. <br/> _Provider_ allowed values are: `none`, `all`, `selected`, `unknownFutureValue`.  
+_Provider_ Note: Please note that this attribute's value must be `selected` if `included_groups` contains any entries.
 - `compliance_url` (String) Compliance URL of the mobility management application.
 - `description` (String) Description of the mobility management application.
 - `discovery_url` (String) Discovery URL of the mobility management application.
 - `display_name` (String) Display name of the mobility management application.
-- `included_groups` (Attributes Set) Microsoft Entra groups under the scope of the mobility management application if appliesTo is `selected` / Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group. This resource is an open type that allows other properties to be passed in.
-
-For performance reasons, the [create](../api/group-post-groups.md), [get](../api/group-get.md), and [list](../api/group-list.md) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option.
-
-This resource supports: / https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta.  
-Provider Note: Please note that this attribute's must not contain any entries if `applies_to` is `none` or `all`. (see [below for nested schema](#nestedatt--included_groups))
+- `included_groups` (Attributes Set) Microsoft Entra groups under the scope of the mobility management application if appliesTo is `selected` <br/> Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group. <br/> For performance reasons, the [create](https://learn.microsoft.com/en-us/graph/api/group-post-groups?view=graph-rest-beta), [get](https://learn.microsoft.com/en-us/graph/api/group-get?view=graph-rest-beta), and [list](https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-beta) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option. Also see [Microsoft docs for group](https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta). <br/>  
+_Provider_ Note: Please note that this attribute's must not contain any entries if `applies_to` is `none` or `all`. <br> (see [below for nested schema](#nestedatt--included_groups))
 - `is_valid` (Boolean) Whether policy is valid. Invalid policies may not be updated and should be deleted.
 - `terms_of_use_url` (String) Terms of Use URL of the mobility management application.
 
@@ -103,5 +99,5 @@ Provider Note: Please note that this attribute's must not contain any entries if
 
 Read-Only:
 
-- `display_name` (String) The display name for the group. Required. Maximum length is 256 characters. <br><br>Returned by default. Supports `$filter` (`eq`, `ne`, `not`, `ge`, `le`, `in`, `startsWith`, and `eq` on `null` values), `$search`, and `$orderby`.
-- `id` (String) The unique identifier for the group. <br><br>Returned by default. Key. Not nullable. <br><br>Supports `$filter` (`eq`, `ne`, `not`, `in`).
+- `display_name` (String) The display name for the group. Required. Maximum length is 256 characters. <br/> Returned by default. Supports `$filter` (`eq`, `ne`, `not`, `ge`, `le`, `in`, `startsWith`, and `eq` on `null` values), `$search`, and `$orderby`.
+- `id` (String) The unique identifier for the group. <br/> Returned by default. Key. Not nullable. <br/> Supports `$filter` (`eq`, `ne`, `not`, `in`).

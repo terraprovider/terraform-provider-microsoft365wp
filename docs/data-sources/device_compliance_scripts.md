@@ -5,7 +5,7 @@ subcategory: "MS Graph: Device management"
 
 # microsoft365wp_device_compliance_scripts (Data Source)
 
-Intune will provide customer the ability to run their Powershell Compliance scripts (detection) on the enrolled windows 10 Azure Active Directory joined devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecompliancescript?view=graph-rest-beta
+Intune will provide customer the ability to run their Powershell Compliance scripts (detection) on the enrolled windows 10 Azure Active Directory joined devices. <br/> Also see [Microsoft docs for deviceComplianceScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecompliancescript?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -69,8 +69,8 @@ output "microsoft365wp_device_compliance_scripts" {
 - `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
 - `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
 - `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
-- `publisher` (String) Name of the device compliance script publisher.
-- `run_as_account` (String) Indicates the type of execution context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context).
+- `publisher` (String) Name of the device compliance script publisher <br/>
+- `run_as_account` (String) Indicates the type of execution context. / Indicates the type of execution context the app runs in. <br/> _Provider_ allowed values are: `system` (System context), `user` (User context).
 
 ### Read-Only
 
@@ -85,7 +85,7 @@ Read-Only:
 - `display_name` (String) Name of the device compliance script
 - `id` (String) Unique Identifier for the device compliance script
 - `last_modified_date_time` (String) The timestamp of when the device compliance script was modified. This property is
-- `publisher` (String) Name of the device compliance script publisher.
-- `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for the device compliance script.
-- `run_as_account` (String) Indicates the type of execution context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context).
+- `publisher` (String) Name of the device compliance script publisher <br/>
+- `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for the device compliance script <br/>
+- `run_as_account` (String) Indicates the type of execution context. / Indicates the type of execution context the app runs in. <br/> _Provider_ allowed values are: `system` (System context), `user` (User context).
 - `version` (String) Version of the device compliance script

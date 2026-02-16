@@ -5,7 +5,7 @@
     "discoverabilities": "AttributeNames,AttributeDataTypes",
     "name": "Microsoft Entra ID",
     "readOnly": true,
-    "version": "v1.2",
+    "version": "Date:2025-06-04T16:17:11.9275095Z, ActivityId:2d5bb8e5-6989-4f8d-ac89-df258f084d87",
     "objects": [
       {
         "name": "User",
@@ -38,7 +38,12 @@
             "required": true,
             "type": "Boolean",
             "apiExpressions": [],
-            "metadata": [],
+            "metadata": [
+              {
+                "key": "IsSynthetic",
+                "value": "true"
+              }
+            ],
             "referencedObjects": []
           },
           {
@@ -622,7 +627,12 @@
             "required": false,
             "type": "String",
             "apiExpressions": [],
-            "metadata": [],
+            "metadata": [
+              {
+                "key": "IsSynthetic",
+                "value": "true"
+              }
+            ],
             "referencedObjects": []
           },
           {
@@ -1256,6 +1266,10 @@
               {
                 "key": "ComplexObjectDefinition",
                 "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"multivalued\":true,\"name\":\"allowedMemberTypes\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"description\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"isEnabled\",\"required\":true,\"type\":\"Boolean\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"origin\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"false\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"}],\"name\":\"AppRole\",\"supportedApis\":[\"AppRole\"]},\"mapping\":{\"attributeMappings\":[{\"defaultValue\":\"User\",\"targetAttributeName\":\"allowedMemberTypes\"},{\"defaultValue\":\".\",\"targetAttributeName\":\"description\"},{\"matchingPriority\":1,\"targetAttributeName\":\"displayName\"},{\"defaultValue\":\"True\",\"targetAttributeName\":\"isEnabled\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"displayName\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRole\"}}"
+              },
+              {
+                "key": "IsSynthetic",
+                "value": "true"
               }
             ],
             "referencedObjects": []
@@ -1327,7 +1341,12 @@
             "required": false,
             "type": "String",
             "apiExpressions": [],
-            "metadata": [],
+            "metadata": [
+              {
+                "key": "IsSynthetic",
+                "value": "true"
+              }
+            ],
             "referencedObjects": []
           },
           {
@@ -1341,7 +1360,12 @@
             "required": false,
             "type": "String",
             "apiExpressions": [],
-            "metadata": [],
+            "metadata": [
+              {
+                "key": "IsSynthetic",
+                "value": "true"
+              }
+            ],
             "referencedObjects": []
           },
           {
@@ -1355,7 +1379,12 @@
             "required": false,
             "type": "String",
             "apiExpressions": [],
-            "metadata": [],
+            "metadata": [
+              {
+                "key": "IsSynthetic",
+                "value": "true"
+              }
+            ],
             "referencedObjects": []
           }
         ],
@@ -1551,7 +1580,7 @@
     "discoverabilities": "AttributeNames,AttributeDataTypes",
     "name": "Microsoft Entra ID (target tenant)",
     "readOnly": true,
-    "version": "v1.2",
+    "version": "Date:2025-06-04T16:17:11.9275095Z, ActivityId:2d5bb8e5-6989-4f8d-ac89-df258f084d87",
     "objects": [
       {
         "name": "User",
@@ -1584,7 +1613,12 @@
             "required": true,
             "type": "Boolean",
             "apiExpressions": [],
-            "metadata": [],
+            "metadata": [
+              {
+                "key": "IsSynthetic",
+                "value": "true"
+              }
+            ],
             "referencedObjects": []
           },
           {
@@ -2149,7 +2183,12 @@
             "required": false,
             "type": "String",
             "apiExpressions": [],
-            "metadata": [],
+            "metadata": [
+              {
+                "key": "IsSynthetic",
+                "value": "true"
+              }
+            ],
             "referencedObjects": []
           },
           {
@@ -2783,6 +2822,10 @@
               {
                 "key": "ComplexObjectDefinition",
                 "value": "{\"definition\":{\"attributes\":[{\"anchor\":true,\"apiExpressions\":[],\"metadata\":[],\"name\":\"id\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"multivalued\":true,\"name\":\"allowedMemberTypes\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"description\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"displayName\",\"required\":true},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"isEnabled\",\"required\":true,\"type\":\"Boolean\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"origin\"},{\"apiExpressions\":[],\"metadata\":[],\"name\":\"value\"}],\"metadata\":[{\"key\":\"IsSoftDeletionSupported\",\"value\":\"false\"},{\"key\":\"IsHardDeletionSupported\",\"value\":\"true\"},{\"key\":\"ConnectorDataStorageRequired\",\"value\":\"false\"},{\"key\":\"IsSynchronizeAllSupported\",\"value\":\"false\"}],\"name\":\"AppRole\",\"supportedApis\":[\"AppRole\"]},\"mapping\":{\"attributeMappings\":[{\"defaultValue\":\"User\",\"targetAttributeName\":\"allowedMemberTypes\"},{\"defaultValue\":\".\",\"targetAttributeName\":\"description\"},{\"matchingPriority\":1,\"targetAttributeName\":\"displayName\"},{\"defaultValue\":\"True\",\"targetAttributeName\":\"isEnabled\"}],\"flowTypes\":\"Add, Update, Delete\",\"metadata\":[{\"key\":\"IsCustomerDefined\",\"value\":\"false\"},{\"key\":\"DisableMonitoringForChanges\",\"value\":\"false\"},{\"key\":\"Disposition\",\"value\":\"\\\"Normal\\\"\"},{\"key\":\"ExcludeFromReporting\",\"value\":\"false\"},{\"key\":\"EscrowBehavior\",\"value\":\"\\\"Default\\\"\"},{\"key\":\"Unsynchronized\",\"value\":\"false\"},{\"key\":\"OriginalJoiningProperty\",\"value\":\"displayName\"}],\"sourceObjectName\":\"\",\"targetObjectName\":\"AppRole\"}}"
+              },
+              {
+                "key": "IsSynthetic",
+                "value": "true"
               }
             ],
             "referencedObjects": []
@@ -2854,7 +2897,12 @@
             "required": false,
             "type": "String",
             "apiExpressions": [],
-            "metadata": [],
+            "metadata": [
+              {
+                "key": "IsSynthetic",
+                "value": "true"
+              }
+            ],
             "referencedObjects": []
           },
           {
@@ -2868,7 +2916,12 @@
             "required": false,
             "type": "String",
             "apiExpressions": [],
-            "metadata": [],
+            "metadata": [
+              {
+                "key": "IsSynthetic",
+                "value": "true"
+              }
+            ],
             "referencedObjects": []
           },
           {
@@ -2882,7 +2935,12 @@
             "required": false,
             "type": "String",
             "apiExpressions": [],
-            "metadata": [],
+            "metadata": [
+              {
+                "key": "IsSynthetic",
+                "value": "true"
+              }
+            ],
             "referencedObjects": []
           }
         ],

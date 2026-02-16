@@ -2,7 +2,7 @@ package services
 
 import (
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
@@ -67,9 +67,9 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: "The policy's description. The _provider_ default value is `\"\"`.",
+			MarkdownDescription: "The policy's description. <br/> The _provider_ default value is `\"\"`.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -83,9 +83,9 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tags for this Entity instance. The _provider_ default value is `[\"0\"]`.",
+			MarkdownDescription: "List of Scope Tags for this Entity instance. <br/> The _provider_ default value is `[\"0\"]`.",
 		},
 		"version": schema.StringAttribute{
 			Computed:            true,
@@ -106,14 +106,14 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 					},
 				},
 			},
-			MarkdownDescription: "A set of string key and string value pairs to be sent to apps for users to whom the configuration is scoped, unalterned by this service / Key value pair for storing custom settings / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta",
+			MarkdownDescription: "A set of string key and string value pairs to be sent to apps for users to whom the configuration is scoped, unalterned by this service / Key value pair for storing custom settings. Also see [Microsoft docs for keyValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta). <br> ",
 		},
 		"app_group_type": schema.StringAttribute{
 			Required: true,
 			Validators: []validator.String{
 				stringvalidator.OneOf("selectedPublicApps", "allCoreMicrosoftApps", "allMicrosoftApps", "allApps"),
 			},
-			MarkdownDescription: "Public Apps selection: group or individual. / Indicates a collection of apps to target which can be one of several pre-defined lists of apps or a manually selected list of apps; possible values are: `selectedPublicApps` (Target the collection of apps manually selected by the admin.), `allCoreMicrosoftApps` (Target the core set of Microsoft apps (Office, Edge, etc).), `allMicrosoftApps` (Target all apps with Microsoft as publisher.), `allApps` (Target all apps with an available assignment.)",
+			MarkdownDescription: "Public Apps selection: group or individual. / Indicates a collection of apps to target which can be one of several pre-defined lists of apps or a manually selected list of apps. <br/> _Provider_ allowed values are: `selectedPublicApps` (Target the collection of apps manually selected by the admin.), `allCoreMicrosoftApps` (Target the core set of Microsoft apps (Office, Edge, etc).), `allMicrosoftApps` (Target all apps with Microsoft as publisher.), `allApps` (Target all apps with an available assignment.).",
 		},
 		"deployed_app_count": schema.Int64Attribute{
 			Computed:            true,
@@ -130,9 +130,11 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				wpvalidator.FlagEnumValues("unspecified", "unmanaged", "mdm", "androidEnterprise", "androidEnterpriseDedicatedDevicesWithAzureAdSharedMode", "androidOpenSourceProjectUserAssociated", "androidOpenSourceProjectUserless", "unknownFutureValue"),
 			},
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("unspecified")},
+			PlanModifiers: []planmodifier.String{
+				wpdefaultvaluemodifier.StringDefaultValue("unspecified"),
+			},
 			Computed:            true,
-			MarkdownDescription: "The intended app management levels for this policy. / Management levels for apps; possible values are: `unspecified` (Unspecified), `unmanaged` (Unmanaged), `mdm` (MDM), `androidEnterprise` (Android Enterprise), `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode` (Android Enterprise dedicated devices with Azure AD Shared mode), `androidOpenSourceProjectUserAssociated` (Android Open Source Project (AOSP) devices), `androidOpenSourceProjectUserless` (Android Open Source Project (AOSP) userless devices), `unknownFutureValue` (Place holder for evolvable enum). The _provider_ default value is `\"unspecified\"`.",
+			MarkdownDescription: "The intended app management levels for this policy. / Management levels for apps. <br/> _Provider_ allowed values are: `unspecified` (Unspecified), `unmanaged` (Unmanaged), `mdm` (MDM), `androidEnterprise` (Android Enterprise), `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode` (Android Enterprise dedicated devices with Azure AD Shared mode), `androidOpenSourceProjectUserAssociated` (Android Open Source Project (AOSP) devices), `androidOpenSourceProjectUserless` (Android Open Source Project (AOSP) userless devices), `unknownFutureValue` (Place holder for evolvable enum). The _provider_ default value is `\"unspecified\"`.",
 		},
 		"apps": schema.SetNestedAttribute{
 			Required: true,
@@ -154,7 +156,7 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										targetedManagedAppConfigurationMobileAppIdentifierValidator,
 									},
-									MarkdownDescription: "The identifier for an Android app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-androidmobileappidentifier?view=graph-rest-beta",
+									MarkdownDescription: "The identifier for an Android app. Also see [Microsoft docs for androidMobileAppIdentifier](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-androidmobileappidentifier?view=graph-rest-beta). <br> ",
 								},
 							},
 							"ios": generic.OdataDerivedTypeNestedAttributeRs{
@@ -170,7 +172,7 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										targetedManagedAppConfigurationMobileAppIdentifierValidator,
 									},
-									MarkdownDescription: "The identifier for an iOS app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-iosmobileappidentifier?view=graph-rest-beta",
+									MarkdownDescription: "The identifier for an iOS app. Also see [Microsoft docs for iosMobileAppIdentifier](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-iosmobileappidentifier?view=graph-rest-beta). <br> ",
 								},
 							},
 							"mac": generic.OdataDerivedTypeNestedAttributeRs{
@@ -186,7 +188,7 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										targetedManagedAppConfigurationMobileAppIdentifierValidator,
 									},
-									MarkdownDescription: "The identifier for a Mac app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-macappidentifier?view=graph-rest-beta",
+									MarkdownDescription: "The identifier for a Mac app. Also see [Microsoft docs for macAppIdentifier](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-macappidentifier?view=graph-rest-beta). <br> ",
 								},
 							},
 							"windows": generic.OdataDerivedTypeNestedAttributeRs{
@@ -203,23 +205,23 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										targetedManagedAppConfigurationMobileAppIdentifierValidator,
 									},
-									MarkdownDescription: "The identifier for a Windows app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-windowsappidentifier?view=graph-rest-beta",
+									MarkdownDescription: "The identifier for a Windows app. Also see [Microsoft docs for windowsAppIdentifier](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-windowsappidentifier?view=graph-rest-beta). <br> ",
 								},
 							},
 						},
 						Description:         `mobileAppIdentifier`, // custom MS Graph attribute name
-						MarkdownDescription: "The identifier for an app with it's operating system type. / The identifier for a mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-mobileappidentifier?view=graph-rest-beta",
+						MarkdownDescription: "The identifier for an app with it's operating system type. / The identifier for a mobile app. Also see [Microsoft docs for mobileAppIdentifier](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-mobileappidentifier?view=graph-rest-beta). <br> ",
 					},
 				},
 			},
 			PlanModifiers: []planmodifier.Set{
 				&wpplanmodifier.IgnoreOnOtherAttributeValuePlanModifier{OtherAttributePath: path.Root("app_group_type"), ValuesRespect: []attr.Value{types.StringValue("selectedPublicApps")}},
 			},
-			MarkdownDescription: "List of apps to which the policy is deployed. / The identifier for the deployment an app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-managedmobileapp?view=graph-rest-beta",
+			MarkdownDescription: "List of apps to which the policy is deployed. / The identifier for the deployment an app. Also see [Microsoft docs for managedMobileApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-managedmobileapp?view=graph-rest-beta). <br> ",
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: "Configuration used to deliver a set of custom settings as-is to all users in the targeted security group / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-targetedmanagedappconfiguration?view=graph-rest-beta ||| MS Graph: App management",
+	MarkdownDescription: "Configuration used to deliver a set of custom settings as-is to all users in the targeted security group <br/> Also see [Microsoft docs for targetedManagedAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-targetedmanagedappconfiguration?view=graph-rest-beta). ||| MS Graph: App management",
 }
 
 var targetedManagedAppConfigurationMobileAppIdentifierValidator = objectvalidator.ExactlyOneOf(

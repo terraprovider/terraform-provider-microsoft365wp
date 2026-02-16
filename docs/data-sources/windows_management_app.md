@@ -5,10 +5,12 @@ subcategory: "MS Graph: Device management"
 
 # microsoft365wp_windows_management_app (Data Source)
 
-Windows management app entity. / https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-windowsmanagementapp?view=graph-rest-beta
+Windows management app entity. <br/> Also see [Microsoft docs for windowsManagementApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-windowsmanagementapp?view=graph-rest-beta).
 
-Provider Note: Please note that MS Graph does currently (as of 2025-02) not seem to allow to update (or even read) this entity
-using application permissions but only using work or school account delegated permissions.
+_Provider_ Note: Please note that MS Graph does currently (as of 2025-02) not seem to allow to update (or even read) this entity
+using application permissions but only using work or school account delegated permissions.  
+Also, there have been reports about **timeouts** or **HTTP 500 errors** when trying to read this entity even when
+using work or school account delegated permissions.
 
 ## Documentation Disclaimer
 
@@ -67,5 +69,5 @@ output "microsoft365wp_windows_management_app" {
 
 - `available_version` (String) Windows management app available version.
 - `id` (String) Unique Identifier for the Windows management app
-- `managed_installer` (String) Managed Installer Status. / ManagedInstallerStatus; possible values are: `disabled` (Managed Installer is Disabled), `enabled` (Managed Installer is Enabled).
+- `managed_installer` (String) Managed Installer Status. / ManagedInstallerStatus. <br/> _Provider_ allowed values are: `disabled` (Managed Installer is Disabled), `enabled` (Managed Installer is Enabled).
 - `managed_installer_configured_date_time` (String) Managed Installer Configured Date Time

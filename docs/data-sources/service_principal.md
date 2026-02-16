@@ -7,9 +7,11 @@ subcategory: "MS Graph: Entra ID"
 
 Represents an instance of an application in a directory.
 
-This resource supports using [delta query](/graph/delta-query-overview) to track incremental additions, deletions, and updates, by providing a [delta](../api/serviceprincipal-delta.md) function. This resource is an open type that allows other properties to be passed in. / https://learn.microsoft.com/en-us/graph/api/resources/serviceprincipal?view=graph-rest-beta
+using [delta query](https://learn.microsoft.com/en-us/graph/delta-query-overview) to track incremental additions, deletions, and updates, by providing a [delta](https://learn.microsoft.com/en-us/graph/api/serviceprincipal-delta?view=graph-rest-beta) function.
 
-Provider Note: This data source is only provided as a companion to `azuread_service_principal` to allow for OData filtering. It is not planned to add more attributes or even provide a resource for this entity.
+Also see [Microsoft docs for servicePrincipal](https://learn.microsoft.com/en-us/graph/api/resources/serviceprincipal?view=graph-rest-beta).
+
+_Provider_ Note: This data source is only provided as a companion to `azuread_service_principal` to allow for OData filtering. It is not planned to add more attributes or even provide a resource for this entity.
 
 ## Documentation Disclaimer
 
@@ -73,7 +75,7 @@ output "microsoft365wp_service_principal" {
 - `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
 - `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
 - `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
-- `service_principal_type` (String) Identifies if the service principal represents an application or a managed identity. This is set by Microsoft Entra ID internally. For a service principal that represents an [application](./application.md) this is set as __Application__. For a service principal that represents a [managed identity](/azure/active-directory/managed-identities-azure-resources/overview) this is set as __ManagedIdentity__. The __SocialIdp__ type is for internal use.
+- `service_principal_type` (String) Identifies if the service principal represents an application or a managed identity. This property is set by Microsoft Entra ID internally. <br/> - For a service principal that represents an [application](./application.md) this is set as `Application`. <br/> - For a service principal that represents a [managed identity](https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) this is set as `ManagedIdentity`. <br/> - For a service principal that represents an [agent identity](https://learn.microsoft.com/en-us/graph/api/resources/agentidentity?view=graph-rest-beta), this is set to `ServiceIdentity`. <br/> - The `SocialIdp` type is for internal use.
 
 ### Read-Only
 

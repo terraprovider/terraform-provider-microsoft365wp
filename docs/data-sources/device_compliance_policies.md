@@ -5,7 +5,7 @@ subcategory: "MS Graph: Device configuration"
 
 # microsoft365wp_device_compliance_policies (Data Source)
 
-This is the base class for Compliance policy. Compliance policies are platform specific and individual per-platform compliance policies inherit from here. / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicecompliancepolicy?view=graph-rest-beta
+This is the base class for Compliance policy. Compliance policies are platform specific and individual per-platform compliance policies inherit from here. <br/> Also see [Microsoft docs for deviceCompliancePolicy](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicecompliancepolicy?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -88,7 +88,7 @@ Read-Only:
 - `ios` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.iosCompliancePolicy` (using e.g. `if x.ios != null`). (see [below for nested schema](#nestedatt--device_compliance_policies--ios))
 - `last_modified_date_time` (String) DateTime the object was last modified.
 - `macos` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.macOSCompliancePolicy` (using e.g. `if x.macos != null`). (see [below for nested schema](#nestedatt--device_compliance_policies--macos))
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>
 - `version` (Number) Version of the device configuration.
 - `windows10` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windows10CompliancePolicy` (using e.g. `if x.windows10 != null`). (see [below for nested schema](#nestedatt--device_compliance_policies--windows10))
 

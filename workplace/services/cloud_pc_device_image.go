@@ -45,9 +45,9 @@ var cloudPcDeviceImageResourceSchema = schema.Schema{
 		"error_code": schema.StringAttribute{
 			Optional: true,
 			Validators: []validator.String{
-				stringvalidator.OneOf("internalServerError", "sourceImageNotFound", "osVersionNotSupported", "sourceImageInvalid", "sourceImageNotGeneralized", "unknownFutureValue", "vmAlreadyAzureAdjoined", "paidSourceImageNotSupport", "sourceImageNotSupportCustomizeVMName", "sourceImageSizeExceedsLimitation", "sourceImageWithDataDiskNotSupported", "sourceImageWithDiskEncryptionSetNotSupported"),
+				stringvalidator.OneOf("internalServerError", "sourceImageNotFound", "osVersionNotSupported", "sourceImageInvalid", "sourceImageNotGeneralized", "unknownFutureValue", "vmAlreadyAzureAdjoined", "paidSourceImageNotSupport", "sourceImageNotSupportCustomizeVMName", "sourceImageSizeExceedsLimitation", "sourceImageWithDataDiskNotSupported", "sourceImageWithDiskEncryptionSetNotSupported", "sourceImageWithAzureDiskEncryptionNotSupported", "fSLogixInstalledSourceImageNotSupported", "startMenuAppLimitExceeded"),
 			},
-			MarkdownDescription: "The error code of the status of the image that indicates why the upload failed, if applicable. Use the `Prefer: include-unknown-enum-members` request header to get the following values from this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `vmAlreadyAzureAdJoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`, `sourceImageWithDataDiskNotSupported`, `sourceImageWithDiskEncryptionSetNotSupported`. Read-only. / Possible values are: `internalServerError`, `sourceImageNotFound`, `osVersionNotSupported`, `sourceImageInvalid`, `sourceImageNotGeneralized`, `unknownFutureValue`, `vmAlreadyAzureAdjoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`, `sourceImageWithDataDiskNotSupported`, `sourceImageWithDiskEncryptionSetNotSupported`",
+			MarkdownDescription: "The error code of the status of the image that indicates why the upload failed, if applicable. Read-only. <br/> _Provider_ allowed values are: `internalServerError`, `sourceImageNotFound`, `osVersionNotSupported`, `sourceImageInvalid`, `sourceImageNotGeneralized`, `unknownFutureValue`, `vmAlreadyAzureAdjoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`, `sourceImageWithDataDiskNotSupported`, `sourceImageWithDiskEncryptionSetNotSupported`, `sourceImageWithAzureDiskEncryptionNotSupported`, `fSLogixInstalledSourceImageNotSupported`, `startMenuAppLimitExceeded`.",
 		},
 		"expiration_date": schema.StringAttribute{
 			Optional:            true,
@@ -59,7 +59,7 @@ var cloudPcDeviceImageResourceSchema = schema.Schema{
 		},
 		"operating_system": schema.StringAttribute{
 			Optional:            true,
-			MarkdownDescription: "The operating system of the image. For example, `Windows 10 Enterprise`. Read-only.",
+			MarkdownDescription: "The operating system of the image. For example, `Windows 11 Enterprise`. Read-only.",
 		},
 		"os_build_number": schema.StringAttribute{
 			Optional:            true,
@@ -70,7 +70,7 @@ var cloudPcDeviceImageResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				stringvalidator.OneOf("supported", "supportedWithWarning", "unknown", "unknownFutureValue"),
 			},
-			MarkdownDescription: "The OS status of this image. The default value is `unknown`. Read-only. / Possible values are: `supported`, `supportedWithWarning`, `unknown`, `unknownFutureValue`",
+			MarkdownDescription: "The OS status of this image. The default value is `unknown`. Read-only. <br/> _Provider_ allowed values are: `supported`, `supportedWithWarning`, `unknown`, `unknownFutureValue`.",
 		},
 		"os_version_number": schema.StringAttribute{
 			Optional:            true,
@@ -81,8 +81,9 @@ var cloudPcDeviceImageResourceSchema = schema.Schema{
 			Optional:    true,
 		},
 		"size_in_gb": schema.Int64Attribute{
-			Optional:    true,
-			Description: `sizeInGB`, // custom MS Graph attribute name
+			Optional:            true,
+			Description:         `sizeInGB`, // custom MS Graph attribute name
+			MarkdownDescription: "The size of the image in GB. For example, `64`. Read-only.",
 		},
 		"source_image_resource_id": schema.StringAttribute{
 			Optional:            true,
@@ -93,19 +94,19 @@ var cloudPcDeviceImageResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				stringvalidator.OneOf("pending", "ready", "failed", "unknownFutureValue", "warning"),
 			},
-			MarkdownDescription: "The status of the image on the Cloud PC. Read-only. / Possible values are: `pending`, `ready`, `failed`, `unknownFutureValue`, `warning`",
+			MarkdownDescription: "The status of the image on the Cloud PC. Read-only. <br/> _Provider_ allowed values are: `pending`, `ready`, `failed`, `unknownFutureValue`, `warning`.",
 		},
 		"status_details": schema.StringAttribute{
 			Optional: true,
 			Validators: []validator.String{
 				stringvalidator.OneOf("internalServerError", "sourceImageNotFound", "osVersionNotSupported", "sourceImageInvalid", "sourceImageNotGeneralized", "unknownFutureValue", "vmAlreadyAzureAdjoined", "paidSourceImageNotSupport", "sourceImageNotSupportCustomizeVMName", "sourceImageSizeExceedsLimitation"),
 			},
-			MarkdownDescription: "Possible values are: `internalServerError`, `sourceImageNotFound`, `osVersionNotSupported`, `sourceImageInvalid`, `sourceImageNotGeneralized`, `unknownFutureValue`, `vmAlreadyAzureAdjoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`",
+			MarkdownDescription: "_Provider_ allowed values are: `internalServerError`, `sourceImageNotFound`, `osVersionNotSupported`, `sourceImageInvalid`, `sourceImageNotGeneralized`, `unknownFutureValue`, `vmAlreadyAzureAdjoined`, `paidSourceImageNotSupport`, `sourceImageNotSupportCustomizeVMName`, `sourceImageSizeExceedsLimitation`.",
 		},
 		"version": schema.StringAttribute{
 			Optional:            true,
 			MarkdownDescription: "The image version. For example, `0.0.1` and `1.5.13`. Read-only.",
 		},
 	},
-	MarkdownDescription: "Represents the image resource on a Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdeviceimage?view=graph-rest-beta ||| MS Graph: Cloud PC",
+	MarkdownDescription: "Represents the image resource on a Cloud PC. <br/> Also see [Microsoft docs for cloudPcDeviceImage](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdeviceimage?view=graph-rest-beta). ||| MS Graph: Cloud PC",
 }

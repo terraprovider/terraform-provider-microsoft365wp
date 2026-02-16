@@ -7,7 +7,9 @@ subcategory: "MS Graph: Custom security attributes"
 
 Represents the schema of a custom security attribute (key-value pair). For example, the custom security attribute name, description, data type, and allowed values.
 
-You can define up to 500 active objects in a tenant. The **customSecurityAttributeDefinition** object can't be renamed or deleted, but it can be deactivated by using the [Update customSecurityAttributeDefinition](../api/customsecurityattributedefinition-update.md) operation. Must be part of an [attributeSet](../resources/attributeset.md). / https://learn.microsoft.com/en-us/graph/api/resources/customsecurityattributedefinition?view=graph-rest-beta
+You can define up to 500 active objects in a tenant. The **customSecurityAttributeDefinition** object can't be renamed or deleted, but it can be deactivated by using the [Update customSecurityAttributeDefinition](https://learn.microsoft.com/en-us/graph/api/customsecurityattributedefinition-update?view=graph-rest-beta) operation. Must be part of an [attributeSet](https://learn.microsoft.com/en-us/graph/api/resources/attributeset?view=graph-rest-beta).
+
+Also see [Microsoft docs for customSecurityAttributeDefinition](https://learn.microsoft.com/en-us/graph/api/resources/customsecurityattributedefinition?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -62,14 +64,12 @@ resource "microsoft365wp_custom_security_attribute_definition" "test" {
 
 ### Optional
 
-- `allowed_values` (Attributes Set) Values that are predefined for this custom security attribute. This navigation property is not returned by default and must be specified in an `$expand` query. For example, `/directory/customSecurityAttributeDefinitions?$expand=allowedValues`. / Represents a predefined value that is allowed for a custom security attribute definition.
-
-You can define up to 100 **allowedValue** objects per [customSecurityAttributeDefinition](customsecurityattributedefinition.md). The **allowedValue** object can't be renamed or deleted, but it can be deactivated by using the [Update allowedValue](../api/../api/allowedvalue-update.md) operation. This object is defined as a navigation property on the [customSecurityAttributeDefinition](customsecurityattributedefinition.md) resource and its value is returned only on `$expand`. / https://learn.microsoft.com/en-us/graph/api/resources/allowedvalue?view=graph-rest-beta. The _provider_ default value is `[]`. (see [below for nested schema](#nestedatt--allowed_values))
+- `allowed_values` (Attributes Set) Values that are predefined for this custom security attribute. This navigation property is not returned by default and must be specified in an `$expand` query. For example, `/directory/customSecurityAttributeDefinitions?$expand=allowedValues`. <br/> Represents a predefined value that is allowed for a custom security attribute definition. <br/> You can define up to 100 **allowedValue** objects per [customSecurityAttributeDefinition](customsecurityattributedefinition.md). The **allowedValue** object can't be renamed or deleted, but it can be deactivated by using the [Update allowedValue](https://learn.microsoft.com/en-us/graph/api/../api/allowedvalue-update?view=graph-rest-beta) operation. This object is defined as a navigation property on the [customSecurityAttributeDefinition](customsecurityattributedefinition.md) resource and its value is returned only on `$expand`. Also see [Microsoft docs for allowedValue](https://learn.microsoft.com/en-us/graph/api/resources/allowedvalue?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> (see [below for nested schema](#nestedatt--allowed_values))
 - `description` (String) Description of the custom security attribute. Can be up to 128 characters long and include Unicode characters. Can be changed later.
-- `is_collection` (Boolean) Indicates whether multiple values can be assigned to the custom security attribute. Cannot be changed later. If **type** is set to `Boolean`, **isCollection** cannot be set to `true`. The _provider_ default value is `false`.
-- `is_searchable` (Boolean) Indicates whether custom security attribute values are indexed for searching on objects that are assigned attribute values. Cannot be changed later. The _provider_ default value is `true`.
-- `status` (String) Specifies whether the custom security attribute is active or deactivated. Acceptable values are: `Available` and `Deprecated`. Can be changed later. The _provider_ default value is `"Available"`.
-- `use_pre_defined_values_only` (Boolean) Indicates whether only predefined values can be assigned to the custom security attribute. If set to `false`, free-form values are allowed. Can later be changed from `true` to `false`, but cannot be changed from `false` to `true`. If **type** is set to `Boolean`, **usePreDefinedValuesOnly** cannot be set to `true`. The _provider_ default value is `false`.
+- `is_collection` (Boolean) Indicates whether multiple values can be assigned to the custom security attribute. Cannot be changed later. If **type** is set to `Boolean`, **isCollection** cannot be set to `true`. <br/> The _provider_ default value is `false`.
+- `is_searchable` (Boolean) Indicates whether custom security attribute values are indexed for searching on objects that are assigned attribute values. Cannot be changed later. <br/> The _provider_ default value is `true`.
+- `status` (String) Specifies whether the custom security attribute is active or deactivated. Acceptable values are: `Available` and `Deprecated`. Can be changed later. <br/> The _provider_ default value is `"Available"`.
+- `use_pre_defined_values_only` (Boolean) Indicates whether only predefined values can be assigned to the custom security attribute. If set to `false`, free-form values are allowed. Can later be changed from `true` to `false`, but cannot be changed from `false` to `true`. If **type** is set to `Boolean`, **usePreDefinedValuesOnly** cannot be set to `true`. <br/> The _provider_ default value is `false`.
 
 ### Read-Only
 
@@ -84,4 +84,4 @@ Required:
 
 Optional:
 
-- `is_active` (Boolean) Indicates whether the predefined value is active or deactivated. If set to `false`, this predefined value can't be assigned to any more supported directory objects. The _provider_ default value is `true`.
+- `is_active` (Boolean) Indicates whether the predefined value is active or deactivated. If set to `false`, this predefined value can't be assigned to any more supported directory objects. <br/> The _provider_ default value is `true`.

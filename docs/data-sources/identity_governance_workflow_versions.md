@@ -5,7 +5,7 @@ subcategory: "MS Graph: Lifecycle workflows"
 
 # microsoft365wp_identity_governance_workflow_versions (Data Source)
 
-Represents a version of a [lifecycle workflow](../resources/identitygovernance-workflowversion.md). Workflow versions are subsequent versions of workflows you can create when you need to change the workflow configuration other than its basic properties. You can view older versions of the workflow and associated reports will note which workflow version had been run. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta
+Represents a version of a [lifecycle workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta). Workflow versions are subsequent versions of workflows you can create when you need to change the workflow configuration other than its basic properties. You can view older versions of the workflow and associated reports will note which workflow version had been run. <br/> Also see [Microsoft docs for identityGovernance.workflowVersion](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -82,8 +82,8 @@ output "microsoft365wp_identity_governance_workflow_versions" {
 
 Read-Only:
 
-- `category` (String) The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. The<br><br>Supports `$filter`(`eq`,`ne`) and `$orderby` / Possible values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`
-- `created_date_time` (String) The date time when the `workflow` was versioned.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
-- `display_name` (String) The display name of the `workflowversion`.<br><br>Supports `$filter`(`eq`, `ne`) and `orderby`.
-- `last_modified_date_time` (String) The date time when the `workflow` was last modified.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
+- `category` (String) The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. <br/> Supports `$filter`(`eq`,`ne`) and `$orderby` <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.
+- `created_date_time` (String) The date time when the `workflow` was versioned. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
+- `display_name` (String) The display name of the `workflowversion`. <br/> Supports `$filter`(`eq`, `ne`) and `orderby`.
+- `last_modified_date_time` (String) The date time when the `workflow` was last modified. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
 - `version_number` (String) The version of the workflow.

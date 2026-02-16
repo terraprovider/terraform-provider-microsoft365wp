@@ -5,7 +5,7 @@ subcategory: "MS Graph: Device management"
 
 # microsoft365wp_device_management_intent (Resource)
 
-Entity that represents an intent to apply settings to a device / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintent?view=graph-rest-beta
+Entity that represents an intent to apply settings to a device <br/> Also see [Microsoft docs for deviceManagementIntent](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintent?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -88,14 +88,14 @@ resource "microsoft365wp_device_management_intent" "test_macos_filevault" {
 ### Required
 
 - `display_name` (String) The user given display name
-- `settings` (Attributes Set) Collection of all settings to be applied / Base type for a setting instance / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings))
+- `settings` (Attributes Set) Collection of all settings to be applied / Base type for a setting instance. Also see [Microsoft docs for deviceManagementSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings))
 - `template_id` (String) The ID of the template this intent was created from (if any)
 
 ### Optional
 
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `description` (String) The user given description
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. The _provider_ default value is `["0"]`.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/> The _provider_ default value is `["0"]`.
 
 ### Read-Only
 
@@ -113,19 +113,19 @@ Required:
 
 Optional:
 
-- `abstract_complex` (Attributes) A setting instance representing a complex value for an abstract setting / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementabstractcomplexsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex))
-- `boolean` (Attributes) A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--boolean))
-- `collection` (Attributes) A setting instance representing a collection of values / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcollectionsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--collection))
-- `complex` (Attributes) A setting instance representing a complex value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcomplexsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex))
-- `integer` (Attributes) A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--integer))
-- `string` (Attributes) A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--string))
+- `abstract_complex` (Attributes) A setting instance representing a complex value for an abstract setting. Also see [Microsoft docs for deviceManagementAbstractComplexSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementabstractcomplexsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex))
+- `boolean` (Attributes) A setting instance representing a boolean value. Also see [Microsoft docs for deviceManagementBooleanSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--boolean))
+- `collection` (Attributes) A setting instance representing a collection of values. Also see [Microsoft docs for deviceManagementCollectionSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcollectionsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--collection))
+- `complex` (Attributes) A setting instance representing a complex value. Also see [Microsoft docs for deviceManagementComplexSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcomplexsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex))
+- `integer` (Attributes) A setting instance representing an integer value. Also see [Microsoft docs for deviceManagementIntegerSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--integer))
+- `string` (Attributes) A setting instance representing a string value. Also see [Microsoft docs for deviceManagementStringSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--string))
 
 <a id="nestedatt--settings--abstract_complex"></a>
 ### Nested Schema for `settings.abstract_complex`
 
 Required:
 
-- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--abstract_complex--value))
+- `value` (Attributes Set) The values that make up the complex setting <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value))
 
 Optional:
 
@@ -140,19 +140,19 @@ Required:
 
 Optional:
 
-- `abstract_complex` (Attributes) A setting instance representing a complex value for an abstract setting / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementabstractcomplexsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex))
-- `boolean` (Attributes) A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--boolean))
-- `collection` (Attributes) A setting instance representing a collection of values / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcollectionsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--collection))
-- `complex` (Attributes) A setting instance representing a complex value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcomplexsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex))
-- `integer` (Attributes) A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--integer))
-- `string` (Attributes) A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string))
+- `abstract_complex` (Attributes) A setting instance representing a complex value for an abstract setting. Also see [Microsoft docs for deviceManagementAbstractComplexSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementabstractcomplexsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex))
+- `boolean` (Attributes) A setting instance representing a boolean value. Also see [Microsoft docs for deviceManagementBooleanSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--boolean))
+- `collection` (Attributes) A setting instance representing a collection of values. Also see [Microsoft docs for deviceManagementCollectionSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcollectionsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--collection))
+- `complex` (Attributes) A setting instance representing a complex value. Also see [Microsoft docs for deviceManagementComplexSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcomplexsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex))
+- `integer` (Attributes) A setting instance representing an integer value. Also see [Microsoft docs for deviceManagementIntegerSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--integer))
+- `string` (Attributes) A setting instance representing a string value. Also see [Microsoft docs for deviceManagementStringSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--string))
 
 <a id="nestedatt--settings--abstract_complex--value--abstract_complex"></a>
 ### Nested Schema for `settings.abstract_complex.value.abstract_complex`
 
 Required:
 
-- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value))
+- `value` (Attributes Set) The values that make up the complex setting <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value))
 
 Optional:
 
@@ -167,9 +167,9 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value--boolean))
-- `integer` (Attributes) A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value--integer))
-- `string` (Attributes) A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value--string))
+- `boolean` (Attributes) A setting instance representing a boolean value. Also see [Microsoft docs for deviceManagementBooleanSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value--boolean))
+- `integer` (Attributes) A setting instance representing an integer value. Also see [Microsoft docs for deviceManagementIntegerSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value--integer))
+- `string` (Attributes) A setting instance representing a string value. Also see [Microsoft docs for deviceManagementStringSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--abstract_complex--value--string))
 
 <a id="nestedatt--settings--abstract_complex--value--abstract_complex--value--boolean"></a>
 ### Nested Schema for `settings.abstract_complex.value.abstract_complex.value.boolean`
@@ -218,7 +218,7 @@ Required:
 
 Required:
 
-- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value))
+- `value` (Attributes Set) The values that make up the complex setting <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value))
 
 <a id="nestedatt--settings--abstract_complex--value--complex--value"></a>
 ### Nested Schema for `settings.abstract_complex.value.complex.value`
@@ -229,9 +229,9 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value--boolean))
-- `integer` (Attributes) A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value--integer))
-- `string` (Attributes) A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value--string))
+- `boolean` (Attributes) A setting instance representing a boolean value. Also see [Microsoft docs for deviceManagementBooleanSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value--boolean))
+- `integer` (Attributes) A setting instance representing an integer value. Also see [Microsoft docs for deviceManagementIntegerSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value--integer))
+- `string` (Attributes) A setting instance representing a string value. Also see [Microsoft docs for deviceManagementStringSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--abstract_complex--value--complex--value--string))
 
 <a id="nestedatt--settings--abstract_complex--value--complex--value--boolean"></a>
 ### Nested Schema for `settings.abstract_complex.value.complex.value.boolean`
@@ -298,7 +298,7 @@ Required:
 
 Required:
 
-- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--complex--value))
+- `value` (Attributes Set) The values that make up the complex setting <br> (see [below for nested schema](#nestedatt--settings--complex--value))
 
 <a id="nestedatt--settings--complex--value"></a>
 ### Nested Schema for `settings.complex.value`
@@ -309,19 +309,19 @@ Required:
 
 Optional:
 
-- `abstract_complex` (Attributes) A setting instance representing a complex value for an abstract setting / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementabstractcomplexsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex))
-- `boolean` (Attributes) A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--boolean))
-- `collection` (Attributes) A setting instance representing a collection of values / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcollectionsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--collection))
-- `complex` (Attributes) A setting instance representing a complex value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcomplexsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--complex))
-- `integer` (Attributes) A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--integer))
-- `string` (Attributes) A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--string))
+- `abstract_complex` (Attributes) A setting instance representing a complex value for an abstract setting. Also see [Microsoft docs for deviceManagementAbstractComplexSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementabstractcomplexsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex))
+- `boolean` (Attributes) A setting instance representing a boolean value. Also see [Microsoft docs for deviceManagementBooleanSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--boolean))
+- `collection` (Attributes) A setting instance representing a collection of values. Also see [Microsoft docs for deviceManagementCollectionSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcollectionsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--collection))
+- `complex` (Attributes) A setting instance representing a complex value. Also see [Microsoft docs for deviceManagementComplexSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementcomplexsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--complex))
+- `integer` (Attributes) A setting instance representing an integer value. Also see [Microsoft docs for deviceManagementIntegerSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--integer))
+- `string` (Attributes) A setting instance representing a string value. Also see [Microsoft docs for deviceManagementStringSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--string))
 
 <a id="nestedatt--settings--complex--value--abstract_complex"></a>
 ### Nested Schema for `settings.complex.value.abstract_complex`
 
 Required:
 
-- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value))
+- `value` (Attributes Set) The values that make up the complex setting <br> (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value))
 
 Optional:
 
@@ -336,9 +336,9 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value--boolean))
-- `integer` (Attributes) A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value--integer))
-- `string` (Attributes) A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value--string))
+- `boolean` (Attributes) A setting instance representing a boolean value. Also see [Microsoft docs for deviceManagementBooleanSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value--boolean))
+- `integer` (Attributes) A setting instance representing an integer value. Also see [Microsoft docs for deviceManagementIntegerSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value--integer))
+- `string` (Attributes) A setting instance representing a string value. Also see [Microsoft docs for deviceManagementStringSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--abstract_complex--value--string))
 
 <a id="nestedatt--settings--complex--value--abstract_complex--value--boolean"></a>
 ### Nested Schema for `settings.complex.value.abstract_complex.value.boolean`
@@ -387,7 +387,7 @@ Required:
 
 Required:
 
-- `value` (Attributes Set) The values that make up the complex setting (see [below for nested schema](#nestedatt--settings--complex--value--complex--value))
+- `value` (Attributes Set) The values that make up the complex setting <br> (see [below for nested schema](#nestedatt--settings--complex--value--complex--value))
 
 <a id="nestedatt--settings--complex--value--complex--value"></a>
 ### Nested Schema for `settings.complex.value.complex.value`
@@ -398,9 +398,9 @@ Required:
 
 Optional:
 
-- `boolean` (Attributes) A setting instance representing a boolean value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--complex--value--boolean))
-- `integer` (Attributes) A setting instance representing an integer value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--complex--value--integer))
-- `string` (Attributes) A setting instance representing a string value / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta (see [below for nested schema](#nestedatt--settings--complex--value--complex--value--string))
+- `boolean` (Attributes) A setting instance representing a boolean value. Also see [Microsoft docs for deviceManagementBooleanSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementbooleansettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--complex--value--boolean))
+- `integer` (Attributes) A setting instance representing an integer value. Also see [Microsoft docs for deviceManagementIntegerSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintegersettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--complex--value--integer))
+- `string` (Attributes) A setting instance representing a string value. Also see [Microsoft docs for deviceManagementStringSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementstringsettinginstance?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings--complex--value--complex--value--string))
 
 <a id="nestedatt--settings--complex--value--complex--value--boolean"></a>
 ### Nested Schema for `settings.complex.value.complex.value.boolean`
@@ -468,19 +468,19 @@ Required:
 
 Required:
 
-- `target` (Attributes) Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target))
+- `target` (Attributes) Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta). (see [below for nested schema](#nestedatt--assignments--target))
 
 <a id="nestedatt--assignments--target"></a>
 ### Nested Schema for `assignments.target`
 
 Optional:
 
-- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_devices))
-- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
-- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
+- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. Also see [Microsoft docs for allDevicesAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_devices))
+- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. Also see [Microsoft docs for allLicensedUsersAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
+- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. Also see [Microsoft docs for exclusionGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The ID of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
-- `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter. <br/> _Provider_ allowed values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
+- `group` (Attributes) Represents an assignment to a group. Also see [Microsoft docs for groupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
 ### Nested Schema for `assignments.target.all_devices`

@@ -5,7 +5,7 @@ subcategory: "MS Graph: App management"
 
 # microsoft365wp_mobile_app_categories (Data Source)
 
-Contains properties for a single Intune app category. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappcategory?view=graph-rest-beta
+Contains properties for a single Intune app category. <br/> Also see [Microsoft docs for mobileAppCategory](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappcategory?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -81,4 +81,4 @@ Read-Only:
 - `display_name` (String) The name of the app category.
 - `id` (String) The key of the entity. This property is
 - `last_modified_date_time` (String) The date and time the mobileAppCategory was last modified. This property is  
-Provider Note: Warning: This attribute seems to always return the _current_ time for mobile app categories that have been created for the tenant (i.e. that have not been predefined by Microsoft). Therefore it can be expected to change with every query.
+_Provider_ Note: Warning: This attribute seems to always return the _current_ time for mobile app categories that have been created for the tenant (i.e. that have not been predefined by Microsoft). Therefore it can be expected to change with every query.

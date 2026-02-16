@@ -86,19 +86,17 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 					Attributes: map[string]schema.Attribute{ // identity
 						"display_name": schema.StringAttribute{
 							Computed:            true,
-							MarkdownDescription: "The display name of the identity. <br/><br/>For drive items, the display name might not always be available or up to date. For example, if a user changes their display name the API might show the new value in a future response, but the items associated with the user don't show up as changed when using [delta](../api/driveitem-delta.md).",
+							MarkdownDescription: "The display name of the identity. <br/> For drive items, the display name might not always be available or up to date. For example, if a user changes their display name the API might show the new value in a future response, but the items associated with the user don't show up as changed when using [delta](https://learn.microsoft.com/en-us/graph/api/driveitem-delta?view=graph-rest-beta).",
 						},
 						"id": schema.StringAttribute{
 							Computed:            true,
 							MarkdownDescription: "Unique identifier for the identity or actor. For example, in the access reviews decisions API, this property might record the **id** of the principal, that is, the group, user, or application that's subject to review.",
 						},
 					},
-					PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-					MarkdownDescription: "The identity who last modified the role setting. / Represents an identity of an _actor_. For example, an actor can be a user, device, or application. Multiple Microsoft Graph APIs share this resource and the data they return varies depending on the API.\n\nBase type of [userIdentity](useridentity.md). / https://learn.microsoft.com/en-us/graph/api/resources/identity?view=graph-rest-beta",
+					MarkdownDescription: "The identity who last modified the role setting. <br/> Represents an identity of an _actor_. For example, an actor can be a user, device, or application. Multiple Microsoft Graph APIs share this resource and the data they return varies depending on the API. <br/> In entitlement management scenarios, this resource is used to represent identities in contexts such as related people in access package suggestions. Also see [Microsoft docs for identity](https://learn.microsoft.com/en-us/graph/api/resources/identity?view=graph-rest-beta). <br> ",
 				},
 				"last_modified_date_time": schema.StringAttribute{
 					Computed:            true,
-					PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 					MarkdownDescription: "The time when the role setting was last modified.",
 				},
 				"scope_id": schema.StringAttribute{
@@ -146,7 +144,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 										MarkdownDescription: "The role management operations that are the target of the policy rule. Allowed values are: `All`, `Activate`, `Deactivate`, `Assign`, `Update`, `Remove`, `Extend`, `Renew`.",
 									},
 								},
-								MarkdownDescription: "**Not implemented.** Defines details of scope that's targeted by role management policy rule. The details can include the principal type, the role assignment type, and actions affecting a role. Supports `$filter` (`eq`, `ne`). / Defines details of the scope that's targeted by role management policy rule. The details can include the principal type, the role assignment type, and actions affecting a role. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyruletarget?view=graph-rest-beta",
+								MarkdownDescription: "**Not implemented.** Defines details of scope that's targeted by role management policy rule. The details can include the principal type, the role assignment type, and actions affecting a role. Supports `$filter` (`eq`, `ne`). / Defines details of the scope that's targeted by role management policy rule. The details can include the principal type, the role assignment type, and actions affecting a role. Also see [Microsoft docs for unifiedRoleManagementPolicyRuleTarget](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyruletarget?view=graph-rest-beta). <br> ",
 							},
 							"approval": generic.OdataDerivedTypeNestedAttributeRs{
 								DerivedType: "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule",
@@ -176,6 +174,23 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																			Computed:            true,
 																			MarkdownDescription: "For a user in an approval stage, this property indicates whether the user is a backup fallback approver.",
 																		},
+																		"attribute_rule_members": generic.OdataDerivedTypeNestedAttributeRs{
+																			DerivedType: "#microsoft.graph.attributeRuleMembers",
+																			SingleNestedAttribute: schema.SingleNestedAttribute{
+																				Computed: true,
+																				Attributes: map[string]schema.Attribute{ // attributeRuleMembers
+																					"description": schema.StringAttribute{
+																						Computed: true,
+																					},
+																					"membership_rule": schema.StringAttribute{
+																						Computed: true,
+																					},
+																				},
+																				Validators: []validator.Object{
+																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
+																				},
+																			},
+																		},
 																		"connected_organization_members": generic.OdataDerivedTypeNestedAttributeRs{
 																			DerivedType: "#microsoft.graph.connectedOrganizationMembers",
 																			SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -183,7 +198,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // connectedOrganizationMembers
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the connected organization. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -194,7 +208,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The `@odata.type` value `#microsoft.graph.connectedOrganizationMembers` indicates that this type identifies a collection of users who are associated with a [connected organization](connectedorganization.md) and are allowed to request an access package. / https://learn.microsoft.com/en-us/graph/api/resources/connectedorganizationmembers?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The `@odata.type` value `#microsoft.graph.connectedOrganizationMembers` indicates that this type identifies a collection of users who are associated with a [connected organization](connectedorganization.md) and are allowed to request an access package. Also see [Microsoft docs for connectedOrganizationMembers](https://learn.microsoft.com/en-us/graph/api/resources/connectedorganizationmembers?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"external_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -206,7 +220,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.externalSponsors` indicates that a requesting user's connected organization external sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with externalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an external sponsor. / https://learn.microsoft.com/en-us/graph/api/resources/externalsponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.externalSponsors` indicates that a requesting user's connected organization external sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with externalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an external sponsor. Also see [Microsoft docs for externalSponsors](https://learn.microsoft.com/en-us/graph/api/resources/externalsponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"group_members": generic.OdataDerivedTypeNestedAttributeRs{
@@ -216,7 +230,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // groupMembers
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the group in Microsoft Entra ID. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -227,7 +240,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nThe `@odata.type` value `#microsoft.graph.groupMembers` indicates that this type identifies a collection of users in the tenant who are allowed as requestor, approver, or reviewer, who are the members of a specific group. / https://learn.microsoft.com/en-us/graph/api/resources/groupmembers?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nThe `@odata.type` value `#microsoft.graph.groupMembers` indicates that this type identifies a collection of users in the tenant who are allowed as requestor, approver, or reviewer, who are the members of a specific group. Also see [Microsoft docs for groupMembers](https://learn.microsoft.com/en-us/graph/api/resources/groupmembers?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"internal_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -239,7 +252,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.internalSponsors` indicates that a requesting user's connected organization internal sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with internalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an internal sponsor. / https://learn.microsoft.com/en-us/graph/api/resources/internalsponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.internalSponsors` indicates that a requesting user's connected organization internal sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with internalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an internal sponsor. Also see [Microsoft docs for internalSponsors](https://learn.microsoft.com/en-us/graph/api/resources/internalsponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"requestor_manager": generic.OdataDerivedTypeNestedAttributeRs{
@@ -255,7 +268,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.requestorManager` indicates that a requesting user's manager is to be the approver. Include another approver When creating an access package assignment policy approval stage with requestorManager, in case the requesting user doesn't have a manager. Including another approver, such as a single user or group member, covers the case where the requesting user doesn't have a manager. / https://learn.microsoft.com/en-us/graph/api/resources/requestormanager?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.requestorManager` indicates that a requesting user's manager is to be the approver. Include another approver When creating an access package assignment policy approval stage with requestorManager, in case the requesting user doesn't have a manager. Including another approver, such as a single user or group member, covers the case where the requesting user doesn't have a manager. Also see [Microsoft docs for requestorManager](https://learn.microsoft.com/en-us/graph/api/resources/requestormanager?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"single_user": generic.OdataDerivedTypeNestedAttributeRs{
@@ -265,7 +278,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // singleUser
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the user in Microsoft Entra ID. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -276,7 +288,18 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The  `@odata.type` value `#microsoft.graph.singleUser` indicates that this userSet identifies a specific user in the tenant who will be allowed as a requestor, approver, or reviewer. / https://learn.microsoft.com/en-us/graph/api/resources/singleuser?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The  `@odata.type` value `#microsoft.graph.singleUser` indicates that this userSet identifies a specific user in the tenant who will be allowed as a requestor, approver, or reviewer. Also see [Microsoft docs for singleUser](https://learn.microsoft.com/en-us/graph/api/resources/singleuser?view=graph-rest-beta). <br> ",
+																			},
+																		},
+																		"target_agent_identity_sponsors_or_owners": generic.OdataDerivedTypeNestedAttributeRs{
+																			DerivedType: "#microsoft.graph.targetAgentIdentitySponsorsOrOwners",
+																			SingleNestedAttribute: schema.SingleNestedAttribute{
+																				Computed:   true,
+																				Attributes: map[string]schema.Attribute{ // targetAgentIdentitySponsorsOrOwners
+																				},
+																				Validators: []validator.Object{
+																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
+																				},
 																			},
 																		},
 																		"target_user_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -288,12 +311,12 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.targetUserSponsors` indicates that a requesting user's sponsors are the approvers. When creating an access package assignment policy approval stage with **targetUserSponsors**, also include another approver, such as a single user or group member, in case the requesting user doesn't have sponsors. / https://learn.microsoft.com/en-us/graph/api/resources/targetusersponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.targetUserSponsors` indicates that a requesting user's sponsors are the approvers. When creating an access package assignment policy approval stage with **targetUserSponsors**, also include another approver, such as a single user or group member, in case the requesting user doesn't have sponsors. Also see [Microsoft docs for targetUserSponsors](https://learn.microsoft.com/en-us/graph/api/resources/targetusersponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																	},
 																},
-																MarkdownDescription: "The users who are asked to approve requests if escalation is enabled and the primary approvers don't respond before the escalation time. This property can be a collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), and [externalSponsors](externalsponsors.md). When you create or update a [policy](accesspackageassignmentpolicy.md), if there are no escalation approvers, or escalation approvers aren't required for the stage, assign an empty collection to this property. / Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). It's an abstract base type inherited by the following resource types: / https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta",
+																MarkdownDescription: "The users who are asked to approve requests if escalation is enabled and the primary approvers don't respond before the escalation time. This property can be a collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), and [externalSponsors](externalsponsors.md). When you create or update a [policy](accesspackageassignmentpolicy.md), if there are no escalation approvers, or escalation approvers aren't required for the stage, assign an empty collection to this property. / Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). It's an abstract base type inherited by the following resource types:. Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
 															},
 															"escalation_time_in_minutes": schema.Int64Attribute{
 																Computed:            true,
@@ -315,6 +338,23 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																			Computed:            true,
 																			MarkdownDescription: "For a user in an approval stage, this property indicates whether the user is a backup fallback approver.",
 																		},
+																		"attribute_rule_members": generic.OdataDerivedTypeNestedAttributeRs{
+																			DerivedType: "#microsoft.graph.attributeRuleMembers",
+																			SingleNestedAttribute: schema.SingleNestedAttribute{
+																				Computed: true,
+																				Attributes: map[string]schema.Attribute{ // attributeRuleMembers
+																					"description": schema.StringAttribute{
+																						Computed: true,
+																					},
+																					"membership_rule": schema.StringAttribute{
+																						Computed: true,
+																					},
+																				},
+																				Validators: []validator.Object{
+																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
+																				},
+																			},
+																		},
 																		"connected_organization_members": generic.OdataDerivedTypeNestedAttributeRs{
 																			DerivedType: "#microsoft.graph.connectedOrganizationMembers",
 																			SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -322,7 +362,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // connectedOrganizationMembers
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the connected organization. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -333,7 +372,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The `@odata.type` value `#microsoft.graph.connectedOrganizationMembers` indicates that this type identifies a collection of users who are associated with a [connected organization](connectedorganization.md) and are allowed to request an access package. / https://learn.microsoft.com/en-us/graph/api/resources/connectedorganizationmembers?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The `@odata.type` value `#microsoft.graph.connectedOrganizationMembers` indicates that this type identifies a collection of users who are associated with a [connected organization](connectedorganization.md) and are allowed to request an access package. Also see [Microsoft docs for connectedOrganizationMembers](https://learn.microsoft.com/en-us/graph/api/resources/connectedorganizationmembers?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"external_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -345,7 +384,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.externalSponsors` indicates that a requesting user's connected organization external sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with externalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an external sponsor. / https://learn.microsoft.com/en-us/graph/api/resources/externalsponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.externalSponsors` indicates that a requesting user's connected organization external sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with externalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an external sponsor. Also see [Microsoft docs for externalSponsors](https://learn.microsoft.com/en-us/graph/api/resources/externalsponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"group_members": generic.OdataDerivedTypeNestedAttributeRs{
@@ -355,7 +394,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // groupMembers
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the group in Microsoft Entra ID. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -366,7 +404,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nThe `@odata.type` value `#microsoft.graph.groupMembers` indicates that this type identifies a collection of users in the tenant who are allowed as requestor, approver, or reviewer, who are the members of a specific group. / https://learn.microsoft.com/en-us/graph/api/resources/groupmembers?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nThe `@odata.type` value `#microsoft.graph.groupMembers` indicates that this type identifies a collection of users in the tenant who are allowed as requestor, approver, or reviewer, who are the members of a specific group. Also see [Microsoft docs for groupMembers](https://learn.microsoft.com/en-us/graph/api/resources/groupmembers?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"internal_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -378,7 +416,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.internalSponsors` indicates that a requesting user's connected organization internal sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with internalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an internal sponsor. / https://learn.microsoft.com/en-us/graph/api/resources/internalsponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.internalSponsors` indicates that a requesting user's connected organization internal sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with internalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an internal sponsor. Also see [Microsoft docs for internalSponsors](https://learn.microsoft.com/en-us/graph/api/resources/internalsponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"requestor_manager": generic.OdataDerivedTypeNestedAttributeRs{
@@ -394,7 +432,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.requestorManager` indicates that a requesting user's manager is to be the approver. Include another approver When creating an access package assignment policy approval stage with requestorManager, in case the requesting user doesn't have a manager. Including another approver, such as a single user or group member, covers the case where the requesting user doesn't have a manager. / https://learn.microsoft.com/en-us/graph/api/resources/requestormanager?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.requestorManager` indicates that a requesting user's manager is to be the approver. Include another approver When creating an access package assignment policy approval stage with requestorManager, in case the requesting user doesn't have a manager. Including another approver, such as a single user or group member, covers the case where the requesting user doesn't have a manager. Also see [Microsoft docs for requestorManager](https://learn.microsoft.com/en-us/graph/api/resources/requestormanager?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"single_user": generic.OdataDerivedTypeNestedAttributeRs{
@@ -404,7 +442,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // singleUser
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the user in Microsoft Entra ID. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -415,7 +452,18 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The  `@odata.type` value `#microsoft.graph.singleUser` indicates that this userSet identifies a specific user in the tenant who will be allowed as a requestor, approver, or reviewer. / https://learn.microsoft.com/en-us/graph/api/resources/singleuser?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The  `@odata.type` value `#microsoft.graph.singleUser` indicates that this userSet identifies a specific user in the tenant who will be allowed as a requestor, approver, or reviewer. Also see [Microsoft docs for singleUser](https://learn.microsoft.com/en-us/graph/api/resources/singleuser?view=graph-rest-beta). <br> ",
+																			},
+																		},
+																		"target_agent_identity_sponsors_or_owners": generic.OdataDerivedTypeNestedAttributeRs{
+																			DerivedType: "#microsoft.graph.targetAgentIdentitySponsorsOrOwners",
+																			SingleNestedAttribute: schema.SingleNestedAttribute{
+																				Computed:   true,
+																				Attributes: map[string]schema.Attribute{ // targetAgentIdentitySponsorsOrOwners
+																				},
+																				Validators: []validator.Object{
+																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
+																				},
 																			},
 																		},
 																		"target_user_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -427,16 +475,16 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.targetUserSponsors` indicates that a requesting user's sponsors are the approvers. When creating an access package assignment policy approval stage with **targetUserSponsors**, also include another approver, such as a single user or group member, in case the requesting user doesn't have sponsors. / https://learn.microsoft.com/en-us/graph/api/resources/targetusersponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.targetUserSponsors` indicates that a requesting user's sponsors are the approvers. When creating an access package assignment policy approval stage with **targetUserSponsors**, also include another approver, such as a single user or group member, in case the requesting user doesn't have sponsors. Also see [Microsoft docs for targetUserSponsors](https://learn.microsoft.com/en-us/graph/api/resources/targetusersponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																	},
 																},
-																MarkdownDescription: "The users who are asked to approve requests. A collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), [externalSponsors](externalsponsors.md), and [targetUserSponsors](targetusersponsors.md). When creating or updating a [policy](accesspackageassignmentpolicy.md), include at least one **userSet** in this collection. / Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). It's an abstract base type inherited by the following resource types: / https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta",
+																MarkdownDescription: "The users who are asked to approve requests. A collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), [externalSponsors](externalsponsors.md), and [targetUserSponsors](targetusersponsors.md). When creating or updating a [policy](accesspackageassignmentpolicy.md), include at least one **userSet** in this collection. / Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). It's an abstract base type inherited by the following resource types:. Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
 															},
 														},
 													},
-													MarkdownDescription: "If approval is required, the one or two elements of this collection define each of the stages of approval. An empty array if no approval is required. / In entitlement management, used for the **approvalStages** property of approval settings in the **requestApprovalSettings** property of an [access package assignment policy](accesspackageassignmentpolicy.md). Specifies the primary, fallback, and escalation approvers of each stage.\n\nIn PIM, defines the settings of the approval stages in a [unifiedRoleManagementPolicyApprovalRule](unifiedrolemanagementpolicyapprovalrule.md) object. Specifies the primary and escalation approvers of each stage and whether approvals and escalations are required. / https://learn.microsoft.com/en-us/graph/api/resources/approvalstage?view=graph-rest-beta",
+													MarkdownDescription: "If approval is required, the one or two elements of this collection define each of the stages of approval. An empty array if no approval is required. <br/> In entitlement management, used for the **approvalStages** property of approval settings in the **requestApprovalSettings** property of an [access package assignment policy](accesspackageassignmentpolicy.md). Specifies the primary, fallback, and escalation approvers of each stage. <br/> In PIM, defines the settings of the approval stages in a [unifiedRoleManagementPolicyApprovalRule](unifiedrolemanagementpolicyapprovalrule.md) object. Specifies the primary and escalation approvers of each stage and whether approvals and escalations are required. Also see [Microsoft docs for approvalStage](https://learn.microsoft.com/en-us/graph/api/resources/approvalstage?view=graph-rest-beta). <br> ",
 												},
 												"is_approval_required": schema.BoolAttribute{
 													Computed:            true,
@@ -451,13 +499,13 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 													MarkdownDescription: "Indicates whether the requestor is required to supply a justification in their request.",
 												},
 											},
-											MarkdownDescription: "The settings for approval of the role assignment. / The settings for approval as defined in a role management policy rule. / https://learn.microsoft.com/en-us/graph/api/resources/approvalsettings?view=graph-rest-beta",
+											MarkdownDescription: "The settings for approval of the role assignment. / The settings for approval as defined in a role management policy rule. Also see [Microsoft docs for approvalSettings](https://learn.microsoft.com/en-us/graph/api/resources/approvalsettings?view=graph-rest-beta). <br> ",
 										},
 									},
 									Validators: []validator.Object{
 										unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator,
 									},
-									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](../resources/unifiedrolemanagementpolicyrule.md) resource type that defines rules for approving a role assignment. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyapprovalrule?view=graph-rest-beta",
+									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines rules for approving a role assignment. Also see [Microsoft docs for unifiedRoleManagementPolicyApprovalRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyapprovalrule?view=graph-rest-beta). <br> ",
 								},
 							},
 							"authentication_context": generic.OdataDerivedTypeNestedAttributeRs{
@@ -477,7 +525,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator,
 									},
-									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](../resources/unifiedrolemanagementpolicyrule.md) resource type that defines the authentication context rule for the conditional access policy associated with a role management policy. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyauthenticationcontextrule?view=graph-rest-beta",
+									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the authentication context rule for the conditional access policy associated with a role management policy. Also see [Microsoft docs for unifiedRoleManagementPolicyAuthenticationContextRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyauthenticationcontextrule?view=graph-rest-beta). <br> ",
 								},
 							},
 							"enablement": generic.OdataDerivedTypeNestedAttributeRs{
@@ -494,7 +542,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator,
 									},
-									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](../resources/unifiedrolemanagementpolicyrule.md) resource type that defines the rules to enable the assignment, for example, enable MFA, justification on assignments or ticketing information. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyenablementrule?view=graph-rest-beta",
+									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the rules to enable the assignment, for example, enable MFA, justification on assignments or ticketing information. Also see [Microsoft docs for unifiedRoleManagementPolicyEnablementRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyenablementrule?view=graph-rest-beta). <br> ",
 								},
 							},
 							"expiration": generic.OdataDerivedTypeNestedAttributeRs{
@@ -514,7 +562,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator,
 									},
-									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](../resources/unifiedrolemanagementpolicyrule.md) resource type that defines the maximum duration a role can be assigned to a principal (either through direct assignment or through activation of eligibility / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyexpirationrule?view=graph-rest-beta",
+									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the maximum duration a role can be assigned to a principal (either through direct assignment or through activation of eligibility. Also see [Microsoft docs for unifiedRoleManagementPolicyExpirationRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyexpirationrule?view=graph-rest-beta). <br> ",
 								},
 							},
 							"notification": generic.OdataDerivedTypeNestedAttributeRs{
@@ -547,13 +595,12 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator,
 									},
-									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](../resources/unifiedrolemanagementpolicyrule.md) resource type that defines the email notification rules for role assignments, activations, and approvals. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicynotificationrule?view=graph-rest-beta",
+									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the email notification rules for role assignments, activations, and approvals. Also see [Microsoft docs for unifiedRoleManagementPolicyNotificationRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicynotificationrule?view=graph-rest-beta). <br> ",
 								},
 							},
 						},
 					},
-					PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
-					MarkdownDescription: "The list of effective rules like approval rules and expiration rules evaluated based on inherited referenced rules. For example, if there is a tenant-wide policy to enforce enabling an approval rule, the effective rule will be to enable approval even if the policy has a rule to disable approval. Supports `$expand`. / An abstract type that defines the rules associated with role management policies. This abstract type is inherited by the following resources that define the various types of rules and their settings associated with role management policies. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta",
+					MarkdownDescription: "The list of effective rules like approval rules and expiration rules evaluated based on inherited referenced rules. For example, if there is a tenant-wide policy to enforce enabling an approval rule, the effective rule will be to enable approval even if the policy has a rule to disable approval. Supports `$expand`. / An abstract type that defines the rules associated with role management policies. This abstract type is inherited by the following resources that define the various types of rules and their settings associated with role management policies. Also see [Microsoft docs for unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta). <br> ",
 				},
 				"rules": schema.SetNestedAttribute{
 					Computed: true,
@@ -590,7 +637,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 										MarkdownDescription: "The role management operations that are the target of the policy rule. Allowed values are: `All`, `Activate`, `Deactivate`, `Assign`, `Update`, `Remove`, `Extend`, `Renew`.",
 									},
 								},
-								MarkdownDescription: "**Not implemented.** Defines details of scope that's targeted by role management policy rule. The details can include the principal type, the role assignment type, and actions affecting a role. Supports `$filter` (`eq`, `ne`). / Defines details of the scope that's targeted by role management policy rule. The details can include the principal type, the role assignment type, and actions affecting a role. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyruletarget?view=graph-rest-beta",
+								MarkdownDescription: "**Not implemented.** Defines details of scope that's targeted by role management policy rule. The details can include the principal type, the role assignment type, and actions affecting a role. Supports `$filter` (`eq`, `ne`). / Defines details of the scope that's targeted by role management policy rule. The details can include the principal type, the role assignment type, and actions affecting a role. Also see [Microsoft docs for unifiedRoleManagementPolicyRuleTarget](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyruletarget?view=graph-rest-beta). <br> ",
 							},
 							"approval": generic.OdataDerivedTypeNestedAttributeRs{
 								DerivedType: "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule",
@@ -620,6 +667,23 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																			Computed:            true,
 																			MarkdownDescription: "For a user in an approval stage, this property indicates whether the user is a backup fallback approver.",
 																		},
+																		"attribute_rule_members": generic.OdataDerivedTypeNestedAttributeRs{
+																			DerivedType: "#microsoft.graph.attributeRuleMembers",
+																			SingleNestedAttribute: schema.SingleNestedAttribute{
+																				Computed: true,
+																				Attributes: map[string]schema.Attribute{ // attributeRuleMembers
+																					"description": schema.StringAttribute{
+																						Computed: true,
+																					},
+																					"membership_rule": schema.StringAttribute{
+																						Computed: true,
+																					},
+																				},
+																				Validators: []validator.Object{
+																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
+																				},
+																			},
+																		},
 																		"connected_organization_members": generic.OdataDerivedTypeNestedAttributeRs{
 																			DerivedType: "#microsoft.graph.connectedOrganizationMembers",
 																			SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -627,7 +691,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // connectedOrganizationMembers
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the connected organization. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -638,7 +701,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The `@odata.type` value `#microsoft.graph.connectedOrganizationMembers` indicates that this type identifies a collection of users who are associated with a [connected organization](connectedorganization.md) and are allowed to request an access package. / https://learn.microsoft.com/en-us/graph/api/resources/connectedorganizationmembers?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The `@odata.type` value `#microsoft.graph.connectedOrganizationMembers` indicates that this type identifies a collection of users who are associated with a [connected organization](connectedorganization.md) and are allowed to request an access package. Also see [Microsoft docs for connectedOrganizationMembers](https://learn.microsoft.com/en-us/graph/api/resources/connectedorganizationmembers?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"external_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -650,7 +713,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.externalSponsors` indicates that a requesting user's connected organization external sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with externalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an external sponsor. / https://learn.microsoft.com/en-us/graph/api/resources/externalsponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.externalSponsors` indicates that a requesting user's connected organization external sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with externalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an external sponsor. Also see [Microsoft docs for externalSponsors](https://learn.microsoft.com/en-us/graph/api/resources/externalsponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"group_members": generic.OdataDerivedTypeNestedAttributeRs{
@@ -660,7 +723,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // groupMembers
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the group in Microsoft Entra ID. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -671,7 +733,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nThe `@odata.type` value `#microsoft.graph.groupMembers` indicates that this type identifies a collection of users in the tenant who are allowed as requestor, approver, or reviewer, who are the members of a specific group. / https://learn.microsoft.com/en-us/graph/api/resources/groupmembers?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nThe `@odata.type` value `#microsoft.graph.groupMembers` indicates that this type identifies a collection of users in the tenant who are allowed as requestor, approver, or reviewer, who are the members of a specific group. Also see [Microsoft docs for groupMembers](https://learn.microsoft.com/en-us/graph/api/resources/groupmembers?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"internal_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -683,7 +745,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.internalSponsors` indicates that a requesting user's connected organization internal sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with internalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an internal sponsor. / https://learn.microsoft.com/en-us/graph/api/resources/internalsponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.internalSponsors` indicates that a requesting user's connected organization internal sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with internalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an internal sponsor. Also see [Microsoft docs for internalSponsors](https://learn.microsoft.com/en-us/graph/api/resources/internalsponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"requestor_manager": generic.OdataDerivedTypeNestedAttributeRs{
@@ -699,7 +761,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.requestorManager` indicates that a requesting user's manager is to be the approver. Include another approver When creating an access package assignment policy approval stage with requestorManager, in case the requesting user doesn't have a manager. Including another approver, such as a single user or group member, covers the case where the requesting user doesn't have a manager. / https://learn.microsoft.com/en-us/graph/api/resources/requestormanager?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.requestorManager` indicates that a requesting user's manager is to be the approver. Include another approver When creating an access package assignment policy approval stage with requestorManager, in case the requesting user doesn't have a manager. Including another approver, such as a single user or group member, covers the case where the requesting user doesn't have a manager. Also see [Microsoft docs for requestorManager](https://learn.microsoft.com/en-us/graph/api/resources/requestormanager?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"single_user": generic.OdataDerivedTypeNestedAttributeRs{
@@ -709,7 +771,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // singleUser
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the user in Microsoft Entra ID. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -720,7 +781,18 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The  `@odata.type` value `#microsoft.graph.singleUser` indicates that this userSet identifies a specific user in the tenant who will be allowed as a requestor, approver, or reviewer. / https://learn.microsoft.com/en-us/graph/api/resources/singleuser?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The  `@odata.type` value `#microsoft.graph.singleUser` indicates that this userSet identifies a specific user in the tenant who will be allowed as a requestor, approver, or reviewer. Also see [Microsoft docs for singleUser](https://learn.microsoft.com/en-us/graph/api/resources/singleuser?view=graph-rest-beta). <br> ",
+																			},
+																		},
+																		"target_agent_identity_sponsors_or_owners": generic.OdataDerivedTypeNestedAttributeRs{
+																			DerivedType: "#microsoft.graph.targetAgentIdentitySponsorsOrOwners",
+																			SingleNestedAttribute: schema.SingleNestedAttribute{
+																				Computed:   true,
+																				Attributes: map[string]schema.Attribute{ // targetAgentIdentitySponsorsOrOwners
+																				},
+																				Validators: []validator.Object{
+																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
+																				},
 																			},
 																		},
 																		"target_user_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -732,12 +804,12 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.targetUserSponsors` indicates that a requesting user's sponsors are the approvers. When creating an access package assignment policy approval stage with **targetUserSponsors**, also include another approver, such as a single user or group member, in case the requesting user doesn't have sponsors. / https://learn.microsoft.com/en-us/graph/api/resources/targetusersponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.targetUserSponsors` indicates that a requesting user's sponsors are the approvers. When creating an access package assignment policy approval stage with **targetUserSponsors**, also include another approver, such as a single user or group member, in case the requesting user doesn't have sponsors. Also see [Microsoft docs for targetUserSponsors](https://learn.microsoft.com/en-us/graph/api/resources/targetusersponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																	},
 																},
-																MarkdownDescription: "The users who are asked to approve requests if escalation is enabled and the primary approvers don't respond before the escalation time. This property can be a collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), and [externalSponsors](externalsponsors.md). When you create or update a [policy](accesspackageassignmentpolicy.md), if there are no escalation approvers, or escalation approvers aren't required for the stage, assign an empty collection to this property. / Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). It's an abstract base type inherited by the following resource types: / https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta",
+																MarkdownDescription: "The users who are asked to approve requests if escalation is enabled and the primary approvers don't respond before the escalation time. This property can be a collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), and [externalSponsors](externalsponsors.md). When you create or update a [policy](accesspackageassignmentpolicy.md), if there are no escalation approvers, or escalation approvers aren't required for the stage, assign an empty collection to this property. / Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). It's an abstract base type inherited by the following resource types:. Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
 															},
 															"escalation_time_in_minutes": schema.Int64Attribute{
 																Computed:            true,
@@ -759,6 +831,23 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																			Computed:            true,
 																			MarkdownDescription: "For a user in an approval stage, this property indicates whether the user is a backup fallback approver.",
 																		},
+																		"attribute_rule_members": generic.OdataDerivedTypeNestedAttributeRs{
+																			DerivedType: "#microsoft.graph.attributeRuleMembers",
+																			SingleNestedAttribute: schema.SingleNestedAttribute{
+																				Computed: true,
+																				Attributes: map[string]schema.Attribute{ // attributeRuleMembers
+																					"description": schema.StringAttribute{
+																						Computed: true,
+																					},
+																					"membership_rule": schema.StringAttribute{
+																						Computed: true,
+																					},
+																				},
+																				Validators: []validator.Object{
+																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
+																				},
+																			},
+																		},
 																		"connected_organization_members": generic.OdataDerivedTypeNestedAttributeRs{
 																			DerivedType: "#microsoft.graph.connectedOrganizationMembers",
 																			SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -766,7 +855,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // connectedOrganizationMembers
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the connected organization. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -777,7 +865,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The `@odata.type` value `#microsoft.graph.connectedOrganizationMembers` indicates that this type identifies a collection of users who are associated with a [connected organization](connectedorganization.md) and are allowed to request an access package. / https://learn.microsoft.com/en-us/graph/api/resources/connectedorganizationmembers?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The `@odata.type` value `#microsoft.graph.connectedOrganizationMembers` indicates that this type identifies a collection of users who are associated with a [connected organization](connectedorganization.md) and are allowed to request an access package. Also see [Microsoft docs for connectedOrganizationMembers](https://learn.microsoft.com/en-us/graph/api/resources/connectedorganizationmembers?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"external_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -789,7 +877,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.externalSponsors` indicates that a requesting user's connected organization external sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with externalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an external sponsor. / https://learn.microsoft.com/en-us/graph/api/resources/externalsponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.externalSponsors` indicates that a requesting user's connected organization external sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with externalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an external sponsor. Also see [Microsoft docs for externalSponsors](https://learn.microsoft.com/en-us/graph/api/resources/externalsponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"group_members": generic.OdataDerivedTypeNestedAttributeRs{
@@ -799,7 +887,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // groupMembers
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the group in Microsoft Entra ID. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -810,7 +897,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nThe `@odata.type` value `#microsoft.graph.groupMembers` indicates that this type identifies a collection of users in the tenant who are allowed as requestor, approver, or reviewer, who are the members of a specific group. / https://learn.microsoft.com/en-us/graph/api/resources/groupmembers?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nThe `@odata.type` value `#microsoft.graph.groupMembers` indicates that this type identifies a collection of users in the tenant who are allowed as requestor, approver, or reviewer, who are the members of a specific group. Also see [Microsoft docs for groupMembers](https://learn.microsoft.com/en-us/graph/api/resources/groupmembers?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"internal_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -822,7 +909,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.internalSponsors` indicates that a requesting user's connected organization internal sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with internalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an internal sponsor. / https://learn.microsoft.com/en-us/graph/api/resources/internalsponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval stage of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.internalSponsors` indicates that a requesting user's connected organization internal sponsors are to be the approver. This approver is only applicable to requests from users who are part of a connected organization.  When creating an access package assignment policy approval stage with internalSponsors, also include another approver, such as a single user or group member, in case the connected organization doesn't have an internal sponsor. Also see [Microsoft docs for internalSponsors](https://learn.microsoft.com/en-us/graph/api/resources/internalsponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"requestor_manager": generic.OdataDerivedTypeNestedAttributeRs{
@@ -838,7 +925,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.requestorManager` indicates that a requesting user's manager is to be the approver. Include another approver When creating an access package assignment policy approval stage with requestorManager, in case the requesting user doesn't have a manager. Including another approver, such as a single user or group member, covers the case where the requesting user doesn't have a manager. / https://learn.microsoft.com/en-us/graph/api/resources/requestormanager?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.requestorManager` indicates that a requesting user's manager is to be the approver. Include another approver When creating an access package assignment policy approval stage with requestorManager, in case the requesting user doesn't have a manager. Including another approver, such as a single user or group member, covers the case where the requesting user doesn't have a manager. Also see [Microsoft docs for requestorManager](https://learn.microsoft.com/en-us/graph/api/resources/requestormanager?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																		"single_user": generic.OdataDerivedTypeNestedAttributeRs{
@@ -848,7 +935,6 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Attributes: map[string]schema.Attribute{ // singleUser
 																					"description": schema.StringAttribute{
 																						Computed:            true,
-																						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 																						MarkdownDescription: "The name of the user in Microsoft Entra ID. Read only.",
 																					},
 																					"id": schema.StringAttribute{
@@ -859,7 +945,18 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The  `@odata.type` value `#microsoft.graph.singleUser` indicates that this userSet identifies a specific user in the tenant who will be allowed as a requestor, approver, or reviewer. / https://learn.microsoft.com/en-us/graph/api/resources/singleuser?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). The  `@odata.type` value `#microsoft.graph.singleUser` indicates that this userSet identifies a specific user in the tenant who will be allowed as a requestor, approver, or reviewer. Also see [Microsoft docs for singleUser](https://learn.microsoft.com/en-us/graph/api/resources/singleuser?view=graph-rest-beta). <br> ",
+																			},
+																		},
+																		"target_agent_identity_sponsors_or_owners": generic.OdataDerivedTypeNestedAttributeRs{
+																			DerivedType: "#microsoft.graph.targetAgentIdentitySponsorsOrOwners",
+																			SingleNestedAttribute: schema.SingleNestedAttribute{
+																				Computed:   true,
+																				Attributes: map[string]schema.Attribute{ // targetAgentIdentitySponsorsOrOwners
+																				},
+																				Validators: []validator.Object{
+																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
+																				},
 																			},
 																		},
 																		"target_user_sponsors": generic.OdataDerivedTypeNestedAttributeRs{
@@ -871,16 +968,16 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																				Validators: []validator.Object{
 																					unifiedRoleManagementPolicyAssignmentUserSetValidator,
 																				},
-																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.targetUserSponsors` indicates that a requesting user's sponsors are the approvers. When creating an access package assignment policy approval stage with **targetUserSponsors**, also include another approver, such as a single user or group member, in case the requesting user doesn't have sponsors. / https://learn.microsoft.com/en-us/graph/api/resources/targetusersponsors?view=graph-rest-beta",
+																				MarkdownDescription: "Used in the approval settings of an [access package assignment policy](accesspackageassignmentpolicy.md).\nIt's a subtype of [userSet](userset.md), in which the `@odata.type` value `#microsoft.graph.targetUserSponsors` indicates that a requesting user's sponsors are the approvers. When creating an access package assignment policy approval stage with **targetUserSponsors**, also include another approver, such as a single user or group member, in case the requesting user doesn't have sponsors. Also see [Microsoft docs for targetUserSponsors](https://learn.microsoft.com/en-us/graph/api/resources/targetusersponsors?view=graph-rest-beta). <br> ",
 																			},
 																		},
 																	},
 																},
-																MarkdownDescription: "The users who are asked to approve requests. A collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), [externalSponsors](externalsponsors.md), and [targetUserSponsors](targetusersponsors.md). When creating or updating a [policy](accesspackageassignmentpolicy.md), include at least one **userSet** in this collection. / Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). It's an abstract base type inherited by the following resource types: / https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta",
+																MarkdownDescription: "The users who are asked to approve requests. A collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), [externalSponsors](externalsponsors.md), and [targetUserSponsors](targetusersponsors.md). When creating or updating a [policy](accesspackageassignmentpolicy.md), include at least one **userSet** in this collection. / Used in the request, approval, and assignment review settings of an [access package assignment policy](accesspackageassignmentpolicy.md). It's an abstract base type inherited by the following resource types:. Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
 															},
 														},
 													},
-													MarkdownDescription: "If approval is required, the one or two elements of this collection define each of the stages of approval. An empty array if no approval is required. / In entitlement management, used for the **approvalStages** property of approval settings in the **requestApprovalSettings** property of an [access package assignment policy](accesspackageassignmentpolicy.md). Specifies the primary, fallback, and escalation approvers of each stage.\n\nIn PIM, defines the settings of the approval stages in a [unifiedRoleManagementPolicyApprovalRule](unifiedrolemanagementpolicyapprovalrule.md) object. Specifies the primary and escalation approvers of each stage and whether approvals and escalations are required. / https://learn.microsoft.com/en-us/graph/api/resources/approvalstage?view=graph-rest-beta",
+													MarkdownDescription: "If approval is required, the one or two elements of this collection define each of the stages of approval. An empty array if no approval is required. <br/> In entitlement management, used for the **approvalStages** property of approval settings in the **requestApprovalSettings** property of an [access package assignment policy](accesspackageassignmentpolicy.md). Specifies the primary, fallback, and escalation approvers of each stage. <br/> In PIM, defines the settings of the approval stages in a [unifiedRoleManagementPolicyApprovalRule](unifiedrolemanagementpolicyapprovalrule.md) object. Specifies the primary and escalation approvers of each stage and whether approvals and escalations are required. Also see [Microsoft docs for approvalStage](https://learn.microsoft.com/en-us/graph/api/resources/approvalstage?view=graph-rest-beta). <br> ",
 												},
 												"is_approval_required": schema.BoolAttribute{
 													Computed:            true,
@@ -895,13 +992,13 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 													MarkdownDescription: "Indicates whether the requestor is required to supply a justification in their request.",
 												},
 											},
-											MarkdownDescription: "The settings for approval of the role assignment. / The settings for approval as defined in a role management policy rule. / https://learn.microsoft.com/en-us/graph/api/resources/approvalsettings?view=graph-rest-beta",
+											MarkdownDescription: "The settings for approval of the role assignment. / The settings for approval as defined in a role management policy rule. Also see [Microsoft docs for approvalSettings](https://learn.microsoft.com/en-us/graph/api/resources/approvalsettings?view=graph-rest-beta). <br> ",
 										},
 									},
 									Validators: []validator.Object{
 										unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator,
 									},
-									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](../resources/unifiedrolemanagementpolicyrule.md) resource type that defines rules for approving a role assignment. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyapprovalrule?view=graph-rest-beta",
+									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines rules for approving a role assignment. Also see [Microsoft docs for unifiedRoleManagementPolicyApprovalRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyapprovalrule?view=graph-rest-beta). <br> ",
 								},
 							},
 							"authentication_context": generic.OdataDerivedTypeNestedAttributeRs{
@@ -921,7 +1018,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator,
 									},
-									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](../resources/unifiedrolemanagementpolicyrule.md) resource type that defines the authentication context rule for the conditional access policy associated with a role management policy. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyauthenticationcontextrule?view=graph-rest-beta",
+									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the authentication context rule for the conditional access policy associated with a role management policy. Also see [Microsoft docs for unifiedRoleManagementPolicyAuthenticationContextRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyauthenticationcontextrule?view=graph-rest-beta). <br> ",
 								},
 							},
 							"enablement": generic.OdataDerivedTypeNestedAttributeRs{
@@ -938,7 +1035,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator,
 									},
-									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](../resources/unifiedrolemanagementpolicyrule.md) resource type that defines the rules to enable the assignment, for example, enable MFA, justification on assignments or ticketing information. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyenablementrule?view=graph-rest-beta",
+									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the rules to enable the assignment, for example, enable MFA, justification on assignments or ticketing information. Also see [Microsoft docs for unifiedRoleManagementPolicyEnablementRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyenablementrule?view=graph-rest-beta). <br> ",
 								},
 							},
 							"expiration": generic.OdataDerivedTypeNestedAttributeRs{
@@ -958,7 +1055,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator,
 									},
-									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](../resources/unifiedrolemanagementpolicyrule.md) resource type that defines the maximum duration a role can be assigned to a principal (either through direct assignment or through activation of eligibility / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyexpirationrule?view=graph-rest-beta",
+									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the maximum duration a role can be assigned to a principal (either through direct assignment or through activation of eligibility. Also see [Microsoft docs for unifiedRoleManagementPolicyExpirationRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyexpirationrule?view=graph-rest-beta). <br> ",
 								},
 							},
 							"notification": generic.OdataDerivedTypeNestedAttributeRs{
@@ -991,18 +1088,18 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator,
 									},
-									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](../resources/unifiedrolemanagementpolicyrule.md) resource type that defines the email notification rules for role assignments, activations, and approvals. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicynotificationrule?view=graph-rest-beta",
+									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the email notification rules for role assignments, activations, and approvals. Also see [Microsoft docs for unifiedRoleManagementPolicyNotificationRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicynotificationrule?view=graph-rest-beta). <br> ",
 								},
 							},
 						},
 					},
-					MarkdownDescription: "The collection of rules like approval rules and expiration rules. Supports `$expand`. / An abstract type that defines the rules associated with role management policies. This abstract type is inherited by the following resources that define the various types of rules and their settings associated with role management policies. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta",
+					MarkdownDescription: "The collection of rules like approval rules and expiration rules. Supports `$expand`. / An abstract type that defines the rules associated with role management policies. This abstract type is inherited by the following resources that define the various types of rules and their settings associated with role management policies. Also see [Microsoft docs for unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta). <br> ",
 				},
 			},
-			MarkdownDescription: "The policy that's associated with a policy assignment. Supports $expand and a nested $expand of the rules and effectiveRules relationships for the policy. / Specifies the various policies associated with scopes and roles. For policies that apply to Azure RBAC, use the [Azure REST PIM API for role management policies](/rest/api/authorization/role-management-policies). / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicy?view=graph-rest-beta",
+			MarkdownDescription: "The policy that's associated with a policy assignment. Supports $expand and a nested $expand of the rules and effectiveRules relationships for the policy. / Specifies the various policies associated with scopes and roles. For policies that apply to Azure RBAC, use the [Azure REST PIM API for role management policies](https://learn.microsoft.com/en-us/rest/api/authorization/role-management-policies). Also see [Microsoft docs for unifiedRoleManagementPolicy](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicy?view=graph-rest-beta). <br> ",
 		},
 	},
-	MarkdownDescription: "The assignment of a role management policy to a [role definition](../resources/unifiedroledefinition.md) object. / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyassignment?view=graph-rest-beta ||| MS Graph: Role management",
+	MarkdownDescription: "The assignment of a role management policy to a [role definition](https://learn.microsoft.com/en-us/graph/api/resources/unifiedroledefinition?view=graph-rest-beta) object. <br/> Also see [Microsoft docs for unifiedRoleManagementPolicyAssignment](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyassignment?view=graph-rest-beta). ||| MS Graph: Role management",
 }
 
 var unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator = objectvalidator.ExactlyOneOf(
@@ -1014,11 +1111,13 @@ var unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidato
 )
 
 var unifiedRoleManagementPolicyAssignmentUserSetValidator = objectvalidator.ExactlyOneOf(
+	path.MatchRelative().AtParent().AtName("attribute_rule_members"),
 	path.MatchRelative().AtParent().AtName("connected_organization_members"),
 	path.MatchRelative().AtParent().AtName("external_sponsors"),
 	path.MatchRelative().AtParent().AtName("group_members"),
 	path.MatchRelative().AtParent().AtName("internal_sponsors"),
 	path.MatchRelative().AtParent().AtName("requestor_manager"),
 	path.MatchRelative().AtParent().AtName("single_user"),
+	path.MatchRelative().AtParent().AtName("target_agent_identity_sponsors_or_owners"),
 	path.MatchRelative().AtParent().AtName("target_user_sponsors"),
 )

@@ -5,9 +5,9 @@ subcategory: "MS Graph: Role management"
 
 # microsoft365wp_unified_role_management_policies (Data Source)
 
-Specifies the various policies associated with scopes and roles. For policies that apply to Azure RBAC, use the [Azure REST PIM API for role management policies](/rest/api/authorization/role-management-policies). / https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicy?view=graph-rest-beta
+Specifies the various policies associated with scopes and roles. For policies that apply to Azure RBAC, use the [Azure REST PIM API for role management policies](https://learn.microsoft.com/en-us/rest/api/authorization/role-management-policies). <br/> Also see [Microsoft docs for unifiedRoleManagementPolicy](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicy?view=graph-rest-beta).
 
-Provider Note: MS Graph entities of type `unifiedRoleManagementPolicy` cannot be created (or deleted) but only existing ones
+_Provider_ Note: MS Graph entities of type `unifiedRoleManagementPolicy` cannot be created (or deleted) but only existing ones
 can be updated. Therefore this resource will always update an existing entity (determined by the `id` attribute)
 and automatically import it into TF state upon creation.  
 Also, entities will never be deleted from MS Graph but only get removed from TF state instead.

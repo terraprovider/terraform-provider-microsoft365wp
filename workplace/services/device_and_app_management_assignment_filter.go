@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -58,7 +58,7 @@ var deviceAndAppManagementAssignmentFilterResourceSchema = schema.Schema{
 				stringvalidator.OneOf("devices", "apps", "unknownFutureValue"),
 			},
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "Indicates filter is applied to either 'devices' or 'apps' management type. Possible values are devices, apps. Default filter will be applied to 'devices'. / Supported filter management types whether its devices or apps; possible values are: `devices` (Indicates when filter is supported based on device properties. This is the default value when management type resolution fails.), `apps` (Indicates when filter is supported based on app properties.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)",
+			MarkdownDescription: "Indicates filter is applied to either 'devices' or 'apps' management type. Possible values are devices, apps. Default filter will be applied to 'devices'. / Supported filter management types whether its devices or apps. <br/> _Provider_ allowed values are: `devices` (Indicates when filter is supported based on device properties. This is the default value when management type resolution fails.), `apps` (Indicates when filter is supported based on app properties.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.).",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -67,9 +67,9 @@ var deviceAndAppManagementAssignmentFilterResourceSchema = schema.Schema{
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: "Optional description of the Assignment Filter. The _provider_ default value is `\"\"`.",
+			MarkdownDescription: "Optional description of the Assignment Filter. <br/> The _provider_ default value is `\"\"`.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -86,19 +86,19 @@ var deviceAndAppManagementAssignmentFilterResourceSchema = schema.Schema{
 				stringvalidator.OneOf("android", "androidForWork", "iOS", "macOS", "windowsPhone81", "windows81AndLater", "windows10AndLater", "androidWorkProfile", "unknown", "androidAOSP", "androidMobileApplicationManagement", "iOSMobileApplicationManagement", "unknownFutureValue", "windowsMobileApplicationManagement"),
 			},
 			PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
-			MarkdownDescription: "Indicates filter is applied to which flatform. Possible values are android,androidForWork,iOS,macOS,windowsPhone81,windows81AndLater,windows10AndLater,androidWorkProfile, unknown, androidAOSP, androidMobileApplicationManagement, iOSMobileApplicationManagement, windowsMobileApplicationManagement. Default filter will be applied to 'unknown'. / Supported platform types; possible values are: `android` (Indicates device platform type is android.), `androidForWork` (Indicates device platform type is android for work.), `iOS` (Indicates device platform type is iOS.), `macOS` (Indicates device platform type is macOS.), `windowsPhone81` (Indicates device platform type is WindowsPhone 8.1.), `windows81AndLater` (Indicates device platform type is Windows 8.1 and later.), `windows10AndLater` (Indicates device platform type is Windows 10 and later.), `androidWorkProfile` (Indicates device platform type is Android Work Profile.), `unknown` (This is the default value when device platform type resolution fails), `androidAOSP` (Indicates device platform type is Android AOSP.), `androidMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for android devices.), `iOSMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for iOS devices.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.), `windowsMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for Windows devices.)",
+			MarkdownDescription: "Indicates filter is applied to which flatform. Possible values are android,androidForWork,iOS,macOS,windowsPhone81,windows81AndLater,windows10AndLater,androidWorkProfile, unknown, androidAOSP, androidMobileApplicationManagement, iOSMobileApplicationManagement, windowsMobileApplicationManagement. Default filter will be applied to 'unknown'. / Supported platform types. <br/> _Provider_ allowed values are: `android` (Indicates device platform type is android.), `androidForWork` (Indicates device platform type is android for work.), `iOS` (Indicates device platform type is iOS.), `macOS` (Indicates device platform type is macOS.), `windowsPhone81` (Indicates device platform type is WindowsPhone 8.1.), `windows81AndLater` (Indicates device platform type is Windows 8.1 and later.), `windows10AndLater` (Indicates device platform type is Windows 10 and later.), `androidWorkProfile` (Indicates device platform type is Android Work Profile.), `unknown` (This is the default value when device platform type resolution fails), `androidAOSP` (Indicates device platform type is Android AOSP.), `androidMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for android devices.), `iOSMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for iOS devices.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.), `windowsMobileApplicationManagement` (Indicates device platform type associated with Mobile Application Management (MAM) for Windows devices.).",
 		},
 		"role_scope_tags": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "Indicates role scope tags assigned for the assignment filter. The _provider_ default value is `[\"0\"]`.",
+			MarkdownDescription: "Indicates role scope tags assigned for the assignment filter. <br/> The _provider_ default value is `[\"0\"]`.",
 		},
 		"rule": schema.StringAttribute{
 			Required:            true,
 			MarkdownDescription: "Rule definition of the assignment filter.",
 		},
 	},
-	MarkdownDescription: "A class containing the properties used for Assignment Filter. / https://learn.microsoft.com/en-us/graph/api/resources/intune-policyset-deviceandappmanagementassignmentfilter?view=graph-rest-beta ||| MS Graph: Assignments",
+	MarkdownDescription: "A class containing the properties used for Assignment Filter. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentFilter](https://learn.microsoft.com/en-us/graph/api/resources/intune-policyset-deviceandappmanagementassignmentfilter?view=graph-rest-beta). ||| MS Graph: Assignments",
 }

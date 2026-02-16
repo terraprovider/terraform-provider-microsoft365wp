@@ -5,7 +5,7 @@ subcategory: "MS Graph: Device configuration"
 
 # microsoft365wp_device_management_configuration_policies (Data Source)
 
-Device Management Configuration Policy / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationpolicy?view=graph-rest-beta
+Device Management Configuration Policy <br/> Also see [Microsoft docs for deviceManagementConfigurationPolicy](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationpolicy?view=graph-rest-beta).
 
 ## Provider Notes
 
@@ -90,4 +90,4 @@ Read-Only:
 - `id` (String) Key of the policy document. Automatically generated.
 - `last_modified_date_time` (String) Policy last modification date and time
 - `name` (String) Policy name
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>

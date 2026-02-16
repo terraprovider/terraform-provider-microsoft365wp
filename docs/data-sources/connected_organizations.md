@@ -5,7 +5,7 @@ subcategory: "MS Graph: Entitlement management"
 
 # microsoft365wp_connected_organizations (Data Source)
 
-In [Microsoft Entra entitlement management](entitlementmanagement-overview.md), a connected organization is a reference to a directory or domain of another organization whose users can request access. / https://learn.microsoft.com/en-us/graph/api/resources/connectedorganization?view=graph-rest-beta
+In [Microsoft Entra entitlement management](entitlementmanagement-overview.md), a connected organization is a reference to a directory or domain of another organization whose users can request access. <br/> Also see [Microsoft docs for connectedOrganization](https://learn.microsoft.com/en-us/graph/api/resources/connectedorganization?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 

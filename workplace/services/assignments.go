@@ -3,7 +3,7 @@ package services
 import (
 	"fmt"
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
@@ -29,7 +29,7 @@ var deviceAndAppManagementAssignment = schema.SetNestedAttribute{
 	},
 	Computed: true,
 	PlanModifiers: []planmodifier.Set{
-		wpdefaultvalue.SetDefaultValueEmpty(),
+		wpdefaultvaluemodifier.SetDefaultValueEmpty(),
 	},
 	MarkdownDescription: `The list of assignments.`,
 }
@@ -50,10 +50,10 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 			Validators: []validator.String{
 				stringvalidator.OneOf("none", "include", "exclude"),
 			},
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("none")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("none")},
 			Computed:            true,
 			Description:         `deviceAndAppManagementAssignmentFilterType`, // custom MS Graph attribute name
-			MarkdownDescription: "The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `\"none\"`.",
+			MarkdownDescription: "The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter. <br/> _Provider_ allowed values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `\"none\"`.",
 		},
 		"all_devices": generic.OdataDerivedTypeNestedAttributeRs{
 			DerivedType: "#microsoft.graph.allDevicesAssignmentTarget",
@@ -64,7 +64,7 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 				Validators: []validator.Object{
 					deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator,
 				},
-				MarkdownDescription: "Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta",
+				MarkdownDescription: "Represents an assignment to all managed devices in the tenant. Also see [Microsoft docs for allDevicesAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta). <br> ",
 			},
 		},
 		"all_licensed_users": generic.OdataDerivedTypeNestedAttributeRs{
@@ -76,7 +76,7 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 				Validators: []validator.Object{
 					deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator,
 				},
-				MarkdownDescription: "Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta",
+				MarkdownDescription: "Represents an assignment to all licensed users in the tenant. Also see [Microsoft docs for allLicensedUsersAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta). <br> ",
 			},
 		},
 		"exclusion_group": generic.OdataDerivedTypeNestedAttributeRs{
@@ -92,7 +92,7 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 				Validators: []validator.Object{
 					deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator,
 				},
-				MarkdownDescription: "Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta",
+				MarkdownDescription: "Represents a group that should be excluded from an assignment. Also see [Microsoft docs for exclusionGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta). <br> ",
 			},
 		},
 		"group": generic.OdataDerivedTypeNestedAttributeRs{
@@ -108,11 +108,11 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 				Validators: []validator.Object{
 					deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator,
 				},
-				MarkdownDescription: "Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta",
+				MarkdownDescription: "Represents an assignment to a group. Also see [Microsoft docs for groupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta). <br> ",
 			},
 		},
 	},
-	MarkdownDescription: "Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta",
+	MarkdownDescription: "Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta).",
 }
 
 var deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator = objectvalidator.ExactlyOneOf(
@@ -142,7 +142,7 @@ func GetAssignmentChildResource(parentResource *generic.GenericResource, singleI
 			Computed:            true,
 			Validators:          []validator.String{stringvalidator.OneOf("direct", "policySets")},
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "The source of the assignment. This property is read-only. / Represents source of assignment; possible values are: `direct` (Direct indicates a direct assignment.), `policySets` (PolicySets indicates assignment was made via PolicySet assignment.)",
+			MarkdownDescription: "The source of the assignment. This property is read-only. / Represents source of assignment. <br/> _Provider_ allowed values are: `direct` (Direct indicates a direct assignment.), `policySets` (PolicySets indicates assignment was made via PolicySet assignment.).",
 		},
 		"source_id": schema.StringAttribute{
 			Computed:            true,
@@ -159,7 +159,7 @@ func GetAssignmentChildResource(parentResource *generic.GenericResource, singleI
 		TypeNameSuffix: fmt.Sprintf("%s_assignment", parentResource.TypeNameSuffix),
 		SpecificSchema: schema.Schema{
 			Attributes: attributes,
-			MarkdownDescription: fmt.Sprintf("\n\nProvider Note: To import this resource, an ID consisting of `%s` and `id` being joined by a forward slash (`/`) must be used.", parentIdFieldName) +
+			MarkdownDescription: fmt.Sprintf("\n\n_Provider_ Note: To import this resource, an ID consisting of `%s` and `id` being joined by a forward slash (`/`) must be used.", parentIdFieldName) +
 				generic.GetSubcategorySuffixFromMarkdownDescription(parentResource.SpecificSchema.MarkdownDescription),
 		},
 		AccessParams: generic.AccessParams{

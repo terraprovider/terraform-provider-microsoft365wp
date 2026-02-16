@@ -5,7 +5,7 @@ subcategory: "MS Graph: Cross-tenant access"
 
 # microsoft365wp_cross_tenant_access_policy (Data Source)
 
-Represents the base policy in the directory for cross-tenant access settings. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicy?view=graph-rest-beta
+Represents the base policy in the directory for cross-tenant access settings. <br/> Also see [Microsoft docs for crossTenantAccessPolicy](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicy?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -62,6 +62,6 @@ output "microsoft365wp_cross_tenant_access_policy" {
 
 ### Read-Only
 
-- `allowed_cloud_endpoints` (Set of String) Used to specify which Microsoft clouds an organization would like to collaborate with. By default, this value is empty. Supported values for this field are: `microsoftonline.com`, `microsoftonline.us`, and `partner.microsoftonline.cn`.
+- `allowed_cloud_endpoints` (Set of String) Used to specify which Microsoft clouds an organization would like to collaborate with. By default, this value is empty. Supported values for this field are: `microsoftonline.com`, `microsoftonline.us`, and `partner.microsoftonline.cn`. <br/>
 - `display_name` (String) The display name of the cross-tenant access policy.
 - `id` (String) The ID of this resource.

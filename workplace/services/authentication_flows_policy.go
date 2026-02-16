@@ -6,6 +6,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 )
 
@@ -45,15 +46,17 @@ var authenticationFlowsPolicyResourceSchema = schema.Schema{
 			Attributes: map[string]schema.Attribute{ // selfServiceSignUpAuthenticationFlowConfiguration
 				"is_enabled": schema.BoolAttribute{
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+					Default:             booldefault.StaticBool(false),
 					Computed:            true,
-					MarkdownDescription: "Indicates whether self-service sign-up flow is enabled or disabled. The default value is `false`. This property isn't a key. Required. The _provider_ default value is `false`.",
+					MarkdownDescription: "Indicates whether self-service sign-up flow is enabled or disabled. The default value is `false`. This property isn't a key. Required. <br/> The _provider_ default value is `false`.",
 				},
 			},
-			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+			Default: wpdefaultvalue.ObjectDefaultValue(map[string]any{
+				"is_enabled": false,
+			}),
 			Computed:            true,
-			MarkdownDescription: "Contains [selfServiceSignUpAuthenticationFlowConfiguration](../resources/selfservicesignupauthenticationflowconfiguration.md) settings that convey whether self-service sign-up is enabled or disabled. This property isn't a key. Optional. Read-only. / Represents the configurations related to self-service sign-up. / https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta. The _provider_ default value is `{}`.",
+			MarkdownDescription: "Contains [selfServiceSignUpAuthenticationFlowConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta) settings that convey whether self-service sign-up is enabled or disabled. This property isn't a key. Optional. Read-only. / Represents the configurations related to self-service sign-up. Also see [Microsoft docs for selfServiceSignUpAuthenticationFlowConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{\"is_enabled\":false}`. <br> ",
 		},
 	},
-	MarkdownDescription: "Represents the [policy configuration of self-service sign-up experience](../resources/selfservicesignupauthenticationflowconfiguration.md) at a tenant level that lets external users request to sign up for approval. It contains information about the ID, display name, and description, and indicates whether self-service sign up is enabled for the policy. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationflowspolicy?view=graph-rest-beta ||| MS Graph: Policies",
+	MarkdownDescription: "Represents the [policy configuration of self-service sign-up experience](https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta) at a tenant level that lets external users request to sign up for approval. It contains information about the ID, display name, and description, and indicates whether self-service sign up is enabled for the policy. <br/> Also see [Microsoft docs for authenticationFlowsPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authenticationflowspolicy?view=graph-rest-beta). ||| MS Graph: Policies",
 }

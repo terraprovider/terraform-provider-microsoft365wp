@@ -7,7 +7,9 @@ subcategory: "MS Graph: Custom security attributes"
 
 Represents a group of related custom security attribute definitions.
 
-You can define up to 500 **attributeSet** objects in a tenant. The **attributeSet** object can't be renamed or deleted. / https://learn.microsoft.com/en-us/graph/api/resources/attributeset?view=graph-rest-beta
+You can define up to 500 **attributeSet** objects in a tenant. The **attributeSet** object can't be renamed or deleted.
+
+Also see [Microsoft docs for attributeSet](https://learn.microsoft.com/en-us/graph/api/resources/attributeset?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 

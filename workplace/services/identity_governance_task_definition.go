@@ -43,7 +43,7 @@ var identityGovernanceTaskDefinitionResourceSchema = schema.Schema{
 			Validators: []validator.String{
 				wpvalidator.FlagEnumValues("joiner", "leaver", "unknownFutureValue", "mover"),
 			},
-			MarkdownDescription: "The category of the HR function that the tasks created using this definition can be used with. The This is a multi-valued enumeration whose allowed combinations are `joiner`, `joiner,leaver`, or `leaver`.<br><br>Supports `$filter`(`eq`, `ne`, `has`) and `$orderby`. / Possible values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`",
+			MarkdownDescription: "The category of the HR function that the tasks created using this definition can be used with. This is a multi-valued enumeration whose allowed combinations are `joiner`, `joiner,leaver`, or `leaver`. <br/> Supports `$filter`(`eq`, `ne`, `has`) and `$orderby`. <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.",
 		},
 		"continue_on_error": schema.BoolAttribute{
 			MarkdownDescription: "Defines if the workflow will continue if the task has an error.",
@@ -53,7 +53,7 @@ var identityGovernanceTaskDefinitionResourceSchema = schema.Schema{
 			MarkdownDescription: "The description of the taskDefinition.",
 		},
 		"display_name": schema.StringAttribute{
-			MarkdownDescription: "The display name of the taskDefinition.<br><br>Supports `$filter`(`eq`, `ne`) and `$orderby`.",
+			MarkdownDescription: "The display name of the taskDefinition. <br/> Supports `$filter`(`eq`, `ne`) and `$orderby`.",
 		},
 		"parameters": schema.SetNestedAttribute{
 			NestedObject: schema.NestedAttributeObject{
@@ -70,15 +70,15 @@ var identityGovernanceTaskDefinitionResourceSchema = schema.Schema{
 						Validators: []validator.String{
 							stringvalidator.OneOf("enum", "string", "int", "bool", "unknownFutureValue"),
 						},
-						MarkdownDescription: "The value type of the parameter. The / Possible values are: `enum`, `string`, `int`, `bool`, `unknownFutureValue`",
+						MarkdownDescription: "The value type of the parameter. <br/> _Provider_ allowed values are: `enum`, `string`, `int`, `bool`, `unknownFutureValue`.",
 					},
 				},
 			},
-			MarkdownDescription: "The parameters that must be supplied when creating a workflow task object.<br><br>Supports `$filter`(`any`). / Represents the allowed arguments that are defined in a [taskDefinition](../resources/identitygovernance-taskdefinition.md) for built-in lifecycle workflow tasks. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-parameter?view=graph-rest-beta",
+			MarkdownDescription: "The parameters that must be supplied when creating a workflow task object. <br/> Supports `$filter`(`any`). <br/> Represents the allowed arguments that are defined in a [taskDefinition](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-taskdefinition?view=graph-rest-beta) for built-in lifecycle workflow tasks. Also see [Microsoft docs for identityGovernance.parameter](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-parameter?view=graph-rest-beta). <br> ",
 		},
 		"version": schema.Int64Attribute{
-			MarkdownDescription: "The version number of the taskDefinition. New records are pushed when we add support for new parameters.<br><br>Supports `$filter`(`ge`, `gt`, `le`, `lt`, `eq`, `ne`) and `$orderby`.",
+			MarkdownDescription: "The version number of the taskDefinition. New records are pushed when we add support for new parameters. <br/> Supports `$filter`(`ge`, `gt`, `le`, `lt`, `eq`, `ne`) and `$orderby`.",
 		},
 	},
-	MarkdownDescription: "Represents the built-in tasks that you can use to construct tasks for lifecycle workflows. Each task has a unique template identifier. For a full list of available built-in tasks, see [Configure the arguments for built-in Lifecycle Workflow tasks](/graph/identitygovernance-lifecycleworkflows-task-arguments). / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-taskdefinition?view=graph-rest-beta ||| MS Graph: Lifecycle workflows",
+	MarkdownDescription: "Represents the built-in tasks that you can use to construct tasks for lifecycle workflows. Each task has a unique template identifier. For a full list of available built-in tasks, see [Configure the arguments for built-in Lifecycle Workflow tasks](https://learn.microsoft.com/en-us/graph/identitygovernance-lifecycleworkflows-task-arguments). <br/> Also see [Microsoft docs for identityGovernance.taskDefinition](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-taskdefinition?view=graph-rest-beta). ||| MS Graph: Lifecycle workflows",
 }

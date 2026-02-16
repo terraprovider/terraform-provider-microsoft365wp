@@ -5,7 +5,7 @@ subcategory: "MS Graph: App management"
 
 # microsoft365wp_targeted_managed_app_configuration (Resource)
 
-Configuration used to deliver a set of custom settings as-is to all users in the targeted security group / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-targetedmanagedappconfiguration?view=graph-rest-beta
+Configuration used to deliver a set of custom settings as-is to all users in the targeted security group <br/> Also see [Microsoft docs for targetedManagedAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-targetedmanagedappconfiguration?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -63,17 +63,17 @@ resource "microsoft365wp_targeted_managed_app_configuration" "test" {
 
 ### Required
 
-- `app_group_type` (String) Public Apps selection: group or individual. / Indicates a collection of apps to target which can be one of several pre-defined lists of apps or a manually selected list of apps; possible values are: `selectedPublicApps` (Target the collection of apps manually selected by the admin.), `allCoreMicrosoftApps` (Target the core set of Microsoft apps (Office, Edge, etc).), `allMicrosoftApps` (Target all apps with Microsoft as publisher.), `allApps` (Target all apps with an available assignment.)
-- `apps` (Attributes Set) List of apps to which the policy is deployed. / The identifier for the deployment an app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-managedmobileapp?view=graph-rest-beta (see [below for nested schema](#nestedatt--apps))
-- `custom_settings` (Attributes Set) A set of string key and string value pairs to be sent to apps for users to whom the configuration is scoped, unalterned by this service / Key value pair for storing custom settings / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta (see [below for nested schema](#nestedatt--custom_settings))
+- `app_group_type` (String) Public Apps selection: group or individual. / Indicates a collection of apps to target which can be one of several pre-defined lists of apps or a manually selected list of apps. <br/> _Provider_ allowed values are: `selectedPublicApps` (Target the collection of apps manually selected by the admin.), `allCoreMicrosoftApps` (Target the core set of Microsoft apps (Office, Edge, etc).), `allMicrosoftApps` (Target all apps with Microsoft as publisher.), `allApps` (Target all apps with an available assignment.).
+- `apps` (Attributes Set) List of apps to which the policy is deployed. / The identifier for the deployment an app. Also see [Microsoft docs for managedMobileApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-managedmobileapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--apps))
+- `custom_settings` (Attributes Set) A set of string key and string value pairs to be sent to apps for users to whom the configuration is scoped, unalterned by this service / Key value pair for storing custom settings. Also see [Microsoft docs for keyValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--custom_settings))
 - `display_name` (String) Policy display name.
 
 ### Optional
 
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
-- `description` (String) The policy's description. The _provider_ default value is `""`.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. The _provider_ default value is `["0"]`.
-- `targeted_app_management_levels` (String) The intended app management levels for this policy. / Management levels for apps; possible values are: `unspecified` (Unspecified), `unmanaged` (Unmanaged), `mdm` (MDM), `androidEnterprise` (Android Enterprise), `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode` (Android Enterprise dedicated devices with Azure AD Shared mode), `androidOpenSourceProjectUserAssociated` (Android Open Source Project (AOSP) devices), `androidOpenSourceProjectUserless` (Android Open Source Project (AOSP) userless devices), `unknownFutureValue` (Place holder for evolvable enum). The _provider_ default value is `"unspecified"`.
+- `description` (String) The policy's description. <br/> The _provider_ default value is `""`.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/> The _provider_ default value is `["0"]`.
+- `targeted_app_management_levels` (String) The intended app management levels for this policy. / Management levels for apps. <br/> _Provider_ allowed values are: `unspecified` (Unspecified), `unmanaged` (Unmanaged), `mdm` (MDM), `androidEnterprise` (Android Enterprise), `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode` (Android Enterprise dedicated devices with Azure AD Shared mode), `androidOpenSourceProjectUserAssociated` (Android Open Source Project (AOSP) devices), `androidOpenSourceProjectUserless` (Android Open Source Project (AOSP) userless devices), `unknownFutureValue` (Place holder for evolvable enum). The _provider_ default value is `"unspecified"`.
 
 ### Read-Only
 
@@ -89,17 +89,17 @@ resource "microsoft365wp_targeted_managed_app_configuration" "test" {
 
 Required:
 
-- `app_id` (Attributes) The identifier for an app with it's operating system type. / The identifier for a mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-mobileappidentifier?view=graph-rest-beta (see [below for nested schema](#nestedatt--apps--app_id))
+- `app_id` (Attributes) The identifier for an app with it's operating system type. / The identifier for a mobile app. Also see [Microsoft docs for mobileAppIdentifier](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-mobileappidentifier?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--apps--app_id))
 
 <a id="nestedatt--apps--app_id"></a>
 ### Nested Schema for `apps.app_id`
 
 Optional:
 
-- `android` (Attributes) The identifier for an Android app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-androidmobileappidentifier?view=graph-rest-beta (see [below for nested schema](#nestedatt--apps--app_id--android))
-- `ios` (Attributes) The identifier for an iOS app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-iosmobileappidentifier?view=graph-rest-beta (see [below for nested schema](#nestedatt--apps--app_id--ios))
-- `mac` (Attributes) The identifier for a Mac app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-macappidentifier?view=graph-rest-beta (see [below for nested schema](#nestedatt--apps--app_id--mac))
-- `windows` (Attributes) The identifier for a Windows app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-windowsappidentifier?view=graph-rest-beta (see [below for nested schema](#nestedatt--apps--app_id--windows))
+- `android` (Attributes) The identifier for an Android app. Also see [Microsoft docs for androidMobileAppIdentifier](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-androidmobileappidentifier?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--apps--app_id--android))
+- `ios` (Attributes) The identifier for an iOS app. Also see [Microsoft docs for iosMobileAppIdentifier](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-iosmobileappidentifier?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--apps--app_id--ios))
+- `mac` (Attributes) The identifier for a Mac app. Also see [Microsoft docs for macAppIdentifier](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-macappidentifier?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--apps--app_id--mac))
+- `windows` (Attributes) The identifier for a Windows app. Also see [Microsoft docs for windowsAppIdentifier](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-windowsappidentifier?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--apps--app_id--windows))
 
 <a id="nestedatt--apps--app_id--android"></a>
 ### Nested Schema for `apps.app_id.android`
@@ -152,19 +152,19 @@ Optional:
 
 Required:
 
-- `target` (Attributes) Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target))
+- `target` (Attributes) Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta). (see [below for nested schema](#nestedatt--assignments--target))
 
 <a id="nestedatt--assignments--target"></a>
 ### Nested Schema for `assignments.target`
 
 Optional:
 
-- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_devices))
-- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
-- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
+- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. Also see [Microsoft docs for allDevicesAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_devices))
+- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. Also see [Microsoft docs for allLicensedUsersAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
+- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. Also see [Microsoft docs for exclusionGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The ID of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
-- `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter. <br/> _Provider_ allowed values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
+- `group` (Attributes) Represents an assignment to a group. Also see [Microsoft docs for groupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
 ### Nested Schema for `assignments.target.all_devices`

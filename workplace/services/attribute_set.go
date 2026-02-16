@@ -52,5 +52,5 @@ var attributeSetResourceSchema = schema.Schema{
 			MarkdownDescription: "Maximum number of custom security attributes that can be defined in this attribute set. Default value is `null`. If not specified, the administrator can add up to the maximum of 500 active attributes per tenant. Can be changed later.",
 		},
 	},
-	MarkdownDescription: "Represents a group of related custom security attribute definitions.\n\nYou can define up to 500 **attributeSet** objects in a tenant. The **attributeSet** object can't be renamed or deleted. / https://learn.microsoft.com/en-us/graph/api/resources/attributeset?view=graph-rest-beta ||| MS Graph: Custom security attributes",
+	MarkdownDescription: "Represents a group of related custom security attribute definitions.\n\nYou can define up to 500 **attributeSet** objects in a tenant. The **attributeSet** object can't be renamed or deleted.\n\nAlso see [Microsoft docs for attributeSet](https://learn.microsoft.com/en-us/graph/api/resources/attributeset?view=graph-rest-beta). ||| MS Graph: Custom security attributes",
 }

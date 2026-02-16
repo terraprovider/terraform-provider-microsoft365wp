@@ -2,7 +2,7 @@ package services
 
 import (
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
@@ -46,40 +46,40 @@ var deviceRegistrationPolicyResourceSchema = schema.Schema{
 					Attributes:          deviceRegistrationPolicyDeviceRegistrationMembershipAttributes,
 					PlanModifiers:       []planmodifier.Object{deviceRegistrationPolicyAll},
 					Computed:            true,
-					MarkdownDescription: "Determines if Microsoft Entra join is allowed. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](../resources/nodeviceregistrationmembership.md), [allDeviceRegistrationMembership](../resources/alldeviceregistrationmembership.md) and [enumeratedDeviceRegistrationMembership](../resources/enumerateddeviceregistrationmembership.md). / https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta. The _provider_ default value is `deviceRegistrationPolicyAll`.",
+					MarkdownDescription: "Determines if Microsoft Entra join is allowed. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta), [allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta) and [enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). Also see [Microsoft docs for deviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta). <br/> The _provider_ default value is `deviceRegistrationPolicyAll`. <br> ",
 				},
 				"is_admin_configurable": schema.BoolAttribute{
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 					Computed:            true,
-					MarkdownDescription: "Determines if administrators can modify this policy. The _provider_ default value is `true`.",
+					MarkdownDescription: "Determines if administrators can modify this policy. <br/> The _provider_ default value is `true`.",
 				},
 				"local_admins": schema.SingleNestedAttribute{
 					Optional: true,
 					Attributes: map[string]schema.Attribute{ // localAdminSettings
 						"enable_global_admins": schema.BoolAttribute{
 							Optional:            true,
-							PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+							PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 							Computed:            true,
-							MarkdownDescription: "Indicates whether global administrators are local administrators on all Microsoft Entra-joined devices. This setting only applies to future registrations. Default is `true`. The _provider_ default value is `true`.",
+							MarkdownDescription: "Indicates whether global administrators are local administrators on all Microsoft Entra-joined devices. This setting only applies to future registrations. Default is `true`. <br/> The _provider_ default value is `true`.",
 						},
 						"registering_users": schema.SingleNestedAttribute{
 							Optional:            true,
 							Attributes:          deviceRegistrationPolicyDeviceRegistrationMembershipAttributes,
 							PlanModifiers:       []planmodifier.Object{deviceRegistrationPolicyAll},
 							Computed:            true,
-							MarkdownDescription: "Determines the users and groups that become local administrators on Microsoft Entra joined devices that they register. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](../resources/nodeviceregistrationmembership.md), [allDeviceRegistrationMembership](../resources/alldeviceregistrationmembership.md) and [enumeratedDeviceRegistrationMembership](../resources/enumerateddeviceregistrationmembership.md). / https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta. The _provider_ default value is `deviceRegistrationPolicyAll`.",
+							MarkdownDescription: "Determines the users and groups that become local administrators on Microsoft Entra joined devices that they register. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta), [allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta) and [enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). Also see [Microsoft docs for deviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta). <br/> The _provider_ default value is `deviceRegistrationPolicyAll`. <br> ",
 						},
 					},
-					PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "Determines who becomes a local administrator on joined devices. / Controls local administrators on Microsoft Entra-joined devices. / https://learn.microsoft.com/en-us/graph/api/resources/localadminsettings?view=graph-rest-beta. The _provider_ default value is `{}`.",
+					MarkdownDescription: "Determines who becomes a local administrator on joined devices. / Controls local administrators on Microsoft Entra-joined devices. Also see [Microsoft docs for localAdminSettings](https://learn.microsoft.com/en-us/graph/api/resources/localadminsettings?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 			},
-			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
 			Description:         `azureADJoin`, // custom MS Graph attribute name
-			MarkdownDescription: "Specifies the authorization policy for controlling registration of new devices using **Microsoft Entra join** within your organization. Required. For more information, see [What is a device identity?](/azure/active-directory/devices/overview). / Represents the policy scope of the Microsoft Entra tenant that controls the ability for users and groups to register device identities to your organization using Microsoft Entra join. / https://learn.microsoft.com/en-us/graph/api/resources/azureadjoinpolicy?view=graph-rest-beta. The _provider_ default value is `{}`.",
+			MarkdownDescription: "Specifies the authorization policy for controlling registration of new devices using **Microsoft Entra join** within your organization. Required. For more information, see [What is a device identity?](https://learn.microsoft.com/en-us/azure/active-directory/devices/overview). / Represents the policy scope of the Microsoft Entra tenant that controls the ability for users and groups to register device identities to your organization using Microsoft Entra join. Also see [Microsoft docs for azureADJoinPolicy](https://learn.microsoft.com/en-us/graph/api/resources/azureadjoinpolicy?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 		"azure_ad_registration": schema.SingleNestedAttribute{
 			Optional: true,
@@ -89,19 +89,19 @@ var deviceRegistrationPolicyResourceSchema = schema.Schema{
 					Attributes:          deviceRegistrationPolicyDeviceRegistrationMembershipAttributes,
 					PlanModifiers:       []planmodifier.Object{deviceRegistrationPolicyAll},
 					Computed:            true,
-					MarkdownDescription: "Determines if Microsoft Entra registered is allowed. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](../resources/nodeviceregistrationmembership.md), [allDeviceRegistrationMembership](../resources/alldeviceregistrationmembership.md) and [enumeratedDeviceRegistrationMembership](../resources/enumerateddeviceregistrationmembership.md). / https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta. The _provider_ default value is `deviceRegistrationPolicyAll`.",
+					MarkdownDescription: "Determines if Microsoft Entra registered is allowed. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta), [allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta) and [enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). Also see [Microsoft docs for deviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta). <br/> The _provider_ default value is `deviceRegistrationPolicyAll`. <br> ",
 				},
 				"is_admin_configurable": schema.BoolAttribute{
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 					Computed:            true,
-					MarkdownDescription: "Determines if administrators can modify this policy. The _provider_ default value is `false`.",
+					MarkdownDescription: "Determines if administrators can modify this policy. <br/> The _provider_ default value is `false`.",
 				},
 			},
-			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
 			Description:         `azureADRegistration`, // custom MS Graph attribute name
-			MarkdownDescription: "Specifies the authorization policy for controlling registration of new devices using **Microsoft Entra registered** within your organization. Required. For more information, see [What is a device identity?](/azure/active-directory/devices/overview). / Represents the policy scope of the Microsoft Entra tenant that controls the ability for users and groups to register device identities to your organization using **Microsoft Entra registered**. For more information, see [What is a device identity?](/azure/active-directory/devices/overview). / https://learn.microsoft.com/en-us/graph/api/resources/azureadregistrationpolicy?view=graph-rest-beta. The _provider_ default value is `{}`.",
+			MarkdownDescription: "Specifies the authorization policy for controlling registration of new devices using **Microsoft Entra registered** within your organization. Required. For more information, see [What is a device identity?](https://learn.microsoft.com/en-us/azure/active-directory/devices/overview). / Represents the policy scope of the Microsoft Entra tenant that controls the ability for users and groups to register device identities to your organization using **Microsoft Entra registered**. For more information, see [What is a device identity?](https://learn.microsoft.com/en-us/azure/active-directory/devices/overview). Also see [Microsoft docs for azureADRegistrationPolicy](https://learn.microsoft.com/en-us/graph/api/resources/azureadregistrationpolicy?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 		"description": schema.StringAttribute{
 			Computed:            true,
@@ -118,32 +118,34 @@ var deviceRegistrationPolicyResourceSchema = schema.Schema{
 			Attributes: map[string]schema.Attribute{ // localAdminPasswordSettings
 				"is_enabled": schema.BoolAttribute{
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 					Computed:            true,
-					MarkdownDescription: "Specifies whether this policy scope is configurable by the admin. The default value is `false`. An admin can set it to true to enable Local Admin Password Solution (LAPS) within their organzation. The _provider_ default value is `false`.",
+					MarkdownDescription: "Specifies whether this policy scope is configurable by the admin. The default value is `false`. An admin can set it to true to enable Local Admin Password Solution (LAPS) within their organzation. <br/> The _provider_ default value is `false`.",
 				},
 			},
-			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Specifies the setting for **Local Admin Password Solution (LAPS)** within your organization. / Represents the policy scope of the Microsoft Entra tenant that controls the Local Admin Password Solution (LAPS) setting. / https://learn.microsoft.com/en-us/graph/api/resources/localadminpasswordsettings?view=graph-rest-beta. The _provider_ default value is `{}`.",
+			MarkdownDescription: "Specifies the setting for **Local Admin Password Solution (LAPS)** within your organization. / Represents the policy scope of the Microsoft Entra tenant that controls the Local Admin Password Solution (LAPS) setting. Also see [Microsoft docs for localAdminPasswordSettings](https://learn.microsoft.com/en-us/graph/api/resources/localadminpasswordsettings?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 		"multi_factor_auth_configuration": schema.StringAttribute{
 			Optional: true,
 			Validators: []validator.String{
 				stringvalidator.OneOf("notRequired", "required", "unknownFutureValue"),
 			},
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notRequired")},
+			PlanModifiers: []planmodifier.String{
+				wpdefaultvaluemodifier.StringDefaultValue("notRequired"),
+			},
 			Computed:            true,
-			MarkdownDescription: "Specifies the authentication policy for a user to complete registration using **Microsoft Entra join** or **Microsoft Entra registered** within your organization. The The default value is `notRequired`. / Possible values are: `notRequired`, `required`, `unknownFutureValue`. The _provider_ default value is `\"notRequired\"`.",
+			MarkdownDescription: "Specifies the authentication policy for a user to complete registration using **Microsoft Entra join** or **Microsoft Entra registered** within your organization. The default value is `notRequired`. <br/> _Provider_ allowed values are: `notRequired`, `required`, `unknownFutureValue`. The _provider_ default value is `\"notRequired\"`.",
 		},
 		"user_device_quota": schema.Int64Attribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(50)},
+			PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(50)},
 			Computed:            true,
-			MarkdownDescription: "Specifies the maximum number of devices that a user can have within your organization before blocking new device registrations. The default value is set to 50. If this property isn't specified during the policy update operation, it's automatically reset to `0` to indicate that users aren't allowed to join any devices. The _provider_ default value is `50`.",
+			MarkdownDescription: "Specifies the maximum number of devices that a user can have within your organization before blocking new device registrations. The default value is set to 50. If this property isn't specified during the policy update operation, it's automatically reset to `0` to indicate that users aren't allowed to join any devices. <br/> The _provider_ default value is `50`.",
 		},
 	},
-	MarkdownDescription: "Represents the policy scope that controls quota restrictions, additional authentication, and authorization policies to register device identities to your organization. / https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta ||| MS Graph: Policies",
+	MarkdownDescription: "Represents the policy scope that controls quota restrictions, additional authentication, and authorization policies to register device identities to your organization. <br/> Also see [Microsoft docs for deviceRegistrationPolicy](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta). ||| MS Graph: Policies",
 }
 
 var deviceRegistrationPolicyDeviceRegistrationMembershipAttributes = map[string]schema.Attribute{ // deviceRegistrationMembership
@@ -156,7 +158,7 @@ var deviceRegistrationPolicyDeviceRegistrationMembershipAttributes = map[string]
 			Validators: []validator.Object{
 				deviceRegistrationPolicyDeviceRegistrationMembershipValidator,
 			},
-			MarkdownDescription: "Indicates that this device registration policy applies to all users and groups. / https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta",
+			MarkdownDescription: "Indicates that this device registration policy applies to all users and groups. Also see [Microsoft docs for allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta). <br> ",
 		},
 	},
 	"enumerated": generic.OdataDerivedTypeNestedAttributeRs{
@@ -167,22 +169,22 @@ var deviceRegistrationPolicyDeviceRegistrationMembershipAttributes = map[string]
 				"groups": schema.SetAttribute{
 					ElementType:         types.StringType,
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+					PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "List of groups that this policy applies to. The _provider_ default value is `[]`.",
+					MarkdownDescription: "List of groups that this policy applies to. <br/> The _provider_ default value is `[]`.",
 				},
 				"users": schema.SetAttribute{
 					ElementType:         types.StringType,
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+					PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "List of users that this policy applies to. The _provider_ default value is `[]`.",
+					MarkdownDescription: "List of users that this policy applies to. <br/> The _provider_ default value is `[]`.",
 				},
 			},
 			Validators: []validator.Object{
 				deviceRegistrationPolicyDeviceRegistrationMembershipValidator,
 			},
-			MarkdownDescription: "Indicates that this device registration policy applies to the enumerated users and groups. / https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta",
+			MarkdownDescription: "Indicates that this device registration policy applies to the enumerated users and groups. Also see [Microsoft docs for enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). <br> ",
 		},
 	},
 	"no": generic.OdataDerivedTypeNestedAttributeRs{
@@ -194,7 +196,7 @@ var deviceRegistrationPolicyDeviceRegistrationMembershipAttributes = map[string]
 			Validators: []validator.Object{
 				deviceRegistrationPolicyDeviceRegistrationMembershipValidator,
 			},
-			MarkdownDescription: "Indicates that no users are allowed to join or register devices. / https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta",
+			MarkdownDescription: "Indicates that no users are allowed to join or register devices. Also see [Microsoft docs for noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta). <br> ",
 		},
 	},
 }
@@ -205,4 +207,4 @@ var deviceRegistrationPolicyDeviceRegistrationMembershipValidator = objectvalida
 	path.MatchRelative().AtParent().AtName("no"),
 )
 
-var deviceRegistrationPolicyAll = wpdefaultvalue.ObjectDefaultValue(map[string]any{"all": map[string]any{}})
+var deviceRegistrationPolicyAll = wpdefaultvaluemodifier.ObjectDefaultValue(map[string]any{"all": map[string]any{}})

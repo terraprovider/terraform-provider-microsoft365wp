@@ -5,7 +5,7 @@ subcategory: "MS Graph: Sites and lists"
 
 # microsoft365wp_sharepoint_settings (Resource)
 
-Represents the tenant-level settings for SharePoint and OneDrive. / https://learn.microsoft.com/en-us/graph/api/resources/sharepointsettings?view=graph-rest-beta
+Represents the tenant-level settings for SharePoint and OneDrive. <br/> Also see [Microsoft docs for sharepointSettings](https://learn.microsoft.com/en-us/graph/api/resources/sharepointsettings?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -42,35 +42,35 @@ resource "microsoft365wp_sharepoint_settings" "singleton" {
 
 ### Optional
 
-- `allowed_domain_guids_for_sync_app` (Set of String) Collection of trusted domain GUIDs for the OneDrive sync app. The _provider_ default value is `[]`.
-- `available_managed_paths_for_site_creation` (Set of String) Collection of managed paths available for site creation. Read-only. The _provider_ default value is `["/sites/","/teams/"]`.
-- `deleted_user_personal_site_retention_period_in_days` (Number) The number of days for preserving a deleted user's OneDrive. The _provider_ default value is `30`.
-- `excluded_file_extensions_for_sync_app` (Set of String) Collection of file extensions not uploaded by the OneDrive sync app. The _provider_ default value is `[]`.
-- `idle_session_sign_out` (Attributes) Specifies the idle session sign-out policies for the tenant. / Represents the idle session sign-out policy settings for SharePoint. / https://learn.microsoft.com/en-us/graph/api/resources/idlesessionsignout?view=graph-rest-beta. The _provider_ default value is `{}`. (see [below for nested schema](#nestedatt--idle_session_sign_out))
-- `image_tagging_option` (String) Specifies the image tagging option for the tenant. / Possible values are: `disabled`, `basic`, `enhanced`, `unknownFutureValue`. The _provider_ default value is `"basic"`.
-- `is_commenting_on_site_pages_enabled` (Boolean) Indicates whether comments are allowed on modern site pages in SharePoint. The _provider_ default value is `true`.
-- `is_file_activity_notification_enabled` (Boolean) Indicates whether push notifications are enabled for OneDrive events. The _provider_ default value is `true`.
-- `is_legacy_auth_protocols_enabled` (Boolean) Indicates whether legacy authentication protocols are enabled for the tenant. The _provider_ default value is `true`.
-- `is_loop_enabled` (Boolean) Indicates whetherif Fluid Framework is allowed on SharePoint sites. The _provider_ default value is `false`.
-- `is_mac_sync_app_enabled` (Boolean) Indicates whether files can be synced using the OneDrive sync app for Mac. The _provider_ default value is `true`.
+- `allowed_domain_guids_for_sync_app` (Set of String) Collection of trusted domain GUIDs for the OneDrive sync app. <br/> The _provider_ default value is `[]`.
+- `available_managed_paths_for_site_creation` (Set of String) Collection of managed paths available for site creation. Read-only. <br/> The _provider_ default value is `["/sites/","/teams/"]`.
+- `deleted_user_personal_site_retention_period_in_days` (Number) The number of days for preserving a deleted user's OneDrive. <br/> The _provider_ default value is `30`.
+- `excluded_file_extensions_for_sync_app` (Set of String) Collection of file extensions not uploaded by the OneDrive sync app. <br/> The _provider_ default value is `[]`.
+- `idle_session_sign_out` (Attributes) Specifies the idle session sign-out policies for the tenant. / Represents the idle session sign-out policy settings for SharePoint. Also see [Microsoft docs for idleSessionSignOut](https://learn.microsoft.com/en-us/graph/api/resources/idlesessionsignout?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--idle_session_sign_out))
+- `image_tagging_option` (String) Specifies the image tagging option for the tenant. <br/> _Provider_ allowed values are: `disabled`, `basic`, `enhanced`, `unknownFutureValue`. The _provider_ default value is `"basic"`.
+- `is_commenting_on_site_pages_enabled` (Boolean) Indicates whether comments are allowed on modern site pages in SharePoint. <br/> The _provider_ default value is `true`.
+- `is_file_activity_notification_enabled` (Boolean) Indicates whether push notifications are enabled for OneDrive events. <br/> The _provider_ default value is `true`.
+- `is_legacy_auth_protocols_enabled` (Boolean) Indicates whether legacy authentication protocols are enabled for the tenant. <br/> The _provider_ default value is `true`.
+- `is_loop_enabled` (Boolean) Indicates whetherif Fluid Framework is allowed on SharePoint sites. <br/> The _provider_ default value is `false`.
+- `is_mac_sync_app_enabled` (Boolean) Indicates whether files can be synced using the OneDrive sync app for Mac. <br/> The _provider_ default value is `true`.
 - `is_require_accepting_user_to_match_invited_user_enabled` (Boolean) Indicates whether guests must sign in using the same account to which sharing invitations are sent.
-- `is_resharing_by_external_users_enabled` (Boolean) Indicates whether guests are allowed to reshare files, folders, and sites they don't own. The _provider_ default value is `true`.
-- `is_sharepoint_mobile_notification_enabled` (Boolean) Indicates whether mobile push notifications are enabled for SharePoint. The _provider_ default value is `true`.
-- `is_sharepoint_newsfeed_enabled` (Boolean) Indicates whether the newsfeed is allowed on the modern site pages in SharePoint. The _provider_ default value is `false`.
-- `is_site_creation_enabled` (Boolean) Indicates whether users are allowed to create sites. The _provider_ default value is `true`.
-- `is_site_creation_ui_enabled` (Boolean) Indicates whether the UI commands for creating sites are shown. The _provider_ default value is `true`.
-- `is_site_pages_creation_enabled` (Boolean) Indicates whether creating new modern pages is allowed on SharePoint sites. The _provider_ default value is `true`.
-- `is_sites_storage_limit_automatic` (Boolean) Indicates whether site storage space is automatically managed or if specific storage limits are set per site. The _provider_ default value is `true`.
-- `is_sync_button_hidden_on_personal_site` (Boolean) Indicates whether the sync button in OneDrive is hidden. The _provider_ default value is `false`.
-- `is_unmanaged_sync_app_for_tenant_restricted` (Boolean) Indicates whether users are allowed to sync files only on PCs joined to specific domains. The _provider_ default value is `false`.
-- `personal_site_default_storage_limit_in_mb` (Number) The default OneDrive storage limit for all new and existing users who are assigned a qualifying license. Measured in megabytes (MB). The _provider_ default value is `1048576`.
-- `sharing_allowed_domain_list` (Set of String) Collection of email domains that are allowed for sharing outside the organization. The _provider_ default value is `[]`.
-- `sharing_blocked_domain_list` (Set of String) Collection of email domains that are blocked for sharing outside the organization. The _provider_ default value is `[]`.
-- `sharing_capability` (String) Sharing capability for the tenant. / Possible values are: `disabled`, `externalUserSharingOnly`, `externalUserAndGuestSharing`, `existingExternalUserSharingOnly`, `unknownFutureValue`. The _provider_ default value is `"externalUserAndGuestSharing"`.
-- `sharing_domain_restriction_mode` (String) Specifies the external sharing mode for domains. / Possible values are: `none`, `allowList`, `blockList`, `unknownFutureValue`. The _provider_ default value is `"none"`.
-- `site_creation_default_managed_path` (String) The value of the team site managed path. This is the path under which new team sites will be created. The _provider_ default value is `"/sites/"`.
-- `site_creation_default_storage_limit_in_mb` (Number) The default storage quota for a new site upon creation. Measured in megabytes (MB). The _provider_ default value is `26214400`.
-- `tenant_default_timezone` (String) The default timezone of a tenant for newly created sites. For a list of possible values, see [SPRegionalSettings.TimeZones property](/sharepoint/dev/schema/regional-settings-schema). The _provider_ default value is `"(UTC) Coordinated Universal Time"`.
+- `is_resharing_by_external_users_enabled` (Boolean) Indicates whether guests are allowed to reshare files, folders, and sites they don't own. <br/> The _provider_ default value is `true`.
+- `is_sharepoint_mobile_notification_enabled` (Boolean) Indicates whether mobile push notifications are enabled for SharePoint. <br/> The _provider_ default value is `true`.
+- `is_sharepoint_newsfeed_enabled` (Boolean) Indicates whether the newsfeed is allowed on the modern site pages in SharePoint. <br/> The _provider_ default value is `false`.
+- `is_site_creation_enabled` (Boolean) Indicates whether users are allowed to create sites. <br/> The _provider_ default value is `true`.
+- `is_site_creation_ui_enabled` (Boolean) Indicates whether the UI commands for creating sites are shown. <br/> The _provider_ default value is `true`.
+- `is_site_pages_creation_enabled` (Boolean) Indicates whether creating new modern pages is allowed on SharePoint sites. <br/> The _provider_ default value is `true`.
+- `is_sites_storage_limit_automatic` (Boolean) Indicates whether site storage space is automatically managed or if specific storage limits are set per site. <br/> The _provider_ default value is `true`.
+- `is_sync_button_hidden_on_personal_site` (Boolean) Indicates whether the sync button in OneDrive is hidden. <br/> The _provider_ default value is `false`.
+- `is_unmanaged_sync_app_for_tenant_restricted` (Boolean) Indicates whether users are allowed to sync files only on PCs joined to specific domains. <br/> The _provider_ default value is `false`.
+- `personal_site_default_storage_limit_in_mb` (Number) The default OneDrive storage limit for all new and existing users who are assigned a qualifying license. Measured in megabytes (MB). <br/> The _provider_ default value is `1048576`.
+- `sharing_allowed_domain_list` (Set of String) Collection of email domains that are allowed for sharing outside the organization. <br/> The _provider_ default value is `[]`.
+- `sharing_blocked_domain_list` (Set of String) Collection of email domains that are blocked for sharing outside the organization. <br/> The _provider_ default value is `[]`.
+- `sharing_capability` (String) Sharing capability for the tenant. <br/> _Provider_ allowed values are: `disabled`, `externalUserSharingOnly`, `externalUserAndGuestSharing`, `existingExternalUserSharingOnly`, `unknownFutureValue`. The _provider_ default value is `"externalUserAndGuestSharing"`.
+- `sharing_domain_restriction_mode` (String) Specifies the external sharing mode for domains. <br/> _Provider_ allowed values are: `none`, `allowList`, `blockList`, `unknownFutureValue`. The _provider_ default value is `"none"`.
+- `site_creation_default_managed_path` (String) The value of the team site managed path. This is the path under which new team sites will be created. <br/> The _provider_ default value is `"/sites/"`.
+- `site_creation_default_storage_limit_in_mb` (Number) The default storage quota for a new site upon creation. Measured in megabytes (MB). <br/> The _provider_ default value is `26214400`.
+- `tenant_default_timezone` (String) The default timezone of a tenant for newly created sites. For a list of possible values, see [SPRegionalSettings.TimeZones property](https://learn.microsoft.com/en-us/sharepoint/dev/schema/regional-settings-schema). <br/> The _provider_ default value is `"(UTC) Coordinated Universal Time"`.
 
 ### Read-Only
 
@@ -81,6 +81,6 @@ resource "microsoft365wp_sharepoint_settings" "singleton" {
 
 Optional:
 
-- `is_enabled` (Boolean) Indicates whether the idle session sign-out policy is enabled. The _provider_ default value is `false`.
-- `sign_out_after_in_seconds` (Number) Number of seconds of inactivity after which a user is signed out. The _provider_ default value is `0`.
-- `warn_after_in_seconds` (Number) Number of seconds of inactivity after which a user is notified that they'll be signed out. The _provider_ default value is `0`.
+- `is_enabled` (Boolean) Indicates whether the idle session sign-out policy is enabled. <br/> The _provider_ default value is `false`.
+- `sign_out_after_in_seconds` (Number) Number of seconds of inactivity after which a user is signed out. <br/> The _provider_ default value is `0`.
+- `warn_after_in_seconds` (Number) Number of seconds of inactivity after which a user is notified that they'll be signed out. <br/> The _provider_ default value is `0`.

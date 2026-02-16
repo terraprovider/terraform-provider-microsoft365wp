@@ -44,5 +44,5 @@ var identitySecurityDefaultsEnforcementPolicyResourceSchema = schema.Schema{
 			MarkdownDescription: "If set to `true`, Microsoft Entra security defaults are enabled for the tenant.",
 		},
 	},
-	MarkdownDescription: "Represents the Microsoft Entra ID [security defaults](/azure/active-directory/fundamentals/concept-fundamentals-security-defaults) policy. Security defaults contain preconfigured security settings that protect against common attacks. / https://learn.microsoft.com/en-us/graph/api/resources/identitysecuritydefaultsenforcementpolicy?view=graph-rest-beta ||| MS Graph: Policies",
+	MarkdownDescription: "Represents the Microsoft Entra ID [security defaults](https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/concept-fundamentals-security-defaults) policy. Security defaults contain preconfigured security settings that protect against common attacks. <br/> Also see [Microsoft docs for identitySecurityDefaultsEnforcementPolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitysecuritydefaultsenforcementpolicy?view=graph-rest-beta). ||| MS Graph: Policies",
 }

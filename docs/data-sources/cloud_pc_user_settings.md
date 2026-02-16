@@ -5,7 +5,7 @@ subcategory: "MS Graph: Cloud PC"
 
 # microsoft365wp_cloud_pc_user_settings (Data Source)
 
-Represents a Cloud PC user setting. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersetting?view=graph-rest-beta
+Represents a Cloud PC user setting. <br/> Also see [Microsoft docs for cloudPcUserSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersetting?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 

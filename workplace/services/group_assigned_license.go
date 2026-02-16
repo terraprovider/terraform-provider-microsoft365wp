@@ -8,7 +8,8 @@ import (
 	"net/http"
 	"terraform-provider-microsoft365wp/workplace/external/msgraph"
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -40,6 +41,10 @@ var (
 				DataSource: generic.DataSourceOptions{
 					NoFilterSupport: true,
 				},
+			},
+			WriteOptions: generic.WriteOptions{
+				SerializeWrites:   true,
+				SerialWritesDelay: time.Second * 3,
 			},
 			GraphToTerraformMiddleware:                     groupAssignedLicenseGraphToTerraformMiddleware,
 			GraphToTerraformMiddlewareTargetSetRunOnRawVal: true,
@@ -127,17 +132,17 @@ var groupAssignedLicenseResourceSchema = schema.Schema{
 			ElementType: types.StringType,
 			Optional:    true,
 			PlanModifiers: []planmodifier.Set{
-				wpdefaultvalue.SetDefaultValueEmpty(),
+				wpdefaultvaluemodifier.SetDefaultValueEmpty(),
 				setplanmodifier.RequiresReplace(),
 			},
 			Computed:            true,
-			MarkdownDescription: "A collection of the unique identifiers for plans that have been disabled. IDs are available in **servicePlans** > **servicePlanId** in the tenant's [subscribedSkus](../resources/subscribedsku.md) or **serviceStatus** > **servicePlanId** in the tenant's [companySubscription](../resources/subscribedsku.md). The _provider_ default value is `[]`.",
+			MarkdownDescription: "A collection of the unique identifiers for plans that have been disabled. IDs are available in **servicePlans** > **servicePlanId** in the tenant's [subscribedSkus](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta) or **serviceStatus** > **servicePlanId** in the tenant's [companySubscription](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta). <br/> The _provider_ default value is `[]`.",
 		},
 		"sku_id": schema.StringAttribute{
 			Required:            true,
 			PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
-			MarkdownDescription: "The unique identifier for the SKU. Corresponds to the **skuId** from [subscribedSkus](../resources/subscribedsku.md) or [companySubscription](../resources/companysubscription.md).",
+			MarkdownDescription: "The unique identifier for the SKU. Corresponds to the **skuId** from [subscribedSkus](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta) or [companySubscription](https://learn.microsoft.com/en-us/graph/api/resources/companysubscription?view=graph-rest-beta).",
 		},
 	},
-	MarkdownDescription: "Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. / https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta\n\nProvider Note: To import this resource, an ID consisting of `group_id` and `sku_id` being joined by a forward slash (`/`) must be used. ||| MS Graph: Licenses and subscriptions",
+	MarkdownDescription: "Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. <br/> Also see [Microsoft docs for assignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta).\n\n_Provider_ Note: To import this resource, an ID consisting of `group_id` and `sku_id` being joined by a forward slash (`/`) must be used. ||| MS Graph: Licenses and subscriptions",
 }

@@ -5,7 +5,7 @@ subcategory: "MS Graph: Device management"
 
 # microsoft365wp_device_management_scripts (Data Source)
 
-Intune will provide customer the ability to run their Powershell scripts on the enrolled windows 10 Azure Active Directory joined devices. The script can be run once or periodically. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-devicemanagementscript?view=graph-rest-beta
+Intune will provide customer the ability to run their Powershell scripts on the enrolled windows 10 Azure Active Directory joined devices. The script can be run once or periodically. <br/> Also see [Microsoft docs for deviceManagementScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-devicemanagementscript?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -79,4 +79,4 @@ Read-Only:
 - `display_name` (String) Name of the device management script.
 - `id` (String) Unique Identifier for the device management script.
 - `last_modified_date_time` (String) The date and time the device management script was last modified. This property is
-- `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for this PowerShellScript instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for this PowerShellScript instance. <br/>

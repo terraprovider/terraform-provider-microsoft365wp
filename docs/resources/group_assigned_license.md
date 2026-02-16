@@ -5,9 +5,9 @@ subcategory: "MS Graph: Licenses and subscriptions"
 
 # microsoft365wp_group_assigned_license (Resource)
 
-Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. / https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta
+Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. <br/> Also see [Microsoft docs for assignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta).
 
-Provider Note: To import this resource, an ID consisting of `group_id` and `sku_id` being joined by a forward slash (`/`) must be used.
+_Provider_ Note: To import this resource, an ID consisting of `group_id` and `sku_id` being joined by a forward slash (`/`) must be used.
 
 ## Documentation Disclaimer
 
@@ -34,10 +34,16 @@ export ARM_CLIENT_SECRET='...'
 */
 
 
-resource "microsoft365wp_group_assigned_license" "test" {
+resource "microsoft365wp_group_assigned_license" "test1" {
   group_id = "298fded6-b252-4166-a473-f405e935f58d"
 
   sku_id = "00ed1723-1992-4384-b7ce-1c3bf01eedc7"
+}
+
+resource "microsoft365wp_group_assigned_license" "test2" {
+  group_id = "298fded6-b252-4166-a473-f405e935f58d"
+
+  sku_id = "05e9a617-0261-4cee-bb44-138d3ef5d965"
 }
 ```
 
@@ -47,8 +53,8 @@ resource "microsoft365wp_group_assigned_license" "test" {
 ### Required
 
 - `group_id` (String)
-- `sku_id` (String) The unique identifier for the SKU. Corresponds to the **skuId** from [subscribedSkus](../resources/subscribedsku.md) or [companySubscription](../resources/companysubscription.md).
+- `sku_id` (String) The unique identifier for the SKU. Corresponds to the **skuId** from [subscribedSkus](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta) or [companySubscription](https://learn.microsoft.com/en-us/graph/api/resources/companysubscription?view=graph-rest-beta).
 
 ### Optional
 
-- `disabled_plans` (Set of String) A collection of the unique identifiers for plans that have been disabled. IDs are available in **servicePlans** > **servicePlanId** in the tenant's [subscribedSkus](../resources/subscribedsku.md) or **serviceStatus** > **servicePlanId** in the tenant's [companySubscription](../resources/subscribedsku.md). The _provider_ default value is `[]`.
+- `disabled_plans` (Set of String) A collection of the unique identifiers for plans that have been disabled. IDs are available in **servicePlans** > **servicePlanId** in the tenant's [subscribedSkus](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta) or **serviceStatus** > **servicePlanId** in the tenant's [companySubscription](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta). <br/> The _provider_ default value is `[]`.

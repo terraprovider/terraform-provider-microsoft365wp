@@ -5,7 +5,7 @@ subcategory: "MS Graph: Policies"
 
 # microsoft365wp_authentication_flows_policy (Data Source)
 
-Represents the [policy configuration of self-service sign-up experience](../resources/selfservicesignupauthenticationflowconfiguration.md) at a tenant level that lets external users request to sign up for approval. It contains information about the ID, display name, and description, and indicates whether self-service sign up is enabled for the policy. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationflowspolicy?view=graph-rest-beta
+Represents the [policy configuration of self-service sign-up experience](https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta) at a tenant level that lets external users request to sign up for approval. It contains information about the ID, display name, and description, and indicates whether self-service sign up is enabled for the policy. <br/> Also see [Microsoft docs for authenticationFlowsPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authenticationflowspolicy?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -65,11 +65,11 @@ output "microsoft365wp_authentication_flows_policy" {
 - `description` (String) Inherited property. A description of the policy. This property isn't a key. Optional.
 - `display_name` (String) Inherited property. The human-readable name of the policy. This property isn't a key. Optional.
 - `id` (String) Inherited property. The ID of the authentication flows policy. Optional.
-- `self_service_sign_up` (Attributes) Contains [selfServiceSignUpAuthenticationFlowConfiguration](../resources/selfservicesignupauthenticationflowconfiguration.md) settings that convey whether self-service sign-up is enabled or disabled. This property isn't a key. Optional. / Represents the configurations related to self-service sign-up. / https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--self_service_sign_up))
+- `self_service_sign_up` (Attributes) Contains [selfServiceSignUpAuthenticationFlowConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta) settings that convey whether self-service sign-up is enabled or disabled. This property isn't a key. Optional. / Represents the configurations related to self-service sign-up. Also see [Microsoft docs for selfServiceSignUpAuthenticationFlowConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/selfservicesignupauthenticationflowconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--self_service_sign_up))
 
 <a id="nestedatt--self_service_sign_up"></a>
 ### Nested Schema for `self_service_sign_up`
 
 Read-Only:
 
-- `is_enabled` (Boolean) Indicates whether self-service sign-up flow is enabled or disabled. This property isn't a key. Required.
+- `is_enabled` (Boolean) Indicates whether self-service sign-up flow is enabled or disabled. This property isn't a key. Required. <br/>

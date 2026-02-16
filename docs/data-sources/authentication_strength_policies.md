@@ -5,9 +5,9 @@ subcategory: "MS Graph: Authentication"
 
 # microsoft365wp_authentication_strength_policies (Data Source)
 
-A collection of settings that define specific combinations of authentication methods and metadata. The authentication strength policy, when applied to a given scenario using Microsoft Entra Conditional Access, defines which authentication methods must be used to authenticate in that scenario. An authentication strength may be built-in or custom (defined by the tenant) and may or may not fulfill the requirements to grant an MFA claim. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta
+A collection of settings that define specific combinations of authentication methods and metadata. The authentication strength policy, when applied to a given scenario using Microsoft Entra Conditional Access, defines which authentication methods must be used to authenticate in that scenario. An authentication strength may be built-in or custom (defined by the tenant) and may or may not fulfill the requirements to grant an MFA claim. <br/> Also see [Microsoft docs for authenticationStrengthPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta).
 
-Provider Note: Use the separate resource `microsoft365wp_authentication_combination_configuration` to create combination configurations for an authentication strength policy.
+_Provider_ Note: Use the separate resource `microsoft365wp_authentication_combination_configuration` to create combination configurations for an authentication strength policy.
 
 ## Documentation Disclaimer
 
@@ -90,6 +90,6 @@ output "microsoft365wp_authentication_strength_policies" {
 Read-Only:
 
 - `created_date_time` (String) The datetime when this policy was created.
-- `display_name` (String) The human-readable display name of this policy. <br><br>Supports `$filter` (`eq`, `ne`, `not` , and `in`).
+- `display_name` (String) The human-readable display name of this policy. <br/> Supports `$filter` (`eq`, `ne`, `not` , and `in`).
 - `id` (String) The system-generated identifier for this mode.
 - `modified_date_time` (String) The datetime when this policy was last modified.

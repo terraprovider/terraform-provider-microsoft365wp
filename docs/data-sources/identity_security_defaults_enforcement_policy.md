@@ -5,7 +5,7 @@ subcategory: "MS Graph: Policies"
 
 # microsoft365wp_identity_security_defaults_enforcement_policy (Data Source)
 
-Represents the Microsoft Entra ID [security defaults](/azure/active-directory/fundamentals/concept-fundamentals-security-defaults) policy. Security defaults contain preconfigured security settings that protect against common attacks. / https://learn.microsoft.com/en-us/graph/api/resources/identitysecuritydefaultsenforcementpolicy?view=graph-rest-beta
+Represents the Microsoft Entra ID [security defaults](https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/concept-fundamentals-security-defaults) policy. Security defaults contain preconfigured security settings that protect against common attacks. <br/> Also see [Microsoft docs for identitySecurityDefaultsEnforcementPolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitysecuritydefaultsenforcementpolicy?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 

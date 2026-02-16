@@ -38,8 +38,8 @@ var mobileAppCategoryResourceSchema = schema.Schema{
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "The date and time the mobileAppCategory was last modified. This property is read-only.  \nProvider Note: Warning: This attribute seems to always return the _current_ time for mobile app categories that have been created for the tenant (i.e. that have not been predefined by Microsoft). Therefore it can be expected to change with every query.",
+			MarkdownDescription: "The date and time the mobileAppCategory was last modified. This property is read-only.  \n_Provider_ Note: Warning: This attribute seems to always return the _current_ time for mobile app categories that have been created for the tenant (i.e. that have not been predefined by Microsoft). Therefore it can be expected to change with every query.",
 		},
 	},
-	MarkdownDescription: "Contains properties for a single Intune app category. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappcategory?view=graph-rest-beta ||| MS Graph: App management",
+	MarkdownDescription: "Contains properties for a single Intune app category. <br/> Also see [Microsoft docs for mobileAppCategory](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappcategory?view=graph-rest-beta). ||| MS Graph: App management",
 }

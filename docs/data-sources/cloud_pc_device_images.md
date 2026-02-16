@@ -5,7 +5,7 @@ subcategory: "MS Graph: Cloud PC"
 
 # microsoft365wp_cloud_pc_device_images (Data Source)
 
-Represents the image resource on a Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdeviceimage?view=graph-rest-beta
+Represents the image resource on a Cloud PC. <br/> Also see [Microsoft docs for cloudPcDeviceImage](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdeviceimage?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -68,10 +68,10 @@ output "microsoft365wp_cloud_pc_device_images" {
 - `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
 - `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
 - `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
-- `operating_system` (String) The operating system of the image. For example, `Windows 10 Enterprise`.
+- `operating_system` (String) The operating system of the image. For example, `Windows 11 Enterprise`.
 - `os_build_number` (String) The OS build version of the image. For example, `1909`.
-- `os_status` (String) The OS status of this image. / Possible values are: `supported`, `supportedWithWarning`, `unknown`, `unknownFutureValue`
-- `status` (String) The status of the image on the Cloud PC. / Possible values are: `pending`, `ready`, `failed`, `unknownFutureValue`, `warning`
+- `os_status` (String) The OS status of this image. <br/> _Provider_ allowed values are: `supported`, `supportedWithWarning`, `unknown`, `unknownFutureValue`.
+- `status` (String) The status of the image on the Cloud PC. <br/> _Provider_ allowed values are: `pending`, `ready`, `failed`, `unknownFutureValue`, `warning`.
 
 ### Read-Only
 
@@ -86,9 +86,9 @@ Read-Only:
 - `expiration_date` (String) The date when the image became unavailable.
 - `id` (String) The unique identifier (ID) of the image resource on the Cloud PC.
 - `last_modified_date_time` (String) The data and time when the image was last modified. The timestamp represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`.
-- `operating_system` (String) The operating system of the image. For example, `Windows 10 Enterprise`.
+- `operating_system` (String) The operating system of the image. For example, `Windows 11 Enterprise`.
 - `os_build_number` (String) The OS build version of the image. For example, `1909`.
-- `os_status` (String) The OS status of this image. / Possible values are: `supported`, `supportedWithWarning`, `unknown`, `unknownFutureValue`
+- `os_status` (String) The OS status of this image. <br/> _Provider_ allowed values are: `supported`, `supportedWithWarning`, `unknown`, `unknownFutureValue`.
 - `os_version_number` (String) The operating system version of this image. For example, `10.0.22000.296`.
-- `status` (String) The status of the image on the Cloud PC. / Possible values are: `pending`, `ready`, `failed`, `unknownFutureValue`, `warning`
+- `status` (String) The status of the image on the Cloud PC. <br/> _Provider_ allowed values are: `pending`, `ready`, `failed`, `unknownFutureValue`, `warning`.
 - `version` (String) The image version. For example, `0.0.1` and `1.5.13`.

@@ -5,7 +5,7 @@ subcategory: "MS Graph: App management"
 
 # microsoft365wp_managed_device_mobile_app_configuration (Data Source)
 
-An abstract class for Mobile app configuration for enrolled devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-manageddevicemobileappconfiguration?view=graph-rest-beta
+An abstract class for Mobile app configuration for enrolled devices. <br/> Also see [Microsoft docs for managedDeviceMobileAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-manageddevicemobileappconfiguration?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -70,14 +70,14 @@ output "microsoft365wp_managed_device_mobile_app_configuration" {
 
 ### Read-Only
 
-- `android_managed_store` (Attributes) Contains properties, inherited properties and actions for Android Enterprise mobile app configurations. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidmanagedstoreappconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_managed_store))
+- `android_managed_store` (Attributes) Contains properties, inherited properties and actions for Android Enterprise mobile app configurations. Also see [Microsoft docs for androidManagedStoreAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidmanagedstoreappconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--android_managed_store))
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `created_date_time` (String) DateTime the object was created.
-- `description` (String) Admin provided description of the Device Configuration.
+- `description` (String) Admin provided description of the Device Configuration. <br/>
 - `display_name` (String) Admin provided name of the device configuration.
-- `ios` (Attributes) Contains properties, inherited properties and actions for iOS mobile app configurations. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosmobileappconfiguration?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios))
+- `ios` (Attributes) Contains properties, inherited properties and actions for iOS mobile app configurations. Also see [Microsoft docs for iosMobileAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosmobileappconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--ios))
 - `last_modified_date_time` (String) DateTime the object was last modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this App configuration entity.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this App configuration entity. <br/>
 - `targeted_mobile_apps` (Set of String) the associated app.
 - `version` (Number) Version of the device configuration.
 
@@ -87,18 +87,18 @@ output "microsoft365wp_managed_device_mobile_app_configuration" {
 Read-Only:
 
 - `app_supports_oem_config` (Boolean) Whether or not this AppConfig is an OEMConfig policy. This property is
-- `connected_apps_enabled` (Boolean) Setting to specify whether to allow ConnectedApps experience for this app.
+- `connected_apps_enabled` (Boolean) Setting to specify whether to allow ConnectedApps experience for this app. <br/>
 - `package_id` (String) Android Enterprise app configuration package id.
 - `payload_json` (String) Android Enterprise app configuration JSON payload.
-- `permission_actions` (Attributes Set) List of Android app permissions and corresponding permission actions. / Mapping between an Android app permission and the action Android should take when that permission is requested. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidpermissionaction?view=graph-rest-beta (see [below for nested schema](#nestedatt--android_managed_store--permission_actions))
-- `profile_applicability` (String) Android Enterprise profile applicability (AndroidWorkProfile, DeviceOwner, or default (applies to both)). / Android profile applicability; possible values are: `default`, `androidWorkProfile`, `androidDeviceOwner`
+- `permission_actions` (Attributes Set) List of Android app permissions and corresponding permission actions. / Mapping between an Android app permission and the action Android should take when that permission is requested. Also see [Microsoft docs for androidPermissionAction](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidpermissionaction?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--android_managed_store--permission_actions))
+- `profile_applicability` (String) Android Enterprise profile applicability (AndroidWorkProfile, DeviceOwner, or default (applies to both)). / Android profile applicability. <br/> _Provider_ allowed values are: `default`, `androidWorkProfile`, `androidDeviceOwner`.
 
 <a id="nestedatt--android_managed_store--permission_actions"></a>
 ### Nested Schema for `android_managed_store.permission_actions`
 
 Read-Only:
 
-- `action` (String) Type of Android permission action. / Android action taken when an app requests a dangerous permission; possible values are: `prompt`, `autoGrant`, `autoDeny`
+- `action` (String) Type of Android permission action. / Android action taken when an app requests a dangerous permission. <br/> _Provider_ allowed values are: `prompt`, `autoGrant`, `autoDeny`.
 - `permission` (String) Android permission string, defined in the official Android documentation.  Example 'android.permission.READ_CONTACTS'.
 
 
@@ -108,19 +108,19 @@ Read-Only:
 
 Read-Only:
 
-- `target` (Attributes) Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target))
+- `target` (Attributes) Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta). (see [below for nested schema](#nestedatt--assignments--target))
 
 <a id="nestedatt--assignments--target"></a>
 ### Nested Schema for `assignments.target`
 
 Read-Only:
 
-- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_devices))
-- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
-- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
+- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. Also see [Microsoft docs for allDevicesAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_devices))
+- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. Also see [Microsoft docs for allLicensedUsersAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
+- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. Also see [Microsoft docs for exclusionGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The ID of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.).
-- `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter. <br/> _Provider_ allowed values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.).
+- `group` (Attributes) Represents an assignment to a group. Also see [Microsoft docs for groupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
 ### Nested Schema for `assignments.target.all_devices`
@@ -154,7 +154,7 @@ Read-Only:
 Read-Only:
 
 - `encoded_setting_xml` (String) mdm app configuration Base64 binary.
-- `settings` (Attributes Set) app configuration setting items. / Contains properties for App configuration setting item. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-appconfigurationsettingitem?view=graph-rest-beta (see [below for nested schema](#nestedatt--ios--settings))
+- `settings` (Attributes Set) app configuration setting items. / Contains properties for App configuration setting item. Also see [Microsoft docs for appConfigurationSettingItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-appconfigurationsettingitem?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--ios--settings))
 
 <a id="nestedatt--ios--settings"></a>
 ### Nested Schema for `ios.settings`
@@ -162,5 +162,5 @@ Read-Only:
 Read-Only:
 
 - `app_config_key` (String) app configuration key.
-- `app_config_key_type` (String) app configuration key type. / App configuration key types; possible values are: `stringType`, `integerType`, `realType`, `booleanType`, `tokenType`
+- `app_config_key_type` (String) app configuration key type. / App configuration key types. <br/> _Provider_ allowed values are: `stringType`, `integerType`, `realType`, `booleanType`, `tokenType`.
 - `app_config_key_value` (String) app configuration key value.

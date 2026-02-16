@@ -5,7 +5,7 @@ subcategory: "MS Graph: Device management"
 
 # microsoft365wp_device_management_intents (Data Source)
 
-Entity that represents an intent to apply settings to a device / https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintent?view=graph-rest-beta
+Entity that represents an intent to apply settings to a device <br/> Also see [Microsoft docs for deviceManagementIntent](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintent?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -81,4 +81,4 @@ Read-Only:
 - `display_name` (String) The user given display name
 - `id` (String) The intent ID
 - `last_modified_date_time` (String) When the intent was last modified
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>

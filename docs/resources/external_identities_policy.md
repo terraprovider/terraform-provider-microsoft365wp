@@ -5,7 +5,7 @@ subcategory: "MS Graph: Identity and sign-in"
 
 # microsoft365wp_external_identities_policy (Resource)
 
-Represents the tenant-wide policy that controls whether external users can leave the guest Microsoft Entra tenant via self-service controls. When permitted by the administrator, external users can leave the guest Microsoft Entra tenant through the **organizations** menu of the [My Account](https://myaccount.microsoft.com/) portal. / https://learn.microsoft.com/en-us/graph/api/resources/externalidentitiespolicy?view=graph-rest-beta
+Represents the tenant-wide policy that controls whether external users can leave the guest Microsoft Entra tenant via self-service controls. When permitted by the administrator, external users can leave the guest Microsoft Entra tenant through the **organizations** menu of the [My Account](https://myaccount.microsoft.com/) portal. <br/> Also see [Microsoft docs for externalIdentitiesPolicy](https://learn.microsoft.com/en-us/graph/api/resources/externalidentitiespolicy?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -42,7 +42,7 @@ resource "microsoft365wp_external_identities_policy" "test" {
 
 ### Optional
 
-- `allow_external_identities_to_leave` (Boolean) Defines whether external users can leave the guest tenant. If set to `false`, self-service controls are disabled, and the admin of the guest tenant must manually remove the external user from the guest tenant. When the external user leaves the tenant, their data in the guest tenant is first soft-deleted then permanently deleted in 30 days. The _provider_ default value is `true`.
+- `allow_external_identities_to_leave` (Boolean) Defines whether external users can leave the guest tenant. If set to `false`, self-service controls are disabled, and the admin of the guest tenant must manually remove the external user from the guest tenant. When the external user leaves the tenant, their data in the guest tenant is first soft-deleted then permanently deleted in 30 days. <br/> The _provider_ default value is `true`.
 
 ### Read-Only
 

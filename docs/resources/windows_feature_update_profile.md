@@ -5,7 +5,7 @@ subcategory: "MS Graph: Software updates"
 
 # microsoft365wp_windows_feature_update_profile (Resource)
 
-Windows Feature Update Profile / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsfeatureupdateprofile?view=graph-rest-beta
+Windows Feature Update Profile <br/> Also see [Microsoft docs for windowsFeatureUpdateProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsfeatureupdateprofile?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -35,13 +35,12 @@ export ARM_CLIENT_SECRET='...'
 locals {
   # take 25th of current month, add 10 days, and then take 1st of that month (i.e. take 1st of next month)
   start_date = formatdate("YYYY-MM-01'T'00:00:00Z", timeadd(formatdate("YYYY-MM-25'T'00:00:00Z", plantimestamp()), "240h"))
-  end_date   = formatdate("YYYY-MM-15'T'00:00:00Z", local.start_date)
 }
 
 resource "microsoft365wp_windows_feature_update_profile" "test_immediate" {
   display_name = "TF Test Immediate"
 
-  feature_update_version = "Windows 10, version 22H2"
+  feature_update_version = "Windows 11, version 25H2"
   rollout_settings       = {}
 
   assignments = [
@@ -49,14 +48,12 @@ resource "microsoft365wp_windows_feature_update_profile" "test_immediate" {
   ]
 }
 
-resource "microsoft365wp_windows_feature_update_profile" "test_graduate" {
-  display_name = "TF Test Graduate"
+resource "microsoft365wp_windows_feature_update_profile" "test_on_date" {
+  display_name = "TF Test On Specific Date"
 
-  feature_update_version = "Windows 10, version 22H2"
+  feature_update_version = "Windows 11, version 25H2"
   rollout_settings = {
     offer_start_date_time_in_utc = local.start_date
-    offer_end_date_time_in_utc   = local.end_date
-    offer_interval_in_days       = 3
   }
 }
 ```
@@ -68,15 +65,15 @@ resource "microsoft365wp_windows_feature_update_profile" "test_graduate" {
 
 - `display_name` (String) The display name of the profile.
 - `feature_update_version` (String) The feature update version that will be deployed to the devices targeted by this profile. The version could be any supported version for example 1709, 1803 or 1809 and so on.
-- `rollout_settings` (Attributes) The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. / A complex type to store the windows update rollout settings including offer start date time, offer end date time, and days between each set of offers. / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsupdaterolloutsettings?view=graph-rest-beta (see [below for nested schema](#nestedatt--rollout_settings))
+- `rollout_settings` (Attributes) The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. / A complex type to store the windows update rollout settings including offer start date time, offer end date time, and days between each set of offers. Also see [Microsoft docs for windowsUpdateRolloutSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsupdaterolloutsettings?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--rollout_settings))
 
 ### Optional
 
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `description` (String) The description of the profile which is specified by the user.
-- `install_feature_updates_optional` (Boolean) If true, the Windows 11 update will become optional. The _provider_ default value is `false`.
-- `install_latest_windows10_on_windows11_ineligible_device` (Boolean) If true, the latest Microsoft Windows 10 update will be installed on devices ineligible for Microsoft Windows 11. The _provider_ default value is `false`.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Feature Update entity. The _provider_ default value is `["0"]`.
+- `install_feature_updates_optional` (Boolean) If true, the Windows 11 update will become optional <br/> The _provider_ default value is `false`.
+- `install_latest_windows10_on_windows11_ineligible_device` (Boolean) If true, the latest Microsoft Windows 10 update will be installed on devices ineligible for Microsoft Windows 11 <br/> The _provider_ default value is `false`.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Feature Update entity. <br/> The _provider_ default value is `["0"]`.
 
 ### Read-Only
 
@@ -100,19 +97,19 @@ Optional:
 
 Required:
 
-- `target` (Attributes) Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target))
+- `target` (Attributes) Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta). (see [below for nested schema](#nestedatt--assignments--target))
 
 <a id="nestedatt--assignments--target"></a>
 ### Nested Schema for `assignments.target`
 
 Optional:
 
-- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_devices))
-- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
-- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
+- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. Also see [Microsoft docs for allDevicesAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_devices))
+- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. Also see [Microsoft docs for allLicensedUsersAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
+- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. Also see [Microsoft docs for exclusionGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The ID of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
-- `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter. <br/> _Provider_ allowed values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.). The _provider_ default value is `"none"`.
+- `group` (Attributes) Represents an assignment to a group. Also see [Microsoft docs for groupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
 ### Nested Schema for `assignments.target.all_devices`

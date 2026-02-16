@@ -2,7 +2,7 @@ package services
 
 import (
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
@@ -54,9 +54,9 @@ var deviceShellScriptResourceSchema = schema.Schema{
 		},
 		"block_execution_notifications": schema.BoolAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 			Computed:            true,
-			MarkdownDescription: "Does not notify the user a script is being executed. The _provider_ default value is `false`.",
+			MarkdownDescription: "Does not notify the user a script is being executed <br/> The _provider_ default value is `false`.",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -65,9 +65,9 @@ var deviceShellScriptResourceSchema = schema.Schema{
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: "Optional description for the device management script. The _provider_ default value is `\"\"`.",
+			MarkdownDescription: "Optional description for the device management script. <br/> The _provider_ default value is `\"\"`.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -75,9 +75,9 @@ var deviceShellScriptResourceSchema = schema.Schema{
 		},
 		"execution_frequency": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("PT0S")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("PT0S")},
 			Computed:            true,
-			MarkdownDescription: "The interval for script to run. If not defined the script will run once. The _provider_ default value is `\"PT0S\"`.",
+			MarkdownDescription: "The interval for script to run. If not defined the script will run once <br/> The _provider_ default value is `\"PT0S\"`.",
 		},
 		"file_name": schema.StringAttribute{
 			Required:            true,
@@ -90,23 +90,23 @@ var deviceShellScriptResourceSchema = schema.Schema{
 		},
 		"retry_count": schema.Int64Attribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
+			PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(0)},
 			Computed:            true,
-			MarkdownDescription: "Number of times for the script to be retried if it fails. The _provider_ default value is `0`.",
+			MarkdownDescription: "Number of times for the script to be retried if it fails <br/> The _provider_ default value is `0`.",
 		},
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tag IDs for this PowerShellScript instance. The _provider_ default value is `[\"0\"]`.",
+			MarkdownDescription: "List of Scope Tag IDs for this PowerShellScript instance. <br/> The _provider_ default value is `[\"0\"]`.",
 		},
 		"run_as_account": schema.StringAttribute{
 			Optional:            true,
 			Validators:          []validator.String{stringvalidator.OneOf("system", "user")},
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("user")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("user")},
 			Computed:            true,
-			MarkdownDescription: "Indicates the type of execution context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context). The _provider_ default value is `\"user\"`.",
+			MarkdownDescription: "Indicates the type of execution context. / Indicates the type of execution context the app runs in. <br/> _Provider_ allowed values are: `system` (System context), `user` (User context). The _provider_ default value is `\"user\"`.",
 		},
 		"script_content": schema.StringAttribute{
 			Required:            true,
@@ -115,5 +115,5 @@ var deviceShellScriptResourceSchema = schema.Schema{
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: "Intune will provide customer the ability to run their Shell scripts on the enrolled Mac OS devices. The script can be run once or periodically. / https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-deviceshellscript?view=graph-rest-beta ||| MS Graph: Device management",
+	MarkdownDescription: "Intune will provide customer the ability to run their Shell scripts on the enrolled Mac OS devices. The script can be run once or periodically. <br/> Also see [Microsoft docs for deviceShellScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-deviceshellscript?view=graph-rest-beta). ||| MS Graph: Device management",
 }

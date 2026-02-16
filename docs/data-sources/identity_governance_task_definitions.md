@@ -5,7 +5,7 @@ subcategory: "MS Graph: Lifecycle workflows"
 
 # microsoft365wp_identity_governance_task_definitions (Data Source)
 
-Represents the built-in tasks that you can use to construct tasks for lifecycle workflows. Each task has a unique template identifier. For a full list of available built-in tasks, see [Configure the arguments for built-in Lifecycle Workflow tasks](/graph/identitygovernance-lifecycleworkflows-task-arguments). / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-taskdefinition?view=graph-rest-beta
+Represents the built-in tasks that you can use to construct tasks for lifecycle workflows. Each task has a unique template identifier. For a full list of available built-in tasks, see [Configure the arguments for built-in Lifecycle Workflow tasks](https://learn.microsoft.com/en-us/graph/identitygovernance-lifecycleworkflows-task-arguments). <br/> Also see [Microsoft docs for identityGovernance.taskDefinition](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-taskdefinition?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -63,7 +63,7 @@ output "microsoft365wp_identity_governance_task_definitions" {
 
 ### Optional
 
-- `display_name` (String) The display name of the taskDefinition.<br><br>Supports `$filter`(`eq`, `ne`) and `$orderby`.
+- `display_name` (String) The display name of the taskDefinition. <br/> Supports `$filter`(`eq`, `ne`) and `$orderby`.
 - `exclude_ids` (Set of String) Exclude entities with these ids (using OData `$filter`).
 - `include_ids` (Set of String) Only return entities with these ids (using OData `$filter`).
 - `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
@@ -79,7 +79,7 @@ output "microsoft365wp_identity_governance_task_definitions" {
 
 Read-Only:
 
-- `category` (String) The category of the HR function that the tasks created using this definition can be used with. The This is a multi-valued enumeration whose allowed combinations are `joiner`, `joiner,leaver`, or `leaver`.<br><br>Supports `$filter`(`eq`, `ne`, `has`) and `$orderby`. / Possible values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`
-- `display_name` (String) The display name of the taskDefinition.<br><br>Supports `$filter`(`eq`, `ne`) and `$orderby`.
+- `category` (String) The category of the HR function that the tasks created using this definition can be used with. This is a multi-valued enumeration whose allowed combinations are `joiner`, `joiner,leaver`, or `leaver`. <br/> Supports `$filter`(`eq`, `ne`, `has`) and `$orderby`. <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.
+- `display_name` (String) The display name of the taskDefinition. <br/> Supports `$filter`(`eq`, `ne`) and `$orderby`.
 - `id` (String) The unique identifier for the taskDefinition.
-- `version` (Number) The version number of the taskDefinition. New records are pushed when we add support for new parameters.<br><br>Supports `$filter`(`ge`, `gt`, `le`, `lt`, `eq`, `ne`) and `$orderby`.
+- `version` (Number) The version number of the taskDefinition. New records are pushed when we add support for new parameters. <br/> Supports `$filter`(`ge`, `gt`, `le`, `lt`, `eq`, `ne`) and `$orderby`.

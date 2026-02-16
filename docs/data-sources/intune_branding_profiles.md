@@ -5,9 +5,9 @@ subcategory: "MS Graph: Mobile app management (MAM)"
 
 # microsoft365wp_intune_branding_profiles (Data Source)
 
-This entity contains data which is used in customizing the tenant level appearance of the Company Portal applications as well as the end user web portal. / https://learn.microsoft.com/en-us/graph/api/resources/intune-wip-intunebrandingprofile?view=graph-rest-beta
+This entity contains data which is used in customizing the tenant level appearance of the Company Portal applications as well as the end user web portal. <br/> Also see [Microsoft docs for intuneBrandingProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-wip-intunebrandingprofile?view=graph-rest-beta).
 
-Provider Note: There have been **nonspecific errors reported when trying to _assign_ with application permissions** (even though the MS docs state that it should be possible)! Empty `assignments` or using delegated permissions both seemed to work in our tests, though.
+_Provider_ Note: There have been **nonspecific errors reported when trying to _assign_ with application permissions** (even though the MS docs state that it should be possible)! Empty `assignments` or using delegated permissions both seemed to work in our tests, though.
 
 ## Documentation Disclaimer
 
@@ -96,4 +96,4 @@ Read-Only:
 - `is_default_profile` (Boolean) Boolean that represents whether the profile is used as default or not
 - `last_modified_date_time` (String) Time when the BrandingProfile was last modified
 - `profile_name` (String) Name of the profile
-- `role_scope_tag_ids` (Set of String) List of scope tags assigned to the branding profile.
+- `role_scope_tag_ids` (Set of String) List of scope tags assigned to the branding profile <br/>

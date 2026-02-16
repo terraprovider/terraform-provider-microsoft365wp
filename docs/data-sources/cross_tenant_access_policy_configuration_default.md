@@ -5,7 +5,7 @@ subcategory: "MS Graph: Cross-tenant access"
 
 # microsoft365wp_cross_tenant_access_policy_configuration_default (Data Source)
 
-Represents the default configuration for cross-tenant access and tenant restrictions. Cross-tenant access settings include inbound and outbound settings of Microsoft Entra B2B collaboration and B2B direct connect. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta
+Represents the default configuration for cross-tenant access and tenant restrictions. Cross-tenant access settings include inbound and outbound settings of Microsoft Entra B2B collaboration and B2B direct connect. <br/> Also see [Microsoft docs for crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -62,24 +62,24 @@ output "microsoft365wp_cross_tenant_access_policy_configuration_default" {
 
 ### Read-Only
 
-- `automatic_user_consent_settings` (Attributes) Determines the default configuration for automatic user consent settings. The **inboundAllowed** and **outboundAllowed** properties are always `false` and can't be updated in the default configuration. / Defines the inbound and outbound rulesets for particular configurations within cross-tenant access settings. / https://learn.microsoft.com/en-us/graph/api/resources/inboundoutboundpolicyconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--automatic_user_consent_settings))
-- `b2b_collaboration_inbound` (Attributes) Defines your default configuration for users from other organizations accessing your resources via Microsoft Entra B2B collaboration. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_collaboration_inbound))
-- `b2b_collaboration_outbound` (Attributes) Defines your default configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B collaboration. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_collaboration_outbound))
-- `b2b_direct_connect_inbound` (Attributes) Defines your default configuration for users from other organizations accessing your resources via Microsoft Entra B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound))
-- `b2b_direct_connect_outbound` (Attributes) Defines your default configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound))
+- `automatic_user_consent_settings` (Attributes) Determines the default configuration for automatic user consent settings. The **inboundAllowed** and **outboundAllowed** properties are always `false` and can't be updated in the default configuration. / Defines the inbound and outbound rulesets for particular configurations within cross-tenant access settings. Also see [Microsoft docs for inboundOutboundPolicyConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/inboundoutboundpolicyconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--automatic_user_consent_settings))
+- `b2b_collaboration_inbound` (Attributes) Defines your default configuration for users from other organizations accessing your resources via Microsoft Entra B2B collaboration. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. Also see [Microsoft docs for crossTenantAccessPolicyB2BSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_inbound))
+- `b2b_collaboration_outbound` (Attributes) Defines your default configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B collaboration. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. Also see [Microsoft docs for crossTenantAccessPolicyB2BSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_outbound))
+- `b2b_direct_connect_inbound` (Attributes) Defines your default configuration for users from other organizations accessing your resources via Microsoft Entra B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. Also see [Microsoft docs for crossTenantAccessPolicyB2BSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound))
+- `b2b_direct_connect_outbound` (Attributes) Defines your default configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. Also see [Microsoft docs for crossTenantAccessPolicyB2BSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound))
 - `id` (String) The ID of this resource.
-- `inbound_trust` (Attributes) Determines the default configuration for trusting other Conditional Access claims from external Microsoft Entra organizations. / Defines the Conditional Access claims you want to accept from other Microsoft Entra organizations via your cross-tenant access policy configuration. These can be configured in your default configuration, partner-specific configuration, or both. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyinboundtrust?view=graph-rest-beta. (see [below for nested schema](#nestedatt--inbound_trust))
-- `invitation_redemption_identity_provider_configuration` (Attributes) Defines the priority order based on which an identity provider is selected during invitation redemption for a guest user. / Defines the invitation redemption provider configuration to set redemption flow settings for Microsoft Entra ID B2B collaboration. / https://learn.microsoft.com/en-us/graph/api/resources/defaultinvitationredemptionidentityproviderconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--invitation_redemption_identity_provider_configuration))
+- `inbound_trust` (Attributes) Determines the default configuration for trusting other Conditional Access claims from external Microsoft Entra organizations. / Defines the Conditional Access claims you want to accept from other Microsoft Entra organizations via your cross-tenant access policy configuration. These can be configured in your default configuration, partner-specific configuration, or both. Also see [Microsoft docs for crossTenantAccessPolicyInboundTrust](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyinboundtrust?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--inbound_trust))
+- `invitation_redemption_identity_provider_configuration` (Attributes) Defines the priority order based on which an identity provider is selected during invitation redemption for a guest user. / Defines the invitation redemption provider configuration to set redemption flow settings for Microsoft Entra ID B2B collaboration. Also see [Microsoft docs for defaultInvitationRedemptionIdentityProviderConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/defaultinvitationredemptionidentityproviderconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--invitation_redemption_identity_provider_configuration))
 - `is_service_default` (Boolean) If `true`, the default configuration is set to the system default configuration. If `false`, the default settings are customized.
-- `tenant_restrictions` (Attributes) Defines the default tenant restrictions configuration for users in your organization who access an external organization on your network or devices. / Defines how to target your tenant restrictions settings. Tenant restrictions give you control over the external organizations that your users can access from your network or devices when they use external identities. Settings can be targeted to specific users, groups, or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytenantrestrictions?view=graph-rest-beta. (see [below for nested schema](#nestedatt--tenant_restrictions))
+- `tenant_restrictions` (Attributes) Defines the default tenant restrictions configuration for users in your organization who access an external organization on your network or devices. / Defines how to target your tenant restrictions settings. Tenant restrictions give you control over the external organizations that your users can access from your network or devices when they use external identities. Settings can be targeted to specific users, groups, or applications. Also see [Microsoft docs for crossTenantAccessPolicyTenantRestrictions](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytenantrestrictions?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--tenant_restrictions))
 
 <a id="nestedatt--automatic_user_consent_settings"></a>
 ### Nested Schema for `automatic_user_consent_settings`
 
 Read-Only:
 
-- `inbound_allowed` (Boolean) Defines whether external users coming inbound are allowed.
-- `outbound_allowed` (Boolean) Defines whether internal users are allowed to go outbound.
+- `inbound_allowed` (Boolean) Defines whether external users coming inbound are allowed. <br/>
+- `outbound_allowed` (Boolean) Defines whether internal users are allowed to go outbound. <br/>
 
 
 <a id="nestedatt--b2b_collaboration_inbound"></a>
@@ -87,24 +87,24 @@ Read-Only:
 
 Read-Only:
 
-- `applications` (Attributes) The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_collaboration_inbound--applications))
-- `users_and_groups` (Attributes) The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_collaboration_inbound--users_and_groups))
+- `applications` (Attributes) The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_inbound--applications))
+- `users_and_groups` (Attributes) The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_inbound--users_and_groups))
 
 <a id="nestedatt--b2b_collaboration_inbound--applications"></a>
 ### Nested Schema for `b2b_collaboration_inbound.applications`
 
 Read-Only:
 
-- `access_type` (String) Defines whether access is allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`.
-- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_collaboration_inbound--applications--targets))
+- `access_type` (String) Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
+- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_inbound--applications--targets))
 
 <a id="nestedatt--b2b_collaboration_inbound--applications--targets"></a>
 ### Nested Schema for `b2b_collaboration_inbound.applications.targets`
 
 Read-Only:
 
-- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
-- `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`.
+- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
+- `target_type` (String) The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.
 
 
 
@@ -113,16 +113,16 @@ Read-Only:
 
 Read-Only:
 
-- `access_type` (String) Defines whether access is allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`.
-- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_collaboration_inbound--users_and_groups--targets))
+- `access_type` (String) Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
+- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_inbound--users_and_groups--targets))
 
 <a id="nestedatt--b2b_collaboration_inbound--users_and_groups--targets"></a>
 ### Nested Schema for `b2b_collaboration_inbound.users_and_groups.targets`
 
 Read-Only:
 
-- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
-- `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`.
+- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
+- `target_type` (String) The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.
 
 
 
@@ -132,24 +132,24 @@ Read-Only:
 
 Read-Only:
 
-- `applications` (Attributes) The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_collaboration_outbound--applications))
-- `users_and_groups` (Attributes) The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_collaboration_outbound--users_and_groups))
+- `applications` (Attributes) The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_outbound--applications))
+- `users_and_groups` (Attributes) The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_outbound--users_and_groups))
 
 <a id="nestedatt--b2b_collaboration_outbound--applications"></a>
 ### Nested Schema for `b2b_collaboration_outbound.applications`
 
 Read-Only:
 
-- `access_type` (String) Defines whether access is allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`.
-- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_collaboration_outbound--applications--targets))
+- `access_type` (String) Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
+- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_outbound--applications--targets))
 
 <a id="nestedatt--b2b_collaboration_outbound--applications--targets"></a>
 ### Nested Schema for `b2b_collaboration_outbound.applications.targets`
 
 Read-Only:
 
-- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
-- `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`.
+- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
+- `target_type` (String) The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.
 
 
 
@@ -158,16 +158,16 @@ Read-Only:
 
 Read-Only:
 
-- `access_type` (String) Defines whether access is allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`.
-- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_collaboration_outbound--users_and_groups--targets))
+- `access_type` (String) Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
+- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_outbound--users_and_groups--targets))
 
 <a id="nestedatt--b2b_collaboration_outbound--users_and_groups--targets"></a>
 ### Nested Schema for `b2b_collaboration_outbound.users_and_groups.targets`
 
 Read-Only:
 
-- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
-- `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`.
+- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
+- `target_type` (String) The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.
 
 
 
@@ -177,24 +177,24 @@ Read-Only:
 
 Read-Only:
 
-- `applications` (Attributes) The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound--applications))
-- `users_and_groups` (Attributes) The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound--users_and_groups))
+- `applications` (Attributes) The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound--applications))
+- `users_and_groups` (Attributes) The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound--users_and_groups))
 
 <a id="nestedatt--b2b_direct_connect_inbound--applications"></a>
 ### Nested Schema for `b2b_direct_connect_inbound.applications`
 
 Read-Only:
 
-- `access_type` (String) Defines whether access is allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`.
-- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound--applications--targets))
+- `access_type` (String) Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
+- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound--applications--targets))
 
 <a id="nestedatt--b2b_direct_connect_inbound--applications--targets"></a>
 ### Nested Schema for `b2b_direct_connect_inbound.applications.targets`
 
 Read-Only:
 
-- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
-- `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`.
+- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
+- `target_type` (String) The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.
 
 
 
@@ -203,16 +203,16 @@ Read-Only:
 
 Read-Only:
 
-- `access_type` (String) Defines whether access is allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`.
-- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound--users_and_groups--targets))
+- `access_type` (String) Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
+- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound--users_and_groups--targets))
 
 <a id="nestedatt--b2b_direct_connect_inbound--users_and_groups--targets"></a>
 ### Nested Schema for `b2b_direct_connect_inbound.users_and_groups.targets`
 
 Read-Only:
 
-- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
-- `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`.
+- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
+- `target_type` (String) The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.
 
 
 
@@ -222,24 +222,24 @@ Read-Only:
 
 Read-Only:
 
-- `applications` (Attributes) The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound--applications))
-- `users_and_groups` (Attributes) The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound--users_and_groups))
+- `applications` (Attributes) The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound--applications))
+- `users_and_groups` (Attributes) The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound--users_and_groups))
 
 <a id="nestedatt--b2b_direct_connect_outbound--applications"></a>
 ### Nested Schema for `b2b_direct_connect_outbound.applications`
 
 Read-Only:
 
-- `access_type` (String) Defines whether access is allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`.
-- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound--applications--targets))
+- `access_type` (String) Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
+- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound--applications--targets))
 
 <a id="nestedatt--b2b_direct_connect_outbound--applications--targets"></a>
 ### Nested Schema for `b2b_direct_connect_outbound.applications.targets`
 
 Read-Only:
 
-- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
-- `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`.
+- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
+- `target_type` (String) The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.
 
 
 
@@ -248,16 +248,16 @@ Read-Only:
 
 Read-Only:
 
-- `access_type` (String) Defines whether access is allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`.
-- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound--users_and_groups--targets))
+- `access_type` (String) Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
+- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound--users_and_groups--targets))
 
 <a id="nestedatt--b2b_direct_connect_outbound--users_and_groups--targets"></a>
 ### Nested Schema for `b2b_direct_connect_outbound.users_and_groups.targets`
 
 Read-Only:
 
-- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
-- `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`.
+- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
+- `target_type` (String) The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.
 
 
 
@@ -267,9 +267,9 @@ Read-Only:
 
 Read-Only:
 
-- `is_compliant_device_accepted` (Boolean) Specifies whether compliant devices from external Microsoft Entra organizations are trusted.
-- `is_hybrid_azure_ad_joined_device_accepted` (Boolean) Specifies whether Microsoft Entra hybrid joined devices from external Microsoft Entra organizations are trusted.
-- `is_mfa_accepted` (Boolean) Specifies whether MFA from external Microsoft Entra organizations is trusted.
+- `is_compliant_device_accepted` (Boolean) Specifies whether compliant devices from external Microsoft Entra organizations are trusted. <br/>
+- `is_hybrid_azure_ad_joined_device_accepted` (Boolean) Specifies whether Microsoft Entra hybrid joined devices from external Microsoft Entra organizations are trusted. <br/>
+- `is_mfa_accepted` (Boolean) Specifies whether MFA from external Microsoft Entra organizations is trusted. <br/>
 
 
 <a id="nestedatt--invitation_redemption_identity_provider_configuration"></a>
@@ -277,8 +277,8 @@ Read-Only:
 
 Read-Only:
 
-- `fallback_identity_provider` (String) The fallback identity provider to be used in case no primary identity provider can be used for guest invitation redemption.or `microsoftAccount`. / Possible values are: `azureActiveDirectory`, `externalFederation`, `socialIdentityProviders`, `emailOneTimePasscode`, `microsoftAccount`, `defaultConfiguredIdp`, `unknownFutureValue`.
-- `primary_identity_provider_precedence_order` (Set of String) Collection of identity providers in priority order of preference to be used for guest invitation redemption.or `socialIdentityProviders`. / Possible values are: `azureActiveDirectory`, `externalFederation`, `socialIdentityProviders`, `emailOneTimePasscode`, `microsoftAccount`, `defaultConfiguredIdp`, `unknownFutureValue`.
+- `fallback_identity_provider` (String) The fallback identity provider to be used in case no primary identity provider can be used for guest invitation redemption. <br/> _Provider_ allowed values are: `azureActiveDirectory`, `externalFederation`, `socialIdentityProviders`, `emailOneTimePasscode`, `microsoftAccount`, `defaultConfiguredIdp`, `unknownFutureValue`.
+- `primary_identity_provider_precedence_order` (Set of String) Collection of identity providers in priority order of preference to be used for guest invitation redemption. <br/> _Provider_ allowed values are: `azureActiveDirectory`, `externalFederation`, `socialIdentityProviders`, `emailOneTimePasscode`, `microsoftAccount`, `defaultConfiguredIdp`, `unknownFutureValue`.
 
 
 <a id="nestedatt--tenant_restrictions"></a>
@@ -286,25 +286,25 @@ Read-Only:
 
 Read-Only:
 
-- `applications` (Attributes) The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--tenant_restrictions--applications))
-- `devices` (Attributes) Defines the rule for filtering devices and whether devices satisfying the rule should be allowed or blocked. This property isn't supported on the server side yet. / Defines a rule to filter the devices and whether devices that satisfy the rule should be allowed or blocked. / https://learn.microsoft.com/en-us/graph/api/resources/devicesfilter?view=graph-rest-beta (see [below for nested schema](#nestedatt--tenant_restrictions--devices))
-- `users_and_groups` (Attributes) The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta. (see [below for nested schema](#nestedatt--tenant_restrictions--users_and_groups))
+- `applications` (Attributes) The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--tenant_restrictions--applications))
+- `devices` (Attributes) Defines the rule for filtering devices and whether devices satisfying the rule should be allowed or blocked. This property isn't supported on the server side yet. / Defines a rule to filter the devices and whether devices that satisfy the rule should be allowed or blocked. Also see [Microsoft docs for devicesFilter](https://learn.microsoft.com/en-us/graph/api/resources/devicesfilter?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--tenant_restrictions--devices))
+- `users_and_groups` (Attributes) The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--tenant_restrictions--users_and_groups))
 
 <a id="nestedatt--tenant_restrictions--applications"></a>
 ### Nested Schema for `tenant_restrictions.applications`
 
 Read-Only:
 
-- `access_type` (String) Defines whether access is allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`.
-- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--tenant_restrictions--applications--targets))
+- `access_type` (String) Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
+- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--tenant_restrictions--applications--targets))
 
 <a id="nestedatt--tenant_restrictions--applications--targets"></a>
 ### Nested Schema for `tenant_restrictions.applications.targets`
 
 Read-Only:
 
-- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
-- `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`.
+- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
+- `target_type` (String) The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.
 
 
 
@@ -313,7 +313,7 @@ Read-Only:
 
 Read-Only:
 
-- `mode` (String) Determines whether devices that satisfy the rule should be allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`
+- `mode` (String) Determines whether devices that satisfy the rule should be allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
 - `rule` (String) Defines the rule to filter the devices. For example, `device.deviceAttribute2 -eq 'PrivilegedAccessWorkstation'`.
 
 
@@ -322,13 +322,13 @@ Read-Only:
 
 Read-Only:
 
-- `access_type` (String) Defines whether access is allowed or blocked. The / Possible values are: `allowed`, `blocked`, `unknownFutureValue`.
-- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta. (see [below for nested schema](#nestedatt--tenant_restrictions--users_and_groups--targets))
+- `access_type` (String) Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.
+- `targets` (Attributes Set) Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--tenant_restrictions--users_and_groups--targets))
 
 <a id="nestedatt--tenant_restrictions--users_and_groups--targets"></a>
 ### Nested Schema for `tenant_restrictions.users_and_groups.targets`
 
 Read-Only:
 
-- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <li> The unique identifier of the user, group, or application <li> `AllUsers` <li> `AllApplications` - Refers to any [Microsoft cloud application](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <li> `Office365` - Includes the applications mentioned as part of the [Office 365](/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
-- `target_type` (String) The type of resource that you want to target. The / Possible values are: `user`, `group`, `application`, `unknownFutureValue`.
+- `target` (String) Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.
+- `target_type` (String) The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.

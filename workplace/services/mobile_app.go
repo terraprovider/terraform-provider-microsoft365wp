@@ -4,7 +4,7 @@ import (
 	"context"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	mobileapputils "terraform-provider-microsoft365wp/workplace/services/mobile_app_utils"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
@@ -121,9 +121,9 @@ var mobileAppResourceSchema = schema.Schema{
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: "The description of the app. The _provider_ default value is `\"\"`.",
+			MarkdownDescription: "The description of the app. <br/> The _provider_ default value is `\"\"`.",
 		},
 		"developer": schema.StringAttribute{
 			Optional:            true,
@@ -144,9 +144,9 @@ var mobileAppResourceSchema = schema.Schema{
 		},
 		"is_featured": schema.BoolAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 			Computed:            true,
-			MarkdownDescription: "The value indicating whether the app is marked as featured by the admin. The _provider_ default value is `false`.",
+			MarkdownDescription: "The value indicating whether the app is marked as featured by the admin. <br/> The _provider_ default value is `false`.",
 		},
 		"large_icon": schema.SingleNestedAttribute{
 			Optional: true,
@@ -161,7 +161,7 @@ var mobileAppResourceSchema = schema.Schema{
 					MarkdownDescription: "The byte array that contains the actual content.",
 				},
 			},
-			MarkdownDescription: "The large icon, to be displayed in the app details and used for upload of the icon. / Contains properties for a generic mime content. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta",
+			MarkdownDescription: "The large icon, to be displayed in the app details and used for upload of the icon. / Contains properties for a generic mime content. Also see [Microsoft docs for mimeContent](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta). <br> ",
 		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -190,14 +190,14 @@ var mobileAppResourceSchema = schema.Schema{
 				stringvalidator.OneOf("notPublished", "processing", "published"),
 			},
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "The publishing state for the app. The app cannot be assigned unless the app is published. / Indicates the publishing state of an app; possible values are: `notPublished` (The app is not yet published.), `processing` (The app is pending service-side processing.), `published` (The app is published.)",
+			MarkdownDescription: "The publishing state for the app. The app cannot be assigned unless the app is published. / Indicates the publishing state of an app. <br/> _Provider_ allowed values are: `notPublished` (The app is not yet published.), `processing` (The app is pending service-side processing.), `published` (The app is published.).",
 		},
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of scope tag ids for this mobile app. The _provider_ default value is `[\"0\"]`.",
+			MarkdownDescription: "List of scope tag ids for this mobile app. <br/> The _provider_ default value is `[\"0\"]`.",
 		},
 		"superseded_app_count": schema.Int64Attribute{
 			Computed:      true,
@@ -217,9 +217,9 @@ var mobileAppResourceSchema = schema.Schema{
 			NestedObject: schema.NestedAttributeObject{
 				Attributes: mobileAppMobileAppAssignmentAttributes,
 			},
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "The list of group assignments for this mobile app. / A class containing the properties used for Group Assignment of a Mobile App. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappassignment?view=graph-rest-beta. The _provider_ default value is `[]`.",
+			MarkdownDescription: "The list of group assignments for this mobile app. / A class containing the properties used for Group Assignment of a Mobile App. Also see [Microsoft docs for mobileAppAssignment](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappassignment?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 		"categories": schema.SetNestedAttribute{
 			Optional: true,
@@ -236,9 +236,9 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 				},
 			},
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "The list of categories for this app. / Contains properties for a single Intune app category. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappcategory?view=graph-rest-beta. The _provider_ default value is `[]`.",
+			MarkdownDescription: "The list of categories for this app. / Contains properties for a single Intune app category. Also see [Microsoft docs for mobileAppCategory](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappcategory?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 		"android_for_work": generic.OdataDerivedTypeNestedAttributeRs{
 			DerivedType: "#microsoft.graph.androidForWorkApp",
@@ -270,7 +270,7 @@ var mobileAppResourceSchema = schema.Schema{
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
 				PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-				MarkdownDescription: "Contains properties and inherited properties for Android for Work (AFW) Apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidforworkapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Android for Work (AFW) Apps. Also see [Microsoft docs for androidForWorkApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidforworkapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"android_lob": generic.OdataDerivedTypeNestedAttributeRs{
@@ -295,7 +295,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppAndroidMinimumOperatingSystemAttributes,
-						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties for the minimum operating system required for an Android mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties for the minimum operating system required for an Android mobile app. Also see [Microsoft docs for androidMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 					"package_id": schema.StringAttribute{
 						Computed:            true,
@@ -306,7 +306,7 @@ var mobileAppResourceSchema = schema.Schema{
 						Validators: []validator.String{
 							wpvalidator.FlagEnumValues("androidDeviceAdministrator", "androidOpenSourceProject", "unknownFutureValue"),
 						},
-						MarkdownDescription: "The platforms to which the application can be targeted. If not specified, will defauilt to Android Device Administrator. / Specifies which platform(s) can be targeted for a given Android LOB application or Managed Android LOB application; possible values are: `androidDeviceAdministrator` (Indicates the Android targeted platform is Android Device Administrator.), `androidOpenSourceProject` (Indicates the Android targeted platform is Android Open Source Project.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)",
+						MarkdownDescription: "The platforms to which the application can be targeted. If not specified, will defauilt to Android Device Administrator. / Specifies which platform(s) can be targeted for a given Android LOB application or Managed Android LOB application. <br/> _Provider_ allowed values are: `androidDeviceAdministrator` (Indicates the Android targeted platform is Android Device Administrator.), `androidOpenSourceProject` (Indicates the Android targeted platform is Android Open Source Project.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.).",
 					},
 					"version_code": schema.StringAttribute{
 						Computed:            true,
@@ -319,7 +319,7 @@ var mobileAppResourceSchema = schema.Schema{
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
 				PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-				MarkdownDescription: "Contains properties and inherited properties for Android Line Of Business apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidlobapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Android Line Of Business apps. Also see [Microsoft docs for androidLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidlobapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"android_managed_store": generic.OdataDerivedTypeNestedAttributeRs{
@@ -354,7 +354,7 @@ var mobileAppResourceSchema = schema.Schema{
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
-						MarkdownDescription: "The tracks that are visible to this enterprise. This property is read-only. / Contains track information for Android Managed Store apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidmanagedstoreapptrack?view=graph-rest-beta",
+						MarkdownDescription: "The tracks that are visible to this enterprise. This property is read-only. / Contains track information for Android Managed Store apps. Also see [Microsoft docs for androidManagedStoreAppTrack](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidmanagedstoreapptrack?view=graph-rest-beta). <br> ",
 					},
 					"is_private": schema.BoolAttribute{
 						Computed:            true,
@@ -364,11 +364,11 @@ var mobileAppResourceSchema = schema.Schema{
 					"is_system_app": schema.BoolAttribute{
 						Optional: true,
 						PlanModifiers: []planmodifier.Bool{
-							wpdefaultvalue.BoolDefaultValue(true),
+							wpdefaultvaluemodifier.BoolDefaultValue(true),
 							boolplanmodifier.RequiresReplace(),
 						},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether the app is a preinstalled system app. The _provider_ default value is `true`.",
+						MarkdownDescription: "Indicates whether the app is a preinstalled system app. <br/> The _provider_ default value is `true`.  \n_Provider_ Note: Settings this to `false` will most likely **make resource creation fail** as non-system apps cannot be created with a POST request.",
 					},
 					"package_id": schema.StringAttribute{
 						Computed:            true,
@@ -392,7 +392,7 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for Android Managed Store Apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidmanagedstoreapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Android Managed Store Apps. Also see [Microsoft docs for androidManagedStoreApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidmanagedstoreapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"android_store": generic.OdataDerivedTypeNestedAttributeRs{
@@ -408,7 +408,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Required:            true,
 						Attributes:          mobileAppAndroidMinimumOperatingSystemAttributes,
-						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties for the minimum operating system required for an Android mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties for the minimum operating system required for an Android mobile app. Also see [Microsoft docs for androidMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 					"package_id": schema.StringAttribute{
 						Computed:            true,
@@ -417,7 +417,7 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for Android store apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidstoreapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Android store apps. Also see [Microsoft docs for androidStoreApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidstoreapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"ios_lob": generic.OdataDerivedTypeNestedAttributeRs{
@@ -439,10 +439,17 @@ var mobileAppResourceSchema = schema.Schema{
 						PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
 						MarkdownDescription: "The total size, including all uploaded files. This property is read-only.",
 					},
+					"apple_device_app_delivery_protocol_type": schema.StringAttribute{
+						Computed: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("default", "mobileDeviceManagement", "declarativeDeviceManagement", "unknownFutureValue"),
+						},
+						MarkdownDescription: "The protocol used to deliver the app to the apple device(s). When the property is set to Declarative Device Management (DDM) protocol ('declarativeDeviceManagement') then it can no longer be modified or updated to 'mobileDeviceManagement' or 'default'. Default value is: 'default' which indicates Apple MDM protocol. / Enum of the supported types of Apple delivery protocols, representing the available protocols to deliver payloads to Apple devices. <br/> _Provider_ allowed values are: `default` (Default. Set if the client hasn't specified a value for an entity. Indicates the payload will be delivered to devices using Intune's default delivery protocol, which is Mobile Device Management (MDM). This protocol is not specific to the apps payload.), `mobileDeviceManagement` (Indicates the payload will be delivered to devices using the Mobile Device Management (MDM) protocol. This protocol is not specific to the apps payload.), `declarativeDeviceManagement` (Indicates the payload will be delivered to devices using the Declarative Device Management (DDM) protocol. This protocol is not specific to the apps payload.), `unknownFutureValue` (Unknown future value, reserved for future usage as expandable enum.).",
+					},
 					"applicable_device_type": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppIosDeviceTypeAttributes,
-						MarkdownDescription: "The iOS architecture for which this app can run on. / Contains properties of the possible iOS device types the mobile app can run on. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta",
+						MarkdownDescription: "The iOS architecture for which this app can run on. / Contains properties of the possible iOS device types the mobile app can run on. Also see [Microsoft docs for iosDeviceType](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta). <br> ",
 					},
 					"build_number": schema.StringAttribute{
 						Computed:            true,
@@ -459,7 +466,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppIosMinimumOperatingSystemAttributes,
-						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties of the minimum operating system required for an iOS mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties of the minimum operating system required for an iOS mobile app. Also see [Microsoft docs for iosMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 					"version_number": schema.StringAttribute{
 						Computed:            true,
@@ -468,7 +475,7 @@ var mobileAppResourceSchema = schema.Schema{
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
 				PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-				MarkdownDescription: "Contains properties and inherited properties for iOS Line Of Business apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-ioslobapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for iOS Line Of Business apps. Also see [Microsoft docs for iosLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-ioslobapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"ios_store": generic.OdataDerivedTypeNestedAttributeRs{
@@ -479,9 +486,9 @@ var mobileAppResourceSchema = schema.Schema{
 					"applicable_device_type": schema.SingleNestedAttribute{
 						Optional:            true,
 						Attributes:          mobileAppIosDeviceTypeAttributes,
-						PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "The iOS architecture for which this app can run on. / Contains properties of the possible iOS device types the mobile app can run on. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta. The _provider_ default value is `{}`.",
+						MarkdownDescription: "The iOS architecture for which this app can run on. / Contains properties of the possible iOS device types the mobile app can run on. Also see [Microsoft docs for iosDeviceType](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 					},
 					"app_store_url": schema.StringAttribute{
 						Required:            true,
@@ -496,11 +503,11 @@ var mobileAppResourceSchema = schema.Schema{
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Required:            true,
 						Attributes:          mobileAppIosMinimumOperatingSystemAttributes,
-						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties of the minimum operating system required for an iOS mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties of the minimum operating system required for an iOS mobile app. Also see [Microsoft docs for iosMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for iOS store apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosstoreapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for iOS store apps. Also see [Microsoft docs for iosStoreApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosstoreapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"ios_vpp": generic.OdataDerivedTypeNestedAttributeRs{
@@ -511,7 +518,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"applicable_device_type": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppIosDeviceTypeAttributes,
-						MarkdownDescription: "The applicable iOS Device Type. / Contains properties of the possible iOS device types the mobile app can run on. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta",
+						MarkdownDescription: "The applicable iOS Device Type. / Contains properties of the possible iOS device types the mobile app can run on. Also see [Microsoft docs for iosDeviceType](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta). <br> ",
 					},
 					"app_store_url": schema.StringAttribute{
 						Computed:            true,
@@ -524,7 +531,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"licensing_type": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppVppLicensingTypeAttributes,
-						MarkdownDescription: "The supported License Type. / Contains properties for iOS Volume-Purchased Program (Vpp) Licensing Type. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-vpplicensingtype?view=graph-rest-beta",
+						MarkdownDescription: "The supported License Type. / Contains properties for iOS Volume-Purchased Program (Vpp) Licensing Type. Also see [Microsoft docs for vppLicensingType](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-vpplicensingtype?view=graph-rest-beta). <br> ",
 					},
 					"release_date_time": schema.StringAttribute{
 						Computed:            true,
@@ -539,7 +546,7 @@ var mobileAppResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("none", "appleFailure", "internalError", "expiredVppToken", "expiredApplePushNotificationCertificate"),
 									},
-									MarkdownDescription: "The reason for the revoke licenses action failure. / Possible types of reasons for an Apple Volume Purchase Program token action failure; possible values are: `none` (None.), `appleFailure` (There was an error on Apple's service.), `internalError` (There was an internal error.), `expiredVppToken` (There was an error because the Apple Volume Purchase Program token was expired.), `expiredApplePushNotificationCertificate` (There was an error because the Apple Volume Purchase Program Push Notification certificate expired.)",
+									MarkdownDescription: "The reason for the revoke licenses action failure. / Possible types of reasons for an Apple Volume Purchase Program token action failure. <br/> _Provider_ allowed values are: `none` (None.), `appleFailure` (There was an error on Apple's service.), `internalError` (There was an internal error.), `expiredVppToken` (There was an error because the Apple Volume Purchase Program token was expired.), `expiredApplePushNotificationCertificate` (There was an error because the Apple Volume Purchase Program Push Notification certificate expired.).",
 								},
 								"action_name": schema.StringAttribute{
 									Computed:            true,
@@ -550,7 +557,7 @@ var mobileAppResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("none", "pending", "canceled", "active", "done", "failed", "notSupported"),
 									},
-									MarkdownDescription: "State of the action. / State of the action on the device; possible values are: `none` (Not a valid action state), `pending` (Action is pending), `canceled` (Action has been cancelled.), `active` (Action is active.), `done` (Action completed without errors.), `failed` (Action failed), `notSupported` (Action is not supported.)",
+									MarkdownDescription: "State of the action. / State of the action on the device. <br/> _Provider_ allowed values are: `none` (Not a valid action state), `pending` (Action is pending), `canceled` (Action has been cancelled.), `active` (Action is active.), `done` (Action completed without errors.), `failed` (Action failed), `notSupported` (Action is not supported.).",
 								},
 								"failed_licenses_count": schema.Int64Attribute{
 									Computed:            true,
@@ -578,7 +585,7 @@ var mobileAppResourceSchema = schema.Schema{
 								},
 							},
 						},
-						MarkdownDescription: "Results of revoke license actions on this app. / Defines results for actions on iOS Vpp Apps, contains inherited properties for ActionResult. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosvppapprevokelicensesactionresult?view=graph-rest-beta",
+						MarkdownDescription: "Results of revoke license actions on this app. / Defines results for actions on iOS Vpp Apps, contains inherited properties for ActionResult. Also see [Microsoft docs for iosVppAppRevokeLicensesActionResult](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosvppapprevokelicensesactionresult?view=graph-rest-beta). <br> ",
 					},
 					"total_license_count": schema.Int64Attribute{
 						Computed:            true,
@@ -591,7 +598,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"vpp_token_account_type": schema.StringAttribute{
 						Computed:            true,
 						Validators:          []validator.String{stringvalidator.OneOf("business", "education")},
-						MarkdownDescription: "The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. / Possible types of an Apple Volume Purchase Program token; possible values are: `business` (Apple Volume Purchase Program token associated with an business program.), `education` (Apple Volume Purchase Program token associated with an education program.)",
+						MarkdownDescription: "The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. / Possible types of an Apple Volume Purchase Program token. <br/> _Provider_ allowed values are: `business` (Apple Volume Purchase Program token associated with an business program.), `education` (Apple Volume Purchase Program token associated with an education program.).",
 					},
 					"vpp_token_apple_id": schema.StringAttribute{
 						Computed:            true,
@@ -635,12 +642,12 @@ var mobileAppResourceSchema = schema.Schema{
 								},
 							},
 						},
-						MarkdownDescription: "The licenses assigned to this app. / iOS Volume Purchase Program license assignment. This class does not support Create, Delete, or Update. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosvppappassignedlicense?view=graph-rest-beta",
+						MarkdownDescription: "The licenses assigned to this app. / iOS Volume Purchase Program license assignment. This class does not support Create, Delete, or Update. Also see [Microsoft docs for iosVppAppAssignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosvppappassignedlicense?view=graph-rest-beta). <br> ",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
 				PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-				MarkdownDescription: "Contains properties and inherited properties for iOS Volume-Purchased Program (VPP) Apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosvppapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for iOS Volume-Purchased Program (VPP) Apps. Also see [Microsoft docs for iosVppApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosvppapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"ios_webclip": generic.OdataDerivedTypeNestedAttributeRs{
@@ -671,13 +678,13 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 					"use_managed_browser": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether or not to use managed browser. When TRUE, the app will be required to be opened in Microsoft Edge. When FALSE, the app will not be required to be opened in Microsoft Edge. By default, this property is set to FALSE. The _provider_ default value is `false`.",
+						MarkdownDescription: "Whether or not to use managed browser. When TRUE, the app will be required to be opened in Microsoft Edge. When FALSE, the app will not be required to be opened in Microsoft Edge. By default, this property is set to FALSE. <br/> The _provider_ default value is `false`.",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for iOS web apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosipadoswebclip?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for iOS web apps. Also see [Microsoft docs for iosiPadOSWebClip](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosipadoswebclip?view=graph-rest-beta). <br> ",
 			},
 		},
 		"macos_dmg": generic.OdataDerivedTypeNestedAttributeRs{
@@ -701,9 +708,9 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 					"ignore_version_detection": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "When TRUE, indicates that the app's version will NOT be used to detect if the app is installed on a device. When FALSE, indicates that the app's version will be used to detect if the app is installed on a device. Set this to true for apps that use a self update feature. The default value is FALSE. The _provider_ default value is `false`.",
+						MarkdownDescription: "When TRUE, indicates that the app's version will NOT be used to detect if the app is installed on a device. When FALSE, indicates that the app's version will be used to detect if the app is installed on a device. Set this to true for apps that use a self update feature. The default value is FALSE. <br/> The _provider_ default value is `false`.",
 					},
 					"included_apps": schema.SetNestedAttribute{
 						Required: true,
@@ -711,12 +718,12 @@ var mobileAppResourceSchema = schema.Schema{
 							Attributes: mobileAppMacOSIncludedAppAttributes,
 						},
 						Validators:          []validator.Set{setvalidator.SizeAtLeast(1)},
-						MarkdownDescription: "The list of .apps expected to be installed by the DMG (Apple Disk Image). This collection can contain a maximum of 500 elements. / Contains properties of an included .app in a MacOS app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosincludedapp?view=graph-rest-beta",
+						MarkdownDescription: "The list of .apps expected to be installed by the DMG (Apple Disk Image). This collection can contain a maximum of 500 elements. / Contains properties of an included .app in a MacOS app. Also see [Microsoft docs for macOSIncludedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosincludedapp?view=graph-rest-beta). <br> ",
 					},
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Required:            true,
 						Attributes:          mobileAppMacOSMinimumOperatingSystemAttributes,
-						MarkdownDescription: "ComplexType macOSMinimumOperatingSystem that indicates the minimum operating system applicable for the application. / The minimum operating system required for a macOS app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "ComplexType macOSMinimumOperatingSystem that indicates the minimum operating system applicable for the application. / The minimum operating system required for a macOS app. Also see [Microsoft docs for macOSMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 					"primary_bundle_id": schema.StringAttribute{
 						Required:            true,
@@ -728,16 +735,16 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 					"source_file": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: "Provider Note: The path to the DMG file to be uploaded.",
+						MarkdownDescription: "_Provider_ Note: The path to the DMG file to be uploaded.",
 					},
 					"source_sha256": schema.StringAttribute{
 						Required:            true,
 						Description:         `sourceSha256`, // custom MS Graph attribute name
-						MarkdownDescription: "Provider Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
+						MarkdownDescription: "_Provider_ Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for the MacOS DMG (Apple Disk Image) App. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosdmgapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for the MacOS DMG (Apple Disk Image) App. Also see [Microsoft docs for macOSDmgApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosdmgapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"macos_lob": generic.OdataDerivedTypeNestedAttributeRs{
@@ -785,7 +792,7 @@ var mobileAppResourceSchema = schema.Schema{
 								},
 							},
 						},
-						MarkdownDescription: "List of ComplexType macOSLobChildApp objects. Represents the apps expected to be installed by the package. / Contains properties of a macOS .app in the package / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobchildapp?view=graph-rest-beta",
+						MarkdownDescription: "List of ComplexType macOSLobChildApp objects. Represents the apps expected to be installed by the package. / Contains properties of a macOS .app in the package. Also see [Microsoft docs for macOSLobChildApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobchildapp?view=graph-rest-beta). <br> ",
 					},
 					"ignore_version_detection": schema.BoolAttribute{
 						Computed:            true,
@@ -809,7 +816,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppMacOSMinimumOperatingSystemAttributes,
-						MarkdownDescription: "ComplexType macOSMinimumOperatingSystem that indicates the minimum operating system applicable for the application. / The minimum operating system required for a macOS app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "ComplexType macOSMinimumOperatingSystem that indicates the minimum operating system applicable for the application. / The minimum operating system required for a macOS app. Also see [Microsoft docs for macOSMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 					"version_number": schema.StringAttribute{
 						Computed:            true,
@@ -818,7 +825,7 @@ var mobileAppResourceSchema = schema.Schema{
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
 				PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-				MarkdownDescription: "Contains properties and inherited properties for the macOS LOB App. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for the macOS LOB App. Also see [Microsoft docs for macOSLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"macos_ms_defender": generic.OdataDerivedTypeNestedAttributeRs{
@@ -828,7 +835,7 @@ var mobileAppResourceSchema = schema.Schema{
 				Attributes: map[string]schema.Attribute{ // macOSMicrosoftDefenderApp
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for the macOS Microsoft Defender App. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosmicrosoftdefenderapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for the macOS Microsoft Defender App. Also see [Microsoft docs for macOSMicrosoftDefenderApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosmicrosoftdefenderapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"macos_ms_edge": generic.OdataDerivedTypeNestedAttributeRs{
@@ -842,15 +849,15 @@ var mobileAppResourceSchema = schema.Schema{
 							stringvalidator.OneOf("dev", "beta", "stable", "unknownFutureValue"),
 						},
 						PlanModifiers: []planmodifier.String{
-							wpdefaultvalue.StringDefaultValue("stable"),
+							wpdefaultvaluemodifier.StringDefaultValue("stable"),
 							stringplanmodifier.RequiresReplace(),
 						},
 						Computed:            true,
-						MarkdownDescription: "The channel to install on target devices. / The enum to specify the channels for Microsoft Edge apps; possible values are: `dev` (The Dev Channel is intended to help you plan and develop with the latest capabilities of Microsoft Edge.), `beta` (The Beta Channel is intended for production deployment to a representative sample set of users. New features ship about every 4 weeks. Security and quality updates ship as needed.), `stable` (The Stable Channel is intended for broad deployment within organizations, and it's the channel that most users should be on. New features ship about every 4 weeks. Security and quality updates ship as needed.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `\"stable\"`.",
+						MarkdownDescription: "The channel to install on target devices. / The enum to specify the channels for Microsoft Edge apps. <br/> _Provider_ allowed values are: `dev` (The Dev Channel is intended to help you plan and develop with the latest capabilities of Microsoft Edge.), `beta` (The Beta Channel is intended for production deployment to a representative sample set of users. New features ship about every 4 weeks. Security and quality updates ship as needed.), `stable` (The Stable Channel is intended for broad deployment within organizations, and it's the channel that most users should be on. New features ship about every 4 weeks. Security and quality updates ship as needed.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `\"stable\"`.",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for the macOS Microsoft Edge App. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosmicrosoftedgeapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for the macOS Microsoft Edge App. Also see [Microsoft docs for macOSMicrosoftEdgeApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosmicrosoftedgeapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"macos_office_suite": generic.OdataDerivedTypeNestedAttributeRs{
@@ -860,7 +867,7 @@ var mobileAppResourceSchema = schema.Schema{
 				Attributes: map[string]schema.Attribute{ // macOSOfficeSuiteApp
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for the MacOS Office Suite App. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosofficesuiteapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for the MacOS Office Suite App. Also see [Microsoft docs for macOSOfficeSuiteApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosofficesuiteapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"macos_pkg": generic.OdataDerivedTypeNestedAttributeRs{
@@ -884,9 +891,9 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 					"ignore_version_detection": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "When TRUE, indicates that the app's version will NOT be used to detect if the app is installed on a device. When FALSE, indicates that the app's version will be used to detect if the app is installed on a device. Set this to true for apps that use a self update feature. The default value is FALSE. The _provider_ default value is `false`.",
+						MarkdownDescription: "When TRUE, indicates that the app's version will NOT be used to detect if the app is installed on a device. When FALSE, indicates that the app's version will be used to detect if the app is installed on a device. Set this to true for apps that use a self update feature. The default value is FALSE. <br/> The _provider_ default value is `false`.",
 					},
 					"included_apps": schema.SetNestedAttribute{
 						Required: true,
@@ -894,12 +901,12 @@ var mobileAppResourceSchema = schema.Schema{
 							Attributes: mobileAppMacOSIncludedAppAttributes,
 						},
 						Validators:          []validator.Set{setvalidator.SizeAtLeast(1)},
-						MarkdownDescription: "The list of apps expected to be installed by the PKG. This collection can contain a maximum of 500 elements. / Contains properties of an included .app in a MacOS app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosincludedapp?view=graph-rest-beta",
+						MarkdownDescription: "The list of apps expected to be installed by the PKG. This collection can contain a maximum of 500 elements. / Contains properties of an included .app in a MacOS app. Also see [Microsoft docs for macOSIncludedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosincludedapp?view=graph-rest-beta). <br> ",
 					},
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Required:            true,
 						Attributes:          mobileAppMacOSMinimumOperatingSystemAttributes,
-						MarkdownDescription: "ComplexType macOSMinimumOperatingSystem that indicates the minimum operating system applicable for the application. / The minimum operating system required for a macOS app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "ComplexType macOSMinimumOperatingSystem that indicates the minimum operating system applicable for the application. / The minimum operating system required for a macOS app. Also see [Microsoft docs for macOSMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 					"post_install_script": schema.SingleNestedAttribute{
 						Optional: true,
@@ -907,12 +914,12 @@ var mobileAppResourceSchema = schema.Schema{
 							"script_content": schema.StringAttribute{
 								Optional:            true,
 								Validators:          []validator.String{wpvalidator.TranslateValueEncodeBase64()},
-								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+								PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 								Computed:            true,
-								MarkdownDescription: "The base64 encoded shell script (.sh) that assists managing macOS apps. The _provider_ default value is `\"\"`.",
+								MarkdownDescription: "The base64 encoded shell script (.sh) that assists managing macOS apps. <br/> The _provider_ default value is `\"\"`.",
 							},
 						},
-						MarkdownDescription: "ComplexType macOSAppScript the contains the post-install script for the app. This will execute on the macOS device after the app is installed. / Shell script used to assist installation of a macOS app. These scripts are used to perform additional tasks to help the app successfully be configured. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosappscript?view=graph-rest-beta",
+						MarkdownDescription: "ComplexType macOSAppScript the contains the post-install script for the app. This will execute on the macOS device after the app is installed. / Shell script used to assist installation of a macOS app. These scripts are used to perform additional tasks to help the app successfully be configured. Also see [Microsoft docs for macOSAppScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosappscript?view=graph-rest-beta). <br> ",
 					},
 					"pre_install_script": schema.SingleNestedAttribute{
 						Optional: true,
@@ -920,12 +927,12 @@ var mobileAppResourceSchema = schema.Schema{
 							"script_content": schema.StringAttribute{
 								Optional:            true,
 								Validators:          []validator.String{wpvalidator.TranslateValueEncodeBase64()},
-								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+								PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 								Computed:            true,
-								MarkdownDescription: "The base64 encoded shell script (.sh) that assists managing macOS apps. The _provider_ default value is `\"\"`.",
+								MarkdownDescription: "The base64 encoded shell script (.sh) that assists managing macOS apps. <br/> The _provider_ default value is `\"\"`.",
 							},
 						},
-						MarkdownDescription: "ComplexType macOSAppScript the contains the post-install script for the app. This will execute on the macOS device after the app is installed. / Shell script used to assist installation of a macOS app. These scripts are used to perform additional tasks to help the app successfully be configured. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosappscript?view=graph-rest-beta",
+						MarkdownDescription: "ComplexType macOSAppScript the contains the post-install script for the app. This will execute on the macOS device after the app is installed. / Shell script used to assist installation of a macOS app. These scripts are used to perform additional tasks to help the app successfully be configured. Also see [Microsoft docs for macOSAppScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosappscript?view=graph-rest-beta). <br> ",
 					},
 					"primary_bundle_id": schema.StringAttribute{
 						Required:            true,
@@ -937,16 +944,16 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 					"source_file": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: "Provider Note: The path to the PKG file to be uploaded.",
+						MarkdownDescription: "_Provider_ Note: The path to the PKG file to be uploaded.",
 					},
 					"source_sha256": schema.StringAttribute{
 						Required:            true,
 						Description:         `sourceSha256`, // custom MS Graph attribute name
-						MarkdownDescription: "Provider Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
+						MarkdownDescription: "_Provider_ Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for the MacOSPkgApp. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macospkgapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for the MacOSPkgApp. Also see [Microsoft docs for macOSPkgApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macospkgapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"macos_vpp": generic.OdataDerivedTypeNestedAttributeRs{
@@ -965,7 +972,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"licensing_type": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppVppLicensingTypeAttributes,
-						MarkdownDescription: "The supported License Type. / Contains properties for iOS Volume-Purchased Program (Vpp) Licensing Type. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-vpplicensingtype?view=graph-rest-beta",
+						MarkdownDescription: "The supported License Type. / Contains properties for iOS Volume-Purchased Program (Vpp) Licensing Type. Also see [Microsoft docs for vppLicensingType](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-vpplicensingtype?view=graph-rest-beta). <br> ",
 					},
 					"release_date_time": schema.StringAttribute{
 						Computed:            true,
@@ -980,7 +987,7 @@ var mobileAppResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("none", "appleFailure", "internalError", "expiredVppToken", "expiredApplePushNotificationCertificate"),
 									},
-									MarkdownDescription: "The reason for the revoke licenses action failure. / Possible types of reasons for an Apple Volume Purchase Program token action failure; possible values are: `none` (None.), `appleFailure` (There was an error on Apple's service.), `internalError` (There was an internal error.), `expiredVppToken` (There was an error because the Apple Volume Purchase Program token was expired.), `expiredApplePushNotificationCertificate` (There was an error because the Apple Volume Purchase Program Push Notification certificate expired.)",
+									MarkdownDescription: "The reason for the revoke licenses action failure. / Possible types of reasons for an Apple Volume Purchase Program token action failure. <br/> _Provider_ allowed values are: `none` (None.), `appleFailure` (There was an error on Apple's service.), `internalError` (There was an internal error.), `expiredVppToken` (There was an error because the Apple Volume Purchase Program token was expired.), `expiredApplePushNotificationCertificate` (There was an error because the Apple Volume Purchase Program Push Notification certificate expired.).",
 								},
 								"action_name": schema.StringAttribute{
 									Computed:            true,
@@ -991,7 +998,7 @@ var mobileAppResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("none", "pending", "canceled", "active", "done", "failed", "notSupported"),
 									},
-									MarkdownDescription: "State of the action. / State of the action on the device; possible values are: `none` (Not a valid action state), `pending` (Action is pending), `canceled` (Action has been cancelled.), `active` (Action is active.), `done` (Action completed without errors.), `failed` (Action failed), `notSupported` (Action is not supported.)",
+									MarkdownDescription: "State of the action. / State of the action on the device. <br/> _Provider_ allowed values are: `none` (Not a valid action state), `pending` (Action is pending), `canceled` (Action has been cancelled.), `active` (Action is active.), `done` (Action completed without errors.), `failed` (Action failed), `notSupported` (Action is not supported.).",
 								},
 								"failed_licenses_count": schema.Int64Attribute{
 									Computed:            true,
@@ -1019,7 +1026,7 @@ var mobileAppResourceSchema = schema.Schema{
 								},
 							},
 						},
-						MarkdownDescription: "Results of revoke license actions on this app. / Defines results for actions on MacOS Vpp Apps, contains inherited properties for ActionResult. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosvppapprevokelicensesactionresult?view=graph-rest-beta",
+						MarkdownDescription: "Results of revoke license actions on this app. / Defines results for actions on MacOS Vpp Apps, contains inherited properties for ActionResult. Also see [Microsoft docs for macOsVppAppRevokeLicensesActionResult](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosvppapprevokelicensesactionresult?view=graph-rest-beta). <br> ",
 					},
 					"total_license_count": schema.Int64Attribute{
 						Computed:            true,
@@ -1032,7 +1039,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"vpp_token_account_type": schema.StringAttribute{
 						Computed:            true,
 						Validators:          []validator.String{stringvalidator.OneOf("business", "education")},
-						MarkdownDescription: "The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. / Possible types of an Apple Volume Purchase Program token; possible values are: `business` (Apple Volume Purchase Program token associated with an business program.), `education` (Apple Volume Purchase Program token associated with an education program.)",
+						MarkdownDescription: "The type of volume purchase program which the given Apple Volume Purchase Program Token is associated with. / Possible types of an Apple Volume Purchase Program token. <br/> _Provider_ allowed values are: `business` (Apple Volume Purchase Program token associated with an business program.), `education` (Apple Volume Purchase Program token associated with an education program.).",
 					},
 					"vpp_token_apple_id": schema.StringAttribute{
 						Computed:            true,
@@ -1076,12 +1083,12 @@ var mobileAppResourceSchema = schema.Schema{
 								},
 							},
 						},
-						MarkdownDescription: "The licenses assigned to this app. / MacOS Volume Purchase Program license assignment. This class does not support Create, Delete, or Update. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosvppappassignedlicense?view=graph-rest-beta",
+						MarkdownDescription: "The licenses assigned to this app. / MacOS Volume Purchase Program license assignment. This class does not support Create, Delete, or Update. Also see [Microsoft docs for macOsVppAppAssignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosvppappassignedlicense?view=graph-rest-beta). <br> ",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
 				PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-				MarkdownDescription: "Contains properties and inherited properties for MacOS Volume-Purchased Program (VPP) Apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosvppapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for MacOS Volume-Purchased Program (VPP) Apps. Also see [Microsoft docs for macOsVppApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosvppapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"macos_webclip": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1104,7 +1111,7 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for macOS web apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoswebclip?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for macOS web apps. Also see [Microsoft docs for macOSWebClip](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoswebclip?view=graph-rest-beta). <br> ",
 			},
 		},
 		"managed_android_lob": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1115,7 +1122,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"app_availability": schema.StringAttribute{
 						Computed:            true,
 						Validators:          []validator.String{stringvalidator.OneOf("global", "lineOfBusiness")},
-						MarkdownDescription: "The Application's availability. This property is read-only. / A managed (MAM) application's availability; possible values are: `global` (A globally available app to all tenants.), `lineOfBusiness` (A line of business apps private to an organization.)",
+						MarkdownDescription: "The Application's availability. This property is read-only. / A managed (MAM) application's availability. <br/> _Provider_ allowed values are: `global` (A globally available app to all tenants.), `lineOfBusiness` (A line of business apps private to an organization.).",
 					},
 					"version": schema.StringAttribute{
 						Computed:            true,
@@ -1138,7 +1145,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppAndroidMinimumOperatingSystemAttributes,
-						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties for the minimum operating system required for an Android mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties for the minimum operating system required for an Android mobile app. Also see [Microsoft docs for androidMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 					"package_id": schema.StringAttribute{
 						Computed:            true,
@@ -1149,7 +1156,7 @@ var mobileAppResourceSchema = schema.Schema{
 						Validators: []validator.String{
 							wpvalidator.FlagEnumValues("androidDeviceAdministrator", "androidOpenSourceProject", "unknownFutureValue"),
 						},
-						MarkdownDescription: "The platforms to which the application can be targeted. If not specified, will defauilt to Android Device Administrator. / Specifies which platform(s) can be targeted for a given Android LOB application or Managed Android LOB application; possible values are: `androidDeviceAdministrator` (Indicates the Android targeted platform is Android Device Administrator.), `androidOpenSourceProject` (Indicates the Android targeted platform is Android Open Source Project.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)",
+						MarkdownDescription: "The platforms to which the application can be targeted. If not specified, will defauilt to Android Device Administrator. / Specifies which platform(s) can be targeted for a given Android LOB application or Managed Android LOB application. <br/> _Provider_ allowed values are: `androidDeviceAdministrator` (Indicates the Android targeted platform is Android Device Administrator.), `androidOpenSourceProject` (Indicates the Android targeted platform is Android Open Source Project.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.).",
 					},
 					"version_code": schema.StringAttribute{
 						Computed:            true,
@@ -1162,7 +1169,7 @@ var mobileAppResourceSchema = schema.Schema{
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
 				PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-				MarkdownDescription: "Contains properties and inherited properties for Managed Android Line Of Business apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-managedandroidlobapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Managed Android Line Of Business apps. Also see [Microsoft docs for managedAndroidLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-managedandroidlobapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"managed_android_store": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1174,7 +1181,7 @@ var mobileAppResourceSchema = schema.Schema{
 						Computed:            true,
 						Validators:          []validator.String{stringvalidator.OneOf("global", "lineOfBusiness")},
 						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-						MarkdownDescription: "The Application's availability. This property is read-only. / A managed (MAM) application's availability; possible values are: `global` (A globally available app to all tenants.), `lineOfBusiness` (A line of business apps private to an organization.)",
+						MarkdownDescription: "The Application's availability. This property is read-only. / A managed (MAM) application's availability. <br/> _Provider_ allowed values are: `global` (A globally available app to all tenants.), `lineOfBusiness` (A line of business apps private to an organization.).",
 					},
 					"version": schema.StringAttribute{
 						Computed:            true,
@@ -1189,7 +1196,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Required:            true,
 						Attributes:          mobileAppAndroidMinimumOperatingSystemAttributes,
-						MarkdownDescription: "The value for the minimum supported operating system. / Contains properties for the minimum operating system required for an Android mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "The value for the minimum supported operating system. / Contains properties for the minimum operating system required for an Android mobile app. Also see [Microsoft docs for androidMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 					"package_id": schema.StringAttribute{
 						Required:            true,
@@ -1198,7 +1205,7 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for Android store apps that you can manage with an Intune app protection policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-managedandroidstoreapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Android store apps that you can manage with an Intune app protection policy. Also see [Microsoft docs for managedAndroidStoreApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-managedandroidstoreapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"managed_ios_lob": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1209,7 +1216,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"app_availability": schema.StringAttribute{
 						Computed:            true,
 						Validators:          []validator.String{stringvalidator.OneOf("global", "lineOfBusiness")},
-						MarkdownDescription: "The Application's availability. This property is read-only. / A managed (MAM) application's availability; possible values are: `global` (A globally available app to all tenants.), `lineOfBusiness` (A line of business apps private to an organization.)",
+						MarkdownDescription: "The Application's availability. This property is read-only. / A managed (MAM) application's availability. <br/> _Provider_ allowed values are: `global` (A globally available app to all tenants.), `lineOfBusiness` (A line of business apps private to an organization.).",
 					},
 					"version": schema.StringAttribute{
 						Computed:            true,
@@ -1232,7 +1239,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"applicable_device_type": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppIosDeviceTypeAttributes,
-						MarkdownDescription: "The iOS architecture for which this app can run on. / Contains properties of the possible iOS device types the mobile app can run on. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta",
+						MarkdownDescription: "The iOS architecture for which this app can run on. / Contains properties of the possible iOS device types the mobile app can run on. Also see [Microsoft docs for iosDeviceType](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta). <br> ",
 					},
 					"build_number": schema.StringAttribute{
 						Computed:            true,
@@ -1253,7 +1260,7 @@ var mobileAppResourceSchema = schema.Schema{
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppIosMinimumOperatingSystemAttributes,
-						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties of the minimum operating system required for an iOS mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "The value for the minimum applicable operating system. / Contains properties of the minimum operating system required for an iOS mobile app. Also see [Microsoft docs for iosMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 					"version_number": schema.StringAttribute{
 						Computed:            true,
@@ -1262,7 +1269,7 @@ var mobileAppResourceSchema = schema.Schema{
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
 				PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-				MarkdownDescription: "Contains properties and inherited properties for Managed iOS Line Of Business apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-managedioslobapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Managed iOS Line Of Business apps. Also see [Microsoft docs for managedIOSLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-managedioslobapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"managed_ios_store": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1274,7 +1281,7 @@ var mobileAppResourceSchema = schema.Schema{
 						Computed:            true,
 						Validators:          []validator.String{stringvalidator.OneOf("global", "lineOfBusiness")},
 						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-						MarkdownDescription: "The Application's availability. This property is read-only. / A managed (MAM) application's availability; possible values are: `global` (A globally available app to all tenants.), `lineOfBusiness` (A line of business apps private to an organization.)",
+						MarkdownDescription: "The Application's availability. This property is read-only. / A managed (MAM) application's availability. <br/> _Provider_ allowed values are: `global` (A globally available app to all tenants.), `lineOfBusiness` (A line of business apps private to an organization.).",
 					},
 					"version": schema.StringAttribute{
 						Computed:            true,
@@ -1284,9 +1291,9 @@ var mobileAppResourceSchema = schema.Schema{
 					"applicable_device_type": schema.SingleNestedAttribute{
 						Optional:            true,
 						Attributes:          mobileAppIosDeviceTypeAttributes,
-						PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "The iOS architecture for which this app can run on. / Contains properties of the possible iOS device types the mobile app can run on. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta. The _provider_ default value is `{}`.",
+						MarkdownDescription: "The iOS architecture for which this app can run on. / Contains properties of the possible iOS device types the mobile app can run on. Also see [Microsoft docs for iosDeviceType](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 					},
 					"app_store_url": schema.StringAttribute{
 						Required:            true,
@@ -1301,11 +1308,11 @@ var mobileAppResourceSchema = schema.Schema{
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Required:            true,
 						Attributes:          mobileAppIosMinimumOperatingSystemAttributes,
-						MarkdownDescription: "The value for the minimum supported operating system. / Contains properties of the minimum operating system required for an iOS mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosminimumoperatingsystem?view=graph-rest-beta",
+						MarkdownDescription: "The value for the minimum supported operating system. / Contains properties of the minimum operating system required for an iOS mobile app. Also see [Microsoft docs for iosMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for an iOS store app that you can manage with an Intune app protection policy. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-managediosstoreapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for an iOS store app that you can manage with an Intune app protection policy. Also see [Microsoft docs for managedIOSStoreApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-managediosstoreapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"web_link": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1320,13 +1327,13 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 					"use_managed_browser": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "Whether or not to use managed browser. This property is only applicable for Android and IOS. The _provider_ default value is `false`.",
+						MarkdownDescription: "Whether or not to use managed browser. This property is only applicable for Android and IOS. <br/> The _provider_ default value is `false`.",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for web apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-webapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for web apps. Also see [Microsoft docs for webApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-webapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"win32_lob": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1348,28 +1355,47 @@ var mobileAppResourceSchema = schema.Schema{
 						PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
 						MarkdownDescription: "The total size, including all uploaded files. This property is read-only.",
 					},
+					"active_install_script": schema.SingleNestedAttribute{
+						Optional: true,
+						Attributes: map[string]schema.Attribute{ // mobileAppScriptReference
+							"target_id": schema.StringAttribute{
+								Optional:            true,
+								MarkdownDescription: "The identifier of an associated mobileAppContentScript entity.",
+							},
+						},
+						MarkdownDescription: "Contains the unique identifier of the associated install script for this Win32 app to be used instead of the install command line by the managed device during app installation. When null, the install command line is used instead. / A complex type that contains an identifier which is a reference an associated mobileAppContentScript entity. Also see [Microsoft docs for mobileAppScriptReference](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappscriptreference?view=graph-rest-beta). <br> ",
+					},
+					"active_uninstall_script": schema.SingleNestedAttribute{
+						Optional: true,
+						Attributes: map[string]schema.Attribute{ // mobileAppScriptReference
+							"target_id": schema.StringAttribute{
+								Optional:            true,
+								MarkdownDescription: "The identifier of an associated mobileAppContentScript entity.",
+							},
+						},
+						MarkdownDescription: "Contains the unique identifier of the associated uninstall script for this Win32 app to be used instead of the uninstall command line by the managed device during app uninstallation. When null, the uninstall command line is used instead. / A complex type that contains an identifier which is a reference an associated mobileAppContentScript entity. Also see [Microsoft docs for mobileAppScriptReference](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappscriptreference?view=graph-rest-beta). <br> ",
+					},
 					"allow_available_uninstall": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 						Computed:            true,
-						MarkdownDescription: "Indicates whether the uninstall is supported from the company portal for the Win32 app with an available assignment. When TRUE, indicates that uninstall is supported from the company portal for the Windows app (Win32) with an available assignment. When FALSE, indicates that uninstall is not supported for the Windows app (Win32) with an Available assignment. Default value is FALSE. The _provider_ default value is `true`.",
+						MarkdownDescription: "Indicates whether the uninstall is supported from the company portal for the Win32 app with an available assignment. When TRUE, indicates that uninstall is supported from the company portal for the Windows app (Win32) with an available assignment. When FALSE, indicates that uninstall is not supported for the Windows app (Win32) with an Available assignment. Default value is FALSE. <br/> The _provider_ default value is `true`.",
 					},
 					"allowed_architectures": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
 							wpvalidator.FlagEnumValues("none", "x86", "x64", "arm", "neutral", "arm64"),
 						},
-						PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
-						MarkdownDescription: "Indicates the Windows architecture(s) this app should be installed on. The app will be treated as not applicable for devices with architectures not matching the selected value. When a non-null value is provided for the `allowedArchitectures` property, the value of the `applicableArchitectures` property is set to `none`. / Contains properties for Windows architecture; possible values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.)",
+						MarkdownDescription: "Indicates the Windows architecture(s) this app should be installed on. The app will be treated as not applicable for devices with architectures not matching the selected value. When a non-null value is provided for the `allowedArchitectures` property, the value of the `applicableArchitectures` property is set to `none`. / Contains properties for Windows architecture. <br/> _Provider_ allowed values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.).",
 					},
 					"applicable_architectures": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
 							wpvalidator.FlagEnumValues("none", "x86", "x64", "arm", "neutral", "arm64"),
 						},
-						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("x86,x64")},
+						PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("none")},
 						Computed:            true,
-						MarkdownDescription: "Indicates the Windows architecture(s) this app should be installed on. The app will be treated as not applicable for devices with architectures not matching the selected value. When a non-null value is provided for the `allowedArchitectures` property, the value of the `applicableArchitectures` property is set to `none`. Default value is `none`. / Contains properties for Windows architecture; possible values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.). The _provider_ default value is `\"x86,x64\"`.",
+						MarkdownDescription: "Indicates the Windows architecture(s) this app should be installed on. The app will be treated as not applicable for devices with architectures not matching the selected value. When a non-null value is provided for the `allowedArchitectures` property, the value of the `applicableArchitectures` property is set to `none`. Default value is `none`. / Contains properties for Windows architecture. <br/> _Provider_ allowed values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.). The _provider_ default value is `\"none\"`.",
 					},
 					"detection_rules": schema.SetNestedAttribute{
 						Optional: true,
@@ -1382,17 +1408,17 @@ var mobileAppResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // win32LobAppFileSystemDetection
 											"check_32_bit_on_64_system": schema.BoolAttribute{
 												Optional:            true,
-												PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+												PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 												Computed:            true,
 												Description:         `check32BitOn64System`, // custom MS Graph attribute name
-												MarkdownDescription: "A value indicating whether this file or folder is for checking 32-bit app on 64-bit system. The _provider_ default value is `false`.",
+												MarkdownDescription: "A value indicating whether this file or folder is for checking 32-bit app on 64-bit system <br/> The _provider_ default value is `false`.",
 											},
 											"detection_type": schema.StringAttribute{
 												Required: true,
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "exists", "modifiedDate", "createdDate", "version", "sizeInMB", "doesNotExist"),
 												},
-												MarkdownDescription: "The file system detection type. / Contains all supported file system detection type; possible values are: `notConfigured` (Not configured.), `exists` (Whether the specified file or folder exists.), `modifiedDate` (Last modified date.), `createdDate` (Created date.), `version` (Version value type.), `sizeInMB` (Size detection type.), `doesNotExist` (The specified file or folder does not exist.)",
+												MarkdownDescription: "The file system detection type. / Contains all supported file system detection type. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `exists` (Whether the specified file or folder exists.), `modifiedDate` (Last modified date.), `createdDate` (Created date.), `version` (Version value type.), `sizeInMB` (Size detection type.), `doesNotExist` (The specified file or folder does not exist.).",
 											},
 											"detection_value": schema.StringAttribute{
 												Optional:            true,
@@ -1407,9 +1433,11 @@ var mobileAppResourceSchema = schema.Schema{
 												Validators: []validator.String{
 													wpvalidator.FlagEnumValues("notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"),
 												},
-												PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+												PlanModifiers: []planmodifier.String{
+													wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+												},
 												Computed:            true,
-												MarkdownDescription: "The operator for file or folder detection. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
+												MarkdownDescription: "The operator for file or folder detection. / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
 											},
 											"path": schema.StringAttribute{
 												Required:            true,
@@ -1417,7 +1445,7 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppDetectionValidator},
-										MarkdownDescription: "Contains file or folder path to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappfilesystemdetection?view=graph-rest-beta",
+										MarkdownDescription: "Contains file or folder path to detect a Win32 App. Also see [Microsoft docs for win32LobAppFileSystemDetection](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappfilesystemdetection?view=graph-rest-beta). <br> ",
 									},
 								},
 								"powershell_script": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1427,16 +1455,16 @@ var mobileAppResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // win32LobAppPowerShellScriptDetection
 											"enforce_signature_check": schema.BoolAttribute{
 												Optional:            true,
-												PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+												PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 												Computed:            true,
-												MarkdownDescription: "A value indicating whether signature check is enforced. The _provider_ default value is `false`.",
+												MarkdownDescription: "A value indicating whether signature check is enforced <br/> The _provider_ default value is `false`.",
 											},
 											"run_as_32_bit": schema.BoolAttribute{
 												Optional:            true,
-												PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+												PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 												Computed:            true,
 												Description:         `runAs32Bit`, // custom MS Graph attribute name
-												MarkdownDescription: "A value indicating whether this script should run as 32-bit. The _provider_ default value is `false`.",
+												MarkdownDescription: "A value indicating whether this script should run as 32-bit <br/> The _provider_ default value is `false`.",
 											},
 											"script_content": schema.StringAttribute{
 												Required:            true,
@@ -1444,7 +1472,7 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppDetectionValidator},
-										MarkdownDescription: "Contains PowerShell script properties to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapppowershellscriptdetection?view=graph-rest-beta",
+										MarkdownDescription: "Contains PowerShell script properties to detect a Win32 App. Also see [Microsoft docs for win32LobAppPowerShellScriptDetection](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapppowershellscriptdetection?view=graph-rest-beta). <br> ",
 									},
 								},
 								"product_code": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1465,13 +1493,15 @@ var mobileAppResourceSchema = schema.Schema{
 												Validators: []validator.String{
 													wpvalidator.FlagEnumValues("notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"),
 												},
-												PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+												PlanModifiers: []planmodifier.String{
+													wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+												},
 												Computed:            true,
-												MarkdownDescription: "The operator to detect product version. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
+												MarkdownDescription: "The operator to detect product version. / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppDetectionValidator},
-										MarkdownDescription: "Contains product code and version properties to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappproductcodedetection?view=graph-rest-beta",
+										MarkdownDescription: "Contains product code and version properties to detect a Win32 App. Also see [Microsoft docs for win32LobAppProductCodeDetection](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappproductcodedetection?view=graph-rest-beta). <br> ",
 									},
 								},
 								"registry": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1481,17 +1511,17 @@ var mobileAppResourceSchema = schema.Schema{
 										Attributes: map[string]schema.Attribute{ // win32LobAppRegistryDetection
 											"check_32_bit_on_64_system": schema.BoolAttribute{
 												Optional:            true,
-												PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+												PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 												Computed:            true,
 												Description:         `check32BitOn64System`, // custom MS Graph attribute name
-												MarkdownDescription: "A value indicating whether this registry path is for checking 32-bit app on 64-bit system. The _provider_ default value is `false`.",
+												MarkdownDescription: "A value indicating whether this registry path is for checking 32-bit app on 64-bit system <br/> The _provider_ default value is `false`.",
 											},
 											"detection_type": schema.StringAttribute{
 												Required: true,
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "exists", "doesNotExist", "string", "integer", "version"),
 												},
-												MarkdownDescription: "The registry data detection type. / Contains all supported registry data detection type; possible values are: `notConfigured` (Not configured.), `exists` (The specified registry key or value exists.), `doesNotExist` (The specified registry key or value does not exist.), `string` (String value type.), `integer` (Integer value type.), `version` (Version value type.)",
+												MarkdownDescription: "The registry data detection type. / Contains all supported registry data detection type. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `exists` (The specified registry key or value exists.), `doesNotExist` (The specified registry key or value does not exist.), `string` (String value type.), `integer` (Integer value type.), `version` (Version value type.).",
 											},
 											"detection_value": schema.StringAttribute{
 												Optional:            true,
@@ -1506,9 +1536,11 @@ var mobileAppResourceSchema = schema.Schema{
 												Validators: []validator.String{
 													wpvalidator.FlagEnumValues("notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"),
 												},
-												PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+												PlanModifiers: []planmodifier.String{
+													wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+												},
 												Computed:            true,
-												MarkdownDescription: "The operator for registry data detection. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
+												MarkdownDescription: "The operator for registry data detection. / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
 											},
 											"value_name": schema.StringAttribute{
 												Optional:            true,
@@ -1516,14 +1548,14 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppDetectionValidator},
-										MarkdownDescription: "Contains registry properties to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappregistrydetection?view=graph-rest-beta",
+										MarkdownDescription: "Contains registry properties to detect a Win32 App. Also see [Microsoft docs for win32LobAppRegistryDetection](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappregistrydetection?view=graph-rest-beta). <br> ",
 									},
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Indicates the detection rules to detect Win32 Line of Business (LoB) app. Possible values are `Win32LobAppPowerShellScriptDetection, Win32LobAppRegistryDetection, Win32LobAppFileSystemDetection, Win32LobAppProductCodeDetection`. / Base class to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappdetection?view=graph-rest-beta. The _provider_ default value is `[]`.",
+						MarkdownDescription: "Indicates the detection rules to detect Win32 Line of Business (LoB) app. Possible values are `Win32LobAppPowerShellScriptDetection, Win32LobAppRegistryDetection, Win32LobAppFileSystemDetection, Win32LobAppProductCodeDetection`. / Base class to detect a Win32 App. Also see [Microsoft docs for win32LobAppDetection](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappdetection?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
 					"display_version": schema.StringAttribute{
 						Optional:            true,
@@ -1541,27 +1573,29 @@ var mobileAppResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("basedOnReturnCode", "allow", "suppress", "force"),
 								},
-								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("allow")},
+								PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("allow")},
 								Computed:            true,
-								MarkdownDescription: "Device restart behavior. / Indicates the type of restart action; possible values are: `basedOnReturnCode` (Intune will restart the device after running the app installation if the operation returns a reboot code.), `allow` (Intune will not take any specific action on reboot codes resulting from app installations. Intune will not attempt to suppress restarts for MSI apps.), `suppress` (Intune will attempt to suppress restarts for MSI apps.), `force` (Intune will force the device to restart immediately after the app installation operation.). The _provider_ default value is `\"allow\"`.",
+								MarkdownDescription: "Device restart behavior. / Indicates the type of restart action. <br/> _Provider_ allowed values are: `basedOnReturnCode` (Intune will restart the device after running the app installation if the operation returns a reboot code.), `allow` (Intune will not take any specific action on reboot codes resulting from app installations. Intune will not attempt to suppress restarts for MSI apps.), `suppress` (Intune will attempt to suppress restarts for MSI apps.), `force` (Intune will force the device to restart immediately after the app installation operation.). The _provider_ default value is `\"allow\"`.",
 							},
 							"max_run_time_in_minutes": schema.Int64Attribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(60)},
+								PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(60)},
 								Computed:            true,
-								MarkdownDescription: "The number of minutes the system will wait for install program to finish. Default value is 60 minutes. The _provider_ default value is `60`.",
+								MarkdownDescription: "The number of minutes the system will wait for install program to finish. Default value is 60 minutes. <br/> The _provider_ default value is `60`.",
 							},
 							"run_as_account": schema.StringAttribute{
-								Optional:            true,
-								Validators:          []validator.String{stringvalidator.OneOf("system", "user")},
-								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("system")},
+								Optional:   true,
+								Validators: []validator.String{stringvalidator.OneOf("system", "user")},
+								PlanModifiers: []planmodifier.String{
+									wpdefaultvaluemodifier.StringDefaultValue("system"),
+								},
 								Computed:            true,
-								MarkdownDescription: "Indicates the type of execution context the app runs in. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context). The _provider_ default value is `\"system\"`.",
+								MarkdownDescription: "Indicates the type of execution context the app runs in. / Indicates the type of execution context the app runs in. <br/> _Provider_ allowed values are: `system` (System context), `user` (User context). The _provider_ default value is `\"system\"`.",
 							},
 						},
-						PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Indicates the install experience for this app. / Contains installation experience properties for a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappinstallexperience?view=graph-rest-beta. The _provider_ default value is `{}`.",
+						MarkdownDescription: "Indicates the install experience for this app. / Contains installation experience properties for a Win32 App. Also see [Microsoft docs for win32LobAppInstallExperience](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappinstallexperience?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 					},
 					"minimum_cpu_speed_in_mhz": schema.Int64Attribute{
 						Optional:            true,
@@ -1584,9 +1618,9 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 					"minimum_supported_windows_release": schema.StringAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("1809")},
+						PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("1809")},
 						Computed:            true,
-						MarkdownDescription: "Indicates the value for the minimum supported windows release. Example: `Windows11_23H2`. The _provider_ default value is `\"1809\"`.",
+						MarkdownDescription: "Indicates the value for the minimum supported windows release. Example: `Windows11_23H2`. <br/> The _provider_ default value is `\"1809\"`.",
 					},
 					"msi_information": schema.SingleNestedAttribute{
 						Optional: true,
@@ -1596,9 +1630,11 @@ var mobileAppResourceSchema = schema.Schema{
 								Validators: []validator.String{
 									stringvalidator.OneOf("perMachine", "perUser", "dualPurpose"),
 								},
-								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("perMachine")},
+								PlanModifiers: []planmodifier.String{
+									wpdefaultvaluemodifier.StringDefaultValue("perMachine"),
+								},
 								Computed:            true,
-								MarkdownDescription: "The MSI package type. / Indicates the package type of an MSI Win32LobApp; possible values are: `perMachine` (Indicates a per-machine app package.), `perUser` (Indicates a per-user app package.), `dualPurpose` (Indicates a dual-purpose app package.). The _provider_ default value is `\"perMachine\"`.",
+								MarkdownDescription: "The MSI package type. / Indicates the package type of an MSI Win32LobApp. <br/> _Provider_ allowed values are: `perMachine` (Indicates a per-machine app package.), `perUser` (Indicates a per-user app package.), `dualPurpose` (Indicates a dual-purpose app package.). The _provider_ default value is `\"perMachine\"`.",
 							},
 							"product_code": schema.StringAttribute{
 								Optional:            true,
@@ -1618,16 +1654,16 @@ var mobileAppResourceSchema = schema.Schema{
 							},
 							"requires_reboot": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
-								MarkdownDescription: "Whether the MSI app requires the machine to reboot to complete installation. The _provider_ default value is `false`.",
+								MarkdownDescription: "Whether the MSI app requires the machine to reboot to complete installation. <br/> The _provider_ default value is `false`.",
 							},
 							"upgrade_code": schema.StringAttribute{
 								Optional:            true,
 								MarkdownDescription: "The MSI upgrade code.",
 							},
 						},
-						MarkdownDescription: "Indicates the MSI details if this Win32 app is an MSI app. / Contains MSI app properties for a Win32 App. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappmsiinformation?view=graph-rest-beta",
+						MarkdownDescription: "Indicates the MSI details if this Win32 app is an MSI app. / Contains MSI app properties for a Win32 App. Also see [Microsoft docs for win32LobAppMsiInformation](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappmsiinformation?view=graph-rest-beta). <br> ",
 					},
 					"requirement_rules": schema.SetNestedAttribute{
 						Optional: true,
@@ -1647,23 +1683,25 @@ var mobileAppResourceSchema = schema.Schema{
 												Validators: []validator.String{
 													wpvalidator.FlagEnumValues("notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"),
 												},
-												PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+												PlanModifiers: []planmodifier.String{
+													wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+												},
 												Computed:            true,
-												MarkdownDescription: "The operator for detection / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
+												MarkdownDescription: "The operator for detection / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
 											},
 											"check_32_bit_on_64_system": schema.BoolAttribute{
 												Optional:            true,
-												PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+												PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 												Computed:            true,
 												Description:         `check32BitOn64System`, // custom MS Graph attribute name
-												MarkdownDescription: "A value indicating whether this file or folder is for checking 32-bit app on 64-bit system. The _provider_ default value is `false`.",
+												MarkdownDescription: "A value indicating whether this file or folder is for checking 32-bit app on 64-bit system <br/> The _provider_ default value is `false`.",
 											},
 											"detection_type": schema.StringAttribute{
 												Required: true,
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "exists", "modifiedDate", "createdDate", "version", "sizeInMB", "doesNotExist"),
 												},
-												MarkdownDescription: "The file system detection type. / Contains all supported file system detection type; possible values are: `notConfigured` (Not configured.), `exists` (Whether the specified file or folder exists.), `modifiedDate` (Last modified date.), `createdDate` (Created date.), `version` (Version value type.), `sizeInMB` (Size detection type.), `doesNotExist` (The specified file or folder does not exist.)",
+												MarkdownDescription: "The file system detection type. / Contains all supported file system detection type. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `exists` (Whether the specified file or folder exists.), `modifiedDate` (Last modified date.), `createdDate` (Created date.), `version` (Version value type.), `sizeInMB` (Size detection type.), `doesNotExist` (The specified file or folder does not exist.).",
 											},
 											"file_or_folder_name": schema.StringAttribute{
 												Required:            true,
@@ -1675,7 +1713,7 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppRequirementValidator},
-										MarkdownDescription: "Contains file or folder path to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappfilesystemrequirement?view=graph-rest-beta",
+										MarkdownDescription: "Contains file or folder path to detect a Win32 App. Also see [Microsoft docs for win32LobAppFileSystemRequirement](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappfilesystemrequirement?view=graph-rest-beta). <br> ",
 									},
 								},
 								"powershell_script": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1692,42 +1730,46 @@ var mobileAppResourceSchema = schema.Schema{
 												Validators: []validator.String{
 													wpvalidator.FlagEnumValues("notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"),
 												},
-												PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+												PlanModifiers: []planmodifier.String{
+													wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+												},
 												Computed:            true,
-												MarkdownDescription: "The operator for detection / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
+												MarkdownDescription: "The operator for detection / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
 											},
 											"detection_type": schema.StringAttribute{
 												Required: true,
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "string", "dateTime", "integer", "float", "version", "boolean"),
 												},
-												MarkdownDescription: "The detection type for script output. / Contains all supported Powershell Script output detection type; possible values are: `notConfigured` (Not configured.), `string` (Output data type is string.), `dateTime` (Output data type is date time.), `integer` (Output data type is integer.), `float` (Output data type is float.), `version` (Output data type is version.), `boolean` (Output data type is boolean.)",
+												MarkdownDescription: "The detection type for script output. / Contains all supported Powershell Script output detection type. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `string` (Output data type is string.), `dateTime` (Output data type is date time.), `integer` (Output data type is integer.), `float` (Output data type is float.), `version` (Output data type is version.), `boolean` (Output data type is boolean.).",
 											},
 											"display_name": schema.StringAttribute{
 												Optional:            true,
-												PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+												PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 												Computed:            true,
-												MarkdownDescription: "The unique display name for this rule. The _provider_ default value is `\"\"`.",
+												MarkdownDescription: "The unique display name for this rule <br/> The _provider_ default value is `\"\"`.",
 											},
 											"enforce_signature_check": schema.BoolAttribute{
 												Optional:            true,
-												PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+												PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 												Computed:            true,
-												MarkdownDescription: "A value indicating whether signature check is enforced. The _provider_ default value is `false`.",
+												MarkdownDescription: "A value indicating whether signature check is enforced <br/> The _provider_ default value is `false`.",
 											},
 											"run_as_32_bit": schema.BoolAttribute{
 												Optional:            true,
-												PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+												PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 												Computed:            true,
 												Description:         `runAs32Bit`, // custom MS Graph attribute name
-												MarkdownDescription: "A value indicating whether this script should run as 32-bit. The _provider_ default value is `false`.",
+												MarkdownDescription: "A value indicating whether this script should run as 32-bit <br/> The _provider_ default value is `false`.",
 											},
 											"run_as_account": schema.StringAttribute{
-												Optional:            true,
-												Validators:          []validator.String{stringvalidator.OneOf("system", "user")},
-												PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("system")},
+												Optional:   true,
+												Validators: []validator.String{stringvalidator.OneOf("system", "user")},
+												PlanModifiers: []planmodifier.String{
+													wpdefaultvaluemodifier.StringDefaultValue("system"),
+												},
 												Computed:            true,
-												MarkdownDescription: "Indicates the type of execution context the script runs in. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context). The _provider_ default value is `\"system\"`.",
+												MarkdownDescription: "Indicates the type of execution context the script runs in. / Indicates the type of execution context the app runs in. <br/> _Provider_ allowed values are: `system` (System context), `user` (User context). The _provider_ default value is `\"system\"`.",
 											},
 											"script_content": schema.StringAttribute{
 												Required:            true,
@@ -1735,7 +1777,7 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppRequirementValidator},
-										MarkdownDescription: "Contains PowerShell script properties to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapppowershellscriptrequirement?view=graph-rest-beta",
+										MarkdownDescription: "Contains PowerShell script properties to detect a Win32 App. Also see [Microsoft docs for win32LobAppPowerShellScriptRequirement](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapppowershellscriptrequirement?view=graph-rest-beta). <br> ",
 									},
 								},
 								"registry": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1752,23 +1794,25 @@ var mobileAppResourceSchema = schema.Schema{
 												Validators: []validator.String{
 													wpvalidator.FlagEnumValues("notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"),
 												},
-												PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+												PlanModifiers: []planmodifier.String{
+													wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+												},
 												Computed:            true,
-												MarkdownDescription: "The operator for detection / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
+												MarkdownDescription: "The operator for detection / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.). The _provider_ default value is `\"notConfigured\"`.",
 											},
 											"check_32_bit_on_64_system": schema.BoolAttribute{
 												Optional:            true,
-												PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+												PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 												Computed:            true,
 												Description:         `check32BitOn64System`, // custom MS Graph attribute name
-												MarkdownDescription: "A value indicating whether this registry path is for checking 32-bit app on 64-bit system. The _provider_ default value is `false`.",
+												MarkdownDescription: "A value indicating whether this registry path is for checking 32-bit app on 64-bit system <br/> The _provider_ default value is `false`.",
 											},
 											"detection_type": schema.StringAttribute{
 												Required: true,
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "exists", "doesNotExist", "string", "integer", "version"),
 												},
-												MarkdownDescription: "The registry data detection type. / Contains all supported registry data detection type; possible values are: `notConfigured` (Not configured.), `exists` (The specified registry key or value exists.), `doesNotExist` (The specified registry key or value does not exist.), `string` (String value type.), `integer` (Integer value type.), `version` (Version value type.)",
+												MarkdownDescription: "The registry data detection type. / Contains all supported registry data detection type. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `exists` (The specified registry key or value exists.), `doesNotExist` (The specified registry key or value does not exist.), `string` (String value type.), `integer` (Integer value type.), `version` (Version value type.).",
 											},
 											"key_path": schema.StringAttribute{
 												Required:            true,
@@ -1780,14 +1824,14 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppRequirementValidator},
-										MarkdownDescription: "Contains registry properties to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappregistryrequirement?view=graph-rest-beta",
+										MarkdownDescription: "Contains registry properties to detect a Win32 App. Also see [Microsoft docs for win32LobAppRegistryRequirement](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappregistryrequirement?view=graph-rest-beta). <br> ",
 									},
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "Indicates the requirement rules to detect Win32 Line of Business (LoB) app. / Base class to detect a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapprequirement?view=graph-rest-beta. The _provider_ default value is `[]`.",
+						MarkdownDescription: "Indicates the requirement rules to detect Win32 Line of Business (LoB) app. / Base class to detect a Win32 App. Also see [Microsoft docs for win32LobAppRequirement](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapprequirement?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
 					"return_codes": schema.SetNestedAttribute{
 						Optional: true,
@@ -1802,13 +1846,13 @@ var mobileAppResourceSchema = schema.Schema{
 									Validators: []validator.String{
 										stringvalidator.OneOf("failed", "success", "softReboot", "hardReboot", "retry"),
 									},
-									MarkdownDescription: "The type of return code. / Indicates the type of return code; possible values are: `failed` (Failed.), `success` (Success.), `softReboot` (Soft-reboot is required.), `hardReboot` (Hard-reboot is required.), `retry` (Retry.)",
+									MarkdownDescription: "The type of return code. / Indicates the type of return code. <br/> _Provider_ allowed values are: `failed` (Failed.), `success` (Success.), `softReboot` (Soft-reboot is required.), `hardReboot` (Hard-reboot is required.), `retry` (Retry.).",
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{mobileAppWin32LobAppReturnCodesDefault},
 						Computed:            true,
-						MarkdownDescription: "Indicates the return codes for post installation behavior. / Contains return code properties for a Win32 App / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappreturncode?view=graph-rest-beta. The _provider_ default value is `mobileAppWin32LobAppReturnCodesDefault`.",
+						MarkdownDescription: "Indicates the return codes for post installation behavior. / Contains return code properties for a Win32 App. Also see [Microsoft docs for win32LobAppReturnCode](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappreturncode?view=graph-rest-beta). <br/> The _provider_ default value is `mobileAppWin32LobAppReturnCodesDefault`. <br> ",
 					},
 					"rules": schema.SetNestedAttribute{
 						Computed: true,
@@ -1817,7 +1861,7 @@ var mobileAppResourceSchema = schema.Schema{
 								"rule_type": schema.StringAttribute{
 									Computed:            true,
 									Validators:          []validator.String{stringvalidator.OneOf("detection", "requirement")},
-									MarkdownDescription: "The rule type indicating the purpose of the rule. / Contains rule types for Win32 LOB apps; possible values are: `detection` (Detection rule.), `requirement` (Requirement rule.)",
+									MarkdownDescription: "The rule type indicating the purpose of the rule. / Contains rule types for Win32 LOB apps. <br/> _Provider_ allowed values are: `detection` (Detection rule.), `requirement` (Requirement rule.).",
 								},
 								"filesystem": generic.OdataDerivedTypeNestedAttributeRs{
 									DerivedType: "#microsoft.graph.win32LobAppFileSystemRule",
@@ -1842,14 +1886,14 @@ var mobileAppResourceSchema = schema.Schema{
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "exists", "modifiedDate", "createdDate", "version", "sizeInMB", "doesNotExist", "sizeInBytes", "appVersion", "unknownFutureValue"),
 												},
-												MarkdownDescription: "The file system operation type. / A list of possible operations for rules used to make determinations about an application based on files or folders. Unless noted, can be used with either detection or requirement rules; possible values are: `notConfigured` (Default. Indicates that the rule does not have the operation type configured.), `exists` (Indicates that the rule evaluates whether the specified file or folder exists.), `modifiedDate` (Indicates that the rule compares the modified date of the specified file against a provided comparison value by DateTime comparison.), `createdDate` (Indicates that the rule compares the created date of the specified file against a provided comparison value by DateTime comparison.), `version` (Indicates that the rule compares the detected version of the specified file against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the value read at the given registry value is not discovered to be in version-compatible format, a string comparison will be used instead.), `sizeInMB` (Indicates that the rule compares the size of the file in MiB (rounded down) against a provided comparison value by integer comparison.), `doesNotExist` (Indicates that the rule evaluates whether the specified file or folder does not exist. It is the functional inverse of an equivalent rule that uses operation type `exists`.), `sizeInBytes` (Indicates that the rule compares the size of the file in bytes against a provided comparison value by integer comparison.), `appVersion` (Indicates that the rule compares the detected version of the file against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the detected version of the file is not discovered to be in version-compatible format, a string comparison will be used instead. This is similar to a rule with operation type `version`, but it also collects and reports the detected version value to report as the discovered version of the app installed on the device when the rule evaluates to `true`. Only one rule with this type may be specified.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)",
+												MarkdownDescription: "The file system operation type. / A list of possible operations for rules used to make determinations about an application based on files or folders. Unless noted, can be used with either detection or requirement rules. <br/> _Provider_ allowed values are: `notConfigured` (Default. Indicates that the rule does not have the operation type configured.), `exists` (Indicates that the rule evaluates whether the specified file or folder exists.), `modifiedDate` (Indicates that the rule compares the modified date of the specified file against a provided comparison value by DateTime comparison.), `createdDate` (Indicates that the rule compares the created date of the specified file against a provided comparison value by DateTime comparison.), `version` (Indicates that the rule compares the detected version of the specified file against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the value read at the given registry value is not discovered to be in version-compatible format, a string comparison will be used instead.), `sizeInMB` (Indicates that the rule compares the size of the file in MiB (rounded down) against a provided comparison value by integer comparison.), `doesNotExist` (Indicates that the rule evaluates whether the specified file or folder does not exist. It is the functional inverse of an equivalent rule that uses operation type `exists`.), `sizeInBytes` (Indicates that the rule compares the size of the file in bytes against a provided comparison value by integer comparison.), `appVersion` (Indicates that the rule compares the detected version of the file against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the detected version of the file is not discovered to be in version-compatible format, a string comparison will be used instead. This is similar to a rule with operation type `version`, but it also collects and reports the detected version value to report as the discovered version of the app installed on the device when the rule evaluates to `true`. Only one rule with this type may be specified.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.).",
 											},
 											"operator": schema.StringAttribute{
 												Computed: true,
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"),
 												},
-												MarkdownDescription: "The operator for file or folder detection. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.)",
+												MarkdownDescription: "The operator for file or folder detection. / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.).",
 											},
 											"path": schema.StringAttribute{
 												Computed:            true,
@@ -1857,7 +1901,7 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppRuleValidator},
-										MarkdownDescription: "A complex type to store file or folder rule data for a Win32 LOB app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappfilesystemrule?view=graph-rest-beta",
+										MarkdownDescription: "A complex type to store file or folder rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppFileSystemRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappfilesystemrule?view=graph-rest-beta). <br> ",
 									},
 								},
 								"powershell_script": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1882,14 +1926,14 @@ var mobileAppResourceSchema = schema.Schema{
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "string", "dateTime", "integer", "float", "version", "boolean"),
 												},
-												MarkdownDescription: "The script output comparison operation type. Use NotConfigured (the default value) if the rule is used for detection. / Contains all supported Powershell Script output detection type; possible values are: `notConfigured` (Not configured.), `string` (Output data type is string.), `dateTime` (Output data type is date time.), `integer` (Output data type is integer.), `float` (Output data type is float.), `version` (Output data type is version.), `boolean` (Output data type is boolean.)",
+												MarkdownDescription: "The script output comparison operation type. Use NotConfigured (the default value) if the rule is used for detection. / Contains all supported Powershell Script output detection type. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `string` (Output data type is string.), `dateTime` (Output data type is date time.), `integer` (Output data type is integer.), `float` (Output data type is float.), `version` (Output data type is version.), `boolean` (Output data type is boolean.).",
 											},
 											"operator": schema.StringAttribute{
 												Computed: true,
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"),
 												},
-												MarkdownDescription: "The script output operator. Use NotConfigured (the default value) if the rule is used for detection. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.)",
+												MarkdownDescription: "The script output operator. Use NotConfigured (the default value) if the rule is used for detection. / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.).",
 											},
 											"run_as_32_bit": schema.BoolAttribute{
 												Computed:            true,
@@ -1899,7 +1943,7 @@ var mobileAppResourceSchema = schema.Schema{
 											"run_as_account": schema.StringAttribute{
 												Computed:            true,
 												Validators:          []validator.String{stringvalidator.OneOf("system", "user")},
-												MarkdownDescription: "The execution context of the script. Do not specify this value if the rule is used for detection. Script detection rules will run in the same context as the associated app install context. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context)",
+												MarkdownDescription: "The execution context of the script. Do not specify this value if the rule is used for detection. Script detection rules will run in the same context as the associated app install context. / Indicates the type of execution context the app runs in. <br/> _Provider_ allowed values are: `system` (System context), `user` (User context).",
 											},
 											"script_content": schema.StringAttribute{
 												Computed:            true,
@@ -1907,7 +1951,7 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppRuleValidator},
-										MarkdownDescription: "A complex type to store the PowerShell script rule data for a Win32 LOB app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapppowershellscriptrule?view=graph-rest-beta",
+										MarkdownDescription: "A complex type to store the PowerShell script rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppPowerShellScriptRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapppowershellscriptrule?view=graph-rest-beta). <br> ",
 									},
 								},
 								"product_code": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1928,11 +1972,11 @@ var mobileAppResourceSchema = schema.Schema{
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"),
 												},
-												MarkdownDescription: "The product version comparison operator. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.)",
+												MarkdownDescription: "The product version comparison operator. / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.).",
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppRuleValidator},
-										MarkdownDescription: "A complex type to store the product code and version rule data for a Win32 LOB app. This rule is not supported as a requirement rule. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappproductcoderule?view=graph-rest-beta",
+										MarkdownDescription: "A complex type to store the product code and version rule data for a Win32 LOB app. This rule is not supported as a requirement rule. Also see [Microsoft docs for win32LobAppProductCodeRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappproductcoderule?view=graph-rest-beta). <br> ",
 									},
 								},
 								"registry": generic.OdataDerivedTypeNestedAttributeRs{
@@ -1958,14 +2002,14 @@ var mobileAppResourceSchema = schema.Schema{
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "exists", "doesNotExist", "string", "integer", "version", "appVersion", "unknownFutureValue"),
 												},
-												MarkdownDescription: "The registry operation type. / A list of possible operations for rules used to make determinations about an application based on registry keys or values. Unless noted, the values can be used with either detection or requirement rules; possible values are: `notConfigured` (Default. Indicates that the rule does not have the operation type configured.), `exists` (Indicates that the rule evaluates whether the specified registry key or value exists.), `doesNotExist` (Indicates that the rule evaluates whether the specified registry key or value does not exist. It is the functional inverse of an equivalent rule that uses operation type `exists`.), `string` (Indicates that the rule compares the value read at the given registry value against a provided comparison value by string comparison.), `integer` (Indicates that the rule compares the value read at the given registry value against a provided comparison value by integer comparison.), `version` (Indicates that the rule compares the value read at the given registry value against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the value read at the given registry value is not discovered to be in version-compatible format, a string comparison will be used instead.), `appVersion` (Indicates that the rule compares the data read at the given registry value against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the data read at the given registry value is not discovered to be in a version-compatible format, a string comparison will be used instead. The rule will be resolved as not detected if the given registry value does not exist. This is similar to a rule with operation type `version`, but it also collects and reports the detected version value to report as the discovered version of the app installed on the device when the rule evaluates to `true`. Only one rule with this type may be specified.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)",
+												MarkdownDescription: "The registry operation type. / A list of possible operations for rules used to make determinations about an application based on registry keys or values. Unless noted, the values can be used with either detection or requirement rules. <br/> _Provider_ allowed values are: `notConfigured` (Default. Indicates that the rule does not have the operation type configured.), `exists` (Indicates that the rule evaluates whether the specified registry key or value exists.), `doesNotExist` (Indicates that the rule evaluates whether the specified registry key or value does not exist. It is the functional inverse of an equivalent rule that uses operation type `exists`.), `string` (Indicates that the rule compares the value read at the given registry value against a provided comparison value by string comparison.), `integer` (Indicates that the rule compares the value read at the given registry value against a provided comparison value by integer comparison.), `version` (Indicates that the rule compares the value read at the given registry value against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the value read at the given registry value is not discovered to be in version-compatible format, a string comparison will be used instead.), `appVersion` (Indicates that the rule compares the data read at the given registry value against a provided comparison value via version semantics (both operand values will be parsed as versions and directly compared). If the data read at the given registry value is not discovered to be in a version-compatible format, a string comparison will be used instead. The rule will be resolved as not detected if the given registry value does not exist. This is similar to a rule with operation type `version`, but it also collects and reports the detected version value to report as the discovered version of the app installed on the device when the rule evaluates to `true`. Only one rule with this type may be specified.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.).",
 											},
 											"operator": schema.StringAttribute{
 												Computed: true,
 												Validators: []validator.String{
 													stringvalidator.OneOf("notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"),
 												},
-												MarkdownDescription: "The operator for registry detection. / Contains properties for detection operator; possible values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.)",
+												MarkdownDescription: "The operator for registry detection. / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.).",
 											},
 											"value_name": schema.StringAttribute{
 												Computed:            true,
@@ -1973,13 +2017,13 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppWin32LobAppRuleValidator},
-										MarkdownDescription: "A complex type to store registry rule data for a Win32 LOB app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappregistryrule?view=graph-rest-beta",
+										MarkdownDescription: "A complex type to store registry rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppRegistryRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappregistryrule?view=graph-rest-beta). <br> ",
 									},
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
-						MarkdownDescription: "Indicates the detection and requirement rules for this app. / A base complex type to store the detection or requirement rule data for a Win32 LOB app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapprule?view=graph-rest-beta",
+						MarkdownDescription: "Indicates the detection and requirement rules for this app. / A base complex type to store the detection or requirement rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapprule?view=graph-rest-beta). <br> ",
 					},
 					"setup_file_path": schema.StringAttribute{
 						Required:            true,
@@ -1991,16 +2035,16 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 					"source_file": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: "Provider Note: The path to the IntuneWin file to be uploaded.",
+						MarkdownDescription: "_Provider_ Note: The path to the IntuneWin file to be uploaded.",
 					},
 					"source_sha256": schema.StringAttribute{
 						Required:            true,
 						Description:         `sourceSha256`, // custom MS Graph attribute name
-						MarkdownDescription: "Provider Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
+						MarkdownDescription: "_Provider_ Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for Win32 apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Win32 apps. Also see [Microsoft docs for win32LobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"windows_ms_edge": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2014,11 +2058,11 @@ var mobileAppResourceSchema = schema.Schema{
 							stringvalidator.OneOf("dev", "beta", "stable", "unknownFutureValue"),
 						},
 						PlanModifiers: []planmodifier.String{
-							wpdefaultvalue.StringDefaultValue("stable"),
+							wpdefaultvaluemodifier.StringDefaultValue("stable"),
 							stringplanmodifier.RequiresReplace(),
 						},
 						Computed:            true,
-						MarkdownDescription: "The channel to install on target devices. The possible values are dev, beta, and stable. By default, this property is set to dev. / The enum to specify the channels for Microsoft Edge apps; possible values are: `dev` (The Dev Channel is intended to help you plan and develop with the latest capabilities of Microsoft Edge.), `beta` (The Beta Channel is intended for production deployment to a representative sample set of users. New features ship about every 4 weeks. Security and quality updates ship as needed.), `stable` (The Stable Channel is intended for broad deployment within organizations, and it's the channel that most users should be on. New features ship about every 4 weeks. Security and quality updates ship as needed.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `\"stable\"`.",
+						MarkdownDescription: "The channel to install on target devices. The possible values are dev, beta, and stable. By default, this property is set to dev. / The enum to specify the channels for Microsoft Edge apps. <br/> _Provider_ allowed values are: `dev` (The Dev Channel is intended to help you plan and develop with the latest capabilities of Microsoft Edge.), `beta` (The Beta Channel is intended for production deployment to a representative sample set of users. New features ship about every 4 weeks. Security and quality updates ship as needed.), `stable` (The Stable Channel is intended for broad deployment within organizations, and it's the channel that most users should be on. New features ship about every 4 weeks. Security and quality updates ship as needed.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `\"stable\"`.",
 					},
 					"display_language_locale": schema.StringAttribute{
 						Optional:            true,
@@ -2026,7 +2070,7 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for the Microsoft Edge app on Windows. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsmicrosoftedgeapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for the Microsoft Edge app on Windows. Also see [Microsoft docs for windowsMicrosoftEdgeApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsmicrosoftedgeapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"windows_msi": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2058,9 +2102,9 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 					"ignore_version_detection": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "A boolean to control whether the app's version will be used to detect the app after it is installed on a device. Set this to true for Windows Mobile MSI Line of Business (LoB) apps that use a self update feature. The _provider_ default value is `false`.",
+						MarkdownDescription: "A boolean to control whether the app's version will be used to detect the app after it is installed on a device. Set this to true for Windows Mobile MSI Line of Business (LoB) apps that use a self update feature. <br/> The _provider_ default value is `false`.",
 					},
 					"product_code": schema.StringAttribute{
 						Optional:            true,
@@ -2077,21 +2121,21 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 					"source_file": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: "Provider Note: The path to the MSI file to be uploaded.",
+						MarkdownDescription: "_Provider_ Note: The path to the MSI file to be uploaded.",
 					},
 					"source_sha256": schema.StringAttribute{
 						Required:            true,
 						Description:         `sourceSha256`, // custom MS Graph attribute name
-						MarkdownDescription: "Provider Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
+						MarkdownDescription: "_Provider_ Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
 					},
 					"manifest_base64": schema.StringAttribute{
 						Required:            true,
 						Description:         `manifestBase64`, // custom MS Graph attribute name
-						MarkdownDescription: "Provider Note: The manifest contains settings that are based on MSI properties (that cannot easily be parsed and read by the provider). Instead, either manually read the MSI file's properties (e.g. using MSI Orca on Windows) and based on their values select the appropriate values for the XML attributes (as shown in detail in the example above). Or open the Intune portal, enable network log recording in your browser's development tool and thereafter upload the MSI from there (creating a dummy app). Then search the network log for a POST request to https://graph.microsoft.com/beta/deviceAppManagement/mobileApps/.../microsoft.graph.windowsMobileMSI/contentVersions/.../files and directly copy the base64 encoded manifest value from its payload.",
+						MarkdownDescription: "_Provider_ Note: The manifest contains settings that are based on MSI properties (that cannot easily be parsed and read by the provider). Instead, either manually read the MSI file's properties (e.g. using MSI Orca on Windows) and based on their values select the appropriate values for the XML attributes (as shown in detail in the example above). Or open the Intune portal, enable network log recording in your browser's development tool and thereafter upload the MSI from there (creating a dummy app). Then search the network log for a POST request to https://graph.microsoft.com/beta/deviceAppManagement/mobileApps/.../microsoft.graph.windowsMobileMSI/contentVersions/.../files and directly copy the base64 encoded manifest value from its payload.",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for Windows Mobile MSI Line Of Business apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsmobilemsi?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Windows Mobile MSI Line Of Business apps. Also see [Microsoft docs for windowsMobileMSI](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsmobilemsi?view=graph-rest-beta). <br> ",
 			},
 		},
 		"windows_office_suite": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2101,126 +2145,126 @@ var mobileAppResourceSchema = schema.Schema{
 				Attributes: map[string]schema.Attribute{ // officeSuiteApp
 					"auto_accept_eula": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 						Computed:            true,
-						MarkdownDescription: "The value to accept the EULA automatically on the enduser's device. The _provider_ default value is `true`.",
+						MarkdownDescription: "The value to accept the EULA automatically on the enduser's device. <br/> The _provider_ default value is `true`.",
 					},
 					"excluded_apps": schema.SingleNestedAttribute{
 						Optional: true,
 						Attributes: map[string]schema.Attribute{ // excludedApps
 							"access": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
-								MarkdownDescription: "The value for if MS Office Access should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if MS Office Access should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 							"bing": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
-								MarkdownDescription: "The value for if Microsoft Search as default should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if Microsoft Search as default should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 							"excel": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
-								MarkdownDescription: "The value for if MS Office Excel should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if MS Office Excel should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 							"groove": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 								Computed:            true,
-								MarkdownDescription: "The value for if MS Office OneDrive for Business - Groove should be excluded or not. The _provider_ default value is `true`.",
+								MarkdownDescription: "The value for if MS Office OneDrive for Business - Groove should be excluded or not. <br/> The _provider_ default value is `true`.",
 							},
 							"infopath": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 								Computed:            true,
 								Description:         `infoPath`, // custom MS Graph attribute name
-								MarkdownDescription: "The value for if MS Office InfoPath should be excluded or not. The _provider_ default value is `true`.",
+								MarkdownDescription: "The value for if MS Office InfoPath should be excluded or not. <br/> The _provider_ default value is `true`.",
 							},
 							"lync": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 								Computed:            true,
-								MarkdownDescription: "The value for if MS Office Skype for Business - Lync should be excluded or not. The _provider_ default value is `true`.",
+								MarkdownDescription: "The value for if MS Office Skype for Business - Lync should be excluded or not. <br/> The _provider_ default value is `true`.",
 							},
 							"onedrive": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
 								Description:         `oneDrive`, // custom MS Graph attribute name
-								MarkdownDescription: "The value for if MS Office OneDrive should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if MS Office OneDrive should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 							"onenote": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
 								Description:         `oneNote`, // custom MS Graph attribute name
-								MarkdownDescription: "The value for if MS Office OneNote should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if MS Office OneNote should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 							"outlook": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
-								MarkdownDescription: "The value for if MS Office Outlook should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if MS Office Outlook should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 							"powerpoint": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
 								Description:         `powerPoint`, // custom MS Graph attribute name
-								MarkdownDescription: "The value for if MS Office PowerPoint should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if MS Office PowerPoint should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 							"publisher": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
-								MarkdownDescription: "The value for if MS Office Publisher should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if MS Office Publisher should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 							"sharepoint_designer": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 								Computed:            true,
 								Description:         `sharePointDesigner`, // custom MS Graph attribute name
-								MarkdownDescription: "The value for if MS Office SharePointDesigner should be excluded or not. The _provider_ default value is `true`.",
+								MarkdownDescription: "The value for if MS Office SharePointDesigner should be excluded or not. <br/> The _provider_ default value is `true`.",
 							},
 							"teams": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
-								MarkdownDescription: "The value for if MS Office Teams should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if MS Office Teams should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 							"visio": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
-								MarkdownDescription: "The value for if MS Office Visio should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if MS Office Visio should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 							"word": schema.BoolAttribute{
 								Optional:            true,
-								PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+								PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 								Computed:            true,
-								MarkdownDescription: "The value for if MS Office Word should be excluded or not. The _provider_ default value is `false`.",
+								MarkdownDescription: "The value for if MS Office Word should be excluded or not. <br/> The _provider_ default value is `false`.",
 							},
 						},
-						PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "The property to represent the apps which are excluded from the selected Office365 Product Id. / Contains properties for Excluded Office365 Apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-excludedapps?view=graph-rest-beta. The _provider_ default value is `{}`.",
+						MarkdownDescription: "The property to represent the apps which are excluded from the selected Office365 Product Id. / Contains properties for Excluded Office365 Apps. Also see [Microsoft docs for excludedApps](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-excludedapps?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 					},
 					"install_progress_display_level": schema.StringAttribute{
 						Optional:            true,
 						Validators:          []validator.String{stringvalidator.OneOf("none", "full")},
-						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("none")},
+						PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("none")},
 						Computed:            true,
-						MarkdownDescription: "To specify the level of display for the Installation Progress Setup UI on the Device. / The Enum to specify the level of display for the Installation Progress Setup UI on the Device; possible values are: `none`, `full`. The _provider_ default value is `\"none\"`.",
+						MarkdownDescription: "To specify the level of display for the Installation Progress Setup UI on the Device. / The Enum to specify the level of display for the Installation Progress Setup UI on the Device. <br/> _Provider_ allowed values are: `none`, `full`. The _provider_ default value is `\"none\"`.",
 					},
 					"locales_to_install": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "The property to represent the locales which are installed when the apps from Office365 is installed. It uses standard RFC 6033. Ref: https://technet.microsoft.com/library/cc179219(v=office.16).aspx. The _provider_ default value is `[]`.",
+						MarkdownDescription: "The property to represent the locales which are installed when the apps from Office365 is installed. It uses standard RFC 6033. Ref: https://technet.microsoft.com/library/cc179219(v=office.16).aspx <br/> The _provider_ default value is `[]`.",
 					},
 					"office_configuration_xml": schema.StringAttribute{
 						Optional:            true,
@@ -2232,11 +2276,11 @@ var mobileAppResourceSchema = schema.Schema{
 							wpvalidator.FlagEnumValues("none", "x86", "x64", "arm", "neutral", "arm64"),
 						},
 						PlanModifiers: []planmodifier.String{
-							wpdefaultvalue.StringDefaultValue("x64"),
+							wpdefaultvaluemodifier.StringDefaultValue("x64"),
 							stringplanmodifier.RequiresReplace(),
 						},
 						Computed:            true,
-						MarkdownDescription: "The property to represent the Office365 app suite version. / Contains properties for Windows architecture; possible values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.). The _provider_ default value is `\"x64\"`.",
+						MarkdownDescription: "The property to represent the Office365 app suite version. / Contains properties for Windows architecture. <br/> _Provider_ allowed values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.). The _provider_ default value is `\"x64\"`.",
 					},
 					"office_suite_app_default_file_format": schema.StringAttribute{
 						Optional: true,
@@ -2244,10 +2288,10 @@ var mobileAppResourceSchema = schema.Schema{
 							stringvalidator.OneOf("notConfigured", "officeOpenXMLFormat", "officeOpenDocumentFormat", "unknownFutureValue"),
 						},
 						PlanModifiers: []planmodifier.String{
-							wpdefaultvalue.StringDefaultValue("officeOpenDocumentFormat"),
+							wpdefaultvaluemodifier.StringDefaultValue("officeOpenDocumentFormat"),
 						},
 						Computed:            true,
-						MarkdownDescription: "The property to represent the Office365 default file format type. / Describes the OfficeSuiteApp file format types that can be selected; possible values are: `notConfigured` (No file format selected), `officeOpenXMLFormat` (Office Open XML Format selected), `officeOpenDocumentFormat` (Office Open Document Format selected), `unknownFutureValue` (Placeholder for evolvable enum.). The _provider_ default value is `\"officeOpenDocumentFormat\"`.",
+						MarkdownDescription: "The property to represent the Office365 default file format type. / Describes the OfficeSuiteApp file format types that can be selected. <br/> _Provider_ allowed values are: `notConfigured` (No file format selected), `officeOpenXMLFormat` (Office Open XML Format selected), `officeOpenDocumentFormat` (Office Open Document Format selected), `unknownFutureValue` (Placeholder for evolvable enum.). The _provider_ default value is `\"officeOpenDocumentFormat\"`.",
 					},
 					"product_ids": schema.SetAttribute{
 						ElementType: types.StringType,
@@ -2257,46 +2301,48 @@ var mobileAppResourceSchema = schema.Schema{
 								stringvalidator.OneOf("o365ProPlusRetail", "o365BusinessRetail", "visioProRetail", "projectProRetail"),
 							),
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 						Computed:            true,
-						MarkdownDescription: "The Product Ids that represent the Office365 Suite SKU. / The Enum to specify the Office365 ProductIds that represent the Office365 Suite SKUs; possible values are: `o365ProPlusRetail`, `o365BusinessRetail`, `visioProRetail`, `projectProRetail`. The _provider_ default value is `[]`.",
+						MarkdownDescription: "The Product Ids that represent the Office365 Suite SKU. / The Enum to specify the Office365 ProductIds that represent the Office365 Suite SKUs. <br/> _Provider_ allowed values are: `o365ProPlusRetail`, `o365BusinessRetail`, `visioProRetail`, `projectProRetail`. The _provider_ default value is `[]`.",
 					},
 					"should_uninstall_older_versions_of_office": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 						Computed:            true,
-						MarkdownDescription: "The property to determine whether to uninstall existing Office MSI if an Office365 app suite is deployed to the device or not. The _provider_ default value is `true`.",
+						MarkdownDescription: "The property to determine whether to uninstall existing Office MSI if an Office365 app suite is deployed to the device or not. <br/> The _provider_ default value is `true`.",
 					},
 					"target_version": schema.StringAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+						PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 						Computed:            true,
-						MarkdownDescription: "The property to represent the specific target version for the Office365 app suite that should be remained deployed on the devices. The _provider_ default value is `\"\"`.",
+						MarkdownDescription: "The property to represent the specific target version for the Office365 app suite that should be remained deployed on the devices. <br/> The _provider_ default value is `\"\"`.",
 					},
 					"update_channel": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
 							stringvalidator.OneOf("none", "current", "deferred", "firstReleaseCurrent", "firstReleaseDeferred", "monthlyEnterprise"),
 						},
-						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("current")},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("current"),
+						},
 						Computed:            true,
-						MarkdownDescription: "The property to represent the Office365 Update Channel. / The Enum to specify the Office365 Updates Channel; possible values are: `none`, `current`, `deferred`, `firstReleaseCurrent`, `firstReleaseDeferred`, `monthlyEnterprise`. The _provider_ default value is `\"current\"`.",
+						MarkdownDescription: "The property to represent the Office365 Update Channel. / The Enum to specify the Office365 Updates Channel. <br/> _Provider_ allowed values are: `none`, `current`, `deferred`, `firstReleaseCurrent`, `firstReleaseDeferred`, `monthlyEnterprise`. The _provider_ default value is `\"current\"`.",
 					},
 					"update_version": schema.StringAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+						PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 						Computed:            true,
-						MarkdownDescription: "The property to represent the update version in which the specific target version is available for the Office365 app suite. The _provider_ default value is `\"\"`.",
+						MarkdownDescription: "The property to represent the update version in which the specific target version is available for the Office365 app suite. <br/> The _provider_ default value is `\"\"`.",
 					},
 					"use_shared_computer_activation": schema.BoolAttribute{
 						Optional:            true,
-						PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "The property to represent that whether the shared computer activation is used not for Office365 app suite. The _provider_ default value is `false`.",
+						MarkdownDescription: "The property to represent that whether the shared computer activation is used not for Office365 app suite. <br/> The _provider_ default value is `false`.",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for the Office365 Suite App. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-officesuiteapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for the Office365 Suite App. Also see [Microsoft docs for officeSuiteApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-officesuiteapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"windows_store": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2310,7 +2356,7 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for Windows Store apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsstoreapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Windows Store apps. Also see [Microsoft docs for windowsStoreApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsstoreapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"windows_universal_appx": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2337,14 +2383,14 @@ var mobileAppResourceSchema = schema.Schema{
 						Validators: []validator.String{
 							wpvalidator.FlagEnumValues("none", "x86", "x64", "arm", "neutral", "arm64"),
 						},
-						MarkdownDescription: "The Windows architecture(s) for which this app can run on.; default value is `none`. / Contains properties for Windows architecture; possible values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.)",
+						MarkdownDescription: "The Windows architecture(s) for which this app can run on.; default value is `none`. / Contains properties for Windows architecture. <br/> _Provider_ allowed values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.).",
 					},
 					"applicable_device_types": schema.StringAttribute{
 						Required: true,
 						Validators: []validator.String{
 							wpvalidator.FlagEnumValues("none", "desktop", "mobile", "holographic", "team", "unknownFutureValue"),
 						},
-						MarkdownDescription: "The Windows device type(s) for which this app can run on.; default value is `none`. / Contains properties for Windows device type. Multiple values can be selected. Default value is `none`; possible values are: `none` (No device types supported. Default value.), `desktop` (Indicates support for Desktop Windows device type.), `mobile` (Indicates support for Mobile Windows device type.), `holographic` (Indicates support for Holographic Windows device type.), `team` (Indicates support for Team Windows device type.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.)",
+						MarkdownDescription: "The Windows device type(s) for which this app can run on.; default value is `none`. / Contains properties for Windows device type. Multiple values can be selected. Default value is `none`. <br/> _Provider_ allowed values are: `none` (No device types supported. Default value.), `desktop` (Indicates support for Desktop Windows device type.), `mobile` (Indicates support for Mobile Windows device type.), `holographic` (Indicates support for Holographic Windows device type.), `team` (Indicates support for Team Windows device type.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.).",
 					},
 					"identity_name": schema.StringAttribute{
 						Optional:            true,
@@ -2365,16 +2411,16 @@ var mobileAppResourceSchema = schema.Schema{
 					"is_bundle": schema.BoolAttribute{
 						Optional: true,
 						PlanModifiers: []planmodifier.Bool{
-							wpdefaultvalue.BoolDefaultValue(false),
+							wpdefaultvaluemodifier.BoolDefaultValue(false),
 							boolplanmodifier.RequiresReplace(),
 						},
 						Computed:            true,
-						MarkdownDescription: "Whether or not the app is a bundle. If TRUE, app is a bundle; if FALSE, app is not a bundle. The _provider_ default value is `false`.",
+						MarkdownDescription: "Whether or not the app is a bundle. If TRUE, app is a bundle; if FALSE, app is not a bundle. <br/> The _provider_ default value is `false`.",
 					},
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
 						Required:            true,
 						Attributes:          mobileAppWindowsMinimumOperatingSystemAttributes,
-						MarkdownDescription: "The value for the minimum applicable Windows operating system. / The minimum operating system required for a Windows mobile app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsminimumoperatingsystem?view=graph-rest-beta  \nProvider Note: v10_0 seems to be required and the only minimum OS version to be accepted by MS Graph for Univeral APPX.",
+						MarkdownDescription: "The value for the minimum applicable Windows operating system. / The minimum operating system required for a Windows mobile app. Also see [Microsoft docs for windowsMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsminimumoperatingsystem?view=graph-rest-beta).  \n_Provider_ Note: v10_0 seems to be required and the only minimum OS version to be accepted by MS Graph for Univeral APPX. <br> ",
 					},
 					"committed_contained_apps": schema.SetNestedAttribute{
 						Computed: true,
@@ -2395,7 +2441,7 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppMobileContainedAppValidator},
-										MarkdownDescription: "A class that represents a contained app of a MicrosoftStoreForBusinessApp. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-microsoftstoreforbusinesscontainedapp?view=graph-rest-beta",
+										MarkdownDescription: "A class that represents a contained app of a MicrosoftStoreForBusinessApp. Also see [Microsoft docs for microsoftStoreForBusinessContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-microsoftstoreforbusinesscontainedapp?view=graph-rest-beta). <br> ",
 									},
 								},
 								"windows_universal_app_x": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2409,26 +2455,26 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										Validators:          []validator.Object{mobileAppMobileContainedAppValidator},
-										MarkdownDescription: "A class that represents a contained app of a WindowsUniversalAppX app. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsuniversalappxcontainedapp?view=graph-rest-beta",
+										MarkdownDescription: "A class that represents a contained app of a WindowsUniversalAppX app. Also see [Microsoft docs for windowsUniversalAppXContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsuniversalappxcontainedapp?view=graph-rest-beta). <br> ",
 									},
 								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
-						MarkdownDescription: "The collection of contained apps in the committed mobileAppContent of a windowsUniversalAppX app. This property is read-only. / An abstract class that represents a contained app in a mobileApp acting as a package. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobilecontainedapp?view=graph-rest-beta",
+						MarkdownDescription: "The collection of contained apps in the committed mobileAppContent of a windowsUniversalAppX app. This property is read-only. / An abstract class that represents a contained app in a mobileApp acting as a package. Also see [Microsoft docs for mobileContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobilecontainedapp?view=graph-rest-beta). <br> ",
 					},
 					"source_file": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: "Provider Note: The path to the APPX/MSIX file to be uploaded.",
+						MarkdownDescription: "_Provider_ Note: The path to the APPX/MSIX file to be uploaded.",
 					},
 					"source_sha256": schema.StringAttribute{
 						Required:            true,
 						Description:         `sourceSha256`, // custom MS Graph attribute name
-						MarkdownDescription: "Provider Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
+						MarkdownDescription: "_Provider_ Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for Windows Universal AppX Line Of Business apps. Inherits from `mobileLobApp`. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsuniversalappx?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Windows Universal AppX Line Of Business apps. Inherits from `mobileLobApp`. Also see [Microsoft docs for windowsUniversalAppX](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsuniversalappx?view=graph-rest-beta). <br> ",
 			},
 		},
 		"windows_web_link": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2443,7 +2489,7 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "Contains properties and inherited properties for Windows web apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowswebapp?view=graph-rest-beta",
+				MarkdownDescription: "Contains properties and inherited properties for Windows web apps. Also see [Microsoft docs for windowsWebApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowswebapp?view=graph-rest-beta). <br> ",
 			},
 		},
 		"winget": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2455,19 +2501,21 @@ var mobileAppResourceSchema = schema.Schema{
 						Optional: true,
 						Attributes: map[string]schema.Attribute{ // winGetAppInstallExperience
 							"run_as_account": schema.StringAttribute{
-								Optional:            true,
-								Validators:          []validator.String{stringvalidator.OneOf("system", "user")},
-								PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("system")},
+								Optional:   true,
+								Validators: []validator.String{stringvalidator.OneOf("system", "user")},
+								PlanModifiers: []planmodifier.String{
+									wpdefaultvaluemodifier.StringDefaultValue("system"),
+								},
 								Computed:            true,
-								MarkdownDescription: "Indicates the type of execution context the app setup runs in on target devices. Options include values of the RunAsAccountType enum, which are System and User. Required at creation time, cannot be modified on existing objects. / Indicates the type of execution context the app runs in; possible values are: `system` (System context), `user` (User context). The _provider_ default value is `\"system\"`.",
+								MarkdownDescription: "Indicates the type of execution context the app setup runs in on target devices. Options include values of the RunAsAccountType enum, which are System and User. Required at creation time, cannot be modified on existing objects. / Indicates the type of execution context the app runs in. <br/> _Provider_ allowed values are: `system` (System context), `user` (User context). The _provider_ default value is `\"system\"`.",
 							},
 						},
 						PlanModifiers: []planmodifier.Object{
-							wpdefaultvalue.ObjectDefaultValueEmpty(),
+							wpdefaultvaluemodifier.ObjectDefaultValueEmpty(),
 							objectplanmodifier.RequiresReplace(),
 						},
 						Computed:            true,
-						MarkdownDescription: "The install experience settings associated with this application, which are used to ensure the desired install experiences on the target device are taken into account. This includes the account type (System or User) that actions should be run as on target devices. Required at creation time. / Represents the install experience settings associated with WinGet apps. This is used to ensure the desired install experiences on the target device are taken into account. Required at creation time. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-wingetappinstallexperience?view=graph-rest-beta. The _provider_ default value is `{}`.",
+						MarkdownDescription: "The install experience settings associated with this application, which are used to ensure the desired install experiences on the target device are taken into account. This includes the account type (System or User) that actions should be run as on target devices. Required at creation time. / Represents the install experience settings associated with WinGet apps. This is used to ensure the desired install experiences on the target device are taken into account. Required at creation time. Also see [Microsoft docs for winGetAppInstallExperience](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-wingetappinstallexperience?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 					},
 					"manifest_hash": schema.StringAttribute{
 						Optional:            true,
@@ -2481,11 +2529,11 @@ var mobileAppResourceSchema = schema.Schema{
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				MarkdownDescription: "A MobileApp that is based on a referenced application in a WinGet repository. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-wingetapp?view=graph-rest-beta",
+				MarkdownDescription: "A MobileApp that is based on a referenced application in a WinGet repository. Also see [Microsoft docs for winGetApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-wingetapp?view=graph-rest-beta). <br> ",
 			},
 		},
 	},
-	MarkdownDescription: "An abstract class containing the base properties for Intune mobile apps. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileapp?view=graph-rest-beta\n\nProvider Note: There have been reports about OpenTofu crashing (with a panic) when trying to generate configuration using `-generate-config-out=...`. Unfortunately this happens inside the code of OpenTofu itself and is not easily diagnoseable from outside or changeable from the provider. A workaround might be to instead use Terraform for generating the config (as it seems to work well for it) - the result should be fully compatible and usable also with OpenTofu. ||| MS Graph: App management",
+	MarkdownDescription: "An abstract class containing the base properties for Intune mobile apps. <br/> Also see [Microsoft docs for mobileApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileapp?view=graph-rest-beta).\n\n_Provider_ Note: There have been reports about OpenTofu crashing (with a panic) when trying to generate configuration using `-generate-config-out=...`. Unfortunately this happens inside the code of OpenTofu itself and is not easily diagnoseable from outside or changeable from the provider. A workaround might be to instead use Terraform for generating the config (as it seems to work well for it) - the result should be fully compatible and usable also with OpenTofu. ||| MS Graph: App management",
 }
 
 var mobileAppMobileAppValidator = objectvalidator.ExactlyOneOf(
@@ -2526,9 +2574,11 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 		Validators: []validator.String{
 			stringvalidator.OneOf("available", "required", "uninstall", "availableWithoutEnrollment"),
 		},
-		PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("required")},
+		PlanModifiers: []planmodifier.String{
+			wpdefaultvaluemodifier.StringDefaultValue("required"),
+		},
 		Computed:            true,
-		MarkdownDescription: "The install intent defined by the admin. / Possible values for the install intent chosen by the admin; possible values are: `available` (Available install intent.), `required` (Required install intent.), `uninstall` (Uninstall install intent.), `availableWithoutEnrollment` (Available without enrollment install intent.). The _provider_ default value is `\"required\"`.",
+		MarkdownDescription: "The install intent defined by the admin. / Possible values for the install intent chosen by the admin. <br/> _Provider_ allowed values are: `available` (Available install intent.), `required` (Required install intent.), `uninstall` (Uninstall install intent.), `availableWithoutEnrollment` (Available without enrollment install intent.). The _provider_ default value is `\"required\"`.",
 	},
 	"settings": schema.SingleNestedAttribute{
 		Optional: true,
@@ -2541,22 +2591,24 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 						"android_managed_store_app_track_ids": schema.SetAttribute{
 							ElementType:         types.StringType,
 							Optional:            true,
-							PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+							PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 							Computed:            true,
-							MarkdownDescription: "The track IDs to enable for this app assignment. The _provider_ default value is `[]`.",
+							MarkdownDescription: "The track IDs to enable for this app assignment. <br/> The _provider_ default value is `[]`.",
 						},
 						"auto_update_mode": schema.StringAttribute{
 							Optional: true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("default", "postponed", "priority", "unknownFutureValue"),
 							},
-							PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("default")},
+							PlanModifiers: []planmodifier.String{
+								wpdefaultvaluemodifier.StringDefaultValue("default"),
+							},
 							Computed:            true,
-							MarkdownDescription: "The prioritization of automatic updates for this app assignment. / Prioritization for automatic updates of Android Managed Store apps set on assignment; possible values are: `default` (Default update behavior (device must be connected to Wifi, charging and not actively used).), `postponed` (Updates are postponed for a maximum of 90 days after the app becomes out of date.), `priority` (The app is updated as soon as possible by the developer. If device is online, it will be updated within minutes.), `unknownFutureValue` (Unknown future mode (reserved, not used right now).). The _provider_ default value is `\"default\"`.",
+							MarkdownDescription: "The prioritization of automatic updates for this app assignment. / Prioritization for automatic updates of Android Managed Store apps set on assignment. <br/> _Provider_ allowed values are: `default` (Default update behavior (device must be connected to Wifi, charging and not actively used).), `postponed` (Updates are postponed for a maximum of 90 days after the app becomes out of date.), `priority` (The app is updated as soon as possible by the developer. If device is online, it will be updated within minutes.), `unknownFutureValue` (Unknown future mode (reserved, not used right now).). The _provider_ default value is `\"default\"`.",
 						},
 					},
 					Validators:          []validator.Object{mobileAppMobileAppAssignmentSettingsValidator},
-					MarkdownDescription: "Contains properties used to assign an Android Managed Store mobile app to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-androidmanagedstoreappassignmentsettings?view=graph-rest-beta",
+					MarkdownDescription: "Contains properties used to assign an Android Managed Store mobile app to a group. Also see [Microsoft docs for androidManagedStoreAppAssignmentSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-androidmanagedstoreappassignmentsettings?view=graph-rest-beta). <br> ",
 				},
 			},
 			"ios_lob": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2582,7 +2634,7 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 						},
 					},
 					Validators:          []validator.Object{mobileAppMobileAppAssignmentSettingsValidator},
-					MarkdownDescription: "Contains properties used to assign an iOS LOB mobile app to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ioslobappassignmentsettings?view=graph-rest-beta",
+					MarkdownDescription: "Contains properties used to assign an iOS LOB mobile app to a group. Also see [Microsoft docs for iosLobAppAssignmentSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-ioslobappassignmentsettings?view=graph-rest-beta). <br> ",
 				},
 			},
 			"ios_store": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2608,7 +2660,7 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 						},
 					},
 					Validators:          []validator.Object{mobileAppMobileAppAssignmentSettingsValidator},
-					MarkdownDescription: "Contains properties used to assign an iOS Store mobile app to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iosstoreappassignmentsettings?view=graph-rest-beta",
+					MarkdownDescription: "Contains properties used to assign an iOS Store mobile app to a group. Also see [Microsoft docs for iosStoreAppAssignmentSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iosstoreappassignmentsettings?view=graph-rest-beta). <br> ",
 				},
 			},
 			"ios_vpp": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2634,9 +2686,9 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 						},
 						"use_device_licensing": schema.BoolAttribute{
 							Optional:            true,
-							PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+							PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 							Computed:            true,
-							MarkdownDescription: "Whether or not to use device licensing. The _provider_ default value is `false`.",
+							MarkdownDescription: "Whether or not to use device licensing. <br/> The _provider_ default value is `false`.",
 						},
 						"vpn_configuration_id": schema.StringAttribute{
 							Optional:            true,
@@ -2644,7 +2696,7 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 						},
 					},
 					Validators:          []validator.Object{mobileAppMobileAppAssignmentSettingsValidator},
-					MarkdownDescription: "Contains properties used to assign an iOS VPP mobile app to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iosvppappassignmentsettings?view=graph-rest-beta",
+					MarkdownDescription: "Contains properties used to assign an iOS VPP mobile app to a group. Also see [Microsoft docs for iosVppAppAssignmentSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iosvppappassignmentsettings?view=graph-rest-beta). <br> ",
 				},
 			},
 			"macos_lob": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2658,7 +2710,7 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 						},
 					},
 					Validators:          []validator.Object{mobileAppMobileAppAssignmentSettingsValidator},
-					MarkdownDescription: "Contains properties used to assign a macOS LOB app to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-macoslobappassignmentsettings?view=graph-rest-beta",
+					MarkdownDescription: "Contains properties used to assign a macOS LOB app to a group. Also see [Microsoft docs for macOsLobAppAssignmentSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-macoslobappassignmentsettings?view=graph-rest-beta). <br> ",
 				},
 			},
 			"macos_vpp": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2680,13 +2732,13 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 						},
 						"use_device_licensing": schema.BoolAttribute{
 							Optional:            true,
-							PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+							PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 							Computed:            true,
-							MarkdownDescription: "Whether or not to use device licensing. The _provider_ default value is `false`.",
+							MarkdownDescription: "Whether or not to use device licensing. <br/> The _provider_ default value is `false`.",
 						},
 					},
 					Validators:          []validator.Object{mobileAppMobileAppAssignmentSettingsValidator},
-					MarkdownDescription: "Contains properties used to assign an Mac VPP mobile app to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-macosvppappassignmentsettings?view=graph-rest-beta",
+					MarkdownDescription: "Contains properties used to assign an Mac VPP mobile app to a group. Also see [Microsoft docs for macOsVppAppAssignmentSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-macosvppappassignmentsettings?view=graph-rest-beta). <br> ",
 				},
 			},
 			"win32_lob": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2702,21 +2754,25 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 									Validators: []validator.String{
 										stringvalidator.OneOf("notConfigured", "enabled", "unknownFutureValue"),
 									},
-									PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+									PlanModifiers: []planmodifier.String{
+										wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+									},
 									Computed:            true,
-									MarkdownDescription: "Contains value for auto-update superseded apps; possible values are: `notConfigured` (Indicates that the auto-update superseded apps state is not configured and the app will not auto-update the superseded apps.), `enabled` (Indicates that the auto-update superseded apps state is enabled and the app will auto-update the superseded apps if the superseded apps are installed on the device.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `\"notConfigured\"`.",
+									MarkdownDescription: "Contains value for auto-update superseded apps. <br/> _Provider_ allowed values are: `notConfigured` (Indicates that the auto-update superseded apps state is not configured and the app will not auto-update the superseded apps.), `enabled` (Indicates that the auto-update superseded apps state is enabled and the app will auto-update the superseded apps if the superseded apps are installed on the device.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `\"notConfigured\"`.",
 								},
 							},
-							MarkdownDescription: "The auto-update settings to apply for this app assignment. / Contains properties used to perform the auto-update of an application. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-win32lobappautoupdatesettings?view=graph-rest-beta",
+							MarkdownDescription: "The auto-update settings to apply for this app assignment. / Contains properties used to perform the auto-update of an application. Also see [Microsoft docs for win32LobAppAutoUpdateSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-win32lobappautoupdatesettings?view=graph-rest-beta). <br> ",
 						},
 						"delivery_optimization_priority": schema.StringAttribute{
 							Optional: true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("notConfigured", "foreground"),
 							},
-							PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+							PlanModifiers: []planmodifier.String{
+								wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+							},
 							Computed:            true,
-							MarkdownDescription: "The delivery optimization priority for this app assignment. This setting is not supported in National Cloud environments. / Contains value for delivery optimization priority; possible values are: `notConfigured` (Not configured or background normal delivery optimization priority.), `foreground` (Foreground delivery optimization priority.). The _provider_ default value is `\"notConfigured\"`.",
+							MarkdownDescription: "The delivery optimization priority for this app assignment. This setting is not supported in National Cloud environments. / Contains value for delivery optimization priority. <br/> _Provider_ allowed values are: `notConfigured` (Not configured or background normal delivery optimization priority.), `foreground` (Foreground delivery optimization priority.). The _provider_ default value is `\"notConfigured\"`.",
 						},
 						"install_time_settings": schema.SingleNestedAttribute{
 							Optional: true,
@@ -2731,47 +2787,49 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 								},
 								"use_local_time": schema.BoolAttribute{
 									Optional:            true,
-									PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+									PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 									Computed:            true,
-									MarkdownDescription: "Whether the local device time or UTC time should be used when determining the available and deadline times. The _provider_ default value is `false`.",
+									MarkdownDescription: "Whether the local device time or UTC time should be used when determining the available and deadline times. <br/> The _provider_ default value is `false`.",
 								},
 							},
-							MarkdownDescription: "The install time settings to apply for this app assignment. / Contains properties used to determine when to offer an app to devices and when to install the app on devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileappinstalltimesettings?view=graph-rest-beta",
+							MarkdownDescription: "The install time settings to apply for this app assignment. / Contains properties used to determine when to offer an app to devices and when to install the app on devices. Also see [Microsoft docs for mobileAppInstallTimeSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileappinstalltimesettings?view=graph-rest-beta). <br> ",
 						},
 						"notifications": schema.StringAttribute{
 							Optional: true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("showAll", "showReboot", "hideAll"),
 							},
-							PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("showAll")},
+							PlanModifiers: []planmodifier.String{
+								wpdefaultvaluemodifier.StringDefaultValue("showAll"),
+							},
 							Computed:            true,
-							MarkdownDescription: "The notification status for this app assignment. / Contains value for notification status; possible values are: `showAll` (Show all notifications.), `showReboot` (Only show restart notification and suppress other notifications.), `hideAll` (Hide all notifications.). The _provider_ default value is `\"showAll\"`.",
+							MarkdownDescription: "The notification status for this app assignment. / Contains value for notification status. <br/> _Provider_ allowed values are: `showAll` (Show all notifications.), `showReboot` (Only show restart notification and suppress other notifications.), `hideAll` (Hide all notifications.). The _provider_ default value is `\"showAll\"`.",
 						},
 						"restart_settings": schema.SingleNestedAttribute{
 							Optional: true,
 							Attributes: map[string]schema.Attribute{ // win32LobAppRestartSettings
 								"countdown_display_before_restart_in_minutes": schema.Int64Attribute{
 									Optional:            true,
-									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
+									PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(0)},
 									Computed:            true,
-									MarkdownDescription: "The number of minutes before the restart time to display the countdown dialog for pending restarts. The _provider_ default value is `0`.",
+									MarkdownDescription: "The number of minutes before the restart time to display the countdown dialog for pending restarts. <br/> The _provider_ default value is `0`.",
 								},
 								"grace_period_in_minutes": schema.Int64Attribute{
 									Optional:            true,
-									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
+									PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(0)},
 									Computed:            true,
-									MarkdownDescription: "The number of minutes to wait before restarting the device after an app installation. The _provider_ default value is `0`.",
+									MarkdownDescription: "The number of minutes to wait before restarting the device after an app installation. <br/> The _provider_ default value is `0`.",
 								},
 								"restart_notification_snooze_duration_in_minutes": schema.Int64Attribute{
 									Optional:            true,
 									MarkdownDescription: "The number of minutes to snooze the restart notification dialog when the snooze button is selected.",
 								},
 							},
-							MarkdownDescription: "The reboot settings to apply for this app assignment. / Contains properties describing restart coordination following an app installation. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-win32lobapprestartsettings?view=graph-rest-beta",
+							MarkdownDescription: "The reboot settings to apply for this app assignment. / Contains properties describing restart coordination following an app installation. Also see [Microsoft docs for win32LobAppRestartSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-win32lobapprestartsettings?view=graph-rest-beta). <br> ",
 						},
 					},
 					Validators:          []validator.Object{mobileAppMobileAppAssignmentSettingsValidator},
-					MarkdownDescription: "Contains properties used to assign an Win32 LOB mobile app to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-win32lobappassignmentsettings?view=graph-rest-beta",
+					MarkdownDescription: "Contains properties used to assign an Win32 LOB mobile app to a group. Also see [Microsoft docs for win32LobAppAssignmentSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-win32lobappassignmentsettings?view=graph-rest-beta). <br> ",
 				},
 			},
 			"windows_universal_appx": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2781,13 +2839,13 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 					Attributes: map[string]schema.Attribute{ // windowsUniversalAppXAppAssignmentSettings
 						"use_device_context": schema.BoolAttribute{
 							Optional:            true,
-							PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+							PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 							Computed:            true,
-							MarkdownDescription: "If true, uses device execution context for Windows Universal AppX mobile app. Device-context install is not allowed when this type of app is targeted with Available intent. Defaults to false. The _provider_ default value is `false`.",
+							MarkdownDescription: "If true, uses device execution context for Windows Universal AppX mobile app. Device-context install is not allowed when this type of app is targeted with Available intent. Defaults to false. <br/> The _provider_ default value is `false`.",
 						},
 					},
 					Validators:          []validator.Object{mobileAppMobileAppAssignmentSettingsValidator},
-					MarkdownDescription: "Contains properties used when assigning a Windows Universal AppX mobile app to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-windowsuniversalappxappassignmentsettings?view=graph-rest-beta",
+					MarkdownDescription: "Contains properties used when assigning a Windows Universal AppX mobile app to a group. Also see [Microsoft docs for windowsUniversalAppXAppAssignmentSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-windowsuniversalappxappassignmentsettings?view=graph-rest-beta). <br> ",
 				},
 			},
 			"winget": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2800,57 +2858,59 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 							Attributes: map[string]schema.Attribute{ // winGetAppInstallTimeSettings
 								"deadline_date_time": schema.StringAttribute{
 									Optional:            true,
-									PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+									PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 									Computed:            true,
-									MarkdownDescription: "The time at which the app should be installed. The _provider_ default value is `\"\"`.",
+									MarkdownDescription: "The time at which the app should be installed. <br/> The _provider_ default value is `\"\"`.",
 								},
 								"use_local_time": schema.BoolAttribute{
 									Optional:            true,
-									PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+									PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 									Computed:            true,
-									MarkdownDescription: "Whether the local device time or UTC time should be used when determining the deadline times. The _provider_ default value is `false`.",
+									MarkdownDescription: "Whether the local device time or UTC time should be used when determining the deadline times. <br/> The _provider_ default value is `false`.",
 								},
 							},
-							MarkdownDescription: "The install time settings to apply for this app assignment. / Contains properties used to determine when to offer an app to devices and when to install the app on devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-wingetappinstalltimesettings?view=graph-rest-beta",
+							MarkdownDescription: "The install time settings to apply for this app assignment. / Contains properties used to determine when to offer an app to devices and when to install the app on devices. Also see [Microsoft docs for winGetAppInstallTimeSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-wingetappinstalltimesettings?view=graph-rest-beta). <br> ",
 						},
 						"notifications": schema.StringAttribute{
 							Optional: true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("showAll", "showReboot", "hideAll", "unknownFutureValue"),
 							},
-							PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("showAll")},
+							PlanModifiers: []planmodifier.String{
+								wpdefaultvaluemodifier.StringDefaultValue("showAll"),
+							},
 							Computed:            true,
-							MarkdownDescription: "The notification status for this app assignment. / Contains value for notification status; possible values are: `showAll` (Show all notifications.), `showReboot` (Only show restart notification and suppress other notifications.), `hideAll` (Hide all notifications.), `unknownFutureValue` (Unknown future value, reserved for future usage as expandable enum.). The _provider_ default value is `\"showAll\"`.",
+							MarkdownDescription: "The notification status for this app assignment. / Contains value for notification status. <br/> _Provider_ allowed values are: `showAll` (Show all notifications.), `showReboot` (Only show restart notification and suppress other notifications.), `hideAll` (Hide all notifications.), `unknownFutureValue` (Unknown future value, reserved for future usage as expandable enum.). The _provider_ default value is `\"showAll\"`.",
 						},
 						"restart_settings": schema.SingleNestedAttribute{
 							Optional: true,
 							Attributes: map[string]schema.Attribute{ // winGetAppRestartSettings
 								"countdown_display_before_restart_in_minutes": schema.Int64Attribute{
 									Optional:            true,
-									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
+									PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(0)},
 									Computed:            true,
-									MarkdownDescription: "The number of minutes before the restart time to display the countdown dialog for pending restarts. The _provider_ default value is `0`.",
+									MarkdownDescription: "The number of minutes before the restart time to display the countdown dialog for pending restarts. <br/> The _provider_ default value is `0`.",
 								},
 								"grace_period_in_minutes": schema.Int64Attribute{
 									Optional:            true,
-									PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(0)},
+									PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(0)},
 									Computed:            true,
-									MarkdownDescription: "The number of minutes to wait before restarting the device after an app installation. The _provider_ default value is `0`.",
+									MarkdownDescription: "The number of minutes to wait before restarting the device after an app installation. <br/> The _provider_ default value is `0`.",
 								},
 								"restart_notification_snooze_duration_in_minutes": schema.Int64Attribute{
 									Optional:            true,
 									MarkdownDescription: "The number of minutes to snooze the restart notification dialog when the snooze button is selected.",
 								},
 							},
-							MarkdownDescription: "The reboot settings to apply for this app assignment. / Contains properties describing restart coordination following an app installation. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-wingetapprestartsettings?view=graph-rest-beta",
+							MarkdownDescription: "The reboot settings to apply for this app assignment. / Contains properties describing restart coordination following an app installation. Also see [Microsoft docs for winGetAppRestartSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-wingetapprestartsettings?view=graph-rest-beta). <br> ",
 						},
 					},
 					Validators:          []validator.Object{mobileAppMobileAppAssignmentSettingsValidator},
-					MarkdownDescription: "Contains properties used to assign a WinGet app to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-wingetappassignmentsettings?view=graph-rest-beta",
+					MarkdownDescription: "Contains properties used to assign a WinGet app to a group. Also see [Microsoft docs for winGetAppAssignmentSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-wingetappassignmentsettings?view=graph-rest-beta). <br> ",
 				},
 			},
 		},
-		MarkdownDescription: "The settings for target assignment defined by the admin. / Abstract class to contain properties used to assign a mobile app to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileappassignmentsettings?view=graph-rest-beta  \nProvider Note: For some mobileApp types it might be required to include appropriate (potentially empty) `settings` with each assignment to avoid recurring differences between plan and actual state, namely for the types: `android_managed_store`, `ios_store`, `managed_ios_store` (use `ios_store` as settings type), `winget`, `win32_lob`, `windows_universal_appx`. For details, see the example above.",
+		MarkdownDescription: "The settings for target assignment defined by the admin. / Abstract class to contain properties used to assign a mobile app to a group. Also see [Microsoft docs for mobileAppAssignmentSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileappassignmentsettings?view=graph-rest-beta).  \n_Provider_ Note: For some mobileApp types it might be required to include appropriate (potentially empty) `settings` with each assignment to avoid recurring differences between plan and actual state, namely for the types: `android_managed_store`, `ios_store`, `managed_ios_store` (use `ios_store` as settings type), `winget`, `win32_lob`, `windows_universal_appx`. For details, see the example above. <br> ",
 	},
 	"target": deviceAndAppManagementAssignmentTarget,
 }
@@ -2870,267 +2930,274 @@ var mobileAppMobileAppAssignmentSettingsValidator = objectvalidator.ExactlyOneOf
 var mobileAppAndroidMinimumOperatingSystemAttributes = map[string]schema.Attribute{ // androidMinimumOperatingSystem
 	"v10_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 10.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 10.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v11_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v11_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 11.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 11.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v12_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v12_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 12.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 12.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v13_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v13_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 13.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 13.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v14_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v14_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 14.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 14.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v15_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v15_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 15.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 15.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v4_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v4_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 4.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 4.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v4_0_3": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v4_0_3`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 4.0.3 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 4.0.3 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v4_1": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v4_1`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 4.1 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 4.1 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v4_2": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v4_2`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 4.2 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 4.2 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v4_3": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v4_3`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 4.3 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 4.3 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v4_4": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v4_4`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 4.4 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 4.4 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v5_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v5_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 5.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 5.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v5_1": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v5_1`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 5.1 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 5.1 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v6_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v6_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 6.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 6.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v7_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v7_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 7.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 7.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v7_1": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v7_1`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 7.1 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 7.1 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v8_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v8_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 8.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 8.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v8_1": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v8_1`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 8.1 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 8.1 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v9_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v9_0`, // custom MS Graph attribute name
-		MarkdownDescription: "When TRUE, only Version 9.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "When TRUE, only Version 9.0 or later is supported. Default value is FALSE. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 }
 
 var mobileAppIosDeviceTypeAttributes = map[string]schema.Attribute{ // iosDeviceType
 	"ipad": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 		Computed:            true,
 		Description:         `iPad`, // custom MS Graph attribute name
-		MarkdownDescription: "Whether the app should run on iPads. The _provider_ default value is `true`.",
+		MarkdownDescription: "Whether the app should run on iPads. <br/> The _provider_ default value is `true`.",
 	},
 	"iphone_and_ipod": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 		Computed:            true,
 		Description:         `iPhoneAndIPod`, // custom MS Graph attribute name
-		MarkdownDescription: "Whether the app should run on iPhones and iPods. The _provider_ default value is `true`.",
+		MarkdownDescription: "Whether the app should run on iPhones and iPods. <br/> The _provider_ default value is `true`.",
 	},
 }
 
 var mobileAppIosMinimumOperatingSystemAttributes = map[string]schema.Attribute{ // iosMinimumOperatingSystem
 	"v10_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 10.0 or later is required to install the app. If 'False', iOS Version 10.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 10.0 or later is required to install the app. If 'False', iOS Version 10.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v11_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v11_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 11.0 or later is required to install the app. If 'False', iOS Version 11.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 11.0 or later is required to install the app. If 'False', iOS Version 11.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v12_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v12_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 12.0 or later is required to install the app. If 'False', iOS Version 12.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 12.0 or later is required to install the app. If 'False', iOS Version 12.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v13_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v13_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 13.0 or later is required to install the app. If 'False', iOS Version 13.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 13.0 or later is required to install the app. If 'False', iOS Version 13.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v14_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v14_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 14.0 or later is required to install the app. If 'False', iOS Version 14.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 14.0 or later is required to install the app. If 'False', iOS Version 14.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v15_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v15_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 15.0 or later is required to install the app. If 'False', iOS Version 15.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 15.0 or later is required to install the app. If 'False', iOS Version 15.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v16_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v16_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 16.0 or later is required to install the app. If 'False', iOS Version 16.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 16.0 or later is required to install the app. If 'False', iOS Version 16.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v17_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v17_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 17.0 or later is required to install the app. If 'False', iOS Version 17.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 17.0 or later is required to install the app. If 'False', iOS Version 17.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v18_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v18_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 18.0 or later is required to install the app. If 'False', iOS Version 18.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 18.0 or later is required to install the app. If 'False', iOS Version 18.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
+	},
+	"v26_0": schema.BoolAttribute{
+		Optional:            true,
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+		Computed:            true,
+		Description:         `v26_0`, // custom MS Graph attribute name
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 26.0 or later is required to install the app. If 'False', iOS Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v8_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v8_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 8.0 or later is required to install the app. If 'False', iOS Version 8.0  is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 8.0 or later is required to install the app. If 'False', iOS Version 8.0  is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v9_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v9_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 9.0 or later is required to install the app. If 'False', iOS Version 9.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 9.0 or later is required to install the app. If 'False', iOS Version 9.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 }
 
 var mobileAppVppLicensingTypeAttributes = map[string]schema.Attribute{ // vppLicensingType
 	"support_device_licensing": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
-		MarkdownDescription: "Whether the program supports the device licensing type. The _provider_ default value is `false`.",
+		MarkdownDescription: "Whether the program supports the device licensing type. <br/> The _provider_ default value is `false`.",
 	},
 	"supports_device_licensing": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
-		MarkdownDescription: "Whether the program supports the device licensing type. The _provider_ default value is `false`.",
+		MarkdownDescription: "Whether the program supports the device licensing type. <br/> The _provider_ default value is `false`.",
 	},
 	"supports_user_licensing": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
-		MarkdownDescription: "Whether the program supports the user licensing type. The _provider_ default value is `false`.",
+		MarkdownDescription: "Whether the program supports the user licensing type. <br/> The _provider_ default value is `false`.",
 	},
 	"support_user_licensing": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
-		MarkdownDescription: "Whether the program supports the user licensing type. The _provider_ default value is `false`.",
+		MarkdownDescription: "Whether the program supports the user licensing type. <br/> The _provider_ default value is `false`.",
 	},
 }
 
@@ -3148,101 +3215,108 @@ var mobileAppMacOSIncludedAppAttributes = map[string]schema.Attribute{ // macOSI
 var mobileAppMacOSMinimumOperatingSystemAttributes = map[string]schema.Attribute{ // macOSMinimumOperatingSystem
 	"v10_10": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_10`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.10 or later is required to install the app. If 'False', OS X Version 10.10 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.10 or later is required to install the app. If 'False', OS X Version 10.10 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_11": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_11`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.11 or later is required to install the app. If 'False', OS X Version 10.11 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.11 or later is required to install the app. If 'False', OS X Version 10.11 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_12": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_12`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.12 or later is required to install the app. If 'False', OS X Version 10.12 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.12 or later is required to install the app. If 'False', OS X Version 10.12 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_13": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_13`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.13 or later is required to install the app. If 'False', OS X Version 10.13 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.13 or later is required to install the app. If 'False', OS X Version 10.13 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_14": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_14`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.14 or later is required to install the app. If 'False', OS X Version 10.14 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.14 or later is required to install the app. If 'False', OS X Version 10.14 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_15": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_15`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.15 or later is required to install the app. If 'False', OS X Version 10.15 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.15 or later is required to install the app. If 'False', OS X Version 10.15 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_7": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_7`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.7 or later is required to install the app. If 'False', OS X Version 10.7 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.7 or later is required to install the app. If 'False', OS X Version 10.7 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_8": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_8`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.8 or later is required to install the app. If 'False', OS X Version 10.8 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.8 or later is required to install the app. If 'False', OS X Version 10.8 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_9": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_9`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.9 or later is required to install the app. If 'False', OS X Version 10.9 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.9 or later is required to install the app. If 'False', OS X Version 10.9 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v11_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v11_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 11.0 or later is required to install the app. If 'False', OS X Version 11.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 11.0 or later is required to install the app. If 'False', OS X Version 11.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v12_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v12_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 12.0 or later is required to install the app. If 'False', OS X Version 12.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 12.0 or later is required to install the app. If 'False', OS X Version 12.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v13_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v13_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 13.0 or later is required to install the app. If 'False', OS X Version 13.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 13.0 or later is required to install the app. If 'False', OS X Version 13.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v14_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v14_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 14.0 or later is required to install the app. If 'False', OS X Version 14.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 14.0 or later is required to install the app. If 'False', OS X Version 14.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 	"v15_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v15_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 15.0 or later is required to install the app. If 'False', OS X Version 15.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. The _provider_ default value is `false`.",
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 15.0 or later is required to install the app. If 'False', OS X Version 15.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
+	},
+	"v26_0": schema.BoolAttribute{
+		Optional:            true,
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+		Computed:            true,
+		Description:         `v26_0`, // custom MS Graph attribute name
+		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 26.0 or later is required to install the app. If 'False', OS X Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
 }
 
@@ -3269,94 +3343,94 @@ var mobileAppWin32LobAppRuleValidator = objectvalidator.ExactlyOneOf(
 var mobileAppWindowsMinimumOperatingSystemAttributes = map[string]schema.Attribute{ // windowsMinimumOperatingSystem
 	"v10_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows version 10.0 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows version 10.0 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_1607": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_1607`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows 10 1607 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows 10 1607 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_1703": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_1703`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows 10 1703 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows 10 1703 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_1709": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_1709`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows 10 1709 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows 10 1709 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_1803": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_1803`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows 10 1803 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows 10 1803 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_1809": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_1809`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows 10 1809 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows 10 1809 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_1903": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_1903`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows 10 1903 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows 10 1903 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_1909": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_1909`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows 10 1909 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows 10 1909 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_2004": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_2004`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows 10 2004 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows 10 2004 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_21_h1": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_21H1`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows 10 21H1 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows 10 21H1 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v10_2_h20": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v10_2H20`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows 10 2H20 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows 10 2H20 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v8_0": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v8_0`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows version 8.0 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows version 8.0 or later. <br/> The _provider_ default value is `false`.",
 	},
 	"v8_1": schema.BoolAttribute{
 		Optional:            true,
-		PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 		Computed:            true,
 		Description:         `v8_1`, // custom MS Graph attribute name
-		MarkdownDescription: "Windows version 8.1 or later. The _provider_ default value is `false`.",
+		MarkdownDescription: "Windows version 8.1 or later. <br/> The _provider_ default value is `false`.",
 	},
 }
 
@@ -3365,7 +3439,7 @@ var mobileAppMobileContainedAppValidator = objectvalidator.ExactlyOneOf(
 	path.MatchRelative().AtParent().AtName("windows_universal_app_x"),
 )
 
-var mobileAppWin32LobAppReturnCodesDefault = wpdefaultvalue.SetDefaultValue([]any{
+var mobileAppWin32LobAppReturnCodesDefault = wpdefaultvaluemodifier.SetDefaultValue([]any{
 	map[string]any{
 		"return_code": 0,
 		"type":        "success",

@@ -1,12 +1,11 @@
 package services
 
 import (
-	"context"
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	msgraphutils "terraform-provider-microsoft365wp/workplace/services/msgraph_utils"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
-	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 )
@@ -18,21 +17,13 @@ var (
 		AccessParams: generic.AccessParams{
 			BaseUri:                    "/identityGovernance/lifecycleWorkflows/settings",
 			IsSingleton:                true,
-			GraphToTerraformMiddleware: identityGovernanceLifecycleManagementSettingsGraphToTerraformMiddleware,
+			GraphToTerraformMiddleware: msgraphutils.SingletonSyntheticIdGraphToTerraformMiddleware,
 		},
 	}
 
 	IdentityGovernanceLifecycleManagementSettingsSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&IdentityGovernanceLifecycleManagementSettingsResource)
 )
-
-func identityGovernanceLifecycleManagementSettingsGraphToTerraformMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.GraphToTerraformMiddlewareParams) generic.GraphToTerraformMiddlewareReturns {
-	// MS Graph does indeed not return anything for id, so add something helpful
-	if params.RawVal["id"] == nil {
-		params.RawVal["id"] = "singleton"
-	}
-	return nil
-}
 
 var identityGovernanceLifecycleManagementSettingsResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // identityGovernance.lifecycleManagementSettings
@@ -44,28 +35,30 @@ var identityGovernanceLifecycleManagementSettingsResourceSchema = schema.Schema{
 			Optional: true,
 			Attributes: map[string]schema.Attribute{ // emailSettings
 				"sender_domain": schema.StringAttribute{
-					Optional:            true,
-					PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("microsoft.com")},
+					Optional: true,
+					PlanModifiers: []planmodifier.String{
+						wpdefaultvaluemodifier.StringDefaultValue("microsoft.com"),
+					},
 					Computed:            true,
-					MarkdownDescription: "Specifies the [domain](domain.md) that should be used when sending email notifications. This domain must be [verified](../api/domain-verify.md) in order to be used. We recommend that you use a domain that has the appropriate DNS records to facilitate email validation, like SPF, DKIM, DMARC, and MX, because this then complies with the [RFC compliance](https://www.ietf.org/rfc/rfc2142.txt) for sending and receiving email. For details, see [Learn more about Exchange Online Email Routing](/exchange/mail-flow-best-practices/mail-flow-best-practices). The _provider_ default value is `\"microsoft.com\"`.",
+					MarkdownDescription: "Specifies the [domain](domain.md) that should be used when sending email notifications. This domain must be [verified](https://learn.microsoft.com/en-us/graph/api/domain-verify?view=graph-rest-beta) in order to be used. We recommend that you use a domain that has the appropriate DNS records to facilitate email validation, like SPF, DKIM, DMARC, and MX, because this then complies with the [RFC compliance](https://www.ietf.org/rfc/rfc2142.txt) for sending and receiving email. For details, see [Learn more about Exchange Online Email Routing](https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/mail-flow-best-practices). <br/> The _provider_ default value is `\"microsoft.com\"`.",
 				},
 				"use_company_branding": schema.BoolAttribute{
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 					Computed:            true,
-					MarkdownDescription: "Specifies if the organization’s banner logo should be included in email notifications. The banner logo will replace the Microsoft logo at the top of the email notification. If `true` the banner logo will be taken from the tenant’s [branding settings](organizationalbranding.md). This value can only be set to `true` if the [organizationalBranding](organizationalbranding.md) **bannerLogo** property is set. The _provider_ default value is `false`.",
+					MarkdownDescription: "Specifies if the organization’s banner logo should be included in email notifications. The banner logo will replace the Microsoft logo at the top of the email notification. If `true` the banner logo will be taken from the tenant’s [branding settings](organizationalbranding.md). This value can only be set to `true` if the [organizationalBranding](organizationalbranding.md) **bannerLogo** property is set. <br/> The _provider_ default value is `false`.",
 				},
 			},
-			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Defines the settings for emails sent out from email-specific [tasks](../resources/identitygovernance-task.md) within workflows. Accepts 2 parameters<br><br>senderDomain- Defines the domain of who is sending the email. <br>useCompanyBranding- A Boolean value that defines if company branding is to be used with the email. / Defines the settings for emails sent from Lifecycle workflow [tasks](identitygovernance-task.md). Allows you to use a verified custom [domain](domain.md) and [organizationalBranding](organizationalbranding.md) with emails sent out via workflow tasks. / https://learn.microsoft.com/en-us/graph/api/resources/emailsettings?view=graph-rest-beta. The _provider_ default value is `{}`.",
+			MarkdownDescription: "Defines the settings for emails sent out from email-specific [tasks](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-task?view=graph-rest-beta) within workflows. Accepts 2 parameters <br/> senderDomain- Defines the domain of who is sending the email. <br/> useCompanyBranding- A Boolean value that defines if company branding is to be used with the email. <br/> Defines the settings for emails sent from Lifecycle workflow [tasks](identitygovernance-task.md). Allows you to use a verified custom [domain](domain.md) and [organizationalBranding](organizationalbranding.md) with emails sent out via workflow tasks. Also see [Microsoft docs for emailSettings](https://learn.microsoft.com/en-us/graph/api/resources/emailsettings?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 		"workflow_schedule_interval_in_hours": schema.Int64Attribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Int64{wpdefaultvalue.Int64DefaultValue(3)},
+			PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(3)},
 			Computed:            true,
-			MarkdownDescription: "The interval in hours at which all [workflows](../resources/identitygovernance-workflow.md) running in the tenant should be scheduled for execution. This interval has a minimum value of 1 and a maximum value of 24. The default value is 3 hours. The _provider_ default value is `3`.",
+			MarkdownDescription: "The interval in hours at which all [workflows](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) running in the tenant should be scheduled for execution. This interval has a minimum value of 1 and a maximum value of 24. The default value is 3 hours. <br/> The _provider_ default value is `3`.",
 		},
 	},
-	MarkdownDescription: "The settings of Microsoft Entra Lifecycle Workflows in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclemanagementsettings?view=graph-rest-beta ||| MS Graph: Lifecycle workflows",
+	MarkdownDescription: "The settings of Microsoft Entra Lifecycle Workflows in the tenant. <br/> Also see [Microsoft docs for identityGovernance.lifecycleManagementSettings](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclemanagementsettings?view=graph-rest-beta). ||| MS Graph: Lifecycle workflows",
 }

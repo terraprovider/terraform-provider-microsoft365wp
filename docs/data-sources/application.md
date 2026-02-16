@@ -5,13 +5,9 @@ subcategory: "MS Graph: Entra ID"
 
 # microsoft365wp_application (Data Source)
 
-Represents an application. Any application that outsources authentication to Microsoft Entra ID must be registered in the Microsoft identity platform. Application registration involves telling Microsoft Entra ID about your application, including the URL where it's located, the URL to send replies after authentication, the URI to identify your application, and more.
+Represents an application. Any application that outsources authentication to Microsoft Entra ID must be registered in the Microsoft identity platform. Application registration involves telling Microsoft Entra ID about your application, including the URL where it's located, the URL to send replies after authentication, the URI to identify your application, and more. <br/> Also see [Microsoft docs for application](https://learn.microsoft.com/en-us/graph/api/resources/application?view=graph-rest-beta).
 
-This resource is an open type that allows other properties to be passed in.
-
-This resource supports: / https://learn.microsoft.com/en-us/graph/api/resources/application?view=graph-rest-beta
-
-Provider Note: This data source is only provided as a companion to `azuread_application` to allow for OData filtering. It is not planned to add more attributes or even provide a resource for this entity.
+_Provider_ Note: This data source is only provided as a companion to `azuread_application` to allow for OData filtering. It is not planned to add more attributes or even provide a resource for this entity.
 
 ## Documentation Disclaimer
 

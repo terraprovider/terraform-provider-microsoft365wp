@@ -5,7 +5,7 @@ subcategory: "MS Graph: Policies"
 
 # microsoft365wp_device_registration_policy (Data Source)
 
-Represents the policy scope that controls quota restrictions, additional authentication, and authorization policies to register device identities to your organization. / https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta
+Represents the policy scope that controls quota restrictions, additional authentication, and authorization policies to register device identities to your organization. <br/> Also see [Microsoft docs for deviceRegistrationPolicy](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -62,32 +62,32 @@ output "microsoft365wp_device_registration_policy" {
 
 ### Read-Only
 
-- `azure_ad_join` (Attributes) Specifies the authorization policy for controlling registration of new devices using **Microsoft Entra join** within your organization. Required. For more information, see [What is a device identity?](/azure/active-directory/devices/overview). / Represents the policy scope of the Microsoft Entra tenant that controls the ability for users and groups to register device identities to your organization using Microsoft Entra join. / https://learn.microsoft.com/en-us/graph/api/resources/azureadjoinpolicy?view=graph-rest-beta. (see [below for nested schema](#nestedatt--azure_ad_join))
-- `azure_ad_registration` (Attributes) Specifies the authorization policy for controlling registration of new devices using **Microsoft Entra registered** within your organization. Required. For more information, see [What is a device identity?](/azure/active-directory/devices/overview). / Represents the policy scope of the Microsoft Entra tenant that controls the ability for users and groups to register device identities to your organization using **Microsoft Entra registered**. For more information, see [What is a device identity?](/azure/active-directory/devices/overview). / https://learn.microsoft.com/en-us/graph/api/resources/azureadregistrationpolicy?view=graph-rest-beta. (see [below for nested schema](#nestedatt--azure_ad_registration))
+- `azure_ad_join` (Attributes) Specifies the authorization policy for controlling registration of new devices using **Microsoft Entra join** within your organization. Required. For more information, see [What is a device identity?](https://learn.microsoft.com/en-us/azure/active-directory/devices/overview). / Represents the policy scope of the Microsoft Entra tenant that controls the ability for users and groups to register device identities to your organization using Microsoft Entra join. Also see [Microsoft docs for azureADJoinPolicy](https://learn.microsoft.com/en-us/graph/api/resources/azureadjoinpolicy?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--azure_ad_join))
+- `azure_ad_registration` (Attributes) Specifies the authorization policy for controlling registration of new devices using **Microsoft Entra registered** within your organization. Required. For more information, see [What is a device identity?](https://learn.microsoft.com/en-us/azure/active-directory/devices/overview). / Represents the policy scope of the Microsoft Entra tenant that controls the ability for users and groups to register device identities to your organization using **Microsoft Entra registered**. For more information, see [What is a device identity?](https://learn.microsoft.com/en-us/azure/active-directory/devices/overview). Also see [Microsoft docs for azureADRegistrationPolicy](https://learn.microsoft.com/en-us/graph/api/resources/azureadregistrationpolicy?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--azure_ad_registration))
 - `description` (String) The description of the device registration policy. It's always set to `Tenant-wide policy that manages intial provisioning controls using quota restrictions, additional authentication and authorization checks`.
 - `display_name` (String) The name of the device registration policy. It's always set to `Device Registration Policy`.
 - `id` (String) The identifier of the device registration policy. It's always set to `deviceRegistrationPolicy`.
-- `local_admin_password` (Attributes) Specifies the setting for **Local Admin Password Solution (LAPS)** within your organization. / Represents the policy scope of the Microsoft Entra tenant that controls the Local Admin Password Solution (LAPS) setting. / https://learn.microsoft.com/en-us/graph/api/resources/localadminpasswordsettings?view=graph-rest-beta. (see [below for nested schema](#nestedatt--local_admin_password))
-- `multi_factor_auth_configuration` (String) Specifies the authentication policy for a user to complete registration using **Microsoft Entra join** or **Microsoft Entra registered** within your organization. The / Possible values are: `notRequired`, `required`, `unknownFutureValue`.
-- `user_device_quota` (Number) Specifies the maximum number of devices that a user can have within your organization before blocking new device registrations. to 50. If this property isn't specified during the policy update operation, it's automatically reset to `0` to indicate that users aren't allowed to join any devices.
+- `local_admin_password` (Attributes) Specifies the setting for **Local Admin Password Solution (LAPS)** within your organization. / Represents the policy scope of the Microsoft Entra tenant that controls the Local Admin Password Solution (LAPS) setting. Also see [Microsoft docs for localAdminPasswordSettings](https://learn.microsoft.com/en-us/graph/api/resources/localadminpasswordsettings?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--local_admin_password))
+- `multi_factor_auth_configuration` (String) Specifies the authentication policy for a user to complete registration using **Microsoft Entra join** or **Microsoft Entra registered** within your organization. <br/> _Provider_ allowed values are: `notRequired`, `required`, `unknownFutureValue`.
+- `user_device_quota` (Number) Specifies the maximum number of devices that a user can have within your organization before blocking new device registrations. to 50. If this property isn't specified during the policy update operation, it's automatically reset to `0` to indicate that users aren't allowed to join any devices. <br/>
 
 <a id="nestedatt--azure_ad_join"></a>
 ### Nested Schema for `azure_ad_join`
 
 Read-Only:
 
-- `allowed_to_join` (Attributes) Determines if Microsoft Entra join is allowed. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](../resources/nodeviceregistrationmembership.md), [allDeviceRegistrationMembership](../resources/alldeviceregistrationmembership.md) and [enumeratedDeviceRegistrationMembership](../resources/enumerateddeviceregistrationmembership.md). / https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta. (see [below for nested schema](#nestedatt--azure_ad_join--allowed_to_join))
-- `is_admin_configurable` (Boolean) Determines if administrators can modify this policy.
-- `local_admins` (Attributes) Determines who becomes a local administrator on joined devices. / Controls local administrators on Microsoft Entra-joined devices. / https://learn.microsoft.com/en-us/graph/api/resources/localadminsettings?view=graph-rest-beta. (see [below for nested schema](#nestedatt--azure_ad_join--local_admins))
+- `allowed_to_join` (Attributes) Determines if Microsoft Entra join is allowed. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta), [allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta) and [enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). Also see [Microsoft docs for deviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--azure_ad_join--allowed_to_join))
+- `is_admin_configurable` (Boolean) Determines if administrators can modify this policy. <br/>
+- `local_admins` (Attributes) Determines who becomes a local administrator on joined devices. / Controls local administrators on Microsoft Entra-joined devices. Also see [Microsoft docs for localAdminSettings](https://learn.microsoft.com/en-us/graph/api/resources/localadminsettings?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--azure_ad_join--local_admins))
 
 <a id="nestedatt--azure_ad_join--allowed_to_join"></a>
 ### Nested Schema for `azure_ad_join.allowed_to_join`
 
 Read-Only:
 
-- `all` (Attributes) Indicates that this device registration policy applies to all users and groups. / https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta (see [below for nested schema](#nestedatt--azure_ad_join--allowed_to_join--all))
-- `enumerated` (Attributes) Indicates that this device registration policy applies to the enumerated users and groups. / https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta (see [below for nested schema](#nestedatt--azure_ad_join--allowed_to_join--enumerated))
-- `no` (Attributes) Indicates that no users are allowed to join or register devices. / https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta (see [below for nested schema](#nestedatt--azure_ad_join--allowed_to_join--no))
+- `all` (Attributes) Indicates that this device registration policy applies to all users and groups. Also see [Microsoft docs for allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--azure_ad_join--allowed_to_join--all))
+- `enumerated` (Attributes) Indicates that this device registration policy applies to the enumerated users and groups. Also see [Microsoft docs for enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--azure_ad_join--allowed_to_join--enumerated))
+- `no` (Attributes) Indicates that no users are allowed to join or register devices. Also see [Microsoft docs for noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--azure_ad_join--allowed_to_join--no))
 
 <a id="nestedatt--azure_ad_join--allowed_to_join--all"></a>
 ### Nested Schema for `azure_ad_join.allowed_to_join.all`
@@ -98,8 +98,8 @@ Read-Only:
 
 Read-Only:
 
-- `groups` (Set of String) List of groups that this policy applies to.
-- `users` (Set of String) List of users that this policy applies to.
+- `groups` (Set of String) List of groups that this policy applies to. <br/>
+- `users` (Set of String) List of users that this policy applies to. <br/>
 
 
 <a id="nestedatt--azure_ad_join--allowed_to_join--no"></a>
@@ -112,17 +112,17 @@ Read-Only:
 
 Read-Only:
 
-- `enable_global_admins` (Boolean) Indicates whether global administrators are local administrators on all Microsoft Entra-joined devices. This setting only applies to future registrations. Default is `true`.
-- `registering_users` (Attributes) Determines the users and groups that become local administrators on Microsoft Entra joined devices that they register. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](../resources/nodeviceregistrationmembership.md), [allDeviceRegistrationMembership](../resources/alldeviceregistrationmembership.md) and [enumeratedDeviceRegistrationMembership](../resources/enumerateddeviceregistrationmembership.md). / https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta. (see [below for nested schema](#nestedatt--azure_ad_join--local_admins--registering_users))
+- `enable_global_admins` (Boolean) Indicates whether global administrators are local administrators on all Microsoft Entra-joined devices. This setting only applies to future registrations. Default is `true`. <br/>
+- `registering_users` (Attributes) Determines the users and groups that become local administrators on Microsoft Entra joined devices that they register. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta), [allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta) and [enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). Also see [Microsoft docs for deviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--azure_ad_join--local_admins--registering_users))
 
 <a id="nestedatt--azure_ad_join--local_admins--registering_users"></a>
 ### Nested Schema for `azure_ad_join.local_admins.registering_users`
 
 Read-Only:
 
-- `all` (Attributes) Indicates that this device registration policy applies to all users and groups. / https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta (see [below for nested schema](#nestedatt--azure_ad_join--local_admins--registering_users--all))
-- `enumerated` (Attributes) Indicates that this device registration policy applies to the enumerated users and groups. / https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta (see [below for nested schema](#nestedatt--azure_ad_join--local_admins--registering_users--enumerated))
-- `no` (Attributes) Indicates that no users are allowed to join or register devices. / https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta (see [below for nested schema](#nestedatt--azure_ad_join--local_admins--registering_users--no))
+- `all` (Attributes) Indicates that this device registration policy applies to all users and groups. Also see [Microsoft docs for allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--azure_ad_join--local_admins--registering_users--all))
+- `enumerated` (Attributes) Indicates that this device registration policy applies to the enumerated users and groups. Also see [Microsoft docs for enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--azure_ad_join--local_admins--registering_users--enumerated))
+- `no` (Attributes) Indicates that no users are allowed to join or register devices. Also see [Microsoft docs for noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--azure_ad_join--local_admins--registering_users--no))
 
 <a id="nestedatt--azure_ad_join--local_admins--registering_users--all"></a>
 ### Nested Schema for `azure_ad_join.local_admins.registering_users.all`
@@ -133,8 +133,8 @@ Read-Only:
 
 Read-Only:
 
-- `groups` (Set of String) List of groups that this policy applies to.
-- `users` (Set of String) List of users that this policy applies to.
+- `groups` (Set of String) List of groups that this policy applies to. <br/>
+- `users` (Set of String) List of users that this policy applies to. <br/>
 
 
 <a id="nestedatt--azure_ad_join--local_admins--registering_users--no"></a>
@@ -149,17 +149,17 @@ Read-Only:
 
 Read-Only:
 
-- `allowed_to_register` (Attributes) Determines if Microsoft Entra registered is allowed. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](../resources/nodeviceregistrationmembership.md), [allDeviceRegistrationMembership](../resources/alldeviceregistrationmembership.md) and [enumeratedDeviceRegistrationMembership](../resources/enumerateddeviceregistrationmembership.md). / https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta. (see [below for nested schema](#nestedatt--azure_ad_registration--allowed_to_register))
-- `is_admin_configurable` (Boolean) Determines if administrators can modify this policy.
+- `allowed_to_register` (Attributes) Determines if Microsoft Entra registered is allowed. / An abstract resource type indicating the scope that a device registration policy applies to. The derived types are [noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta), [allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta) and [enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). Also see [Microsoft docs for deviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--azure_ad_registration--allowed_to_register))
+- `is_admin_configurable` (Boolean) Determines if administrators can modify this policy. <br/>
 
 <a id="nestedatt--azure_ad_registration--allowed_to_register"></a>
 ### Nested Schema for `azure_ad_registration.allowed_to_register`
 
 Read-Only:
 
-- `all` (Attributes) Indicates that this device registration policy applies to all users and groups. / https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta (see [below for nested schema](#nestedatt--azure_ad_registration--allowed_to_register--all))
-- `enumerated` (Attributes) Indicates that this device registration policy applies to the enumerated users and groups. / https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta (see [below for nested schema](#nestedatt--azure_ad_registration--allowed_to_register--enumerated))
-- `no` (Attributes) Indicates that no users are allowed to join or register devices. / https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta (see [below for nested schema](#nestedatt--azure_ad_registration--allowed_to_register--no))
+- `all` (Attributes) Indicates that this device registration policy applies to all users and groups. Also see [Microsoft docs for allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--azure_ad_registration--allowed_to_register--all))
+- `enumerated` (Attributes) Indicates that this device registration policy applies to the enumerated users and groups. Also see [Microsoft docs for enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--azure_ad_registration--allowed_to_register--enumerated))
+- `no` (Attributes) Indicates that no users are allowed to join or register devices. Also see [Microsoft docs for noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--azure_ad_registration--allowed_to_register--no))
 
 <a id="nestedatt--azure_ad_registration--allowed_to_register--all"></a>
 ### Nested Schema for `azure_ad_registration.allowed_to_register.all`
@@ -170,8 +170,8 @@ Read-Only:
 
 Read-Only:
 
-- `groups` (Set of String) List of groups that this policy applies to.
-- `users` (Set of String) List of users that this policy applies to.
+- `groups` (Set of String) List of groups that this policy applies to. <br/>
+- `users` (Set of String) List of users that this policy applies to. <br/>
 
 
 <a id="nestedatt--azure_ad_registration--allowed_to_register--no"></a>
@@ -185,4 +185,4 @@ Read-Only:
 
 Read-Only:
 
-- `is_enabled` (Boolean) Specifies whether this policy scope is configurable by the admin. An admin can set it to true to enable Local Admin Password Solution (LAPS) within their organzation.
+- `is_enabled` (Boolean) Specifies whether this policy scope is configurable by the admin. An admin can set it to true to enable Local Admin Password Solution (LAPS) within their organzation. <br/>

@@ -5,7 +5,7 @@ subcategory: "MS Graph: Software updates"
 
 # microsoft365wp_windows_feature_update_profile (Data Source)
 
-Windows Feature Update Profile / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsfeatureupdateprofile?view=graph-rest-beta
+Windows Feature Update Profile <br/> Also see [Microsoft docs for windowsFeatureUpdateProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsfeatureupdateprofile?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -73,30 +73,30 @@ output "microsoft365wp_windows_feature_update_profile" {
 - `display_name` (String) The display name of the profile.
 - `end_of_support_date` (String) The last supported date for a feature update
 - `feature_update_version` (String) The feature update version that will be deployed to the devices targeted by this profile. The version could be any supported version for example 1709, 1803 or 1809 and so on.
-- `install_feature_updates_optional` (Boolean) If true, the Windows 11 update will become optional.
-- `install_latest_windows10_on_windows11_ineligible_device` (Boolean) If true, the latest Microsoft Windows 10 update will be installed on devices ineligible for Microsoft Windows 11.
+- `install_feature_updates_optional` (Boolean) If true, the Windows 11 update will become optional <br/>
+- `install_latest_windows10_on_windows11_ineligible_device` (Boolean) If true, the latest Microsoft Windows 10 update will be installed on devices ineligible for Microsoft Windows 11 <br/>
 - `last_modified_date_time` (String) The date time that the profile was last modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Feature Update entity.
-- `rollout_settings` (Attributes) The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. / A complex type to store the windows update rollout settings including offer start date time, offer end date time, and days between each set of offers. / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsupdaterolloutsettings?view=graph-rest-beta (see [below for nested schema](#nestedatt--rollout_settings))
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Feature Update entity. <br/>
+- `rollout_settings` (Attributes) The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. / A complex type to store the windows update rollout settings including offer start date time, offer end date time, and days between each set of offers. Also see [Microsoft docs for windowsUpdateRolloutSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsupdaterolloutsettings?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--rollout_settings))
 
 <a id="nestedatt--assignments"></a>
 ### Nested Schema for `assignments`
 
 Read-Only:
 
-- `target` (Attributes) Base type for assignment targets. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target))
+- `target` (Attributes) Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta). (see [below for nested schema](#nestedatt--assignments--target))
 
 <a id="nestedatt--assignments--target"></a>
 ### Nested Schema for `assignments.target`
 
 Read-Only:
 
-- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_devices))
-- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
-- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
+- `all_devices` (Attributes) Represents an assignment to all managed devices in the tenant. Also see [Microsoft docs for allDevicesAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alldevicesassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_devices))
+- `all_licensed_users` (Attributes) Represents an assignment to all licensed users in the tenant. Also see [Microsoft docs for allLicensedUsersAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-alllicensedusersassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--all_licensed_users))
+- `exclusion_group` (Attributes) Represents a group that should be excluded from an assignment. Also see [Microsoft docs for exclusionGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-exclusiongroupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--exclusion_group))
 - `filter_id` (String) The ID of the filter for the target assignment.
-- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter; possible values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.).
-- `group` (Attributes) Represents an assignment to a group. / https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta (see [below for nested schema](#nestedatt--assignments--target--group))
+- `filter_type` (String) The type of filter of the target assignment i.e. Exclude or Include. / Represents type of the assignment filter. <br/> _Provider_ allowed values are: `none` (Default value. Do not use.), `include` (Indicates in-filter, rule matching will offer the payload to devices.), `exclude` (Indicates out-filter, rule matching will not offer the payload to devices.).
+- `group` (Attributes) Represents an assignment to a group. Also see [Microsoft docs for groupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-groupassignmenttarget?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--target--group))
 
 <a id="nestedatt--assignments--target--all_devices"></a>
 ### Nested Schema for `assignments.target.all_devices`

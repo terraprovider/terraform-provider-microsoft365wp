@@ -2,7 +2,7 @@ package services
 
 import (
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
@@ -62,9 +62,9 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 			Attributes: map[string]schema.Attribute{ // cloudPcCrossRegionDisasterRecoverySetting
 				"cross_region_disaster_recovery_enabled": schema.BoolAttribute{
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 					Computed:            true,
-					MarkdownDescription: ". The _provider_ default value is `false`.",
+					MarkdownDescription: "The _provider_ default value is `false`.",
 				},
 				"disaster_recovery_network_setting": schema.SingleNestedAttribute{
 					Optional: true,
@@ -82,7 +82,7 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 								Validators: []validator.Object{
 									cloudPcUserSettingCloudPcDisasterRecoveryNetworkSettingValidator,
 								},
-								MarkdownDescription: "Represents the Azure network connection configuration of backup Cloud PCs provisioned for cross-region disaster recovery. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdisasterrecoveryazureconnectionsetting?view=graph-rest-beta",
+								MarkdownDescription: "Represents the Azure network connection configuration of backup Cloud PCs provisioned for cross-region disaster recovery. Also see [Microsoft docs for cloudPcDisasterRecoveryAzureConnectionSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdisasterrecoveryazureconnectionsetting?view=graph-rest-beta). <br> ",
 							},
 						},
 						"microsoft_hosted_network": generic.OdataDerivedTypeNestedAttributeRs{
@@ -93,9 +93,9 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 									"region_group": schema.StringAttribute{
 										Required: true,
 										Validators: []validator.String{
-											stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico", "australasia", "europe"),
+											stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico", "australasia", "europe", "singapore", "hongKong", "ireland", "sweden", "poland", "italy", "spain", "netherlands", "brazil", "israel", "automatic", "indonesia", "taiwan", "malaysia", "newZealand", "austria", "denmark", "belgium", "kenya"),
 										},
-										MarkdownDescription: "Indicates the logic geographic group this region belongs to. Multiple regions can belong to one region group. When a region group is configured for disaster recovery, the new Cloud PC is assigned to one of the regions within the group based on resource availability. For example, the `europeUnion` region group contains the North Europe and West Europe regions. Use the `Prefer: include-unknown-enum-members` request header to get the following values in this [evolvable enum](/graph/best-practices-concept#handling-future-members-in-evolvable-enumerations): `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`. / Possible values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`",
+										MarkdownDescription: "Indicates the logic geographic group this region belongs to. Multiple regions can belong to one region group. When a region group is configured for disaster recovery, the new Cloud PC is assigned to one of the regions within the group based on resource availability. For example, the `europeUnion` region group contains the North Europe and West Europe regions. <br/> Represents the logical geographic group that a region belongs to for Microsoft-hosted network for backup Cloud PCs. Multiple regions can belong to one region group. <br/> This is an evolvable enumeration. <br/> _Provider_ allowed values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`, `singapore`, `hongKong`, `ireland`, `sweden`, `poland`, `italy`, `spain`, `netherlands`, `brazil`, `israel`, `automatic`, `indonesia`, `taiwan`, `malaysia`, `newZealand`, `austria`, `denmark`, `belgium`, `kenya`.",
 									},
 									"region_name": schema.StringAttribute{
 										Required:            true,
@@ -105,37 +105,39 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 								Validators: []validator.Object{
 									cloudPcUserSettingCloudPcDisasterRecoveryNetworkSettingValidator,
 								},
-								MarkdownDescription: "Represents the configuration of Microsoft-hosted network for backup Cloud PCs provisioned for cross-region disaster recovery. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdisasterrecoverymicrosofthostednetworksetting?view=graph-rest-beta",
+								MarkdownDescription: "Represents the configuration of Microsoft-hosted network for backup Cloud PCs provisioned for cross-region disaster recovery. Also see [Microsoft docs for cloudPcDisasterRecoveryMicrosoftHostedNetworkSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdisasterrecoverymicrosofthostednetworksetting?view=graph-rest-beta). <br> ",
 							},
 						},
 					},
-					MarkdownDescription: "Indicates the network settings of the Cloud PC during a cross-region disaster recovery operation. / An abstract type that represents the network configuration of backup Cloud PCs provisioned for cross-region disaster recovery.\n\nBase type of [cloudPcDisasterRecoveryAzureConnectionSetting](../resources/cloudpcdisasterrecoveryazureconnectionsetting.md) and [cloudPcDisasterRecoveryMicrosoftHostedNetworkSetting](../resources/cloudpcdisasterrecoverymicrosofthostednetworksetting.md) / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdisasterrecoverynetworksetting?view=graph-rest-beta",
+					MarkdownDescription: "Indicates the network settings of the Cloud PC during a cross-region disaster recovery operation. / An abstract type that represents the network configuration of backup Cloud PCs provisioned for cross-region disaster recovery. Also see [Microsoft docs for cloudPcDisasterRecoveryNetworkSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdisasterrecoverynetworksetting?view=graph-rest-beta). <br> ",
 				},
 				"disaster_recovery_type": schema.StringAttribute{
 					Optional: true,
 					Validators: []validator.String{
 						stringvalidator.OneOf("notConfigured", "crossRegion", "premium", "unknownFutureValue"),
 					},
-					PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("notConfigured")},
+					PlanModifiers: []planmodifier.String{
+						wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+					},
 					Computed:            true,
-					MarkdownDescription: "Indicates the type of disaster recovery to perform when a disaster occurs on the user's Cloud PC. The The default value is `notConfigured`. / Possible values are: `notConfigured`, `crossRegion`, `premium`, `unknownFutureValue`. The _provider_ default value is `\"notConfigured\"`.",
+					MarkdownDescription: "Indicates the type of disaster recovery to perform when a disaster occurs on the user's Cloud PC. The default value is `notConfigured`. <br/> _Provider_ allowed values are: `notConfigured`, `crossRegion`, `premium`, `unknownFutureValue`. The _provider_ default value is `\"notConfigured\"`.",
 				},
 				"maintain_cross_region_restore_point_enabled": schema.BoolAttribute{
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(true)},
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 					Computed:            true,
-					MarkdownDescription: "Indicates whether Windows 365 maintain the cross-region disaster recovery function generated restore points. If `true`, the Windows 365 stored restore points; `false` indicates that Windows 365 doesn't generate or keep the restore point from the original Cloud PC. If a disaster occurs, the new Cloud PC can only be provisioned using the initial image. This limitation can result in the loss of some user data on the original Cloud PC. The default value is `false`. The _provider_ default value is `true`.",
+					MarkdownDescription: "Indicates whether Windows 365 maintain the cross-region disaster recovery function generated restore points. If `true`, the Windows 365 stored restore points; `false` indicates that Windows 365 doesn't generate or keep the restore point from the original Cloud PC. If a disaster occurs, the new Cloud PC can only be provisioned using the initial image. This limitation can result in the loss of some user data on the original Cloud PC. The default value is `false`. <br/> The _provider_ default value is `true`.",
 				},
 				"user_initiated_disaster_recovery_allowed": schema.BoolAttribute{
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 					Computed:            true,
-					MarkdownDescription: "Indicates whether the client allows the end user to initiate a disaster recovery activation. `True` indicates that the client includes the option for the end user to activate Backup Cloud PC. When `false`, the end user doesn't have the option to activate disaster recovery. The default value is `false`. Currently, only premium disaster recovery is supported. The _provider_ default value is `false`.",
+					MarkdownDescription: "Indicates whether the client allows the end user to initiate a disaster recovery activation. `True` indicates that the client includes the option for the end user to activate Backup Cloud PC. When `false`, the end user doesn't have the option to activate disaster recovery. The default value is `false`. Currently, only premium disaster recovery is supported. <br/> The _provider_ default value is `false`.",
 				},
 			},
-			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Defines whether the user's Cloud PC enables cross-region disaster recovery and specifies the network for the disaster recovery. / Represents the settings for cross-region disaster recovery on a Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpccrossregiondisasterrecoverysetting?view=graph-rest-beta. The _provider_ default value is `{}`.",
+			MarkdownDescription: "Defines whether the user's Cloud PC enables cross-region disaster recovery and specifies the network for the disaster recovery. / Represents the settings for cross-region disaster recovery on a Cloud PC. Also see [Microsoft docs for cloudPcCrossRegionDisasterRecoverySetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpccrossregiondisasterrecoverysetting?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -148,29 +150,36 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 		},
 		"local_admin_enabled": schema.BoolAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 			Computed:            true,
-			MarkdownDescription: "Indicates whether the local admin option is enabled. Default value is `false`. To enable the local admin option, change the setting to `true`. If the local admin option is enabled, the end user can be an admin of the Cloud PC device. The _provider_ default value is `false`.",
+			MarkdownDescription: "Indicates whether the local admin option is enabled. Default value is `false`. To enable the local admin option, change the setting to `true`. If the local admin option is enabled, the end user can be an admin of the Cloud PC device. <br/> The _provider_ default value is `false`.",
 		},
 		"notification_setting": schema.SingleNestedAttribute{
 			Optional: true,
 			Attributes: map[string]schema.Attribute{ // cloudPcNotificationSetting
 				"restart_prompts_disabled": schema.BoolAttribute{
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 					Computed:            true,
-					MarkdownDescription: "If `true`, doesn't prompt the user to restart the Cloud PC. If `false`, prompts the user to restart Cloud PC. The default value is `false`. The _provider_ default value is `false`.",
+					MarkdownDescription: "If `true`, doesn't prompt the user to restart the Cloud PC. If `false`, prompts the user to restart Cloud PC. The default value is `false`. <br/> The _provider_ default value is `false`.",
 				},
 			},
-			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Defines the setting of the Cloud PC notification prompts for the Cloud PC user. / Represents the settings of a point-in-time restore of a Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcnotificationsetting?view=graph-rest-beta. The _provider_ default value is `{}`.",
+			MarkdownDescription: "Defines the setting of the Cloud PC notification prompts for the Cloud PC user. / Represents specific settings of notification prompt. Also see [Microsoft docs for cloudPcNotificationSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcnotificationsetting?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+		},
+		"provisioning_source_type": schema.StringAttribute{
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("image", "snapshot", "unknownFutureValue"),
+			},
+			MarkdownDescription: "Indicates the provisioning source of the Cloud PC prepared for an end user. The default value is `image`. If this property isn't set or set to `null`, its functionality is the same as setting it to `image`. <br/> _Provider_ allowed values are: `image`, `snapshot`, `unknownFutureValue`.",
 		},
 		"reset_enabled": schema.BoolAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 			Computed:            true,
-			MarkdownDescription: "Indicates whether an end user is allowed to reset their Cloud PC. When `true`, the user is allowed to reset their Cloud PC. When `false`, end-user initiated reset isn't allowed. The default value is `false`. The _provider_ default value is `false`.",
+			MarkdownDescription: "Indicates whether an end user is allowed to reset their Cloud PC. When `true`, the user is allowed to reset their Cloud PC. When `false`, end-user initiated reset isn't allowed. The default value is `false`. <br/> The _provider_ default value is `false`.",
 		},
 		"restore_point_setting": schema.SingleNestedAttribute{
 			Optional: true,
@@ -184,20 +193,22 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 					Validators: []validator.String{
 						stringvalidator.OneOf("default", "fourHours", "sixHours", "twelveHours", "sixteenHours", "twentyFourHours", "unknownFutureValue"),
 					},
-					PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("twelveHours")},
+					PlanModifiers: []planmodifier.String{
+						wpdefaultvaluemodifier.StringDefaultValue("twelveHours"),
+					},
 					Computed:            true,
-					MarkdownDescription: "The time interval in hours to take snapshots (restore points) of a Cloud PC automatically. The default value is `default` that indicates that the time interval for automatic capturing of restore point snapshots is set to 12 hours. / Possible values are: `default`, `fourHours`, `sixHours`, `twelveHours`, `sixteenHours`, `twentyFourHours`, `unknownFutureValue`. The _provider_ default value is `\"twelveHours\"`.",
+					MarkdownDescription: "The time interval in hours to take snapshots (restore points) of a Cloud PC automatically. The default value is `default` that indicates that the time interval for automatic capturing of restore point snapshots is set to 12 hours. <br/> _Provider_ allowed values are: `default`, `fourHours`, `sixHours`, `twelveHours`, `sixteenHours`, `twentyFourHours`, `unknownFutureValue`. The _provider_ default value is `\"twelveHours\"`.",
 				},
 				"user_restore_enabled": schema.BoolAttribute{
 					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvalue.BoolDefaultValue(false)},
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 					Computed:            true,
-					MarkdownDescription: "If `true`, the user has the ability to use snapshots to restore Cloud PCs. If `false`, non-admin users can't use snapshots to restore the Cloud PC. The _provider_ default value is `false`.",
+					MarkdownDescription: "If `true`, the user has the ability to use snapshots to restore Cloud PCs. If `false`, non-admin users can't use snapshots to restore the Cloud PC. <br/> The _provider_ default value is `false`.",
 				},
 			},
-			PlanModifiers:       []planmodifier.Object{wpdefaultvalue.ObjectDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Defines how frequently a restore point is created that is, a snapshot is taken) for users' provisioned Cloud PCs (default is 12 hours), and whether the user is allowed to restore their own Cloud PCs to a backup made at a specific point in time. / Represents the settings of a point-in-time restore of a Cloud PC. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcrestorepointsetting?view=graph-rest-beta. The _provider_ default value is `{}`.",
+			MarkdownDescription: "Defines how frequently a restore point is created that is, a snapshot is taken) for users' provisioned Cloud PCs (default is 12 hours), and whether the user is allowed to restore their own Cloud PCs to a backup made at a specific point in time. / Represents the settings of a point-in-time restore of a Cloud PC. Also see [Microsoft docs for cloudPcRestorePointSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcrestorepointsetting?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 		"assignments": schema.SetNestedAttribute{
 			Optional: true,
@@ -229,20 +240,20 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 									Validators: []validator.Object{
 										cloudPcUserSettingCloudPcManagementAssignmentTargetValidator,
 									},
-									MarkdownDescription: "Complex type that represents the assignment target group. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcmanagementgroupassignmenttarget?view=graph-rest-beta",
+									MarkdownDescription: "Complex type that represents the assignment target group. Also see [Microsoft docs for cloudPcManagementGroupAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcmanagementgroupassignmenttarget?view=graph-rest-beta). <br> ",
 								},
 							},
 						},
-						MarkdownDescription: "The assignment target for the user setting. Currently, the only target supported for this user setting is a user group. For details, see [cloudPcManagementGroupAssignmentTarget](cloudpcmanagementgroupassignmenttarget.md). / Represents an abstract base type for assignment targets.\n\nBase type of [cloudPcManagementGroupAssignmentTarget](cloudpcmanagementgroupassignmenttarget.md). / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcmanagementassignmenttarget?view=graph-rest-beta",
+						MarkdownDescription: "The assignment target for the user setting. Currently, the only target supported for this user setting is a user group. For details, see [cloudPcManagementGroupAssignmentTarget](cloudpcmanagementgroupassignmenttarget.md). / Represents an abstract base type for assignment targets. Also see [Microsoft docs for cloudPcManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcmanagementassignmenttarget?view=graph-rest-beta). <br> ",
 					},
 				},
 			},
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValueEmpty()},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Represents the set of Microsoft 365 groups and security groups in Microsoft Entra ID that have **cloudPCUserSetting** assigned. Returned only on `$expand`. For an example, see [Get cloudPcUserSettingample](../api/cloudpcusersetting-get.md). / Represents a defined collection of user setting assignments. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingassignment?view=graph-rest-beta. The _provider_ default value is `[]`.",
+			MarkdownDescription: "Represents the set of Microsoft 365 groups and security groups in Microsoft Entra ID that have **cloudPCUserSetting** assigned. Returned only on `$expand`. For an example, see [Get cloudPcUserSettingample](https://learn.microsoft.com/en-us/graph/api/cloudpcusersetting-get?view=graph-rest-beta). / Represents a defined collection of user setting assignments. Also see [Microsoft docs for cloudPcUserSettingAssignment](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingassignment?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 	},
-	MarkdownDescription: "Represents a Cloud PC user setting. / https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersetting?view=graph-rest-beta ||| MS Graph: Cloud PC",
+	MarkdownDescription: "Represents a Cloud PC user setting. <br/> Also see [Microsoft docs for cloudPcUserSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersetting?view=graph-rest-beta). ||| MS Graph: Cloud PC",
 }
 
 var cloudPcUserSettingCloudPcDisasterRecoveryNetworkSettingValidator = objectvalidator.ExactlyOneOf(

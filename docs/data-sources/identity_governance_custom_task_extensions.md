@@ -7,7 +7,9 @@ subcategory: "MS Graph: Lifecycle workflows"
 
 Defines the attributes of a customTaskExtension that allows you to integrate Lifecycle Workflows with Azure Logic Apps. While Lifecycle Workflows provide multiple built-in tasks (known as taskDefinitions) to automate common scenarios during the user lifecycle, you may eventually reach the limits of these built-in tasks. You can create a customTaskExtension that contains information about an Azure Logic app, and trigger the Azure Logic app with the built-in task "Run a custom task extension" that references the corresponding customTaskExtension.
 
-For more information about using custom task extensions, refer to the links in the [see also](#related-content) section. / https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta
+For more information about using custom task extensions, refer to the links in the [see also](#related-content) section.
+
+Also see [Microsoft docs for identityGovernance.customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -79,7 +81,7 @@ output "microsoft365wp_identity_governance_custom_task_extensions" {
 
 Read-Only:
 
-- `created_date_time` (String) When the custom task extension was created.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
-- `display_name` (String) A unique string that identifies the custom task extension. Required.<br><br>Supports `$filter`(`eq`, `ne`) and `$orderby`.
-- `id` (String) <br><br>Supports `$filter`(`eq`, `ne`) and `$orderby`.
-- `last_modified_date_time` (String) When the custom extension was last modified.<br><br>Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
+- `created_date_time` (String) When the custom task extension was created. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
+- `display_name` (String) A unique string that identifies the custom task extension. Required. <br/> Supports `$filter`(`eq`, `ne`) and `$orderby`.
+- `id` (String) Supports `$filter`(`eq`, `ne`) and `$orderby`.
+- `last_modified_date_time` (String) When the custom extension was last modified. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.

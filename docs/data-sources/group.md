@@ -5,13 +5,13 @@ subcategory: "MS Graph: Entra ID"
 
 # microsoft365wp_group (Data Source)
 
-Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group. This resource is an open type that allows other properties to be passed in.
+Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group.
 
-For performance reasons, the [create](../api/group-post-groups.md), [get](../api/group-get.md), and [list](../api/group-list.md) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option.
+For performance reasons, the [create](https://learn.microsoft.com/en-us/graph/api/group-post-groups?view=graph-rest-beta), [get](https://learn.microsoft.com/en-us/graph/api/group-get?view=graph-rest-beta), and [list](https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-beta) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option.
 
-This resource supports: / https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta
+Also see [Microsoft docs for group](https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta).
 
-Provider Note: This data source is only provided as a companion to `azuread_group` to allow for OData filtering. It is not planned to add more attributes or even provide a resource for this entity.
+_Provider_ Note: This data source is only provided as a companion to `azuread_group` to allow for OData filtering. It is not planned to add more attributes or even provide a resource for this entity.
 
 ## Documentation Disclaimer
 
@@ -69,20 +69,20 @@ output "microsoft365wp_group" {
 
 ### Optional
 
-- `id` (String) The unique identifier for the group. <br><br>Returned by default. Key. Not nullable. <br><br>Supports `$filter` (`eq`, `ne`, `not`, `in`).
+- `id` (String) The unique identifier for the group. <br/> Returned by default. Key. Not nullable. <br/> Supports `$filter` (`eq`, `ne`, `not`, `in`).
 - `odata_filter` (String) Literal OData `$filter` value to pass to MS Graph.
 - `odata_orderby` (String) Literal OData `$orderby` value to pass to MS Graph.
 - `odata_top` (Number) Literal OData `$top` value to pass to MS Graph.
 
 ### Read-Only
 
-- `assigned_licenses` (Attributes Set) The licenses that are assigned to the group. <br><br>Returned only on `$select`. Supports `$filter` (`eq`). / Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. / https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta (see [below for nested schema](#nestedatt--assigned_licenses))
-- `display_name` (String) The display name for the group. Required. Maximum length is 256 characters. <br><br>Returned by default. Supports `$filter` (`eq`, `ne`, `not`, `ge`, `le`, `in`, `startsWith`, and `eq` on `null` values), `$search`, and `$orderby`.
+- `assigned_licenses` (Attributes Set) The licenses that are assigned to the group. <br/> Returned only on `$select`. Supports `$filter` (`eq`). <br/> Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. Also see [Microsoft docs for assignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assigned_licenses))
+- `display_name` (String) The display name for the group. Required. Maximum length is 256 characters. <br/> Returned by default. Supports `$filter` (`eq`, `ne`, `not`, `ge`, `le`, `in`, `startsWith`, and `eq` on `null` values), `$search`, and `$orderby`.
 
 <a id="nestedatt--assigned_licenses"></a>
 ### Nested Schema for `assigned_licenses`
 
 Read-Only:
 
-- `disabled_plans` (Set of String) A collection of the unique identifiers for plans that have been disabled. IDs are available in **servicePlans** > **servicePlanId** in the tenant's [subscribedSkus](../resources/subscribedsku.md) or **serviceStatus** > **servicePlanId** in the tenant's [companySubscription](../resources/subscribedsku.md).
-- `sku_id` (String) The unique identifier for the SKU. Corresponds to the **skuId** from [subscribedSkus](../resources/subscribedsku.md) or [companySubscription](../resources/companysubscription.md).
+- `disabled_plans` (Set of String) A collection of the unique identifiers for plans that have been disabled. IDs are available in **servicePlans** > **servicePlanId** in the tenant's [subscribedSkus](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta) or **serviceStatus** > **servicePlanId** in the tenant's [companySubscription](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta).
+- `sku_id` (String) The unique identifier for the SKU. Corresponds to the **skuId** from [subscribedSkus](https://learn.microsoft.com/en-us/graph/api/resources/subscribedsku?view=graph-rest-beta) or [companySubscription](https://learn.microsoft.com/en-us/graph/api/resources/companysubscription?view=graph-rest-beta).

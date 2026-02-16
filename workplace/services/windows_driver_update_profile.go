@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 	"terraform-provider-microsoft365wp/workplace/generic"
-	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvalue"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -67,7 +67,7 @@ var windowsDriverUpdateProfileResourceSchema = schema.Schema{
 			Required:            true,
 			Validators:          []validator.String{stringvalidator.OneOf("manual", "automatic")},
 			PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
-			MarkdownDescription: "Driver update profile approval type. For example, manual or automatic approval. / An enum type to represent approval type of a driver update profile; possible values are: `manual` (This indicates a driver and firmware profile needs to be approved manually.), `automatic` (This indicates a driver and firmware profile is approved automatically.)",
+			MarkdownDescription: "Driver update profile approval type. For example, manual or automatic approval. / An enum type to represent approval type of a driver update profile. <br/> _Provider_ allowed values are: `manual` (This indicates a driver and firmware profile needs to be approved manually.), `automatic` (This indicates a driver and firmware profile is approved automatically.).",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -80,9 +80,9 @@ var windowsDriverUpdateProfileResourceSchema = schema.Schema{
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
-			PlanModifiers:       []planmodifier.String{wpdefaultvalue.StringDefaultValue("")},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 			Computed:            true,
-			MarkdownDescription: "The description of the profile which is specified by the user. The _provider_ default value is `\"\"`.",
+			MarkdownDescription: "The description of the profile which is specified by the user. <br/> The _provider_ default value is `\"\"`.",
 		},
 		"device_reporting": schema.Int64Attribute{
 			Computed:            true,
@@ -101,7 +101,7 @@ var windowsDriverUpdateProfileResourceSchema = schema.Schema{
 					Validators: []validator.String{
 						stringvalidator.OneOf("pending", "success", "failure"),
 					},
-					MarkdownDescription: "The state of the latest sync. / Windows DnF update inventory sync state; possible values are: `pending` (Pending sync.), `success` (Successful sync.), `failure` (Failed sync.)",
+					MarkdownDescription: "The state of the latest sync. / Windows DnF update inventory sync state. <br/> _Provider_ allowed values are: `pending` (Pending sync.), `success` (Successful sync.), `failure` (Failed sync.).",
 				},
 				"last_successful_sync_date_time": schema.StringAttribute{
 					Computed:            true,
@@ -109,7 +109,7 @@ var windowsDriverUpdateProfileResourceSchema = schema.Schema{
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-			MarkdownDescription: "Driver inventory sync status for this profile. / A complex type to store the status of a driver and firmware profile inventory sync. The status includes the last successful sync date time and the state of the last sync. / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofileinventorysyncstatus?view=graph-rest-beta",
+			MarkdownDescription: "Driver inventory sync status for this profile. / A complex type to store the status of a driver and firmware profile inventory sync. The status includes the last successful sync date time and the state of the last sync. Also see [Microsoft docs for windowsDriverUpdateProfileInventorySyncStatus](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofileinventorysyncstatus?view=graph-rest-beta). <br> ",
 		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -124,9 +124,9 @@ var windowsDriverUpdateProfileResourceSchema = schema.Schema{
 		"role_scope_tag_ids": schema.SetAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
-			PlanModifiers:       []planmodifier.Set{wpdefaultvalue.SetDefaultValue([]any{"0"})},
+			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "List of Scope Tags for this Driver Update entity. The _provider_ default value is `[\"0\"]`.",
+			MarkdownDescription: "List of Scope Tags for this Driver Update entity. <br/> The _provider_ default value is `[\"0\"]`.",
 		},
 		"assignments": deviceAndAppManagementAssignment,
 		"driver_inventories": schema.SetNestedAttribute{
@@ -146,14 +146,14 @@ var windowsDriverUpdateProfileResourceSchema = schema.Schema{
 						Validators: []validator.String{
 							stringvalidator.OneOf("needsReview", "declined", "approved", "suspended"),
 						},
-						MarkdownDescription: "The approval status for this driver. / An enum type to represent approval status of a driver; possible values are: `needsReview` (This indicates a driver needs IT admin's review.), `declined` (This indicates IT admin has declined a driver.), `approved` (This indicates IT admin has approved a driver.), `suspended` (This indicates IT admin has suspended a driver.)",
+						MarkdownDescription: "The approval status for this driver. / An enum type to represent approval status of a driver. <br/> _Provider_ allowed values are: `needsReview` (This indicates a driver needs IT admin's review.), `declined` (This indicates IT admin has declined a driver.), `approved` (This indicates IT admin has approved a driver.), `suspended` (This indicates IT admin has suspended a driver.).",
 					},
 					"category": schema.StringAttribute{
 						Computed: true,
 						Validators: []validator.String{
 							stringvalidator.OneOf("recommended", "previouslyApproved", "other"),
 						},
-						MarkdownDescription: "The category for this driver. / An enum type to represent which category a driver belongs to; possible values are: `recommended` (This indicates a driver is recommended by Microsoft.), `previouslyApproved` (This indicates a driver was recommended by Microsoft and IT admin has taken some approval action on it.), `other` (This indicates a driver is never recommended by Microsoft.)",
+						MarkdownDescription: "The category for this driver. / An enum type to represent which category a driver belongs to. <br/> _Provider_ allowed values are: `recommended` (This indicates a driver is recommended by Microsoft.), `previouslyApproved` (This indicates a driver was recommended by Microsoft and IT admin has taken some approval action on it.), `other` (This indicates a driver is never recommended by Microsoft.).",
 					},
 					"deploy_date_time": schema.StringAttribute{
 						Computed:            true,
@@ -182,8 +182,8 @@ var windowsDriverUpdateProfileResourceSchema = schema.Schema{
 				},
 			},
 			PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
-			MarkdownDescription: "Driver inventories for this profile. / A new entity to represent driver inventories. / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateinventory?view=graph-rest-beta",
+			MarkdownDescription: "Driver inventories for this profile. / A new entity to represent driver inventories. Also see [Microsoft docs for windowsDriverUpdateInventory](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateinventory?view=graph-rest-beta). <br> ",
 		},
 	},
-	MarkdownDescription: "Windows Driver Update Profile / https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofile?view=graph-rest-beta ||| MS Graph: Software updates",
+	MarkdownDescription: "Windows Driver Update Profile <br/> Also see [Microsoft docs for windowsDriverUpdateProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofile?view=graph-rest-beta). ||| MS Graph: Software updates",
 }

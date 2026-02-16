@@ -7,7 +7,9 @@ subcategory: "MS Graph: Cross-tenant access"
 
 Represents the partner-specific configuration for cross-tenant access and tenant restrictions. Cross-tenant access settings include inbound and outbound settings of Microsoft Entra B2B collaboration and B2B direct connect.
 
-For any partner-specific property that is `null`, these settings inherit the behavior configured in your [default cross-tenant access settings](../resources/crosstenantaccesspolicyconfigurationdefault.md). / https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta
+For any partner-specific property that is `null`, these settings inherit the behavior configured in your [default cross-tenant access settings](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta).
+
+Also see [Microsoft docs for crossTenantAccessPolicyConfigurationPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -79,6 +81,7 @@ output "microsoft365wp_cross_tenant_access_policy_configuration_partners" {
 
 Read-Only:
 
+- `deleted_date_time` (String) Shows the last date and time the policy was deleted.
 - `is_in_multi_tenant_organization` (Boolean) Identifies whether a tenant is a member of a multitenant organization.
 - `is_service_provider` (Boolean) Identifies whether the partner-specific configuration is a Cloud Service Provider for your organization.
-- `tenant_id` (String) The tenant identifier for the partner Microsoft Entra organization. Key.
+- `tenant_id` (String) The tenant identifier for the partner Microsoft Entra organization. Key. <br/>

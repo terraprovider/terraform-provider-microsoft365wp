@@ -3,7 +3,7 @@
 
 // Lifted from https://github.com/hashicorp/terraform-provider-awscc/blob/v0.48.0/internal/generic/default_value.go
 
-package wpdefaultvalue
+package wpdefaultvaluemodifier
 
 import (
 	"context"

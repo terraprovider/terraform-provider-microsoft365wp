@@ -5,7 +5,7 @@ subcategory: "MS Graph: Conditional access"
 
 # microsoft365wp_authentication_context_class_references (Data Source)
 
-Represents a Microsoft Entra authentication context class reference. Authentication context class references are custom values that define a Conditional Access authentication requirement. / https://learn.microsoft.com/en-us/graph/api/resources/authenticationcontextclassreference?view=graph-rest-beta
+Represents a Microsoft Entra authentication context class reference. Authentication context class references are custom values that define a Conditional Access authentication requirement. For more information, see [Developer guide to Conditional Access authentication context](https://learn.microsoft.com/en-us/entra/identity-platform/developer-guide-conditional-access-authentication-context). <br/> Also see [Microsoft docs for authenticationContextClassReference](https://learn.microsoft.com/en-us/graph/api/resources/authenticationcontextclassreference?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 

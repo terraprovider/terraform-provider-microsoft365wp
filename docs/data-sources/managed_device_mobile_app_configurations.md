@@ -5,7 +5,7 @@ subcategory: "MS Graph: App management"
 
 # microsoft365wp_managed_device_mobile_app_configurations (Data Source)
 
-An abstract class for Mobile app configuration for enrolled devices. / https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-manageddevicemobileappconfiguration?view=graph-rest-beta
+An abstract class for Mobile app configuration for enrolled devices. <br/> Also see [Microsoft docs for managedDeviceMobileAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-manageddevicemobileappconfiguration?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -84,7 +84,7 @@ Read-Only:
 - `id` (String) Key of the entity.
 - `ios` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.iosMobileAppConfiguration` (using e.g. `if x.ios != null`). (see [below for nested schema](#nestedatt--managed_device_mobile_app_configurations--ios))
 - `last_modified_date_time` (String) DateTime the object was last modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this App configuration entity.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this App configuration entity. <br/>
 - `version` (Number) Version of the device configuration.
 
 <a id="nestedatt--managed_device_mobile_app_configurations--android_managed_store"></a>

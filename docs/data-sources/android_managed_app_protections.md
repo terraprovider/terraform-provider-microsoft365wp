@@ -5,7 +5,7 @@ subcategory: "MS Graph: App management"
 
 # microsoft365wp_android_managed_app_protections (Data Source)
 
-Policy used to configure detailed management settings targeted to specific security groups and for a specified set of apps on an Android device / https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-androidmanagedappprotection?view=graph-rest-beta
+Policy used to configure detailed management settings targeted to specific security groups and for a specified set of apps on an Android device <br/> Also see [Microsoft docs for androidManagedAppProtection](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-androidmanagedappprotection?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -82,5 +82,5 @@ Read-Only:
 - `display_name` (String) Policy display name.
 - `id` (String) Key of the entity.
 - `last_modified_date_time` (String) Last time the policy was modified.
-- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance.
+- `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>
 - `version` (String) Version of the entity.
