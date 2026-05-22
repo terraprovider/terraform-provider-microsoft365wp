@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/hashicorp/go-retryablehttp"
@@ -71,7 +72,7 @@ func UploadBlobInBlocks(ctx context.Context, fileName string, sasUri string) (fi
 		blockIdBase64 := base64.StdEncoding.EncodeToString(blockNumBytes)
 		blockList.BlockId = append(blockList.BlockId, blockIdBase64)
 
-		blockUri := fmt.Sprintf("%s&comp=block&blockid=%s", sasUri, blockIdBase64)
+		blockUri := fmt.Sprintf("%s&comp=block&blockid=%s", sasUri, url.QueryEscape(blockIdBase64))
 		req, err := retryablehttp.NewRequestWithContext(ctx, http.MethodPut, blockUri, bytes.NewBuffer(blockBuffer))
 		if err != nil {
 			return "", err

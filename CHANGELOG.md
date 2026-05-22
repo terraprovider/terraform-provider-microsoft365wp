@@ -1,6 +1,17 @@
 # `microsoft365wp` Terraform Provider Changelog
 
 
+## 0.18.1 (2026-05-22)
+
+### fixed
+
+- [mobile_app](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_app): URL-encode base64 block ID in upload URL
+
+### changed
+
+- Update dependencies
+
+
 ## 0.18.0 (2026-02-16)
 
 ### added
@@ -10,17 +21,17 @@
 - [connector_group_application](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/connector_group_application)
 - [connector_group_member_connector](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/connector_group_member_connector)
 - [networkaccess_tenant_status](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/networkaccess_tenant_status)
-- implement TF plugin framework default values
+- Implement TF plugin framework default values
 
 ### fixed
 
-- [group_assigned_license](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/group_assigned_license): fix concurrency issues
+- [group_assigned_license](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/group_assigned_license): Fix concurrency issues
 
 ### changed
 
-- [cloud_pc_provisioning_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cloud_pc_provisioning_policy): fix examples
-- [microsoft365wp_mobile_app.android_managed_store](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_app#nestedatt--android_managed_store): update docs
-- [windows_management_app](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/windows_management_app): update docs
+- [cloud_pc_provisioning_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cloud_pc_provisioning_policy): Fix examples
+- [mobile_app.android_managed_store](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_app#nestedatt--android_managed_store): Update docs
+- [windows_management_app](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/windows_management_app): Update docs
 - Update MS Graph metadata & docs
 - Update MS Graph metadata & docs (again)
 - Update dependencies
@@ -30,10 +41,10 @@
 
 ### breaking
 
-- [authentication_methods_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authentication_methods_policy): add verifiable_credentials
-- [authorization_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authorization_policy): align default values
-- [authorization_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authorization_policy): align default values (again)
-- [mobile_app](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_app): align default values
+- [authentication_methods_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authentication_methods_policy): Add verifiable_credentials
+- [authorization_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authorization_policy): Align default values
+- [authorization_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authorization_policy): Align default values (again)
+- [mobile_app](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_app): Align default values
 
 
 ## 0.17.4 (2025-12-03)

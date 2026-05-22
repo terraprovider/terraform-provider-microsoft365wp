@@ -80,8 +80,7 @@ If you decide to disable **Recurring billing**, your subscription will not renew
 
 ### Cancellation
 
-*   If you would like to (irreversibly) cancel your subscription, navigate to your **TerraProvider subscription** in the [Azure SaaS portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceBlade/resourceType/Microsoft.SaaS%2Fresources) and click **Cancel subscription**.\
-
+*   If you would like to (irreversibly) cancel your subscription, navigate to your **TerraProvider subscription** in the [Azure SaaS portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceBlade/resourceType/Microsoft.SaaS%2Fresources) and click **Cancel subscription**.<br>
 
     <figure><img src="https://github.com/terraprovider/terraform-provider-microsoft365wp/raw/main/docs/.mdassets/MASTER copy (2).jpg" alt="Screenshot"><figcaption></figcaption></figure>
 * If you cancel within the grace period, the license will be revoked immediately.
@@ -89,7 +88,7 @@ If you decide to disable **Recurring billing**, your subscription will not renew
 
 ## **Trials**
 
-In case you would like to test TerraProvider, please [get in contact with us](https://www.terraprovider.com/drop-a-question) or send us an email to [sales@terraprovider.com](mailto:sales@terraprovider.com).
+In case you would like to test TerraProvider, please [request a trial via our website](https://support.terraprovider.com/support/tickets/new?ticket_form=trial_request_%28terraprovider%29) or send us an email to [sales@terraprovider.com](mailto:sales@terraprovider.com).
 
 ## FAQs
 
