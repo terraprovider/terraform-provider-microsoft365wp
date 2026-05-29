@@ -2,9 +2,9 @@
 page_title: "Manage existing resources"
 ---
 
-description: How to manage existing Entra- and Intune objects using this provider
-
 # Manage existing resources
+
+How to manage existing Entra- and Intune objects using this provider
 
 ## Overview
 
