@@ -277,7 +277,7 @@ Read-Only:
 - `os_minimum_build_version` (String) Minimum IOS build version.
 - `os_minimum_version` (String) Minimum IOS version.
 - `passcode_block_simple` (Boolean) Indicates whether or not to block simple passcodes. <br/>
-- `passcode_expiration_days` (Number) Number of days before the passcode expires. Valid values 1 to 65535
+- `passcode_expiration_days` (Number) Number of days before the passcode expires. Starting January 2026 (Intune release version: 2601), the maximum expiration days will be limited to 730 days. Any setting above 730 days will be default to 730 days. Valid values 1 to 65535
 - `passcode_minimum_character_set_count` (Number) The number of character sets required in the password.
 - `passcode_minimum_length` (Number) Minimum length of passcode. Valid values 4 to 14
 - `passcode_minutes_of_inactivity_before_lock` (Number) Minutes of inactivity before a passcode is required.

@@ -92,7 +92,6 @@ resource "microsoft365wp_intune_branding_profile" "test" {
 - `online_support_site_url` (String) URL to the company/organization’s IT helpdesk site <br/> The _provider_ default value is `""`.
 - `profile_description` (String) Description of the profile <br/> The _provider_ default value is `""`.
 - `role_scope_tag_ids` (Set of String) List of scope tags assigned to the branding profile <br/> The _provider_ default value is `["0"]`.
-- `send_device_ownership_change_push_notification` (Boolean) Boolean that indicates if a push notification is sent to users when their device ownership type changes from personal to corporate <br/> The _provider_ default value is `true`.
 - `show_azure_ad_enterprise_apps` (Boolean) Boolean that indicates if AzureAD Enterprise Apps will be shown in Company Portal <br/> The _provider_ default value is `false`.
 - `show_configuration_manager_apps` (Boolean) Boolean that indicates if Configuration Manager Apps will be shown in Company Portal <br/> The _provider_ default value is `true`.
 - `show_display_name_next_to_logo` (Boolean) Boolean that represents whether the administrator-supplied display name will be shown next to the logo image or not <br/> The _provider_ default value is `true`.

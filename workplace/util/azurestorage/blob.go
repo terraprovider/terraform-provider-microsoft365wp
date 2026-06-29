@@ -1,11 +1,11 @@
 package azurestorage
 
+//nosemgrep
 import (
 	"bytes"
 	"context"
 	"terraform-provider-microsoft365wp/workplace/util/retryablehttputil"
 
-	// nosemgrep
 	"crypto/md5"
 
 	"encoding/base64"

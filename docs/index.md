@@ -21,12 +21,15 @@ Please avoid "me too" or "+1" comments. Instead, use a thumbs up reaction on enh
 
 ### Optional
 
+- `ado_pipeline_service_connection_id` (String) The Azure DevOps Pipeline Service Connection ID.
 - `client_certificate` (String, Sensitive) Base64 encoded PKCS#12 certificate bundle to use when authenticating as a Service Principal using a Client Certificate
 - `client_certificate_password` (String, Sensitive) The password to decrypt the Client Certificate. For use when authenticating as a Service Principal using a Client Certificate
 - `client_certificate_path` (String) The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service Principal using a Client Certificate
 - `client_id` (String) The Client ID which should be used for service principal authentication
+- `client_id_file_path` (String) The path to a file containing the Client ID which should be used for service principal authentication
 - `client_secret` (String, Sensitive) The application password to use when authenticating as a Service Principal using a Client Secret
-- `environment` (String) The cloud environment which should be used. Possible values are: `global` (also `public`), `usgovernmentl4` (also `usgovernment`), `usgovernmentl5` (also `dod`), and `china`. Defaults to `global`
+- `client_secret_file_path` (String) The path to a file containing the application password to use when authenticating as a Service Principal using a Client Secret
+- `environment` (String) The cloud environment which should be used. Possible values are: `global` (also `public`), `usgovernmentl4` (also `usgovernment`), `usgovernmentl5` (also `dod`), and `china`. Defaults to `global`. Not used and should not be specified when `metadata_host` is specified.
 - `metadata_host` (String) The Hostname which should be used for the Azure Metadata Service.
 - `msi_endpoint` (String) The path to a custom endpoint for Managed Identity - in most circumstances this should be detected automatically
 - `oidc_request_token` (String, Sensitive) The bearer token for the request to the OIDC provider. For use when authenticating as a Service Principal using OpenID Connect.
@@ -34,6 +37,7 @@ Please avoid "me too" or "+1" comments. Instead, use a thumbs up reaction on enh
 - `oidc_token` (String, Sensitive) The ID token for use when authenticating as a Service Principal using OpenID Connect.
 - `oidc_token_file_path` (String) The path to a file containing an ID token for use when authenticating as a Service Principal using OpenID Connect.
 - `tenant_id` (String) The Tenant ID which should be used. Works with all authentication methods except Managed Identity
+- `use_aks_workload_identity` (Boolean) Allow Azure AKS Workload Identity to be used for Authentication.
 - `use_cli` (Boolean) Allow Azure CLI to be used for Authentication
 - `use_msi` (Boolean) Allow Managed Identity to be used for Authentication
 - `use_oidc` (Boolean) Allow OpenID Connect to be used for authentication

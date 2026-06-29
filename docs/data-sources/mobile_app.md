@@ -187,7 +187,7 @@ Read-Only:
 - `app_tracks` (Attributes Set) The tracks that are visible to this enterprise. This property is / Contains track information for Android Managed Store apps. Also see [Microsoft docs for androidManagedStoreAppTrack](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-androidmanagedstoreapptrack?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--android_managed_store--app_tracks))
 - `is_private` (Boolean) Indicates whether the app is only available to a given enterprise's users. This property is
 - `is_system_app` (Boolean) Indicates whether the app is a preinstalled system app. <br/>  
-_Provider_ Note: Settings this to `false` will most likely **make resource creation fail** as non-system apps cannot be created with a POST request.
+_Provider_ Note: Setting this to `false` will most likely **make resource creation fail** as non-system apps cannot be created with a POST request.
 - `package_id` (String) The package identifier. This property is
 - `supports_oem_config` (Boolean) Whether this app supports OEMConfig policy. This property is
 - `total_license_count` (Number) The total number of VPP licenses. This property is

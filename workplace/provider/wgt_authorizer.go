@@ -3,7 +3,7 @@
 
 // Lifted from https://github.com/hashicorp/go-azure-sdk/blob/f6aaaa9a/sdk/auth/azure_cli_authorizer.go
 
-package workplace
+package provider
 
 import (
 	"bytes"

@@ -513,7 +513,7 @@ Required:
 Optional:
 
 - `is_system_app` (Boolean) Indicates whether the app is a preinstalled system app. <br/> The _provider_ default value is `true`.  
-_Provider_ Note: Settings this to `false` will most likely **make resource creation fail** as non-system apps cannot be created with a POST request.
+_Provider_ Note: Setting this to `false` will most likely **make resource creation fail** as non-system apps cannot be created with a POST request.
 
 Read-Only:
 

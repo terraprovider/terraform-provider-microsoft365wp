@@ -382,7 +382,7 @@ Required:
 
 Read-Only:
 
-- `allowed_combinations` (Set of String) A collection of authentication method modes that are required be used to satify this authentication strength. <br/> _Provider_ allowed values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`.
+- `allowed_combinations` (Set of String) A collection of authentication method modes that are required be used to satify this authentication strength. / Defines the authentication method modes that can be used as part of an authentication method combination in an authentication strength. This flagged enumeration allows multiple members to be selected simultaneously. <br/> _Provider_ allowed values are: `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue`, `qrCodePin`.
 - `created_date_time` (String) The datetime when this policy was created.
 - `description` (String) The human-readable description of this policy.
 - `display_name` (String) The human-readable display name of this policy. <br/> Supports `$filter` (`eq`, `ne`, `not` , and `in`).

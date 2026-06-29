@@ -1,11 +1,13 @@
-// Copyright (c) HashiCorp, Inc.
+// Copyright IBM Corp. 2014, 2025
 // SPDX-License-Identifier: MPL-2.0
 
-package workplace
+// Code has mostly been lifted/copied from https://github.com/hashicorp/terraform-provider-azuread/blob/v3.7.0/internal/provider/provider.go
+// To make updates easier, I tried to leave its structure as is as much as possible. Therefore it looks far from pretty ;-)
+
+package provider
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -21,14 +23,11 @@ import (
 	"github.com/hashicorp/go-azure-sdk/sdk/auth"
 	"github.com/hashicorp/go-azure-sdk/sdk/claims"
 	"github.com/hashicorp/go-azure-sdk/sdk/environments"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/function"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -51,104 +50,127 @@ func (p *workplaceProvider) Metadata(_ context.Context, _ provider.MetadataReque
 }
 
 // Defines the provider-level schema for configuration data.
-// Lifted from https://github.com/hashicorp/terraform-provider-azuread/blob/v2.36.0/internal/provider/provider.go
 func (p *workplaceProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
+
+	// --- Lifted/copied from internal/provider/provider.go func AzureADProvider() ---
 
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"client_id": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_CLIENT_ID", ""),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_CLIENT_ID", ""),
 				Description: "The Client ID which should be used for service principal authentication",
+			},
+			"client_id_file_path": schema.StringAttribute{
+				Optional: true,
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_CLIENT_ID_FILE_PATH", ""),
+				Description: "The path to a file containing the Client ID which should be used for service principal authentication",
 			},
 			"tenant_id": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_TENANT_ID", ""),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_TENANT_ID", ""),
 				Description: "The Tenant ID which should be used. Works with all authentication methods except Managed Identity",
 			},
 			"environment": schema.StringAttribute{
-				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_ENVIRONMENT", "global"),
-				Description: "The cloud environment which should be used. Possible values are: `global` (also `public`), `usgovernmentl4` (also `usgovernment`), `usgovernmentl5` (also `dod`), and `china`. Defaults to `global`",
+				Optional: true, // required is _not_ needed here since the default will work fine
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_ENVIRONMENT", "global"),
+				Description: "The cloud environment which should be used. Possible values are: `global` (also `public`), `usgovernmentl4` (also `usgovernment`), `usgovernmentl5` (also `dod`), and `china`. Defaults to `global`. Not used and should not be specified when `metadata_host` is specified.",
 			},
 			"metadata_host": schema.StringAttribute{
-				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_METADATA_HOSTNAME", ""),
+				Optional: true, // required is _not_ needed here since the default will work fine
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_METADATA_HOSTNAME", ""),
 				Description: "The Hostname which should be used for the Azure Metadata Service.",
 			},
 
 			// Client Certificate specific fields
 			"client_certificate": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_CLIENT_CERTIFICATE", ""),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_CLIENT_CERTIFICATE", ""),
 				Description: "Base64 encoded PKCS#12 certificate bundle to use when authenticating as a Service Principal using a Client Certificate",
 				Sensitive:   true,
 			},
 			"client_certificate_password": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_CLIENT_CERTIFICATE_PASSWORD", ""),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_CLIENT_CERTIFICATE_PASSWORD", ""),
 				Description: "The password to decrypt the Client Certificate. For use when authenticating as a Service Principal using a Client Certificate",
 				Sensitive:   true,
 			},
 			"client_certificate_path": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_CLIENT_CERTIFICATE_PATH", ""),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_CLIENT_CERTIFICATE_PATH", ""),
 				Description: "The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service Principal using a Client Certificate",
 			},
 
 			// Client Secret specific fields
 			"client_secret": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_CLIENT_SECRET", ""),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_CLIENT_SECRET", ""),
 				Description: "The application password to use when authenticating as a Service Principal using a Client Secret",
 				Sensitive:   true,
+			},
+			"client_secret_file_path": schema.StringAttribute{
+				Optional: true,
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_CLIENT_SECRET_FILE_PATH", ""),
+				Description: "The path to a file containing the application password to use when authenticating as a Service Principal using a Client Secret",
 			},
 
 			// OIDC specific fields
 			"use_oidc": schema.BoolAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_USE_OIDC", false),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_USE_OIDC", false),
 				Description: "Allow OpenID Connect to be used for authentication",
 			},
 			"oidc_token": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_OIDC_TOKEN", ""),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_OIDC_TOKEN", ""),
 				Description: "The ID token for use when authenticating as a Service Principal using OpenID Connect.",
 				Sensitive:   true,
 			},
 			"oidc_token_file_path": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_OIDC_TOKEN_FILE_PATH", ""),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_OIDC_TOKEN_FILE_PATH", ""),
 				Description: "The path to a file containing an ID token for use when authenticating as a Service Principal using OpenID Connect.",
+			},
+			"ado_pipeline_service_connection_id": schema.StringAttribute{
+				Optional: true,
+				// DefaultFunc: schema.MultiEnvDefaultFunc([]string{"ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID", "ARM_OIDC_AZURE_SERVICE_CONNECTION_ID"}, nil),
+				Description: "The Azure DevOps Pipeline Service Connection ID.",
 			},
 			"oidc_request_token": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.MultiEnvDefaultFunc([]string{"ARM_OIDC_REQUEST_TOKEN", "ACTIONS_ID_TOKEN_REQUEST_TOKEN"}, ""),
+				// DefaultFunc: pluginsdk.MultiEnvDefaultFunc([]string{"ARM_OIDC_REQUEST_TOKEN", "ACTIONS_ID_TOKEN_REQUEST_TOKEN", "SYSTEM_ACCESSTOKEN"}, ""),
 				Description: "The bearer token for the request to the OIDC provider. For use when authenticating as a Service Principal using OpenID Connect.",
 				Sensitive:   true,
 			},
 			"oidc_request_url": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.MultiEnvDefaultFunc([]string{"ARM_OIDC_REQUEST_URL", "ACTIONS_ID_TOKEN_REQUEST_URL"}, ""),
+				// DefaultFunc: pluginsdk.MultiEnvDefaultFunc([]string{"ARM_OIDC_REQUEST_URL", "ACTIONS_ID_TOKEN_REQUEST_URL", "SYSTEM_OIDCREQUESTURI"}, ""),
 				Description: "The URL for the OIDC provider from which to request an ID token. For use when authenticating as a Service Principal using OpenID Connect.",
+			},
+
+			// Azure AKS Workload Identity fields
+			"use_aks_workload_identity": schema.BoolAttribute{
+				Optional: true,
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_USE_AKS_WORKLOAD_IDENTITY", false),
+				Description: "Allow Azure AKS Workload Identity to be used for Authentication.",
 			},
 
 			// CLI authentication specific fields
 			"use_cli": schema.BoolAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_USE_CLI", true),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_USE_CLI", true),
 				Description: "Allow Azure CLI to be used for Authentication",
 			},
 
 			// Managed Identity specific fields
 			"use_msi": schema.BoolAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_USE_MSI", false),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_USE_MSI", false),
 				Description: "Allow Managed Identity to be used for Authentication",
 			},
 			"msi_endpoint": schema.StringAttribute{
 				Optional: true,
-				// DefaultFunc: schema.EnvDefaultFunc("ARM_MSI_ENDPOINT", ""),
+				// DefaultFunc: pluginsdk.EnvDefaultFunc("ARM_MSI_ENDPOINT", ""),
 				Description: "The path to a custom endpoint for Managed Identity - in most circumstances this should be detected automatically",
 			},
 
@@ -162,8 +184,6 @@ func (p *workplaceProvider) Schema(_ context.Context, _ provider.SchemaRequest, 
 }
 
 // Prepares an API client for data sources and resources.
-// Lifted from https://github.com/hashicorp/terraform-provider-azuread/blob/v2.36.0/internal/provider/provider.go
-// To make updates easier, I tried to leave its structure as is as much as possible. Therefore it looks far from pretty ;-)
 func (p *workplaceProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
 
 	if !req.Config.Raw.IsFullyKnown() {
@@ -171,167 +191,125 @@ func (p *workplaceProvider) Configure(ctx context.Context, req provider.Configur
 		return
 	}
 
-	// --- Helper functions ---
-
-	dGet := func(attributeName string, envVarName string, defaultValue any) any {
-		var tfTarget attr.Value
-		resp.Diagnostics.Append(req.Config.GetAttribute(ctx, path.Root(attributeName), &tfTarget)...)
-		switch typedTfTarget := tfTarget.(type) {
-
-		case types.String:
-			var result string
-			if !typedTfTarget.IsNull() {
-				result = typedTfTarget.ValueString()
-			} else if envVarValue := os.Getenv(envVarName); envVarValue != "" {
-				result = envVarValue
-			} else {
-				result = defaultValue.(string)
-			}
-			return result
-
-		case types.Bool:
-			var result bool
-			if !typedTfTarget.IsNull() {
-				result = typedTfTarget.ValueBool()
-			} else if envVarValue := os.Getenv(envVarName); envVarValue != "" {
-				result = envVarValue == "1" || envVarValue == "true"
-			} else {
-				result = defaultValue.(bool)
-			}
-			return result
-
-		}
-
-		panic(fmt.Sprintf("Don't know how to deal with config attribute of type %T", tfTarget))
+	pch := providerConfigHelper{
+		ctx:    ctx,
+		diags:  &resp.Diagnostics,
+		config: &req.Config,
 	}
 
-	addError := func(err error) {
-		resp.Diagnostics.AddError(
-			"Error configuring microsoft365wp provider",
-			fmt.Sprintf("Error configuring the microsoft365wp provider.\n%s\n", err),
-		)
-	}
-
-	// --- Copied from member functions ---
-
-	decodeCertificate := func(clientCertificate string) ([]byte, error) {
-		var pfx []byte
-		if clientCertificate != "" {
-			out := make([]byte, base64.StdEncoding.DecodedLen(len(clientCertificate)))
-			n, err := base64.StdEncoding.Decode(out, []byte(clientCertificate))
-			if err != nil {
-				return pfx, fmt.Errorf("could not decode client certificate data: %v", err)
-			}
-			pfx = out[:n]
-		}
-		return pfx, nil
-	}
-
-	oidcToken := func() (string, error) {
-		idToken := dGet("oidc_token", "ARM_OIDC_TOKEN", "").(string)
-
-		if path := dGet("oidc_token_file_path", "ARM_OIDC_TOKEN_FILE_PATH", "").(string); path != "" {
-			fileToken, err := os.ReadFile(path)
-
-			if err != nil {
-				return "", fmt.Errorf("reading OIDC Token from file %q: %v", path, err)
-			}
-
-			if idToken != "" && idToken != string(fileToken) {
-				return "", fmt.Errorf("mismatch between supplied OIDC token and supplied OIDC token file contents - please either remove one or ensure they match")
-			}
-
-			idToken = string(fileToken)
-		}
-
-		return idToken, nil
-	}
-
-	// --- Copied from providerConfigure ---
+	// --- Lifted/copied from internal/provider/provider.go func providerConfigure(...) ---
 
 	var certData []byte
-	if encodedCert := dGet("client_certificate", "ARM_CLIENT_CERTIFICATE", "").(string); encodedCert != "" {
+	if encodedCert := dGet(&pch, "client_certificate", "ARM_CLIENT_CERTIFICATE", "").(string); encodedCert != "" {
 		var err error
 		certData, err = decodeCertificate(encodedCert)
 		if err != nil {
-			addError(err)
+			diagsAddError(&pch, err)
 			return
 		}
+	}
+
+	idToken, err := getOidcToken(&pch)
+	if err != nil {
+		diagsAddError(&pch, err)
+		return
+	}
+
+	clientSecret, err := getClientSecret(&pch)
+	if err != nil {
+		diagsAddError(&pch, err)
+		return
+	}
+
+	clientId, err := getClientId(&pch)
+	if err != nil {
+		diagsAddError(&pch, err)
+		return
+	}
+
+	tenantId, err := getTenantId(&pch)
+	if err != nil {
+		diagsAddError(&pch, err)
+		return
 	}
 
 	var (
 		env *environments.Environment
-		err error
 
-		envName      = dGet("environment", "ARM_ENVIRONMENT", "global").(string)
-		metadataHost = dGet("metadata_host", "ARM_METADATA_HOSTNAME", "").(string)
+		envName      = dGet(&pch, "environment", "ARM_ENVIRONMENT", "global").(string)
+		metadataHost = dGet(&pch, "metadata_host", "ARM_METADATA_HOSTNAME", "").(string)
 	)
 
 	if metadataHost != "" {
-		if env, err = environments.FromEndpoint(ctx, fmt.Sprintf("https://%s", metadataHost), envName); err != nil {
-			addError(err)
+		if env, err = environments.FromEndpoint(ctx, fmt.Sprintf("https://%s", metadataHost)); err != nil {
+			diagsAddError(&pch, err)
 			return
 		}
-	} else if env, err = environments.FromName(envName); err != nil {
-		addError(err)
-		return
+	} else {
+		if env, err = environments.FromName(envName); err != nil {
+			diagsAddError(&pch, err)
+			return
+		}
 	}
 
 	if env.MicrosoftGraph == nil {
-		addError(errors.New("Microsoft Graph was not configured for the specified environment")) //lint:ignore ST1005 Company name
+		diagsAddError(&pch, errors.New("Microsoft Graph was not configured for the specified environment")) //lint:ignore ST1005 Company name
 		return
 	} else if endpoint, ok := env.MicrosoftGraph.Endpoint(); !ok || *endpoint == "" {
-		addError(errors.New("Microsoft Graph endpoint could not be determined for the specified environment")) //lint:ignore ST1005 Company name
+		diagsAddError(&pch, errors.New("Microsoft Graph endpoint could not be determined for the specified environment")) //lint:ignore ST1005 Company name
 		return
 	}
 
-	idToken, err := oidcToken()
-	if err != nil {
-		addError(err)
-		return
-	}
+	var (
+		enableAzureCli        = dGet(&pch, "use_cli", "ARM_USE_CLI", true).(bool)
+		enableManagedIdentity = dGet(&pch, "use_msi", "ARM_USE_MSI", false).(bool)
+		enableOidc            = dGet(&pch, "use_oidc", "ARM_USE_OIDC", false).(bool) || dGet(&pch, "use_aks_workload_identity", "ARM_USE_AKS_WORKLOAD_IDENTITY", false).(bool)
+	)
 
-	authConfig := auth.Credentials{
-		Environment:                 *env,
-		TenantID:                    dGet("tenant_id", "ARM_TENANT_ID", "").(string),
-		ClientID:                    dGet("client_id", "ARM_CLIENT_ID", "").(string),
-		ClientCertificateData:       certData,
-		ClientCertificatePassword:   dGet("client_certificate_password", "ARM_CLIENT_CERTIFICATE_PASSWORD", "").(string),
-		ClientCertificatePath:       dGet("client_certificate_path", "ARM_CLIENT_CERTIFICATE_PATH", "").(string),
-		ClientSecret:                dGet("client_secret", "ARM_CLIENT_SECRET", "").(string),
-		OIDCAssertionToken:          idToken,
-		GitHubOIDCTokenRequestURL:   dGet("oidc_request_url", "ARM_OIDC_REQUEST_URL", os.Getenv("ACTIONS_ID_TOKEN_REQUEST_URL")).(string),
-		GitHubOIDCTokenRequestToken: dGet("oidc_request_token", "ARM_OIDC_REQUEST_TOKEN", os.Getenv("ACTIONS_ID_TOKEN_REQUEST_TOKEN")).(string),
+	authConfig := &auth.Credentials{
+		Environment:                    *env,
+		ClientID:                       *clientId,
+		TenantID:                       *tenantId,
+		ClientCertificateData:          certData,
+		ClientCertificatePassword:      dGet(&pch, "client_certificate_password", "ARM_CLIENT_CERTIFICATE_PASSWORD", "").(string),
+		ClientCertificatePath:          dGet(&pch, "client_certificate_path", "ARM_CLIENT_CERTIFICATE_PATH", "").(string),
+		ClientSecret:                   *clientSecret,
+		OIDCAssertionToken:             *idToken,
+		OIDCTokenRequestURL:            dGet(&pch, "oidc_request_url", "ARM_OIDC_REQUEST_URL", os.Getenv("ACTIONS_ID_TOKEN_REQUEST_URL")).(string),
+		OIDCTokenRequestToken:          dGet(&pch, "oidc_request_token", "ARM_OIDC_REQUEST_TOKEN", os.Getenv("ACTIONS_ID_TOKEN_REQUEST_TOKEN")).(string),
+		ADOPipelineServiceConnectionID: dGet(&pch, "ado_pipeline_service_connection_id", "ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID", os.Getenv("ARM_OIDC_AZURE_SERVICE_CONNECTION_ID")).(string),
+
+		CustomManagedIdentityEndpoint: dGet(&pch, "msi_endpoint", "ARM_MSI_ENDPOINT", "").(string),
+
+		EnableAuthenticatingUsingAzureCLI:          enableAzureCli,
 		EnableAuthenticatingUsingClientCertificate: true,
 		EnableAuthenticatingUsingClientSecret:      true,
-		EnableAuthenticationUsingOIDC:              dGet("use_oidc", "ARM_USE_OIDC", false).(bool),
-		EnableAuthenticationUsingGitHubOIDC:        dGet("use_oidc", "ARM_USE_OIDC", false).(bool),
-		EnableAuthenticatingUsingAzureCLI:          dGet("use_cli", "ARM_USE_CLI", true).(bool),
-		EnableAuthenticatingUsingManagedIdentity:   dGet("use_msi", "ARM_USE_MSI", false).(bool),
-		CustomManagedIdentityEndpoint:              dGet("msi_endpoint", "ARM_MSI_ENDPOINT", "").(string),
+		EnableAuthenticatingUsingManagedIdentity:   enableManagedIdentity,
+		EnableAuthenticationUsingGitHubOIDC:        enableOidc,
+		EnableAuthenticationUsingADOPipelineOIDC:   enableOidc,
+		EnableAuthenticationUsingOIDC:              enableOidc,
 	}
 
-	api := authConfig.Environment.MicrosoftGraph
-
 	var authorizer auth.Authorizer
-	if dGet("use_wgt", "ARM_USE_WGT", false).(bool) {
+	if dGet(&pch, "use_wgt", "ARM_USE_WGT", false).(bool) {
 		authorizer, err = NewWgtAuthorizer(ctx)
 		if err != nil {
-			resp.Diagnostics.AddError("Could not configure AzureCli Authorizer", err.Error())
+			resp.Diagnostics.AddError("Could not configure WGT Authorizer", err.Error())
+			return
 		}
 	} else {
-		// --- Copied from internal/clients/ClientBuilder ---
-		authorizer, err = auth.NewAuthorizerFromCredentials(ctx, authConfig, api)
+		// --- Lifted/copied from internal/clients/builder.go func (b *ClientBuilder) Build(...) ---
+		authorizer, err = auth.NewAuthorizerFromCredentials(ctx, *authConfig, authConfig.Environment.MicrosoftGraph)
 		if err != nil {
 			resp.Diagnostics.AddError("Unable to build authorizer", err.Error())
 			return
 		}
 	}
 
-	// --- Copied from internal/clients/Client ---
-	// The token will be cached and reused.
+	// --- Lifted/copied from internal/clients/client.go func (client *Client) build(...) ---
 
 	// Acquire an access token upfront, so we can decode the JWT and populate the claims
+	// The token will be cached and reused.
 	token, err := authorizer.Token(ctx, &http.Request{})
 	if err != nil {
 		resp.Diagnostics.AddError("Unable to obtain access token", err.Error())
@@ -347,14 +325,14 @@ func (p *workplaceProvider) Configure(ctx context.Context, req provider.Configur
 	// Log the claims for debugging
 	claimsJson, err := json.Marshal(claims)
 	if err != nil {
-		tflog.Warn(ctx, "Unable to marshal access token claims for log to JSON")
+		tflog.Warn(ctx, "Unable to marshal access token claims for log output to JSON")
 	} else if claimsJson == nil {
 		tflog.Warn(ctx, "Marshaled access token claims JSON was nil")
 	} else {
 		tflog.Debug(ctx, fmt.Sprintf("Provider access token claims: %s", claimsJson))
 	}
 
-	// --- End of copied code ---
+	// --- End of lifted/copied code ---
 
 	// Log HTTP requests and responses
 	requestLogger := func(req *http.Request) (*http.Request, error) {

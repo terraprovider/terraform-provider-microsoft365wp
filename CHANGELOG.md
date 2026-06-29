@@ -1,6 +1,15 @@
 # `microsoft365wp` Terraform Provider Changelog
 
 
+## 0.18.2 (2026-06-26)
+
+### changed (3 changes)
+
+- Update dependencies
+- Update MS Graph metadata & docs
+- Update hashicorp/go-azure-sdk & provider schema
+
+
 ## 0.18.1 (2026-05-22)
 
 ### fixed

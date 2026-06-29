@@ -104,7 +104,6 @@ output "microsoft365wp_intune_branding_profile_default" {
 - `privacy_url` (String) URL to the company/organization’s privacy policy
 - `profile_description` (String) Description of the profile <br/>
 - `role_scope_tag_ids` (Set of String) List of scope tags assigned to the branding profile <br/>
-- `send_device_ownership_change_push_notification` (Boolean) Boolean that indicates if a push notification is sent to users when their device ownership type changes from personal to corporate <br/>
 - `show_azure_ad_enterprise_apps` (Boolean) Boolean that indicates if AzureAD Enterprise Apps will be shown in Company Portal <br/>
 - `show_configuration_manager_apps` (Boolean) Boolean that indicates if Configuration Manager Apps will be shown in Company Portal <br/>
 - `show_display_name_next_to_logo` (Boolean) Boolean that represents whether the administrator-supplied display name will be shown next to the logo image or not <br/>
