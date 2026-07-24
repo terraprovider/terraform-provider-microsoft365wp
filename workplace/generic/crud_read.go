@@ -243,15 +243,20 @@ func ReadRaw2(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph
 
 	graphResp, status, odata, err := graphClient.Get(ctx, graphRequest)
 	if err != nil {
-		if status == http.StatusNotFound || (odata != nil && odata.Error != nil && *odata.Error.Code == "ResourceNotFound") {
+		// odataQuery may be nil (e.g. when called via the package-level ReadRaw), so do not dereference it directly.
+		odataFilter := ""
+		if odataQuery != nil {
+			odataFilter = odataQuery.Filter
+		}
+		if status == http.StatusNotFound || (odata != nil && odata.Error != nil && odata.Error.Code != nil && *odata.Error.Code == "ResourceNotFound") {
 			if tolerateNotFound {
-				tflog.Info(ctx, fmt.Sprintf("No entity found in MS Graph for query %q and OData filter %q", uri.Entity, odataQuery.Filter))
+				tflog.Info(ctx, fmt.Sprintf("No entity found in MS Graph for query %q and OData filter %q", uri.Entity, odataFilter))
 			} else {
-				diags.AddError(fmt.Sprintf("No entity found in MS Graph for query %q and OData filter %q", uri.Entity, odataQuery.Filter),
+				diags.AddError(fmt.Sprintf("No entity found in MS Graph for query %q and OData filter %q", uri.Entity, odataFilter),
 					fmt.Sprintf("MS Graph returned a resource not found error. Original Error: %s", err.Error()))
 			}
 		} else {
-			diags.AddError(fmt.Sprintf("Error reading from MS Graph for query %q and OData filter %q", uri.Entity, odataQuery.Filter),
+			diags.AddError(fmt.Sprintf("Error reading from MS Graph for query %q and OData filter %q", uri.Entity, odataFilter),
 				fmt.Sprintf("Original Error: %s", err.Error()))
 		}
 		return nil

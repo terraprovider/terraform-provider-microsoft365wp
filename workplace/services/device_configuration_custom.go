@@ -6,6 +6,8 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"os"
+	"strconv"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
@@ -18,8 +20,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
+
+// deviceConfigurationCustomSkipSecretDecryptionEnvVar can be set to a truthy value (e.g. "1" or "true") to make the
+// provider skip retrieving encrypted OMA setting values via the getOmaSettingPlainTextValue MS Graph action during
+// read. That action requires the DeviceManagementConfiguration.ReadWrite.All permission, so read-only setups cannot
+// use it. When decryption is skipped the value from the prior Terraform state is kept, i.e. changes to these values
+// are not detected ("assume no changes").
+const deviceConfigurationCustomSkipSecretDecryptionEnvVar = "TF_M365WP_SKIP_OMA_SETTING_SECRET_DECRYPTION"
 
 var (
 	DeviceConfigurationCustomResource = generic.GenericResource{
@@ -96,6 +107,14 @@ func deviceConfigurationCustomExtraRequestCustomReadSecretValue(ctx context.Cont
 		return
 	}
 
+	// When decryption is disabled we do not call getOmaSettingPlainTextValue (which requires write permissions).
+	// Instead we keep the value(s) from the prior state so that no permanent drift is reported.
+	skipDecryption := deviceConfigurationCustomSkipSecretDecryption()
+	var stateValuesByOmaUri map[string]string
+	if skipDecryption {
+		stateValuesByOmaUri = deviceConfigurationCustomOmaValuesFromState(params.ReqState)
+	}
+
 	for i, omaSettingRaw := range omaSettings {
 		omaSetting, ok := omaSettingRaw.(map[string]any)
 		if !ok {
@@ -107,28 +126,129 @@ func deviceConfigurationCustomExtraRequestCustomReadSecretValue(ctx context.Cont
 			diags.AddWarning(fmt.Sprintf("omaSettings[%d]: isEncrypted not found or not of type bool", i), warningDetail)
 			continue
 		}
-		if isEncrypted {
-			secretReferenceValueId, ok := omaSetting["secretReferenceValueId"].(string)
-			if !ok {
-				diags.AddWarning(fmt.Sprintf("omaSettings[%d]: secretReferenceValueId not found or not of type string", i), warningDetail)
+		if !isEncrypted {
+			continue
+		}
+
+		if skipDecryption {
+			// Keep the value from the prior state instead of decrypting it via MS Graph.
+			omaUri, _ := omaSetting["omaUri"].(string)
+			if stateValue, ok := stateValuesByOmaUri[omaUri]; ok {
+				omaSetting["value"] = stateValue
+			} else {
+				diags.AddWarning(
+					fmt.Sprintf("omaSettings[%d] (oma_uri %q): no prior state value available while %s is set", i, omaUri, deviceConfigurationCustomSkipSecretDecryptionEnvVar),
+					"The encrypted value cannot be retrieved with read-only permissions and was not present in the prior state "+
+						"(e.g. on import or first read). Its value will not be tracked until secret decryption is enabled again.")
+			}
+			continue
+		}
+
+		secretReferenceValueId, ok := omaSetting["secretReferenceValueId"].(string)
+		if !ok {
+			diags.AddWarning(fmt.Sprintf("omaSettings[%d]: secretReferenceValueId not found or not of type string", i), warningDetail)
+			continue
+		}
+
+		getSecretUri := fmt.Sprintf("%s/getOmaSettingPlainTextValue(secretReferenceValueId='%s')", params.Uri.Entity, secretReferenceValueId)
+		plainValueResponse := generic.ReadRaw(ctx, diags, params.Client, getSecretUri, params.TolerateNotFound)
+		if diags.HasError() {
+			return
+		}
+
+		plainValue, ok := plainValueResponse["value"].(string)
+		if !ok {
+			diags.AddWarning(fmt.Sprintf("omaSettings[%d] getOmaSettingPlainTextValue response: value not found or not of type string", i), warningDetail)
+			continue
+		}
+
+		omaSetting["value"] = plainValue
+	}
+}
+
+// deviceConfigurationCustomSkipSecretDecryption reports whether retrieval of encrypted OMA setting values should be
+// skipped, based on the deviceConfigurationCustomSkipSecretDecryptionEnvVar environment variable. Any value that
+// parses to a boolean is honored; any other non-empty value enables skipping.
+func deviceConfigurationCustomSkipSecretDecryption() bool {
+	raw := os.Getenv(deviceConfigurationCustomSkipSecretDecryptionEnvVar)
+	if raw == "" {
+		return false
+	}
+	if parsed, err := strconv.ParseBool(raw); err == nil {
+		return parsed
+	}
+	return true
+}
+
+// deviceConfigurationCustomOmaValuesFromState extracts the plain OMA setting values from the prior Terraform state,
+// keyed by their oma_uri. It is used to preserve encrypted values when secret decryption is skipped. It returns an
+// empty map when there is no usable prior state (e.g. for data sources or on import).
+func deviceConfigurationCustomOmaValuesFromState(reqState *tfsdk.State) map[string]string {
+	result := map[string]string{}
+	if reqState == nil {
+		return result
+	}
+
+	omaSettingsPath := tftypes.NewAttributePath().WithAttributeName("windows10").WithAttributeName("oma_settings")
+	omaSettingsRaw, _, err := tftypes.WalkAttributePath(reqState.Raw, omaSettingsPath)
+	if err != nil {
+		return result
+	}
+	omaSettingsVal, ok := omaSettingsRaw.(tftypes.Value)
+	if !ok || omaSettingsVal.IsNull() || !omaSettingsVal.IsKnown() {
+		return result
+	}
+	var omaSettingsSlice []tftypes.Value
+	if err := omaSettingsVal.As(&omaSettingsSlice); err != nil {
+		return result
+	}
+
+	// Encrypted values are only ever stored in the string, string_xml and base64 derived types.
+	valueAttrByDerivedType := map[string]string{
+		"base64":     "value_base64",
+		"string":     "value",
+		"string_xml": "value",
+	}
+
+	for _, omaSettingVal := range omaSettingsSlice {
+		if omaSettingVal.IsNull() || !omaSettingVal.IsKnown() {
+			continue
+		}
+		var omaSettingMap map[string]tftypes.Value
+		if err := omaSettingVal.As(&omaSettingMap); err != nil {
+			continue
+		}
+
+		var omaUri string
+		if uriVal, ok := omaSettingMap["oma_uri"]; ok && !uriVal.IsNull() && uriVal.IsKnown() {
+			_ = uriVal.As(&omaUri)
+		}
+		if omaUri == "" {
+			continue
+		}
+
+		for derivedType, valueAttr := range valueAttrByDerivedType {
+			derivedVal, ok := omaSettingMap[derivedType]
+			if !ok || derivedVal.IsNull() || !derivedVal.IsKnown() {
 				continue
 			}
-
-			getSecretUri := fmt.Sprintf("%s/getOmaSettingPlainTextValue(secretReferenceValueId='%s')", params.Uri.Entity, secretReferenceValueId)
-			plainValueResponse := generic.ReadRaw(ctx, diags, params.Client, getSecretUri, params.TolerateNotFound)
-			if diags.HasError() {
-				return
-			}
-
-			plainValue, ok := plainValueResponse["value"].(string)
-			if !ok {
-				diags.AddWarning(fmt.Sprintf("omaSettings[%d] getOmaSettingPlainTextValue response: value not found or not of type string", i), warningDetail)
+			var derivedMap map[string]tftypes.Value
+			if err := derivedVal.As(&derivedMap); err != nil {
 				continue
 			}
-
-			omaSetting["value"] = plainValue
+			valueVal, ok := derivedMap[valueAttr]
+			if !ok || valueVal.IsNull() || !valueVal.IsKnown() {
+				continue
+			}
+			var value string
+			if err := valueVal.As(&value); err != nil {
+				continue
+			}
+			result[omaUri] = value
 		}
 	}
+
+	return result
 }
 
 var deviceConfigurationCustomResourceSchema = schema.Schema{
@@ -388,7 +508,7 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 			},
 		},
 	},
-	MarkdownDescription: "Device Configuration. <br/> Also see [Microsoft docs for deviceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta).\n\n_Provider_ Note: When using values of type `base64`, `string` or `string_xml` the write permission `DeviceManagementConfiguration.ReadWrite.All` is required also for plan operations. This is due to the fact that values of these types are saved encrypted in MS Graph and need to be retrieved using the special MS Graph action `getOmaSettingPlainTextValue` (which requires write permissions) when reading. Also see https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-deviceconfiguration-getomasettingplaintextvalue ||| MS Graph: Device configuration",
+	MarkdownDescription: "Device Configuration. <br/> Also see [Microsoft docs for deviceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta).\n\n_Provider_ Note: When using values of type `base64`, `string` or `string_xml` the write permission `DeviceManagementConfiguration.ReadWrite.All` is required also for plan operations. This is due to the fact that values of these types are saved encrypted in MS Graph and need to be retrieved using the special MS Graph action `getOmaSettingPlainTextValue` (which requires write permissions) when reading. Also see https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-deviceconfiguration-getomasettingplaintextvalue If write permissions are not available, set the environment variable `TF_M365WP_SKIP_OMA_SETTING_SECRET_DECRYPTION` to a truthy value (e.g. `1` or `true`) to skip this decryption. The provider will then keep the encrypted value(s) from the prior state, i.e. changes to these values will no longer be detected (\"assume no changes\"). ||| MS Graph: Device configuration",
 }
 
 var deviceConfigurationCustomDeviceConfigurationValidator = objectvalidator.ExactlyOneOf(
