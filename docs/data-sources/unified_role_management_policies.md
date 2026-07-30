@@ -9,7 +9,7 @@ Specifies the various policies associated with scopes and roles. For policies th
 
 _Provider_ Note: MS Graph entities of type `unifiedRoleManagementPolicy` cannot be created (or deleted) but only existing ones
 can be updated. Therefore this resource will always update an existing entity (determined by the `id` attribute)
-and automatically import it into TF state upon creation.  
+and automatically import it into TF state upon creation.
 Also, entities will never be deleted from MS Graph but only get removed from TF state instead.
 
 ## Documentation Disclaimer

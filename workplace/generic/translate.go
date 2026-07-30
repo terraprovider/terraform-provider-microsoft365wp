@@ -7,6 +7,7 @@ import (
 
 	dsschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	rsschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
@@ -15,12 +16,14 @@ type ToFromGraphTranslator struct {
 	SchemaRoot               rsschema.NestedAttribute
 	IsDataSource             bool
 	IncludeNullObjectsInJson bool
+	priorState               *tfsdk.State
 }
 
-func NewToFromGraphTranslator(schema tftypes.AttributePathStepper, includeNullObjectsInJson bool) ToFromGraphTranslator {
+func NewToFromGraphTranslator(schema tftypes.AttributePathStepper, includeNullObjectsInJson bool, priorState *tfsdk.State) ToFromGraphTranslator {
 
 	result := ToFromGraphTranslator{
 		IncludeNullObjectsInJson: includeNullObjectsInJson,
+		priorState:               priorState,
 	}
 
 	// create dummy SingleNestedAttribute here to always return the same type
@@ -204,6 +207,30 @@ func (t *ToFromGraphTranslator) getAllValidatorsForPath(p *tftypes.AttributePath
 		for _, v := range attr.SetValidators() {
 			validators = append(validators, v)
 		}
+	case rsschema.ListAttribute:
+		for _, v := range attr.ListValidators() {
+			validators = append(validators, v)
+		}
+	case dsschema.ListAttribute:
+		for _, v := range attr.ListValidators() {
+			validators = append(validators, v)
+		}
+	case rsschema.ListNestedAttribute:
+		for _, v := range attr.ListValidators() {
+			validators = append(validators, v)
+		}
+	case dsschema.ListNestedAttribute:
+		for _, v := range attr.ListValidators() {
+			validators = append(validators, v)
+		}
+	case rsschema.SetNestedAttribute:
+		for _, v := range attr.SetValidators() {
+			validators = append(validators, v)
+		}
+	case dsschema.SetNestedAttribute:
+		for _, v := range attr.SetValidators() {
+			validators = append(validators, v)
+		}
 	}
 
 	return validators, nil
@@ -269,4 +296,23 @@ func (t *ToFromGraphTranslator) TerraformToGraphTranslateValue(p *tftypes.Attrib
 	}
 
 	return nil, false, nil
+}
+
+func (t *ToFromGraphTranslator) GraphToTerraformModifyValue(p *tftypes.AttributePath, graphValue any) (any, error) {
+
+	validators, err := t.getAllValidatorsForPath(p)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, v := range validators {
+		if v, ok := v.(wpvalidator.AttributeValueModifier); ok {
+			graphValue, err = v.ModifyGraphToTerraform(graphValue, t.priorState, p)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	return graphValue, nil
 }

@@ -6,10 +6,9 @@ import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -262,12 +261,12 @@ var connectedOrganizationResourceSchema = schema.Schema{
 	MarkdownDescription: "In [Microsoft Entra entitlement management](entitlementmanagement-overview.md), a connected organization is a reference to a directory or domain of another organization whose users can request access. <br/> Also see [Microsoft docs for connectedOrganization](https://learn.microsoft.com/en-us/graph/api/resources/connectedorganization?view=graph-rest-beta). ||| MS Graph: Entitlement management",
 }
 
-var connectedOrganizationIdentitySourceValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("azure_active_directory_tenant"),
-	path.MatchRelative().AtParent().AtName("cross_cloud_azure_active_directory_tenant"),
-	path.MatchRelative().AtParent().AtName("domain_identity_source"),
-	path.MatchRelative().AtParent().AtName("external_domain_federation"),
-	path.MatchRelative().AtParent().AtName("social_identity_source"),
+var connectedOrganizationIdentitySourceValidator = wpvalidator.ExactlyOneOfSiblings(
+	"azure_active_directory_tenant",
+	"cross_cloud_azure_active_directory_tenant",
+	"domain_identity_source",
+	"external_domain_federation",
+	"social_identity_source",
 )
 
 var connectedOrganizationDirectoryObjectAttributes = map[string]schema.Attribute{ // directoryObject

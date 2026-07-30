@@ -19,6 +19,7 @@ package wpdefaultvaluemodifier
 
 import (
 	"context"
+	"sync"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpschemautil"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -33,6 +34,14 @@ import (
 
 type defaultValueAttributePlanModifier struct{}
 
+type cachedDefaultValueAttributePlanModifier struct {
+	defaultValueAttributePlanModifier
+
+	initOnce          sync.Once
+	defaultValue      attr.Value
+	defaultValueDiags diag.Diagnostics
+}
+
 func (attributePlanModifier defaultValueAttributePlanModifier) Description(_ context.Context) string {
 	return "If the value of the attribute is missing, then the value is semantically the same as if the value was present with the default value hard-coded in the provider."
 }
@@ -41,13 +50,33 @@ func (attributePlanModifier defaultValueAttributePlanModifier) MarkdownDescripti
 	return attributePlanModifier.Description(ctx)
 }
 
+func getCachedDefaultValue[T attr.Value](ctx context.Context, diags *diag.Diagnostics, schema rsschema.Schema, path path.Path, defaultValueRaw any, attributePlanModifier *cachedDefaultValueAttributePlanModifier) T {
+	attributePlanModifier.initOnce.Do(func() {
+		attributePlanModifier.defaultValue = wpschemautil.GetFwTypedValueFromAny[T](ctx, &attributePlanModifier.defaultValueDiags, &schema, path, defaultValueRaw)
+	})
+
+	diags.Append(attributePlanModifier.defaultValueDiags...)
+
+	if attributePlanModifier.defaultValue == nil {
+		var zero T
+		return zero
+	}
+
+	defaultValue, ok := attributePlanModifier.defaultValue.(T)
+	if !ok {
+		panic("cached default value has unexpected type")
+	}
+
+	return defaultValue
+}
+
 //
 // defaultValuePlanModify
 //
 
-func defaultValuePlanModify[T attr.Value](ctx context.Context, diags *diag.Diagnostics, schema rsschema.Schema, path path.Path, configValue T, defaultValueRaw any, responsePlanValue *T) {
+func defaultValuePlanModify[T attr.Value](ctx context.Context, diags *diag.Diagnostics, schema rsschema.Schema, path path.Path, configValue T, defaultValueRaw any, cachedDefaultValue *cachedDefaultValueAttributePlanModifier, responsePlanValue *T) {
 
 	if configValue.IsNull() {
-		*responsePlanValue = wpschemautil.GetFwTypedValueFromAny[T](ctx, diags, &schema, path, defaultValueRaw)
+		*responsePlanValue = getCachedDefaultValue[T](ctx, diags, schema, path, defaultValueRaw, cachedDefaultValue)
 	}
 }

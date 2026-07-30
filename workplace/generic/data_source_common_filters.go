@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	dsschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -76,11 +76,7 @@ func dsPrepareFilterAttributes(accessParams *AccessParams, attributes map[string
 
 	// Create AtLeastOneOf validator (if applicable) for singular data sources to ensure that any criteria has been specified
 	if isSingular && len(atLeastOneOfAttributes) > 0 {
-		validatorPaths := []path.Expression{}
-		for _, name := range atLeastOneOfAttributes {
-			validatorPaths = append(validatorPaths, path.MatchRoot(name))
-		}
-		*dsConfigValidators = append(*dsConfigValidators, datasourcevalidator.AtLeastOneOf(validatorPaths...))
+		*dsConfigValidators = append(*dsConfigValidators, wpvalidator.DataSourceAtLeastOneOfRootAttributes(atLeastOneOfAttributes...))
 	}
 
 	// Now loop through filter attributes and adjust all required details

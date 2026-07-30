@@ -8,8 +8,8 @@ import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -673,11 +673,11 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 	MarkdownDescription: "Entity that represents an intent to apply settings to a device <br/> Also see [Microsoft docs for deviceManagementIntent](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintent?view=graph-rest-beta). ||| MS Graph: Device management",
 }
 
-var deviceManagementIntentDeviceManagementSettingInstanceValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("abstract_complex"),
-	path.MatchRelative().AtParent().AtName("boolean"),
-	path.MatchRelative().AtParent().AtName("collection"),
-	path.MatchRelative().AtParent().AtName("complex"),
-	path.MatchRelative().AtParent().AtName("integer"),
-	path.MatchRelative().AtParent().AtName("string"),
+var deviceManagementIntentDeviceManagementSettingInstanceValidator = wpvalidator.ExactlyOneOfSiblings(
+	"abstract_complex",
+	"boolean",
+	"collection",
+	"complex",
+	"integer",
+	"string",
 )

@@ -30,6 +30,7 @@ type AccessParams struct {
 	GraphToTerraformMiddlewareTargetSetRunOnRawVal bool
 	TerraformToGraphMiddleware                     TerraformToGraphMiddlewareFunc
 
+
 	CreateModifyFunc func(context.Context, *diag.Diagnostics, *CreateModifyFuncParams) // pass pointer to allow modifications
 	UpdateModifyFunc func(context.Context, *diag.Diagnostics, *UpdateModifyFuncParams)
 	DeleteModifyFunc func(context.Context, *diag.Diagnostics, *DeleteModifyFuncParams)

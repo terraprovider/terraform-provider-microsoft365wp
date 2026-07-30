@@ -8,9 +8,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -376,6 +374,6 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 	MarkdownDescription: "Represents a Cloud PC provisioning policy. <br/> Also see [Microsoft docs for cloudPcProvisioningPolicy](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicy?view=graph-rest-beta). ||| MS Graph: Cloud PC",
 }
 
-var cloudPcProvisioningPolicyCloudPcManagementAssignmentTargetValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("group"),
+var cloudPcProvisioningPolicyCloudPcManagementAssignmentTargetValidator = wpvalidator.ExactlyOneOfSiblings(
+	"group",
 )

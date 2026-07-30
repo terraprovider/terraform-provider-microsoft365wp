@@ -8,7 +8,6 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -115,7 +114,7 @@ var authenticationCombinationConfigurationResourceSchema = schema.Schema{
 	MarkdownDescription: "Sets restrictions on specific types, modes, or versions of an authentication method that is tied to specific auth method combinations used in an [authentication strength](authenticationstrengths-overview.md). The following resources inherit from this abstract and define the various types of combination configurations: <br/> Also see [Microsoft docs for authenticationCombinationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/authenticationcombinationconfiguration?view=graph-rest-beta).\n\n_Provider_ Note: To import this resource, an ID consisting of `authentication_strength_policy_id` and `id` being joined by a forward slash (`/`) must be used. ||| MS Graph: Authentication",
 }
 
-var authenticationCombinationConfigurationAuthenticationCombinationConfigurationValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("fido2"),
-	path.MatchRelative().AtParent().AtName("x509_certificate"),
+var authenticationCombinationConfigurationAuthenticationCombinationConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(
+	"fido2",
+	"x509_certificate",
 )

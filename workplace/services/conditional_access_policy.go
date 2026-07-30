@@ -8,11 +8,8 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
-	"github.com/hashicorp/terraform-plugin-framework-validators/resourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -39,9 +36,9 @@ var (
 )
 
 var conditionalAccessPolicyResourceSchemaValidators = []resource.ConfigValidator{
-	resourcevalidator.AtLeastOneOf(
-		path.MatchRoot("grant_controls"),
-		path.MatchRoot("session_controls"),
+	wpvalidator.ResourceAtLeastOneOfRootAttributes(
+		"grant_controls",
+		"session_controls",
 	),
 }
 
@@ -785,7 +782,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 	MarkdownDescription: "Represents a Microsoft Entra Conditional Access policy. Conditional access policies are custom rules that define an access scenario. For more information, see the [Conditional access documentation](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/). <br/> Also see [Microsoft docs for conditionalAccessPolicy](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta). ||| MS Graph: Conditional access",
 }
 
-var conditionalAccessPolicyConditionalAccessExternalTenantsValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("all"),
-	path.MatchRelative().AtParent().AtName("enumerated"),
+var conditionalAccessPolicyConditionalAccessExternalTenantsValidator = wpvalidator.ExactlyOneOfSiblings(
+	"all",
+	"enumerated",
 )

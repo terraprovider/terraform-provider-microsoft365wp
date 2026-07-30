@@ -6,10 +6,9 @@ import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -203,10 +202,10 @@ var deviceRegistrationPolicyDeviceRegistrationMembershipAttributes = map[string]
 	},
 }
 
-var deviceRegistrationPolicyDeviceRegistrationMembershipValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("all"),
-	path.MatchRelative().AtParent().AtName("enumerated"),
-	path.MatchRelative().AtParent().AtName("no"),
+var deviceRegistrationPolicyDeviceRegistrationMembershipValidator = wpvalidator.ExactlyOneOfSiblings(
+	"all",
+	"enumerated",
+	"no",
 )
 
 var deviceRegistrationPolicyAll = wpdefaultvaluemodifier.ObjectDefaultValue(map[string]any{"all": map[string]any{}})

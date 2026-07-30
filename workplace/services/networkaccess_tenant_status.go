@@ -47,7 +47,6 @@ func networkaccessTenantStatusGraphToTerraformMiddleware(ctx context.Context, di
 
 	return msgraphutils.SingletonSyntheticIdGraphToTerraformMiddleware(ctx, diags, params)
 }
-
 func networkaccessTenantStatusUpdateReplaceFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.UpdateReplaceFuncParams) {
 	errorSummary := "Error updating resource"
 

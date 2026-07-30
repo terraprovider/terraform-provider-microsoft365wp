@@ -11,6 +11,12 @@ terraform {
 export ARM_TENANT_ID='...'
 export ARM_CLIENT_ID='...'
 export ARM_CLIENT_SECRET='...'
+
+# oma_settings of type base64, string and string_xml are stored encrypted in MS Graph. Reading them back requires the
+# write permission DeviceManagementConfiguration.ReadWrite.All (also for plan/refresh). If only read-only permissions
+# are available, set the following variable to a truthy value to skip decryption and keep the value from the prior
+# Terraform state instead (external changes to these values will then no longer be detected):
+export TF_M365WP_SKIP_OMA_SETTING_SECRET_DECRYPTION='1'
 */
 
 

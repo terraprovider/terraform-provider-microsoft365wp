@@ -10,11 +10,9 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
@@ -1902,7 +1900,6 @@ var mobileAppResourceSchema = schema.Schema{
 												MarkdownDescription: "The file or folder path to look up.",
 											},
 										},
-										Validators:          []validator.Object{mobileAppWin32LobAppRuleValidator},
 										MarkdownDescription: "A complex type to store file or folder rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppFileSystemRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappfilesystemrule?view=graph-rest-beta). <br> ",
 									},
 								},
@@ -1952,7 +1949,6 @@ var mobileAppResourceSchema = schema.Schema{
 												MarkdownDescription: "The base64-encoded script content.",
 											},
 										},
-										Validators:          []validator.Object{mobileAppWin32LobAppRuleValidator},
 										MarkdownDescription: "A complex type to store the PowerShell script rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppPowerShellScriptRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapppowershellscriptrule?view=graph-rest-beta). <br> ",
 									},
 								},
@@ -1977,7 +1973,6 @@ var mobileAppResourceSchema = schema.Schema{
 												MarkdownDescription: "The product version comparison operator. / Contains properties for detection operator. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `equal` (Equal operator.), `notEqual` (Not equal operator.), `greaterThan` (Greater than operator.), `greaterThanOrEqual` (Greater than or equal operator.), `lessThan` (Less than operator.), `lessThanOrEqual` (Less than or equal operator.).",
 											},
 										},
-										Validators:          []validator.Object{mobileAppWin32LobAppRuleValidator},
 										MarkdownDescription: "A complex type to store the product code and version rule data for a Win32 LOB app. This rule is not supported as a requirement rule. Also see [Microsoft docs for win32LobAppProductCodeRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappproductcoderule?view=graph-rest-beta). <br> ",
 									},
 								},
@@ -2018,7 +2013,6 @@ var mobileAppResourceSchema = schema.Schema{
 												MarkdownDescription: "The name of the registry value to detect.",
 											},
 										},
-										Validators:          []validator.Object{mobileAppWin32LobAppRuleValidator},
 										MarkdownDescription: "A complex type to store registry rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppRegistryRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappregistryrule?view=graph-rest-beta). <br> ",
 									},
 								},
@@ -2442,7 +2436,6 @@ var mobileAppResourceSchema = schema.Schema{
 												MarkdownDescription: "The app user model ID of the contained app of a MicrosoftStoreForBusinessApp.",
 											},
 										},
-										Validators:          []validator.Object{mobileAppMobileContainedAppValidator},
 										MarkdownDescription: "A class that represents a contained app of a MicrosoftStoreForBusinessApp. Also see [Microsoft docs for microsoftStoreForBusinessContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-microsoftstoreforbusinesscontainedapp?view=graph-rest-beta). <br> ",
 									},
 								},
@@ -2456,7 +2449,6 @@ var mobileAppResourceSchema = schema.Schema{
 												MarkdownDescription: "The app user model ID of the contained app of a WindowsUniversalAppX app.",
 											},
 										},
-										Validators:          []validator.Object{mobileAppMobileContainedAppValidator},
 										MarkdownDescription: "A class that represents a contained app of a WindowsUniversalAppX app. Also see [Microsoft docs for windowsUniversalAppXContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsuniversalappxcontainedapp?view=graph-rest-beta). <br> ",
 									},
 								},
@@ -2538,36 +2530,36 @@ var mobileAppResourceSchema = schema.Schema{
 	MarkdownDescription: "An abstract class containing the base properties for Intune mobile apps. <br/> Also see [Microsoft docs for mobileApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileapp?view=graph-rest-beta).\n\n_Provider_ Note: There have been reports about OpenTofu crashing (with a panic) when trying to generate configuration using `-generate-config-out=...`. Unfortunately this happens inside the code of OpenTofu itself and is not easily diagnoseable from outside or changeable from the provider. A workaround might be to instead use Terraform for generating the config (as it seems to work well for it) - the result should be fully compatible and usable also with OpenTofu. ||| MS Graph: App management",
 }
 
-var mobileAppMobileAppValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("android_for_work"),
-	path.MatchRelative().AtParent().AtName("android_lob"),
-	path.MatchRelative().AtParent().AtName("android_managed_store"),
-	path.MatchRelative().AtParent().AtName("android_store"),
-	path.MatchRelative().AtParent().AtName("ios_lob"),
-	path.MatchRelative().AtParent().AtName("ios_store"),
-	path.MatchRelative().AtParent().AtName("ios_vpp"),
-	path.MatchRelative().AtParent().AtName("ios_webclip"),
-	path.MatchRelative().AtParent().AtName("macos_dmg"),
-	path.MatchRelative().AtParent().AtName("macos_lob"),
-	path.MatchRelative().AtParent().AtName("macos_ms_defender"),
-	path.MatchRelative().AtParent().AtName("macos_ms_edge"),
-	path.MatchRelative().AtParent().AtName("macos_office_suite"),
-	path.MatchRelative().AtParent().AtName("macos_pkg"),
-	path.MatchRelative().AtParent().AtName("macos_vpp"),
-	path.MatchRelative().AtParent().AtName("macos_webclip"),
-	path.MatchRelative().AtParent().AtName("managed_android_lob"),
-	path.MatchRelative().AtParent().AtName("managed_android_store"),
-	path.MatchRelative().AtParent().AtName("managed_ios_lob"),
-	path.MatchRelative().AtParent().AtName("managed_ios_store"),
-	path.MatchRelative().AtParent().AtName("web_link"),
-	path.MatchRelative().AtParent().AtName("win32_lob"),
-	path.MatchRelative().AtParent().AtName("windows_ms_edge"),
-	path.MatchRelative().AtParent().AtName("windows_msi"),
-	path.MatchRelative().AtParent().AtName("windows_office_suite"),
-	path.MatchRelative().AtParent().AtName("windows_store"),
-	path.MatchRelative().AtParent().AtName("windows_universal_appx"),
-	path.MatchRelative().AtParent().AtName("windows_web_link"),
-	path.MatchRelative().AtParent().AtName("winget"),
+var mobileAppMobileAppValidator = wpvalidator.ExactlyOneOfSiblings(
+	"android_for_work",
+	"android_lob",
+	"android_managed_store",
+	"android_store",
+	"ios_lob",
+	"ios_store",
+	"ios_vpp",
+	"ios_webclip",
+	"macos_dmg",
+	"macos_lob",
+	"macos_ms_defender",
+	"macos_ms_edge",
+	"macos_office_suite",
+	"macos_pkg",
+	"macos_vpp",
+	"macos_webclip",
+	"managed_android_lob",
+	"managed_android_store",
+	"managed_ios_lob",
+	"managed_ios_store",
+	"web_link",
+	"win32_lob",
+	"windows_ms_edge",
+	"windows_msi",
+	"windows_office_suite",
+	"windows_store",
+	"windows_universal_appx",
+	"windows_web_link",
+	"winget",
 )
 
 var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mobileAppAssignment
@@ -2917,16 +2909,16 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 	"target": deviceAndAppManagementAssignmentTarget,
 }
 
-var mobileAppMobileAppAssignmentSettingsValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("android_managed_store"),
-	path.MatchRelative().AtParent().AtName("ios_lob"),
-	path.MatchRelative().AtParent().AtName("ios_store"),
-	path.MatchRelative().AtParent().AtName("ios_vpp"),
-	path.MatchRelative().AtParent().AtName("macos_lob"),
-	path.MatchRelative().AtParent().AtName("macos_vpp"),
-	path.MatchRelative().AtParent().AtName("win32_lob"),
-	path.MatchRelative().AtParent().AtName("windows_universal_appx"),
-	path.MatchRelative().AtParent().AtName("winget"),
+var mobileAppMobileAppAssignmentSettingsValidator = wpvalidator.ExactlyOneOfSiblings(
+	"android_managed_store",
+	"ios_lob",
+	"ios_store",
+	"ios_vpp",
+	"macos_lob",
+	"macos_vpp",
+	"win32_lob",
+	"windows_universal_appx",
+	"winget",
 )
 
 var mobileAppAndroidMinimumOperatingSystemAttributes = map[string]schema.Attribute{ // androidMinimumOperatingSystem
@@ -3322,24 +3314,24 @@ var mobileAppMacOSMinimumOperatingSystemAttributes = map[string]schema.Attribute
 	},
 }
 
-var mobileAppWin32LobAppDetectionValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("filesystem"),
-	path.MatchRelative().AtParent().AtName("powershell_script"),
-	path.MatchRelative().AtParent().AtName("product_code"),
-	path.MatchRelative().AtParent().AtName("registry"),
+var mobileAppWin32LobAppDetectionValidator = wpvalidator.ExactlyOneOfSiblings(
+	"filesystem",
+	"powershell_script",
+	"product_code",
+	"registry",
 )
 
-var mobileAppWin32LobAppRequirementValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("filesystem"),
-	path.MatchRelative().AtParent().AtName("powershell_script"),
-	path.MatchRelative().AtParent().AtName("registry"),
+var mobileAppWin32LobAppRequirementValidator = wpvalidator.ExactlyOneOfSiblings(
+	"filesystem",
+	"powershell_script",
+	"registry",
 )
 
-var mobileAppWin32LobAppRuleValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("filesystem"),
-	path.MatchRelative().AtParent().AtName("powershell_script"),
-	path.MatchRelative().AtParent().AtName("product_code"),
-	path.MatchRelative().AtParent().AtName("registry"),
+var mobileAppWin32LobAppRuleValidator = wpvalidator.ExactlyOneOfSiblings(
+	"filesystem",
+	"powershell_script",
+	"product_code",
+	"registry",
 )
 
 var mobileAppWindowsMinimumOperatingSystemAttributes = map[string]schema.Attribute{ // windowsMinimumOperatingSystem
@@ -3436,9 +3428,9 @@ var mobileAppWindowsMinimumOperatingSystemAttributes = map[string]schema.Attribu
 	},
 }
 
-var mobileAppMobileContainedAppValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("microsoft_store_for_business"),
-	path.MatchRelative().AtParent().AtName("windows_universal_app_x"),
+var mobileAppMobileContainedAppValidator = wpvalidator.ExactlyOneOfSiblings(
+	"microsoft_store_for_business",
+	"windows_universal_app_x",
 )
 
 var mobileAppWin32LobAppReturnCodesDefault = wpdefaultvaluemodifier.SetDefaultValue([]any{

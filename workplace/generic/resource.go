@@ -22,6 +22,7 @@ var (
 	_ resource.ResourceWithConfigure        = &GenericResource{}
 	_ resource.ResourceWithConfigValidators = &GenericResource{}
 	_ resource.ResourceWithImportState      = &GenericResource{}
+	_ resource.ResourceWithUpgradeState     = &GenericResource{}
 )
 
 // Resource implementation.
@@ -30,6 +31,8 @@ type GenericResource struct {
 	SpecificSchema           schema.Schema
 	SpecificConfigValidators []resource.ConfigValidator
 	AccessParams             AccessParams
+	SchemaVersion            int64
+	StateUpgraders           map[int64]resource.StateUpgrader
 
 	initSchemaOnce sync.Once
 
@@ -46,7 +49,16 @@ func (r *GenericResource) Schema(ctx context.Context, _ resource.SchemaRequest, 
 	r.initSchemaOnce.Do(func() {
 		wpdefaultvalue.Init(ctx, &resp.Diagnostics, &r.SpecificSchema)
 	})
+	r.SpecificSchema.Version = r.SchemaVersion
 	resp.Schema = r.SpecificSchema
+}
+
+// UpgradeState returns state upgraders for migrating from prior schema versions.
+func (r *GenericResource) UpgradeState(_ context.Context) map[int64]resource.StateUpgrader {
+	if r.StateUpgraders == nil {
+		return map[int64]resource.StateUpgrader{}
+	}
+	return r.StateUpgraders
 }
 
 // Adds the provider configured MSGraph client to the resource.
@@ -409,7 +421,7 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 	populateSource := tftypes.Value{}
 	if createUpdateResultRaw != nil {
 		populateSource = ConvertOdataRawToTerraform(ctx, &diagsPopulateUnknowns, requestPlan.Schema, createUpdateResultRaw, "",
-			r.AccessParams.GraphToTerraformMiddleware, id, r.AccessParams.GraphToTerraformMiddlewareTargetSetRunOnRawVal)
+			r.AccessParams.GraphToTerraformMiddleware, id, r.AccessParams.GraphToTerraformMiddlewareTargetSetRunOnRawVal, requestState)
 		if diagsPopulateUnknowns.HasError() {
 			diags.Append(diagsPopulateUnknowns...)
 			return

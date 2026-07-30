@@ -163,7 +163,7 @@ func (d *GenericDataSourcePlural) Read(ctx context.Context, req datasource.ReadR
 	}
 
 	val := ConvertOdataRawToTerraform(ctx, &resp.Diagnostics, req.Config.Schema.(dsschema.Schema), rawVal, d.ResultAttributeName,
-		d.AccessParams.GraphToTerraformMiddleware, "", d.AccessParams.GraphToTerraformMiddlewareTargetSetRunOnRawVal)
+		d.AccessParams.GraphToTerraformMiddleware, "", d.AccessParams.GraphToTerraformMiddlewareTargetSetRunOnRawVal, nil)
 	if resp.Diagnostics.HasError() {
 		return
 	}

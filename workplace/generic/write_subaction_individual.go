@@ -155,7 +155,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 		diags.AddError(ErrorSummary, fmt.Sprintf("Unable to retrieve plan sub-schema: setPlanSchemaRaw is not schema.SetNestedAttribute but %T", setPlanSchemaRaw))
 		return
 	}
-	elementTranslator := NewToFromGraphTranslator(setPlanSchema, false)
+	elementTranslator := NewToFromGraphTranslator(setPlanSchema, false, nil)
 
 	// We do not check for errors after Graph operations but continue to try to finish other tasks as much as possible.
 	// Our caller will check for errors and exit later.

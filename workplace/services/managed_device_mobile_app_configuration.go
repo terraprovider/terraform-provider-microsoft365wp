@@ -8,9 +8,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -205,7 +203,7 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 	MarkdownDescription: "An abstract class for Mobile app configuration for enrolled devices. <br/> Also see [Microsoft docs for managedDeviceMobileAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-manageddevicemobileappconfiguration?view=graph-rest-beta). ||| MS Graph: App management",
 }
 
-var managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("android_managed_store"),
-	path.MatchRelative().AtParent().AtName("ios"),
+var managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(
+	"android_managed_store",
+	"ios",
 )

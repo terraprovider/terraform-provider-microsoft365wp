@@ -11,12 +11,11 @@ import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -508,19 +507,19 @@ var deviceConfigurationCustomResourceSchema = schema.Schema{
 			},
 		},
 	},
-	MarkdownDescription: "Device Configuration. <br/> Also see [Microsoft docs for deviceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta).\n\n_Provider_ Note: When using values of type `base64`, `string` or `string_xml` the write permission `DeviceManagementConfiguration.ReadWrite.All` is required also for plan operations. This is due to the fact that values of these types are saved encrypted in MS Graph and need to be retrieved using the special MS Graph action `getOmaSettingPlainTextValue` (which requires write permissions) when reading. Also see https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-deviceconfiguration-getomasettingplaintextvalue If write permissions are not available, set the environment variable `TF_M365WP_SKIP_OMA_SETTING_SECRET_DECRYPTION` to a truthy value (e.g. `1` or `true`) to skip this decryption. The provider will then keep the encrypted value(s) from the prior state, i.e. changes to these values will no longer be detected (\"assume no changes\"). ||| MS Graph: Device configuration",
+	MarkdownDescription: "Device Configuration. <br/> Also see [Microsoft docs for deviceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta).\n\n_Provider_ Note: When using values of type `base64`, `string` or `string_xml` the write permission `DeviceManagementConfiguration.ReadWrite.All` is required also for plan operations. This is due to the fact that values of these types are saved encrypted in MS Graph and need to be retrieved using the special MS Graph action `getOmaSettingPlainTextValue` (which requires write permissions) when reading (also see https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-deviceconfiguration-getomasettingplaintextvalue). If these write permissions are not available, the environment variable `TF_M365WP_SKIP_OMA_SETTING_SECRET_DECRYPTION` can be set to a truthy value (e.g. `1` or `true`) to skip the decryption entirely. The provider will then keep the previously stored value of each encrypted OMA setting from the Terraform state instead of reading it back, which means that external changes to these values will no longer be detected (\"assume no changes\"). On the first read or on import, where no prior state value exists, the value cannot be populated and a warning is emitted instead. ||| MS Graph: Device configuration",
 }
 
-var deviceConfigurationCustomDeviceConfigurationValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("windows10"),
+var deviceConfigurationCustomDeviceConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(
+	"windows10",
 )
 
-var deviceConfigurationCustomOmaSettingValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("base64"),
-	path.MatchRelative().AtParent().AtName("boolean"),
-	path.MatchRelative().AtParent().AtName("date_time"),
-	path.MatchRelative().AtParent().AtName("floating_point"),
-	path.MatchRelative().AtParent().AtName("integer"),
-	path.MatchRelative().AtParent().AtName("string"),
-	path.MatchRelative().AtParent().AtName("string_xml"),
+var deviceConfigurationCustomOmaSettingValidator = wpvalidator.ExactlyOneOfSiblings(
+	"base64",
+	"boolean",
+	"date_time",
+	"floating_point",
+	"integer",
+	"string",
+	"string_xml",
 )

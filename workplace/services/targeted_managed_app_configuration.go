@@ -8,7 +8,6 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -226,9 +225,9 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 	MarkdownDescription: "Configuration used to deliver a set of custom settings as-is to all users in the targeted security group <br/> Also see [Microsoft docs for targetedManagedAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-targetedmanagedappconfiguration?view=graph-rest-beta). ||| MS Graph: App management",
 }
 
-var targetedManagedAppConfigurationMobileAppIdentifierValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("android"),
-	path.MatchRelative().AtParent().AtName("ios"),
-	path.MatchRelative().AtParent().AtName("mac"),
-	path.MatchRelative().AtParent().AtName("windows"),
+var targetedManagedAppConfigurationMobileAppIdentifierValidator = wpvalidator.ExactlyOneOfSiblings(
+	"android",
+	"ios",
+	"mac",
+	"windows",
 )

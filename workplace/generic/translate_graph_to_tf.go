@@ -44,6 +44,11 @@ func (t *ToFromGraphTranslator) TerraformFromJsonString(ctx context.Context, res
 
 func (t *ToFromGraphTranslator) terraformValueFromRaw(ctx context.Context, path *tftypes.AttributePath, v any) (tftypes.Value, error) {
 
+	v, err := t.GraphToTerraformModifyValue(path, v)
+	if err != nil {
+		return tftypes.Value{}, fmt.Errorf("modifying graph values before plan: %w", err)
+	}
+
 	// first check if we have any translated value for this attribute - if so, we're finished already
 	tfValue, ok, err := t.GraphToTerraformTranslateValue(path, v)
 	if err != nil || ok {

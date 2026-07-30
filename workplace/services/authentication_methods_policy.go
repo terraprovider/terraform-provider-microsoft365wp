@@ -9,10 +9,8 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -975,18 +973,18 @@ var authenticationMethodsPolicyIncludeTargetAttributes = map[string]schema.Attri
 	},
 }
 
-var authenticationMethodsPolicyAuthenticationMethodConfigurationValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("email"),
-	path.MatchRelative().AtParent().AtName("fido2"),
-	path.MatchRelative().AtParent().AtName("hardware_oath"),
-	path.MatchRelative().AtParent().AtName("microsoft_authenticator"),
-	path.MatchRelative().AtParent().AtName("qr_code_pin"),
-	path.MatchRelative().AtParent().AtName("sms"),
-	path.MatchRelative().AtParent().AtName("software_oath"),
-	path.MatchRelative().AtParent().AtName("temporary_access_pass"),
-	path.MatchRelative().AtParent().AtName("verifiable_credentials"),
-	path.MatchRelative().AtParent().AtName("voice"),
-	path.MatchRelative().AtParent().AtName("x509_certificate"),
+var authenticationMethodsPolicyAuthenticationMethodConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(
+	"email",
+	"fido2",
+	"hardware_oath",
+	"microsoft_authenticator",
+	"qr_code_pin",
+	"sms",
+	"software_oath",
+	"temporary_access_pass",
+	"verifiable_credentials",
+	"voice",
+	"x509_certificate",
 )
 
 var authenticationMethodsPolicyAuthenticationMethodTargetAttributes = map[string]schema.Attribute{ // authenticationMethodTarget

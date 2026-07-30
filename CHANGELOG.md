@@ -1,5 +1,16 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.18.4 (2026-07-30)
+
+### fixed
+
+- [unified_role_management_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/unified_role_management_policy): Improve performance
+
+## 0.18.3 (2026-07-24)
+
+### fixed (1 change)
+
+- Crash when planning Intune OMA-URI policies with read-only permissions
 
 ## 0.18.2 (2026-06-26)
 

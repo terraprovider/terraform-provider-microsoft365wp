@@ -112,7 +112,8 @@ func (aps *AccessParams) ReadSingleCompleteTf3(ctx context.Context, diags *diag.
 		}
 	}
 
-	tfVal := ConvertOdataRawToTerraform(ctx, diags, schema, rawVal, "", aps.GraphToTerraformMiddleware, id, aps.GraphToTerraformMiddlewareTargetSetRunOnRawVal)
+
+	tfVal := ConvertOdataRawToTerraform(ctx, diags, schema, rawVal, "", aps.GraphToTerraformMiddleware, id, aps.GraphToTerraformMiddlewareTargetSetRunOnRawVal, reqState)
 	if diags.HasError() {
 		return tftypes.Value{}
 	}

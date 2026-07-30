@@ -8,7 +8,6 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -639,6 +638,6 @@ var iosManagedAppProtectionResourceSchema = schema.Schema{
 	MarkdownDescription: "Policy used to configure detailed management settings targeted to specific security groups and for a specified set of apps on an iOS device <br/> Also see [Microsoft docs for iosManagedAppProtection](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-iosmanagedappprotection?view=graph-rest-beta). ||| MS Graph: App management",
 }
 
-var iosManagedAppProtectionMobileAppIdentifierValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("ios"),
+var iosManagedAppProtectionMobileAppIdentifierValidator = wpvalidator.ExactlyOneOfSiblings(
+	"ios",
 )

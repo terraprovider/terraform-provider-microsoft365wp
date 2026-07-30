@@ -31,7 +31,7 @@ func ConvertTerraformToOdataRaw(ctx context.Context, diags *diag.Diagnostics, sc
 	isUpdate bool, config tfsdk.Config, middlewareFunc TerraformToGraphMiddlewareFunc,
 	valSourceDesc string) map[string]any {
 
-	translator := NewToFromGraphTranslator(schema, includeNullObjects)
+	translator := NewToFromGraphTranslator(schema, includeNullObjects, nil)
 	rawVal, err := translator.TerraformAsRaw(ctx, val)
 
 	if err != nil {

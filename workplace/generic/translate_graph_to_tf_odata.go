@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
@@ -25,7 +26,7 @@ func ConvertOdataJsonToRaw(ctx context.Context, diags *diag.Diagnostics, jsonVal
 
 func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper,
 	rawVal map[string]any, valueToTargetSetName string, middlewareFunc GraphToTerraformMiddlewareFunc,
-	middlewareExpectedId string, middlewareFuncTargetSetRunOnRawVal bool) tftypes.Value {
+	middlewareExpectedId string, middlewareFuncTargetSetRunOnRawVal bool, priorState *tfsdk.State) tftypes.Value {
 
 	runMiddleware := func(item map[string]any, isTargetSetOnRawVal bool) bool {
 		params := GraphToTerraformMiddlewareParams{
@@ -95,30 +96,13 @@ func ConvertOdataRawToTerraform(ctx context.Context, diags *diag.Diagnostics, sc
 		rawVal[valueToTargetSetName] = items
 	}
 
-	translator := NewToFromGraphTranslator(schema, false)
+	translator := NewToFromGraphTranslator(schema, false, priorState)
 	tfVal, err := translator.TerraformFromRaw(ctx, rawVal)
 	if err != nil {
 		diags.AddError(
 			"Creation Of Terraform State Unsuccessful",
 			fmt.Sprintf("Unable to create a Terraform State value from OData Raw value. Original Error: %s", err.Error()),
 		)
-		return tftypes.Value{}
-	}
-
-	return tfVal
-}
-
-func ConvertOdataJsonToTerraform(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper,
-	jsonVal []byte, valueToTargetSetName string, middlewareFunc GraphToTerraformMiddlewareFunc,
-	middlewareExpectedId string, middlewareFuncTargetSetRunOnRawVal bool) tftypes.Value {
-
-	rawVal := ConvertOdataJsonToRaw(ctx, diags, jsonVal)
-	if diags.HasError() {
-		return tftypes.Value{}
-	}
-
-	tfVal := ConvertOdataRawToTerraform(ctx, diags, schema, rawVal, valueToTargetSetName, middlewareFunc, middlewareExpectedId, middlewareFuncTargetSetRunOnRawVal)
-	if diags.HasError() {
 		return tftypes.Value{}
 	}
 

@@ -13,7 +13,6 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -130,7 +129,6 @@ func deviceEnrollmentConfigurationGraphToTerraformMiddleware(ctx context.Context
 	}
 	return nil
 }
-
 func deviceEnrollmentConfigurationCreateModifyFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.CreateModifyFuncParams) {
 	errorSummary := "Error determining MS Graph id of device enrollment default configuration"
 
@@ -529,12 +527,12 @@ var deviceEnrollmentConfigurationResourceSchema = schema.Schema{
 	MarkdownDescription: "The Base Class of Device Enrollment Configuration <br/> Also see [Microsoft docs for deviceEnrollmentConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceenrollmentconfiguration?view=graph-rest-beta).\n\n## Provider Notes\n\n### Default Enrollment Configurations\nTo target _default_ enrollment configurations instead of creating new ones, `display_name` **must** be set to\n`###TfWorkplaceDefault###` and `priority` **must** be set to `0`. `description`, `role_scope_tag_ids` and\n`assignments` should not be set (their values will be ignored).  \nThe provider will then automatically import the existing default config from MS Graph on resource creation\ninstead of creating a new MS Graph entity. On destruction, the provider will only remove the resource from\nTerraform state but not try to delete the default config entity from MS Graph.  \nTo compare your own Terraform config to the actual values of a default configuration in MS Graph, you can still\nimport the entity into Terraform state as can be done with any other resource (e.g.\n`terraform import microsoft365wp_device_enrollment_configuration.windows_hello_for_business_default 01234567-89ab-cdef-0123-456789abcdef_DefaultWindowsHelloForBusiness` -\nget the real `id` directly from MS Graph using e.g. some browser's development tools). Then run `terraform plan` as\nusual to see the required changes.  \n\n### Priorities\nMS Graph seems to be quite picky about setting priorities. They have to be sequential (i.e. there cannot be gaps\nwhen creating) and when updating priorities, values can only be switched with another exiting config (e.g. if\nthe config with priority 1 gets deleted (e.g. manually) then the list will start with priority 2 and the\n`setPriority` action will refuse to set any other config to priority 1 anymore but only to priority 2).  \nTherefore setting of configuration priorities has been implemented as best-effort only: Any errors returned from\nMS Graph during the `setPriority` action will only be shown as warnings in Terraform and more than one apply\naction may be required to actually get every priority set correctly.  \nAnd in case of a situation that MS Graph is not willing (or able) to fulfill, there will continously remain\nchanges. If you are really, really sure that your configuration should actually be fulfillable by MS Graph, then\nit may help to destroy all configurations again and start over.  \n\n### Delays Between Writes\nAs there have been situations during testing that resulted in multiple enrollment configurations with duplicate\npriority values (which MS Graph was unable to correct or reorder ever again), all write operations will incur a\nsmall delay to ensure individual priority values. ||| MS Graph: Onboarding",
 }
 
-var deviceEnrollmentConfigurationDeviceEnrollmentConfigurationValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("device_enrollment_limit"),
-	path.MatchRelative().AtParent().AtName("platform_restrictions"),
-	path.MatchRelative().AtParent().AtName("single_platform_restriction"),
-	path.MatchRelative().AtParent().AtName("windows_hello_for_business"),
-	path.MatchRelative().AtParent().AtName("windows10_esp"),
+var deviceEnrollmentConfigurationDeviceEnrollmentConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(
+	"device_enrollment_limit",
+	"platform_restrictions",
+	"single_platform_restriction",
+	"windows_hello_for_business",
+	"windows10_esp",
 )
 
 var deviceEnrollmentConfigurationDeviceEnrollmentPlatformRestrictionAttributes = map[string]schema.Attribute{ // deviceEnrollmentPlatformRestriction

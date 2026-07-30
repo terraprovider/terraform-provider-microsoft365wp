@@ -10,10 +10,8 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -371,19 +369,19 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 	MarkdownDescription: "Represents workflows created using Lifecycle Workflows. Workflows, when triggered by execution conditions, automate parts of the lifecycle management process using tasks. These tasks can either be built-in tasks, or a custom task can be called using the custom task extension which integrate with Azure Logic Apps.\n\nYou can create up to 100 workflows in a tenant.\n\nAlso see [Microsoft docs for identityGovernance.workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta). ||| MS Graph: Lifecycle workflows",
 }
 
-var identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionConditionsValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("on_demand_execution_only"),
-	path.MatchRelative().AtParent().AtName("trigger_and_scope_based_conditions"),
+var identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionConditionsValidator = wpvalidator.ExactlyOneOfSiblings(
+	"on_demand_execution_only",
+	"trigger_and_scope_based_conditions",
 )
 
-var identityGovernanceWorkflowSubjectSetValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("group"),
-	path.MatchRelative().AtParent().AtName("rule"),
+var identityGovernanceWorkflowSubjectSetValidator = wpvalidator.ExactlyOneOfSiblings(
+	"group",
+	"rule",
 )
 
-var identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionTriggerValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("attribute_change"),
-	path.MatchRelative().AtParent().AtName("membership_change"),
-	path.MatchRelative().AtParent().AtName("time_based_attribute"),
-	path.MatchRelative().AtParent().AtName("user_inactivity"),
+var identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionTriggerValidator = wpvalidator.ExactlyOneOfSiblings(
+	"attribute_change",
+	"membership_change",
+	"time_based_attribute",
+	"user_inactivity",
 )

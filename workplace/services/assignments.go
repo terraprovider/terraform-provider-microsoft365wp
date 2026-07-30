@@ -7,7 +7,6 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -115,11 +114,11 @@ var deviceAndAppManagementAssignmentTarget = schema.SingleNestedAttribute{
 	MarkdownDescription: "Base type for assignment targets. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentTarget](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-deviceandappmanagementassignmenttarget?view=graph-rest-beta).",
 }
 
-var deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("all_devices"),
-	path.MatchRelative().AtParent().AtName("all_licensed_users"),
-	path.MatchRelative().AtParent().AtName("exclusion_group"),
-	path.MatchRelative().AtParent().AtName("group"),
+var deviceAndAppManagementAssignmentTargetDeviceAndAppManagementAssignmentTargetValidator = wpvalidator.ExactlyOneOfSiblings(
+	"all_devices",
+	"all_licensed_users",
+	"exclusion_group",
+	"group",
 )
 
 func GetAssignmentChildResource(parentResource *generic.GenericResource, singleItemUseODataFilter bool) generic.GenericResource {

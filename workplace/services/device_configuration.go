@@ -10,10 +10,9 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -25,6 +24,10 @@ var (
 	DeviceConfigurationResource = generic.GenericResource{
 		TypeNameSuffix: "device_configuration",
 		SpecificSchema: deviceConfigurationResourceSchema,
+		SchemaVersion:  1,
+		StateUpgraders: map[int64]resource.StateUpgrader{
+			0: {StateUpgrader: generic.SetToListStateUpgrader},
+		},
 		AccessParams: generic.AccessParams{
 			BaseUri: "/deviceManagement/deviceConfigurations",
 			ReadOptions: generic.ReadOptions{
@@ -179,7 +182,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "Indicates whether or not adding or removing accounts is disabled.",
 					},
-					"android_device_owner_delegated_scope_app_settings": schema.SetNestedAttribute{
+					"android_device_owner_delegated_scope_app_settings": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // androidDeviceOwnerDelegatedScopeAppSetting
@@ -204,7 +207,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Specifies the list of managed apps with app details and its associated delegated scope(s). This collection can contain a maximum of 500 elements. / Represents one item in the list of managed apps with app details and its associated delegated scope(s). Also see [Microsoft docs for androidDeviceOwnerDelegatedScopeAppSetting](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerdelegatedscopeappsetting?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -230,12 +233,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "Whether or not to recommend all apps skip any first-time-use hints they may have added.",
 					},
-					"azure_ad_shared_device_data_clear_apps": schema.SetNestedAttribute{
+					"azure_ad_shared_device_data_clear_apps": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationAppListItemAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "A list of managed apps that will have their data cleared during a global sign-out in AAD shared device mode. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications. Also see [Microsoft docs for appListItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -294,12 +297,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Required:            true,
 								MarkdownDescription: "The default message displayed if the user's locale doesn't match with any of the localized messages",
 							},
-							"localized_messages": schema.SetNestedAttribute{
+							"localized_messages": schema.ListNestedAttribute{
 								Optional: true,
 								NestedObject: schema.NestedAttributeObject{
 									Attributes: deviceConfigurationKeyValuePairAttributes,
 								},
-								PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+								PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 								Computed:            true,
 								MarkdownDescription: "The list of <locale, message> pairs. This collection can contain a maximum of 500 elements. / Key value pair for storing custom settings. Also see [Microsoft docs for keyValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 							},
@@ -320,12 +323,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Required:            true,
 								MarkdownDescription: "The default message displayed if the user's locale doesn't match with any of the localized messages",
 							},
-							"localized_messages": schema.SetNestedAttribute{
+							"localized_messages": schema.ListNestedAttribute{
 								Optional: true,
 								NestedObject: schema.NestedAttributeObject{
 									Attributes: deviceConfigurationKeyValuePairAttributes,
 								},
-								PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+								PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 								Computed:            true,
 								MarkdownDescription: "The list of <locale, message> pairs. This collection can contain a maximum of 500 elements. / Key value pair for storing custom settings. Also see [Microsoft docs for keyValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 							},
@@ -452,7 +455,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "Whether or not to enable app ordering in Kiosk Mode.",
 					},
-					"kiosk_mode_app_positions": schema.SetNestedAttribute{
+					"kiosk_mode_app_positions": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // androidDeviceOwnerKioskModeAppPositionItem
@@ -548,16 +551,16 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "The ordering of items on Kiosk Mode Managed Home Screen. This collection can contain a maximum of 500 elements. / An item in the list of app positions that sets the order of items on the Managed Home Screen. Also see [Microsoft docs for androidDeviceOwnerKioskModeAppPositionItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeapppositionitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
-					"kiosk_mode_apps": schema.SetNestedAttribute{
+					"kiosk_mode_apps": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationAppListItemAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "A list of managed apps that will be shown when the device is in Kiosk Mode. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications. Also see [Microsoft docs for appListItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -619,7 +622,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Required:            true,
 									MarkdownDescription: "Display name for the folder",
 								},
-								"items": schema.SetNestedAttribute{
+								"items": schema.ListNestedAttribute{
 									Optional: true,
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: map[string]schema.Attribute{ // androidDeviceOwnerKioskModeFolderItem
@@ -647,7 +650,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 										},
 									},
-									PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+									PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 									Computed:            true,
 									MarkdownDescription: "Items to be added to managed folder. This collection can contain a maximum of 500 elements. / Represents an item that can be added to Android Device Owner folder (application or weblink). Also see [Microsoft docs for androidDeviceOwnerKioskModeFolderItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodefolderitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 								},
@@ -657,12 +660,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "A list of managed folders for a device in Kiosk Mode. This collection can contain a maximum of 500 elements. / A folder containing pages of apps and weblinks on the Managed Home Screen. Also see [Microsoft docs for androidDeviceOwnerKioskModeManagedFolder](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodemanagedfolder?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
-					"kiosk_mode_managed_home_screen_app_settings": schema.SetNestedAttribute{
+					"kiosk_mode_managed_home_screen_app_settings": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationAndroidDeviceOwnerKioskModeAppAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Indicates the list of managed applications and associated settings, which will be applied when android device is run on kiosk mode with Managed Home Screen. This collection can contain a maximum of 500 elements. / An application on the Android Device Owner Managed Home Screen. Also see [Microsoft docs for androidDeviceOwnerKioskModeApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownerkioskmodeapp?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -938,12 +941,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "Indicates whether to disable the use of the camera on the personal profile.",
 					},
-					"personal_profile_personal_applications": schema.SetNestedAttribute{
+					"personal_profile_personal_applications": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationAppListItemAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Policy applied to applications in the personal profile. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications. Also see [Microsoft docs for appListItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -998,12 +1001,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								Required:            true,
 								MarkdownDescription: "The default message displayed if the user's locale doesn't match with any of the localized messages",
 							},
-							"localized_messages": schema.SetNestedAttribute{
+							"localized_messages": schema.ListNestedAttribute{
 								Optional: true,
 								NestedObject: schema.NestedAttributeObject{
 									Attributes: deviceConfigurationKeyValuePairAttributes,
 								},
-								PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+								PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 								Computed:            true,
 								MarkdownDescription: "The list of <locale, message> pairs. This collection can contain a maximum of 500 elements. / Key value pair for storing custom settings. Also see [Microsoft docs for keyValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 							},
@@ -1038,7 +1041,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "Indicates whether or not to block USB file transfer.",
 					},
-					"system_update_freeze_periods": schema.SetNestedAttribute{
+					"system_update_freeze_periods": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // androidDeviceOwnerSystemUpdateFreezePeriod
@@ -1068,7 +1071,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Indicates the annually repeating time periods during which system updates are postponed. This collection can contain a maximum of 500 elements. / Represents one item in the list of freeze periods for Android Device Owner system updates. Also see [Microsoft docs for androidDeviceOwnerSystemUpdateFreezePeriod](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-androiddeviceownersystemupdatefreezeperiod?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -1622,21 +1625,21 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								SingleNestedAttribute: schema.SingleNestedAttribute{
 									Optional: true,
 									Attributes: map[string]schema.Attribute{ // iosWebContentFilterSpecificWebsitesAccess
-										"specific_websites_only": schema.SetNestedAttribute{
+										"specific_websites_only": schema.ListNestedAttribute{
 											Optional: true,
 											NestedObject: schema.NestedAttributeObject{
 												Attributes: deviceConfigurationIosBookmarkAttributes,
 											},
-											PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+											PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 											Computed:            true,
 											MarkdownDescription: "URL bookmarks which will be installed into built-in browser and user is only allowed to access websites through bookmarks. This collection can contain a maximum of 500 elements. / iOS URL bookmark. Also see [Microsoft docs for iosBookmark](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosbookmark?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 										},
-										"website_list": schema.SetNestedAttribute{
+										"website_list": schema.ListNestedAttribute{
 											Optional: true,
 											NestedObject: schema.NestedAttributeObject{
 												Attributes: deviceConfigurationIosBookmarkAttributes,
 											},
-											PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+											PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 											Computed:            true,
 											MarkdownDescription: "URL bookmarks which will be installed into built-in browser and user is only allowed to access websites through bookmarks. This collection can contain a maximum of 500 elements. / iOS URL bookmark. Also see [Microsoft docs for iosBookmark](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosbookmark?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 										},
@@ -1650,7 +1653,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						MarkdownDescription: "Gets or sets iOS Web Content Filter settings, supervised mode only / Represents an iOS Web Content Filter setting base type. An empty and abstract base. Caller should use one of derived types for configurations. Also see [Microsoft docs for iosWebContentFilterBase](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioswebcontentfilterbase?view=graph-rest-beta). <br> ",
 					},
-					"home_screen_dock_icons": schema.SetNestedAttribute{
+					"home_screen_dock_icons": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // iosHomeScreenItem
@@ -1678,7 +1681,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "A list of app and folders to appear on the Home Screen Dock. This collection can contain a maximum of 500 elements. / Represents an item on the iOS Home Screen. Also see [Microsoft docs for iosHomeScreenItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -1690,7 +1693,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "Gets or sets the number of columns to render when configuring iOS home screen layout settings. If this value is configured, homeScreenGridHeight must be configured as well.",
 					},
-					"home_screen_pages": schema.SetNestedAttribute{
+					"home_screen_pages": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // iosHomeScreenPage
@@ -1698,7 +1701,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Optional:            true,
 									MarkdownDescription: "Name of the page",
 								},
-								"icons": schema.SetNestedAttribute{
+								"icons": schema.ListNestedAttribute{
 									Optional: true,
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: map[string]schema.Attribute{ // iosHomeScreenItem
@@ -1726,13 +1729,13 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											},
 										},
 									},
-									PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+									PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 									Computed:            true,
 									MarkdownDescription: "A list of apps, folders, and web clips to appear on a page. This collection can contain a maximum of 500 elements. / Represents an item on the iOS Home Screen. Also see [Microsoft docs for iosHomeScreenItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "A list of pages on the Home Screen. This collection can contain a maximum of 500 elements. / A page containing apps, folders, and web clips on the Home Screen. Also see [Microsoft docs for iosHomeScreenPage](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-ioshomescreenpage?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -1751,12 +1754,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											Computed:            true,
 											MarkdownDescription: "An optional list of additional bundle IDs allowed to use the AAD extension for single sign-on. <br/> The _provider_ default value is `[]`.",
 										},
-										"configurations": schema.SetNestedAttribute{
+										"configurations": schema.ListNestedAttribute{
 											Optional: true,
 											NestedObject: schema.NestedAttributeObject{
 												Attributes: deviceConfigurationKeyTypedValuePairAttributes,
 											},
-											PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+											PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 											Computed:            true,
 											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. Also see [Microsoft docs for keyTypedValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 										},
@@ -1778,12 +1781,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								SingleNestedAttribute: schema.SingleNestedAttribute{
 									Optional: true,
 									Attributes: map[string]schema.Attribute{ // iosCredentialSingleSignOnExtension
-										"configurations": schema.SetNestedAttribute{
+										"configurations": schema.ListNestedAttribute{
 											Optional: true,
 											NestedObject: schema.NestedAttributeObject{
 												Attributes: deviceConfigurationKeyTypedValuePairAttributes,
 											},
-											PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+											PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 											Computed:            true,
 											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. Also see [Microsoft docs for keyTypedValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 										},
@@ -1926,12 +1929,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								SingleNestedAttribute: schema.SingleNestedAttribute{
 									Optional: true,
 									Attributes: map[string]schema.Attribute{ // iosRedirectSingleSignOnExtension
-										"configurations": schema.SetNestedAttribute{
+										"configurations": schema.ListNestedAttribute{
 											Optional: true,
 											NestedObject: schema.NestedAttributeObject{
 												Attributes: deviceConfigurationKeyTypedValuePairAttributes,
 											},
-											PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+											PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 											Computed:            true,
 											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. Also see [Microsoft docs for keyTypedValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 										},
@@ -1962,7 +1965,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "A footnote displayed on the login window and lock screen. Available in iOS 9.3.1 and later.",
 					},
-					"notification_settings": schema.SetNestedAttribute{
+					"notification_settings": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // iosNotificationSettings
@@ -2025,19 +2028,19 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Notification settings for each bundle id. Applicable to devices in supervised mode only (iOS 9.3 and later). This collection can contain a maximum of 500 elements. / An item describing notification setting. Also see [Microsoft docs for iosNotificationSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosnotificationsettings?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
 					"single_sign_on_settings": schema.SingleNestedAttribute{
 						Optional: true,
 						Attributes: map[string]schema.Attribute{ // iosSingleSignOnSettings
-							"allowed_apps_list": schema.SetNestedAttribute{
+							"allowed_apps_list": schema.ListNestedAttribute{
 								Optional: true,
 								NestedObject: schema.NestedAttributeObject{
 									Attributes: deviceConfigurationAppListItemAttributes,
 								},
-								PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+								PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 								Computed:            true,
 								MarkdownDescription: "List of app identifiers that are allowed to use this login. If this field is omitted, the login applies to all applications on the device. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications. Also see [Microsoft docs for appListItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 							},
@@ -2321,12 +2324,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Indicates if the removal of apps is allowed. <br/> The _provider_ default value is `false`.",
 					},
-					"apps_single_app_mode_list": schema.SetNestedAttribute{
+					"apps_single_app_mode_list": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationAppListItemAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Gets or sets the list of iOS apps allowed to autonomously enter Single App Mode. Supervised only. iOS 7.0 and later. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications. Also see [Microsoft docs for appListItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -2361,12 +2364,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Indicates whether or not to require a password when using the app store. <br/> The _provider_ default value is `false`.",
 					},
-					"apps_visibility_list": schema.SetNestedAttribute{
+					"apps_visibility_list": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationAppListItemAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "List of apps in the visibility list (either visible/launchable apps list or hidden/unlaunchable apps list, controlled by AppsVisibilityListType) (iOS 9.3 and later). This collection can contain a maximum of 10000 elements. / Represents an app in the list of managed applications. Also see [Microsoft docs for appListItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -2496,12 +2499,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "List that is in the AppComplianceList. / Possible values of the compliance app list. <br/> _Provider_ allowed values are: `none` (Default value, no intent.), `appsInListCompliant` (The list represents the apps that will be considered compliant (only apps on the list are compliant).), `appsNotInListCompliant` (The list represents the apps that will be considered non compliant (all apps are compliant except apps on the list).). The _provider_ default value is `\"none\"`.",
 					},
-					"compliant_apps_list": schema.SetNestedAttribute{
+					"compliant_apps_list": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationAppListItemAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "List of apps in the compliance (either allow list or block list, controlled by CompliantAppListType). This collection can contain a maximum of 10000 elements. / Represents an app in the list of managed applications. Also see [Microsoft docs for appListItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -3174,7 +3177,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Indicates whether or not to block the user from using the Messages app on the supervised device. <br/> The _provider_ default value is `false`.",
 					},
-					"network_usage_rules": schema.SetNestedAttribute{
+					"network_usage_rules": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // iosNetworkUsageRule
@@ -3186,7 +3189,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 									Required:            true,
 									MarkdownDescription: "If set to true, corresponding managed apps will not be allowed to use cellular data when roaming.",
 								},
-								"managed_apps": schema.SetNestedAttribute{
+								"managed_apps": schema.ListNestedAttribute{
 									Optional: true,
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: deviceConfigurationAppListItemAttributes,
@@ -3195,7 +3198,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "List of managed apps and the network rules that applies to them. This collection can contain a maximum of 1000 elements. / Network Usage Rules allow enterprises to specify how managed apps use networks, such as cellular data networks. Also see [Microsoft docs for iosNetworkUsageRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-iosnetworkusagerule?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -3520,7 +3523,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Active Hours Start (active hours mean the time window when updates install should not happen) <br/> The _provider_ default value is `\"00:00:00.0000000\"`.",
 					},
-					"custom_update_time_windows": schema.SetNestedAttribute{
+					"custom_update_time_windows": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // customUpdateTimeWindow
@@ -3548,7 +3551,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "If update schedule type is set to use time window scheduling, custom time windows when updates will be scheduled. This collection can contain a maximum of 20 elements. / Custom update time window. Also see [Microsoft docs for customUpdateTimeWindow](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-customupdatetimewindow?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -3627,7 +3630,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						},
 						MarkdownDescription: "Connection type. / Apple VPN connection type. <br/> _Provider_ allowed values are: `ciscoAnyConnect` (Cisco AnyConnect.), `pulseSecure` (Pulse Secure.), `f5EdgeClient` (F5 Edge Client.), `dellSonicWallMobileConnect` (Dell SonicWALL Mobile Connection.), `checkPointCapsuleVpn` (Check Point Capsule VPN.), `customVpn` (Custom VPN.), `ciscoIPSec` (Cisco (IPSec).), `citrix` (Citrix.), `ciscoAnyConnectV2` (Cisco AnyConnect V2.), `paloAltoGlobalProtect` (Palo Alto Networks GlobalProtect.), `zscalerPrivateAccess` (Zscaler Private Access.), `f5Access2018` (F5 Access 2018.), `citrixSso` (Citrix Sso.), `paloAltoGlobalProtectV2` (Palo Alto Networks GlobalProtect V2.), `ikEv2` (IKEv2.), `alwaysOn` (AlwaysOn.), `microsoftTunnel` (Microsoft Tunnel.), `netMotionMobility` (NetMotion Mobility.), `microsoftProtect` (Microsoft Protect.).",
 					},
-					"custom_data": schema.SetNestedAttribute{
+					"custom_data": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // keyValue
@@ -3641,7 +3644,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Custom data when connection type is set to Custom VPN. Use this field to enable functionality not supported by Intune, but available in your VPN solution. Contact your VPN vendor to learn how to add these key/value pairs. This collection can contain a maximum of 25 elements. / Key Value definition. Also see [Microsoft docs for keyValue](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvalue?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -3682,7 +3685,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "Login group or domain when connection type is set to Dell SonicWALL Mobile Connection.",
 					},
-					"on_demand_rules": schema.SetNestedAttribute{
+					"on_demand_rules": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // vpnOnDemandRule
@@ -3753,7 +3756,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "On-Demand Rules. This collection can contain a maximum of 500 elements. / VPN On-Demand Rule definition. Also see [Microsoft docs for vpnOnDemandRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnondemandrule?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -3840,12 +3843,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "Zscaler only. Blocks network traffic until the user signs into Zscaler app. \"True\" means traffic is blocked.",
 					},
-					"targeted_mobile_apps": schema.SetNestedAttribute{
+					"targeted_mobile_apps": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationAppListItemAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Targeted mobile apps. This collection can contain a maximum of 500 elements. / Represents an app in the list of managed applications. Also see [Microsoft docs for appListItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -3918,12 +3921,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 			SingleNestedAttribute: schema.SingleNestedAttribute{
 				Optional: true,
 				Attributes: map[string]schema.Attribute{ // macOSDeviceFeaturesConfiguration
-					"airprint_destinations": schema.SetNestedAttribute{
+					"airprint_destinations": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationAirPrintDestinationAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						Description:         `airPrintDestinations`, // custom MS Graph attribute name
 						MarkdownDescription: "An array of AirPrint printers that should always be shown. This collection can contain a maximum of 500 elements. / Represents an AirPrint destination. Also see [Microsoft docs for airPrintDestination](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-airprintdestination?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
@@ -3934,7 +3937,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Whether to show admin host information on the login window. <br/> The _provider_ default value is `false`.",
 					},
-					"app_associated_domains": schema.SetNestedAttribute{
+					"app_associated_domains": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // macOSAssociatedDomainsItem
@@ -3953,7 +3956,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Gets or sets a list that maps apps to their associated domains. Application identifiers must be unique. This collection can contain a maximum of 500 elements. / A mapping of application identifiers to associated domains. Also see [Microsoft docs for macOSAssociatedDomainsItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macosassociateddomainsitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -3993,7 +3996,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Whether to show other users in the authorized users list on the login window. <br/> The _provider_ default value is `false`.",
 					},
-					"auto_launch_items": schema.SetNestedAttribute{
+					"auto_launch_items": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // macOSLaunchItem
@@ -4007,7 +4010,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "List of applications, files, folders, and other items to launch when the user logs in. This collection can contain a maximum of 500 elements. / Represents an app in the list of macOS launch items. Also see [Microsoft docs for macOSLaunchItem](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macoslaunchitem?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -4023,12 +4026,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Prevents content caches from purging content to free up disk space for other apps. <br/> The _provider_ default value is `false`.",
 					},
-					"content_caching_client_listen_ranges": schema.SetNestedAttribute{
+					"content_caching_client_listen_ranges": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationIpRangeAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "A list of custom IP ranges content caches will use to listen for clients. This collection can contain a maximum of 500 elements. / IP range base class for representing IPV4, IPV6 address ranges. Also see [Microsoft docs for ipRange](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iprange?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -4099,21 +4102,21 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Determines the method in which content caching servers will select parents if multiple are present. / Determines how content caches select a parent cache. <br/> _Provider_ allowed values are: `notConfigured` (Defaults to round-robin strategy.), `roundRobin` (Rotate through the parents in order. Use this policy for load balancing.), `firstAvailable` (Always use the first available parent in the Parents list. Use this policy to designate permanent primary, secondary, and subsequent parents.), `urlPathHash` (Hash the path part of the requested URL so that the same parent is always used for the same URL. This is useful for maximizing the size of the combined caches of the parents.), `random` (Choose a parent at random. Use this policy for load balancing.), `stickyAvailable` (Use the first available parent that is available in the Parents list until it becomes unavailable, then advance to the next one. Use this policy for designating floating primary, secondary, and subsequent parents.). The _provider_ default value is `\"notConfigured\"`.",
 					},
-					"content_caching_peer_filter_ranges": schema.SetNestedAttribute{
+					"content_caching_peer_filter_ranges": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationIpRangeAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "A list of custom IP ranges content caches will use to query for content from peers caches. This collection can contain a maximum of 500 elements. / IP range base class for representing IPV4, IPV6 address ranges. Also see [Microsoft docs for ipRange](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iprange?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
-					"content_caching_peer_listen_ranges": schema.SetNestedAttribute{
+					"content_caching_peer_listen_ranges": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationIpRangeAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "A list of custom IP ranges content caches will use to listen for peer caches. This collection can contain a maximum of 500 elements. / IP range base class for representing IPV4, IPV6 address ranges. Also see [Microsoft docs for ipRange](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iprange?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -4132,12 +4135,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "Sets the port used for content caching. If the value is 0, a random available port will be selected. Valid values 0 to 65535",
 					},
-					"content_caching_public_ranges": schema.SetNestedAttribute{
+					"content_caching_public_ranges": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: deviceConfigurationIpRangeAttributes,
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "A list of custom IP ranges that Apple's content caching service should use to match clients to content caches. This collection can contain a maximum of 500 elements. / IP range base class for representing IPV4, IPV6 address ranges. Also see [Microsoft docs for ipRange](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-iprange?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -4189,12 +4192,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 											Computed:            true,
 											MarkdownDescription: "An optional list of additional bundle IDs allowed to use the AAD extension for single sign-on. <br/> The _provider_ default value is `[]`.",
 										},
-										"configurations": schema.SetNestedAttribute{
+										"configurations": schema.ListNestedAttribute{
 											Optional: true,
 											NestedObject: schema.NestedAttributeObject{
 												Attributes: deviceConfigurationKeyTypedValuePairAttributes,
 											},
-											PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+											PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 											Computed:            true,
 											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. Also see [Microsoft docs for keyTypedValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 										},
@@ -4216,12 +4219,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								SingleNestedAttribute: schema.SingleNestedAttribute{
 									Optional: true,
 									Attributes: map[string]schema.Attribute{ // macOSCredentialSingleSignOnExtension
-										"configurations": schema.SetNestedAttribute{
+										"configurations": schema.ListNestedAttribute{
 											Optional: true,
 											NestedObject: schema.NestedAttributeObject{
 												Attributes: deviceConfigurationKeyTypedValuePairAttributes,
 											},
-											PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+											PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 											Computed:            true,
 											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. Also see [Microsoft docs for keyTypedValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 										},
@@ -4396,12 +4399,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								SingleNestedAttribute: schema.SingleNestedAttribute{
 									Optional: true,
 									Attributes: map[string]schema.Attribute{ // macOSRedirectSingleSignOnExtension
-										"configurations": schema.SetNestedAttribute{
+										"configurations": schema.ListNestedAttribute{
 											Optional: true,
 											NestedObject: schema.NestedAttributeObject{
 												Attributes: deviceConfigurationKeyTypedValuePairAttributes,
 											},
-											PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+											PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 											Computed:            true,
 											MarkdownDescription: "Gets or sets a list of typed key-value pairs used to configure Credential-type profiles. This collection can contain a maximum of 500 elements. / A key-value pair with a string key and a typed value. Also see [Microsoft docs for keyTypedValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keytypedvaluepair?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 										},
@@ -4497,7 +4500,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "If set to true, users can approve additional kernel extensions not explicitly allowed by configurations profiles. <br/> The _provider_ default value is `false`.",
 					},
-					"kernel_extensions_allowed": schema.SetNestedAttribute{
+					"kernel_extensions_allowed": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // macOSKernelExtension
@@ -4511,11 +4514,11 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "A list of kernel extensions that will be allowed to load. . This collection can contain a maximum of 500 elements. / Represents a specific macOS kernel extension. A macOS kernel extension can be described by its team identifier plus its bundle identifier. Also see [Microsoft docs for macOSKernelExtension](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macoskernelextension?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
-					"system_extensions_allowed": schema.SetNestedAttribute{
+					"system_extensions_allowed": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // macOSSystemExtension
@@ -4529,7 +4532,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Gets or sets a list of allowed macOS system extensions. This collection can contain a maximum of 500 elements. / Represents a specific macOS system extension. Also see [Microsoft docs for macOSSystemExtension](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macossystemextension?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -4540,7 +4543,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Gets or sets a list of allowed team identifiers. Any system extension signed with any of the specified team identifiers will be approved. <br/> The _provider_ default value is `[]`.",
 					},
-					"system_extensions_allowed_types": schema.SetNestedAttribute{
+					"system_extensions_allowed_types": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // macOSSystemExtensionTypeMapping
@@ -4557,7 +4560,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Gets or sets a list of allowed macOS system extension types. This collection can contain a maximum of 500 elements. / Represents a mapping between team identifiers for macOS system extensions and system extension types. Also see [Microsoft docs for macOSSystemExtensionTypeMapping](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macossystemextensiontypemapping?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -4610,7 +4613,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Update behavior for critical updates. / Update behavior options for macOS software updates. <br/> _Provider_ allowed values are: `notConfigured` (Not configured.), `default` (Download and/or install the software update, depending on the current device state.), `downloadOnly` (Download the software update without installing it.), `installASAP` (Install an already downloaded software update.), `notifyOnly` (Download the software update and notify the user via the App Store.), `installLater` (Download the software update and install it at a later time.). The _provider_ default value is `\"notConfigured\"`.",
 					},
-					"custom_update_time_windows": schema.SetNestedAttribute{
+					"custom_update_time_windows": schema.ListNestedAttribute{
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // customUpdateTimeWindow
@@ -4638,7 +4641,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 						Computed:            true,
 						MarkdownDescription: "Custom Time windows when updates will be allowed or blocked. This collection can contain a maximum of 20 elements. / Custom update time window. Also see [Microsoft docs for customUpdateTimeWindow](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-customupdatetimewindow?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
@@ -7059,24 +7062,24 @@ var deviceConfigurationResourceSchema = schema.Schema{
 	MarkdownDescription: "Device Configuration. <br/> Also see [Microsoft docs for deviceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta). ||| MS Graph: Device configuration",
 }
 
-var deviceConfigurationDeviceConfigurationValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("android_device_owner_general_device"),
-	path.MatchRelative().AtParent().AtName("android_work_profile_general_device"),
-	path.MatchRelative().AtParent().AtName("edition_upgrade"),
-	path.MatchRelative().AtParent().AtName("ios_custom"),
-	path.MatchRelative().AtParent().AtName("ios_device_features"),
-	path.MatchRelative().AtParent().AtName("ios_eas_email_profile"),
-	path.MatchRelative().AtParent().AtName("ios_general_device"),
-	path.MatchRelative().AtParent().AtName("ios_update"),
-	path.MatchRelative().AtParent().AtName("ios_vpn"),
-	path.MatchRelative().AtParent().AtName("macos_custom"),
-	path.MatchRelative().AtParent().AtName("macos_custom_app"),
-	path.MatchRelative().AtParent().AtName("macos_device_features"),
-	path.MatchRelative().AtParent().AtName("macos_extensions"),
-	path.MatchRelative().AtParent().AtName("macos_software_update"),
-	path.MatchRelative().AtParent().AtName("windows_health_monitoring"),
-	path.MatchRelative().AtParent().AtName("windows_update_for_business"),
-	path.MatchRelative().AtParent().AtName("windows10_general"),
+var deviceConfigurationDeviceConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(
+	"android_device_owner_general_device",
+	"android_work_profile_general_device",
+	"edition_upgrade",
+	"ios_custom",
+	"ios_device_features",
+	"ios_eas_email_profile",
+	"ios_general_device",
+	"ios_update",
+	"ios_vpn",
+	"macos_custom",
+	"macos_custom_app",
+	"macos_device_features",
+	"macos_extensions",
+	"macos_software_update",
+	"windows_health_monitoring",
+	"windows_update_for_business",
+	"windows10_general",
 )
 
 var deviceConfigurationAppListItemAttributes = map[string]schema.Attribute{ // appListItem
@@ -7109,16 +7112,16 @@ var deviceConfigurationKeyValuePairAttributes = map[string]schema.Attribute{ // 
 	},
 }
 
-var deviceConfigurationAndroidDeviceOwnerGlobalProxyValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("auto_config"),
-	path.MatchRelative().AtParent().AtName("direct"),
+var deviceConfigurationAndroidDeviceOwnerGlobalProxyValidator = wpvalidator.ExactlyOneOfSiblings(
+	"auto_config",
+	"direct",
 )
 
-var deviceConfigurationAndroidDeviceOwnerKioskModeHomeScreenItemValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("app"),
-	path.MatchRelative().AtParent().AtName("folder_item"),
-	path.MatchRelative().AtParent().AtName("managed_folder_reference"),
-	path.MatchRelative().AtParent().AtName("weblink"),
+var deviceConfigurationAndroidDeviceOwnerKioskModeHomeScreenItemValidator = wpvalidator.ExactlyOneOfSiblings(
+	"app",
+	"folder_item",
+	"managed_folder_reference",
+	"weblink",
 )
 
 var deviceConfigurationAndroidDeviceOwnerKioskModeAppAttributes = map[string]schema.Attribute{ // androidDeviceOwnerKioskModeApp
@@ -7140,9 +7143,9 @@ var deviceConfigurationAndroidDeviceOwnerKioskModeAppAttributes = map[string]sch
 	},
 }
 
-var deviceConfigurationAndroidDeviceOwnerKioskModeFolderItemValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("app"),
-	path.MatchRelative().AtParent().AtName("weblink"),
+var deviceConfigurationAndroidDeviceOwnerKioskModeFolderItemValidator = wpvalidator.ExactlyOneOfSiblings(
+	"app",
+	"weblink",
 )
 
 var deviceConfigurationAndroidDeviceOwnerKioskModeWeblinkAttributes = map[string]schema.Attribute{ // androidDeviceOwnerKioskModeWeblink
@@ -7175,9 +7178,9 @@ var deviceConfigurationAirPrintDestinationAttributes = map[string]schema.Attribu
 	},
 }
 
-var deviceConfigurationIosWebContentFilterBaseValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("auto_filter"),
-	path.MatchRelative().AtParent().AtName("specific_websites_access"),
+var deviceConfigurationIosWebContentFilterBaseValidator = wpvalidator.ExactlyOneOfSiblings(
+	"auto_filter",
+	"specific_websites_access",
 )
 
 var deviceConfigurationIosBookmarkAttributes = map[string]schema.Attribute{ // iosBookmark
@@ -7199,9 +7202,9 @@ var deviceConfigurationIosBookmarkAttributes = map[string]schema.Attribute{ // i
 	},
 }
 
-var deviceConfigurationIosHomeScreenItemValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("app"),
-	path.MatchRelative().AtParent().AtName("folder"),
+var deviceConfigurationIosHomeScreenItemValidator = wpvalidator.ExactlyOneOfSiblings(
+	"app",
+	"folder",
 )
 
 var deviceConfigurationIosHomeScreenAppAttributes = map[string]schema.Attribute{ // iosHomeScreenApp
@@ -7219,11 +7222,11 @@ var deviceConfigurationIosHomeScreenAppAttributes = map[string]schema.Attribute{
 }
 
 var deviceConfigurationIosHomeScreenFolderAttributes = map[string]schema.Attribute{ // iosHomeScreenFolder
-	"pages": schema.SetNestedAttribute{
+	"pages": schema.ListNestedAttribute{
 		Required: true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{ // iosHomeScreenFolderPage
-				"apps": schema.SetNestedAttribute{
+				"apps": schema.ListNestedAttribute{
 					Required: true,
 					NestedObject: schema.NestedAttributeObject{
 						Attributes: deviceConfigurationIosHomeScreenAppAttributes,
@@ -7240,11 +7243,11 @@ var deviceConfigurationIosHomeScreenFolderAttributes = map[string]schema.Attribu
 	},
 }
 
-var deviceConfigurationIosSingleSignOnExtensionValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("azure_ad"),
-	path.MatchRelative().AtParent().AtName("credential"),
-	path.MatchRelative().AtParent().AtName("kerberos"),
-	path.MatchRelative().AtParent().AtName("redirect"),
+var deviceConfigurationIosSingleSignOnExtensionValidator = wpvalidator.ExactlyOneOfSiblings(
+	"azure_ad",
+	"credential",
+	"kerberos",
+	"redirect",
 )
 
 var deviceConfigurationKeyTypedValuePairAttributes = map[string]schema.Attribute{ // keyTypedValuePair
@@ -7310,11 +7313,11 @@ var deviceConfigurationKeyTypedValuePairAttributes = map[string]schema.Attribute
 	},
 }
 
-var deviceConfigurationKeyTypedValuePairValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("boolean"),
-	path.MatchRelative().AtParent().AtName("integer"),
-	path.MatchRelative().AtParent().AtName("real"),
-	path.MatchRelative().AtParent().AtName("string"),
+var deviceConfigurationKeyTypedValuePairValidator = wpvalidator.ExactlyOneOfSiblings(
+	"boolean",
+	"integer",
+	"real",
+	"string",
 )
 
 var deviceConfigurationIpRangeAttributes = map[string]schema.Attribute{ // ipRange
@@ -7384,35 +7387,35 @@ var deviceConfigurationIpRangeAttributes = map[string]schema.Attribute{ // ipRan
 	},
 }
 
-var deviceConfigurationIpRangeValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("v4"),
-	path.MatchRelative().AtParent().AtName("v4_cidr"),
-	path.MatchRelative().AtParent().AtName("v6"),
-	path.MatchRelative().AtParent().AtName("v6_cidr"),
+var deviceConfigurationIpRangeValidator = wpvalidator.ExactlyOneOfSiblings(
+	"v4",
+	"v4_cidr",
+	"v6",
+	"v6_cidr",
 )
 
-var deviceConfigurationMacOSSingleSignOnExtensionValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("azure_ad"),
-	path.MatchRelative().AtParent().AtName("credential"),
-	path.MatchRelative().AtParent().AtName("kerberos"),
-	path.MatchRelative().AtParent().AtName("redirect"),
+var deviceConfigurationMacOSSingleSignOnExtensionValidator = wpvalidator.ExactlyOneOfSiblings(
+	"azure_ad",
+	"credential",
+	"kerberos",
+	"redirect",
 )
 
-var deviceConfigurationWindowsUpdateInstallScheduleTypeValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("active_hours"),
-	path.MatchRelative().AtParent().AtName("scheduled"),
+var deviceConfigurationWindowsUpdateInstallScheduleTypeValidator = wpvalidator.ExactlyOneOfSiblings(
+	"active_hours",
+	"scheduled",
 )
 
-var deviceConfigurationEdgeHomeButtonConfigurationValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("hidden"),
-	path.MatchRelative().AtParent().AtName("loads_start_page"),
-	path.MatchRelative().AtParent().AtName("opens_custom_url"),
-	path.MatchRelative().AtParent().AtName("opens_new_tab"),
+var deviceConfigurationEdgeHomeButtonConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(
+	"hidden",
+	"loads_start_page",
+	"opens_custom_url",
+	"opens_new_tab",
 )
 
-var deviceConfigurationEdgeSearchEngineBaseValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("custom"),
-	path.MatchRelative().AtParent().AtName("predefined"),
+var deviceConfigurationEdgeSearchEngineBaseValidator = wpvalidator.ExactlyOneOfSiblings(
+	"custom",
+	"predefined",
 )
 
 type deviceConfigurationEditionUpgradeProductKeyPlanModifier struct{ generic.EmptyDescriber }

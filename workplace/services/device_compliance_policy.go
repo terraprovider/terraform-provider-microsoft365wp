@@ -8,10 +8,8 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -1290,12 +1288,12 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 	MarkdownDescription: "This is the base class for Compliance policy. Compliance policies are platform specific and individual per-platform compliance policies inherit from here. <br/> Also see [Microsoft docs for deviceCompliancePolicy](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicecompliancepolicy?view=graph-rest-beta). ||| MS Graph: Device configuration",
 }
 
-var deviceCompliancePolicyDeviceCompliancePolicyValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("android"),
-	path.MatchRelative().AtParent().AtName("android_device_owner"),
-	path.MatchRelative().AtParent().AtName("android_work_profile"),
-	path.MatchRelative().AtParent().AtName("aosp_device_owner"),
-	path.MatchRelative().AtParent().AtName("ios"),
-	path.MatchRelative().AtParent().AtName("macos"),
-	path.MatchRelative().AtParent().AtName("windows10"),
+var deviceCompliancePolicyDeviceCompliancePolicyValidator = wpvalidator.ExactlyOneOfSiblings(
+	"android",
+	"android_device_owner",
+	"android_work_profile",
+	"aosp_device_owner",
+	"ios",
+	"macos",
+	"windows10",
 )

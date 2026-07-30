@@ -7,8 +7,8 @@ import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -255,16 +255,16 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 	MarkdownDescription: "Defines the attributes of a customTaskExtension that allows you to integrate Lifecycle Workflows with Azure Logic Apps. While Lifecycle Workflows provide multiple built-in tasks (known as taskDefinitions) to automate common scenarios during the user lifecycle, you may eventually reach the limits of these built-in tasks. You can create a customTaskExtension that contains information about an Azure Logic app, and trigger the Azure Logic app with the built-in task \"Run a custom task extension\" that references the corresponding customTaskExtension.\n\nFor more information about using custom task extensions, refer to the links in the [see also](#related-content) section.\n\nAlso see [Microsoft docs for identityGovernance.customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta). ||| MS Graph: Lifecycle workflows",
 }
 
-var identityGovernanceCustomTaskExtensionCustomExtensionAuthenticationConfigurationValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("azure_ad_pop_token"),
-	path.MatchRelative().AtParent().AtName("azure_ad_token"),
+var identityGovernanceCustomTaskExtensionCustomExtensionAuthenticationConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(
+	"azure_ad_pop_token",
+	"azure_ad_token",
 )
 
-var identityGovernanceCustomTaskExtensionCustomExtensionEndpointConfigurationValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("http_request"),
-	path.MatchRelative().AtParent().AtName("logic_app_trigger"),
+var identityGovernanceCustomTaskExtensionCustomExtensionEndpointConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(
+	"http_request",
+	"logic_app_trigger",
 )
 
-var identityGovernanceCustomTaskExtensionCustomExtensionCallbackConfigurationValidator = objectvalidator.ExactlyOneOf(
-	path.MatchRelative().AtParent().AtName("task"),
+var identityGovernanceCustomTaskExtensionCustomExtensionCallbackConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(
+	"task",
 )
