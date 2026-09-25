@@ -296,6 +296,15 @@ resource "microsoft365wp_device_configuration" "windows_health_monitoring" {
   }
 }
 
+resource "microsoft365wp_device_configuration" "windows10_device_firmware_configuration_interface" {
+  display_name = "TF Test Windows 10 DFCI"
+  windows10_device_firmware_configuration_interface = {
+    change_uefi_settings_permission = "none"
+    cameras                         = "disabled"
+    boot_from_external_media        = "disabled"
+  }
+}
+
 resource "microsoft365wp_device_configuration" "windows10_general" {
   display_name = "TF Test Windows 10 General"
   windows10_general = {

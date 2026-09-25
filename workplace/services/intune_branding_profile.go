@@ -98,7 +98,6 @@ func intuneBrandingProfileGraphToTerraformMiddleware(ctx context.Context, diags 
 	}
 	return nil
 }
-
 func intuneBrandingProfileCreateModifyFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.CreateModifyFuncParams) {
 	var profileName string
 	params.Req.Plan.GetAttribute(ctx, path.Root("profile_name"), &profileName)

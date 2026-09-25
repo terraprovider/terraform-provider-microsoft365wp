@@ -24,13 +24,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
-// deviceConfigurationCustomSkipSecretDecryptionEnvVar can be set to a truthy value (e.g. "1" or "true") to make the
-// provider skip retrieving encrypted OMA setting values via the getOmaSettingPlainTextValue MS Graph action during
-// read. That action requires the DeviceManagementConfiguration.ReadWrite.All permission, so read-only setups cannot
-// use it. When decryption is skipped the value from the prior Terraform state is kept, i.e. changes to these values
-// are not detected ("assume no changes").
-const deviceConfigurationCustomSkipSecretDecryptionEnvVar = "TF_M365WP_SKIP_OMA_SETTING_SECRET_DECRYPTION"
-
 var (
 	DeviceConfigurationCustomResource = generic.GenericResource{
 		TypeNameSuffix: "device_configuration_custom",
@@ -96,6 +89,13 @@ func deviceConfigurationCustomTerraformToGraphMiddleware(ctx context.Context, di
 
 	return nil
 }
+
+// deviceConfigurationCustomSkipSecretDecryptionEnvVar can be set to a truthy value (e.g. "1" or "true") to make the
+// provider skip retrieving encrypted OMA setting values via the getOmaSettingPlainTextValue MS Graph action during
+// read. That action requires the DeviceManagementConfiguration.ReadWrite.All permission, so read-only setups cannot
+// use it. When decryption is skipped the value from the prior Terraform state is kept, i.e. changes to these values
+// are not detected ("assume no changes").
+const deviceConfigurationCustomSkipSecretDecryptionEnvVar = "TF_M365WP_SKIP_OMA_SETTING_SECRET_DECRYPTION"
 
 func deviceConfigurationCustomExtraRequestCustomReadSecretValue(ctx context.Context, diags *diag.Diagnostics, params generic.ReadExtraRequestCustomParams) {
 	warningDetail := "Skipping retrieval of secret value(s)"

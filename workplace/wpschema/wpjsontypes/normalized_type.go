@@ -5,6 +5,7 @@
 // Lifted from https://github.com/hashicorp/terraform-plugin-framework-jsontypes/tree/v0.2.0/jsontypes
 // Changes:
 //   - Added WpObjectFilterFunc
+//   - Added WpIgnoreArrayOrder
 //
 
 package wpjsontypes
@@ -30,6 +31,9 @@ var (
 type NormalizedType struct {
 	basetypes.StringType
 	WpObjectFilterFunc wpobjectfilter.FilterFunc
+	// WpIgnoreArrayOrder makes semantic equality ignore the element order of all (nested) arrays.
+	// Only use it for JSON where no array order carries meaning.
+	WpIgnoreArrayOrder bool
 }
 
 // String returns a human readable string of the type name.
@@ -41,6 +45,7 @@ func (t NormalizedType) String() string {
 func (t NormalizedType) ValueType(ctx context.Context) attr.Value {
 	return Normalized{
 		WpObjectFilterFunc: t.WpObjectFilterFunc,
+		WpIgnoreArrayOrder: t.WpIgnoreArrayOrder,
 	}
 }
 
@@ -60,6 +65,7 @@ func (t NormalizedType) ValueFromString(ctx context.Context, in basetypes.String
 	return Normalized{
 		StringValue:        in,
 		WpObjectFilterFunc: t.WpObjectFilterFunc,
+		WpIgnoreArrayOrder: t.WpIgnoreArrayOrder,
 	}, nil
 }
 

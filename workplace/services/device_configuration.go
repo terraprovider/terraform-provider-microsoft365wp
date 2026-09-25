@@ -4991,6 +4991,245 @@ var deviceConfigurationResourceSchema = schema.Schema{
 				MarkdownDescription: "Windows Update for business configuration, allows you to specify how and when Windows as a Service updates your Windows 10/11 devices with feature and quality updates. Supports ODATA clauses that DeviceConfiguration entity supports: $filter by types of DeviceConfiguration, $top, $select only DeviceConfiguration base properties, $orderby only DeviceConfiguration base properties, and $skip. The query parameter '$search' is not supported. Also see [Microsoft docs for windowsUpdateForBusinessConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windowsupdateforbusinessconfiguration?view=graph-rest-beta). <br> ",
 			},
 		},
+		"windows10_device_firmware_configuration_interface": generic.OdataDerivedTypeNestedAttributeRs{
+			DerivedType: "#microsoft.graph.windows10DeviceFirmwareConfigurationInterface",
+			SingleNestedAttribute: schema.SingleNestedAttribute{
+				Optional: true,
+				Attributes: map[string]schema.Attribute{ // windows10DeviceFirmwareConfigurationInterface
+					"bluetooth": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable Bluetooth. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"boot_from_built_in_network_adapters": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to boot from built-in network adapters. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"boot_from_external_media": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to boot from external media. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"cameras": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether built-in cameras are enabled. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"change_uefi_settings_permission": schema.StringAttribute{
+						Optional:   true,
+						Validators: []validator.String{stringvalidator.OneOf("notConfiguredOnly", "none")},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfiguredOnly"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines the permission level granted to users to change UEFI settings. / Defines the permission level granted to users to enable them change Uefi settings. <br/> _Provider_ allowed values are: `notConfiguredOnly` (Device default value, no intent.), `none` (Prevent change of UEFI setting permission). The _provider_ default value is `\"notConfiguredOnly\"`.",
+					},
+					"front_camera": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable Front Camera. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"infrared_camera": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable Infrared camera. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"microphone": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable Microphone. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"microphones_and_speakers": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether built-in microphones or speakers are enabled. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"near_field_communication": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable Near Field Communication. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"radios": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether built-in radios e.g. WIFI, NFC, Bluetooth, are enabled. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"rear_camera": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable rear camera. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"sd_card": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable SD Card Port. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"simultaneous_multi_threading": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable Simultaneous MultiThreading. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"usb_type_a_port": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable USB Type A Port. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"virtualization_of_cpu_and_i_o": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether CPU and IO virtualization is enabled. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"wake_on_l_a_n": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable Wake on LAN. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"wake_on_power": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable Wake On Power. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"wi_fi": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable WiFi. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"windows_platform_binary_table": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable Windows Platform Binary Table. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"wireless_wide_area_network": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Defines whether a user is allowed to enable Wireless Wide Area Network. / Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+				},
+				Validators:          []validator.Object{deviceConfigurationDeviceConfigurationValidator},
+				MarkdownDescription: "Graph properties for Device Firmware Configuration Interface. Also see [Microsoft docs for windows10DeviceFirmwareConfigurationInterface](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-windows10devicefirmwareconfigurationinterface?view=graph-rest-beta). <br> ",
+			},
+		},
 		"windows10_general": generic.OdataDerivedTypeNestedAttributeRs{
 			DerivedType: "#microsoft.graph.windows10GeneralConfiguration",
 			SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -7079,6 +7318,7 @@ var deviceConfigurationDeviceConfigurationValidator = wpvalidator.ExactlyOneOfSi
 	"macos_software_update",
 	"windows_health_monitoring",
 	"windows_update_for_business",
+	"windows10_device_firmware_configuration_interface",
 	"windows10_general",
 )
 

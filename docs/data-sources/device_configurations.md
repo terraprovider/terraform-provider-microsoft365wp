@@ -98,6 +98,7 @@ Read-Only:
 - `macos_software_update` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.macOSSoftwareUpdateConfiguration` (using e.g. `if x.macos_software_update != null`). (see [below for nested schema](#nestedatt--device_configurations--macos_software_update))
 - `role_scope_tag_ids` (Set of String) List of Scope Tags for this Entity instance. <br/>
 - `version` (Number) Version of the device configuration.
+- `windows10_device_firmware_configuration_interface` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windows10DeviceFirmwareConfigurationInterface` (using e.g. `if x.windows10_device_firmware_configuration_interface != null`). (see [below for nested schema](#nestedatt--device_configurations--windows10_device_firmware_configuration_interface))
 - `windows10_general` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windows10GeneralConfiguration` (using e.g. `if x.windows10_general != null`). (see [below for nested schema](#nestedatt--device_configurations--windows10_general))
 - `windows_health_monitoring` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windowsHealthMonitoringConfiguration` (using e.g. `if x.windows_health_monitoring != null`). (see [below for nested schema](#nestedatt--device_configurations--windows_health_monitoring))
 - `windows_update_for_business` (Attributes) Please note that this nested object does not have any attributes but only exists to be able to test if the parent object is of derived OData type `#microsoft.graph.windowsUpdateForBusinessConfiguration` (using e.g. `if x.windows_update_for_business != null`). (see [below for nested schema](#nestedatt--device_configurations--windows_update_for_business))
@@ -156,6 +157,10 @@ Read-Only:
 
 <a id="nestedatt--device_configurations--macos_software_update"></a>
 ### Nested Schema for `device_configurations.macos_software_update`
+
+
+<a id="nestedatt--device_configurations--windows10_device_firmware_configuration_interface"></a>
+### Nested Schema for `device_configurations.windows10_device_firmware_configuration_interface`
 
 
 <a id="nestedatt--device_configurations--windows10_general"></a>

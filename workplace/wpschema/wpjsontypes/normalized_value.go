@@ -5,6 +5,7 @@
 // Lifted from https://github.com/hashicorp/terraform-plugin-framework-jsontypes/tree/v0.2.0/jsontypes
 // Changes:
 //   - Added WpObjectFilterFunc
+//   - Added WpIgnoreArrayOrder
 //
 
 package wpjsontypes
@@ -13,6 +14,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"slices"
 	"strings"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpobjectfilter"
 
@@ -36,12 +38,14 @@ var (
 type Normalized struct {
 	basetypes.StringValue
 	WpObjectFilterFunc wpobjectfilter.FilterFunc
+	WpIgnoreArrayOrder bool
 }
 
 // Type returns a NormalizedType.
 func (v Normalized) Type(_ context.Context) attr.Type {
 	return NormalizedType{
 		WpObjectFilterFunc: v.WpObjectFilterFunc,
+		WpIgnoreArrayOrder: v.WpIgnoreArrayOrder,
 	}
 }
 
@@ -75,7 +79,7 @@ func (v Normalized) StringSemanticEquals(_ context.Context, newValuable basetype
 		return false, diags
 	}
 
-	result, err := jsonEqual(newValue.ValueString(), v.ValueString(), v.WpObjectFilterFunc)
+	result, err := jsonEqual(newValue.ValueString(), v.ValueString(), v.WpObjectFilterFunc, v.WpIgnoreArrayOrder)
 
 	if err != nil {
 		diags.AddError(
@@ -91,13 +95,13 @@ func (v Normalized) StringSemanticEquals(_ context.Context, newValuable basetype
 	return result, diags
 }
 
-func jsonEqual(s1, s2 string, wpObjectFilterFunc wpobjectfilter.FilterFunc) (bool, error) {
-	s1, err := normalizeJSONString(s1, wpObjectFilterFunc)
+func jsonEqual(s1, s2 string, wpObjectFilterFunc wpobjectfilter.FilterFunc, wpIgnoreArrayOrder bool) (bool, error) {
+	s1, err := normalizeJSONString(s1, wpObjectFilterFunc, wpIgnoreArrayOrder)
 	if err != nil {
 		return false, err
 	}
 
-	s2, err = normalizeJSONString(s2, wpObjectFilterFunc)
+	s2, err = normalizeJSONString(s2, wpObjectFilterFunc, wpIgnoreArrayOrder)
 	if err != nil {
 		return false, err
 	}
@@ -105,7 +109,7 @@ func jsonEqual(s1, s2 string, wpObjectFilterFunc wpobjectfilter.FilterFunc) (boo
 	return s1 == s2, nil
 }
 
-func normalizeJSONString(jsonStr string, wpObjectFilterFunc wpobjectfilter.FilterFunc) (string, error) {
+func normalizeJSONString(jsonStr string, wpObjectFilterFunc wpobjectfilter.FilterFunc, wpIgnoreArrayOrder bool) (string, error) {
 	dec := json.NewDecoder(strings.NewReader(jsonStr))
 
 	// This ensures the JSON decoder will not parse JSON numbers into Go's float64 type; avoiding Go
@@ -126,12 +130,62 @@ func normalizeJSONString(jsonStr string, wpObjectFilterFunc wpobjectfilter.Filte
 		}
 	}
 
+	if wpIgnoreArrayOrder {
+		var err error
+		temp, err = sortArrays(temp)
+		if err != nil {
+			return "", err
+		}
+	}
+
 	jsonBytes, err := json.Marshal(&temp)
 	if err != nil {
 		return "", err
 	}
 
 	return string(jsonBytes), nil
+}
+
+// sortArrays recursively sorts the elements of all arrays by their canonical JSON representation (json.Marshal sorts
+// map keys), so that arrays holding the same elements in a different order normalize to the same value. Nested arrays
+// get sorted before their parent, as the parent's sort order depends on the canonical form of its elements.
+func sortArrays(value any) (any, error) {
+	switch v := value.(type) {
+	case map[string]any:
+		for key, item := range v {
+			sorted, err := sortArrays(item)
+			if err != nil {
+				return nil, err
+			}
+			v[key] = sorted
+		}
+		return v, nil
+
+	case []any:
+		type keyedItem struct {
+			key  string
+			item any
+		}
+		items := make([]keyedItem, len(v))
+		for i, item := range v {
+			sorted, err := sortArrays(item)
+			if err != nil {
+				return nil, err
+			}
+			keyBytes, err := json.Marshal(sorted)
+			if err != nil {
+				return nil, err
+			}
+			items[i] = keyedItem{key: string(keyBytes), item: sorted}
+		}
+		slices.SortFunc(items, func(a, b keyedItem) int { return strings.Compare(a.key, b.key) })
+		for i, item := range items {
+			v[i] = item.item
+		}
+		return v, nil
+	}
+
+	return value, nil
 }
 
 // ValidateAttribute implements attribute value validation. This type requires the value provided to be a String

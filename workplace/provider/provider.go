@@ -353,6 +353,8 @@ func (p *workplaceProvider) Configure(ctx context.Context, req provider.Configur
 	}
 
 	graphClient := msgraph.NewClient(msgraph.VersionBeta)
+	graphEndpoint, _ := env.MicrosoftGraph.Endpoint() // already checked to be non-empty above
+	graphClient.Endpoint = *graphEndpoint
 	graphClient.Authorizer = authorizer
 	graphClient.RequestMiddlewares = &[]msgraph.RequestMiddleware{requestLogger}
 	graphClient.ResponseMiddlewares = &[]msgraph.ResponseMiddleware{responseLogger}

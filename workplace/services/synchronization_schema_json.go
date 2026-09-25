@@ -59,7 +59,7 @@ var synchronizationSchemaJsonResourceSchema = schema.Schema{
 		},
 		"synchronization_rules_json": schema.StringAttribute{
 			Required:            true,
-			CustomType:          wpjsontypes.NormalizedType{},
+			CustomType:          wpjsontypes.NormalizedType{WpIgnoreArrayOrder: true},
 			Description:         `synchronizationRules`, // custom MS Graph attribute name
 			MarkdownDescription: "A collection of synchronization rules configured for the [synchronizationJob](synchronization-synchronizationjob.md) or [synchronizationTemplate](synchronization-synchronizationtemplate.md). / Defines how the synchronization should be performed for the synchronization engine, including which objects to synchronize and in which direction, how objects from the source directory should be matched with objects in the target directory, and how attributes should be transformed when they're synchronized from the source to the target directory.\n\nSynchronization rules are updated as part of the [synchronization schema](synchronization-synchronizationschema.md). / https://learn.microsoft.com/en-us/graph/api/resources/synchronization-synchronizationrule?view=graph-rest-beta",
 		},
@@ -69,7 +69,7 @@ var synchronizationSchemaJsonResourceSchema = schema.Schema{
 		},
 		"directories_json": schema.StringAttribute{
 			Required:            true,
-			CustomType:          wpjsontypes.NormalizedType{WpObjectFilterFunc: synchronizationSchemaJsonDirectoriesFilter},
+			CustomType:          wpjsontypes.NormalizedType{WpObjectFilterFunc: synchronizationSchemaJsonDirectoriesFilter, WpIgnoreArrayOrder: true},
 			Description:         `directories`, // custom MS Graph attribute name
 			MarkdownDescription: "Contains the collection of directories and all of their objects. / Provides the synchronization engine information about a directory and its objects. This resource tells the synchronization engine, for example, that the directory has objects named **user** and **group**, which attributes are supported for those objects, and the types for those attributes. In order for the object and attribute to participate in [synchronization rules](synchronization-synchronizationrule.md) and [object mappings](synchronization-objectmapping.md), they must be defined as part of the directory definition.\n\nIn general, the default [synchronization schema](synchronization-synchronizationschema.md) provided as part of the [synchronization template](synchronization-synchronizationtemplate.md) defines the most commonly used objects and attributes for that directory. However, if the directory supports the addition of custom attributes, you might want to expand the default definition with your own custom objects or attributes. For more information, see the following articles.\n\nDirectory definitions are updated as part of the [synchronization schema](synchronization-synchronizationschema.md). / https://learn.microsoft.com/en-us/graph/api/resources/synchronization-directorydefinition?view=graph-rest-beta",
 		},

@@ -46,6 +46,10 @@ func authenticationMethodsPolicyGraphToTerraformMiddleware(ctx context.Context, 
 					// skip appending to new slice
 					continue
 				}
+				// also remove the "Password" entry (rolled out to some tenants, but neither in metadata nor documented yet)
+				if id, idOk := configMap["id"].(string); idOk && id == "Password" {
+					continue
+				}
 			}
 			amConfigsNew = append(amConfigsNew, configAny)
 		}

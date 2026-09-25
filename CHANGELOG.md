@@ -1,5 +1,18 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.19.0 (2026-09-25)
+
+### added
+
+- [device_configuration.windows10_device_firmware_configuration_interface](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_configuration#nestedatt--windows10_device_firmware_configuration_interface): Add Device Firmware Configuration Interface (DFCI) (GH #18)
+
+### fixed
+
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): Use Microsoft Graph endpoint of configured `environment` / `metadata_host` (GH #21)
+- [authentication_methods_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authentication_methods_policy): Ignore undocumented `Password` method configuration (GH #28)
+- [synchronization_schema_json](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/synchronization_schema_json): Ignore array order in JSON semantic equality
+
+
 ## 0.18.4 (2026-07-30)
 
 ### fixed
