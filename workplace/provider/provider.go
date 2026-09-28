@@ -552,6 +552,7 @@ func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resou
 		func() resource.Resource { return &services.DeviceCompliancePolicyResource },
 		func() resource.Resource { return &services.DeviceComplianceScriptResource },
 		func() resource.Resource { return &services.DeviceConfigurationResource },
+		func() resource.Resource { return services.DeviceConfigurationAssignmentResource },
 		func() resource.Resource { return &services.DeviceConfigurationCustomResource },
 		func() resource.Resource { return &services.DeviceCustomAttributeShellScriptResource },
 		func() resource.Resource { return &services.DeviceEnrollmentConfigurationResource },
