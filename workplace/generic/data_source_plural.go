@@ -157,7 +157,7 @@ func (d *GenericDataSourcePlural) Read(ctx context.Context, req datasource.ReadR
 	}
 
 	// do not consider ODataExpand here as it would automatically include the attribute(s) in the result
-	rawVal := d.AccessParams.ReadRaw3(ctx, &resp.Diagnostics, uri, "", odataFilter, d.odataSelectGraphNames, odataOrderby, odataTop, false)
+	rawVal := d.AccessParams.ReadRaw3(ctx, &resp.Diagnostics, uri, "", odataFilter, d.odataSelectGraphNames, odataOrderby, odataTop, false, false)
 	if resp.Diagnostics.HasError() {
 		return
 	}

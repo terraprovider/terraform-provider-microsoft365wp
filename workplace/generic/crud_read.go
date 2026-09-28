@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"slices"
 
 	"terraform-provider-microsoft365wp/workplace/external/msgraph"
 
@@ -45,9 +46,29 @@ func (aps *AccessParams) ReadSingleCompleteTf3(ctx context.Context, diags *diag.
 		return tftypes.Value{}
 	}
 
-	rawVal := aps.ReadRaw3(ctx, diags, uri, readOptions.ODataExpand, odataFilter2, readOptions.ODataSelect, odataOrderby, odataTop, tolerateNotFound)
+	filteredSingle := readOptions.SingleItemUseODataFilter && id != ""
+	odataSelect := readOptions.ODataSelect
+	if filteredSingle && len(odataSelect) > 0 && !slices.Contains(odataSelect, aps.EntityId.AttrNameGraph) {
+		odataSelect = append(slices.Clone(odataSelect), aps.EntityId.AttrNameGraph)
+	}
+	rawVal := aps.ReadRaw3(ctx, diags, uri, readOptions.ODataExpand, odataFilter2, odataSelect, odataOrderby, odataTop, tolerateNotFound, filteredSingle)
 	if rawVal == nil || diags.HasError() {
 		return tftypes.Value{}
+	}
+	if filteredSingle {
+		items, isCollection := rawVal["value"].([]any)
+		_, hasContinuation := rawVal["@odata.nextLink"]
+		valid := isCollection && len(items) <= 1 && !hasContinuation
+		if valid && len(items) == 1 {
+			item, isObject := items[0].(map[string]any)
+			returnedId, isString := item[aps.EntityId.AttrNameGraph].(string)
+			valid = isObject && isString && returnedId == id
+		}
+		if !valid {
+			diags.AddError("Invalid filtered MS Graph response", "Expected a complete collection containing either no entity or exactly one entity with the requested ID.")
+			return tftypes.Value{}
+		}
+		rawVal = map[string]any{"value": items}
 	}
 
 	if len(readOptions.ExtraRequests) > 0 || len(readOptions.ExtraRequestsCustom) > 0 {
@@ -112,7 +133,6 @@ func (aps *AccessParams) ReadSingleCompleteTf3(ctx context.Context, diags *diag.
 		}
 	}
 
-
 	tfVal := ConvertOdataRawToTerraform(ctx, diags, schema, rawVal, "", aps.GraphToTerraformMiddleware, id, aps.GraphToTerraformMiddlewareTargetSetRunOnRawVal, reqState)
 	if diags.HasError() {
 		return tftypes.Value{}
@@ -133,10 +153,10 @@ func (aps *AccessParams) ReadRaw(ctx context.Context, diags *diag.Diagnostics, u
 
 func (aps *AccessParams) ReadRaw2(ctx context.Context, diags *diag.Diagnostics, uri msgraph.Uri,
 	odataExpand string, odataFilter string, odataSelect []string, tolerateNotFound bool) map[string]any {
-	return aps.ReadRaw3(ctx, diags, uri, odataExpand, odataFilter, odataSelect, "", 0, tolerateNotFound)
+	return aps.ReadRaw3(ctx, diags, uri, odataExpand, odataFilter, odataSelect, "", 0, tolerateNotFound, false)
 }
 func (aps *AccessParams) ReadRaw3(ctx context.Context, diags *diag.Diagnostics, uri msgraph.Uri,
-	odataExpand string, odataFilter string, odataSelect []string, odataOrderby string, odataTop int, tolerateNotFound bool) map[string]any {
+	odataExpand string, odataFilter string, odataSelect []string, odataOrderby string, odataTop int, tolerateNotFound bool, disablePaging bool) map[string]any {
 	odataQuery := odata.Query{
 		Filter: odataFilter,
 		Select: odataSelect,
@@ -152,7 +172,7 @@ func (aps *AccessParams) ReadRaw3(ctx context.Context, diags *diag.Diagnostics, 
 		}
 		uri.Params.Set("$orderby", odataOrderby)
 	}
-	return ReadRaw2(ctx, diags, aps.graphClient, uri, &odataQuery, aps.ReadOptions.ValidStatusCodesExtra, tolerateNotFound)
+	return ReadRaw2(ctx, diags, aps.graphClient, uri, &odataQuery, aps.ReadOptions.ValidStatusCodesExtra, tolerateNotFound, disablePaging)
 }
 
 func (aps *AccessParams) ReadId(ctx context.Context, diags *diag.Diagnostics,
@@ -228,15 +248,16 @@ func (aps *AccessParams) PopulateStateParentIdsFromRequest(ctx context.Context, 
 }
 
 func ReadRaw(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph.Client, uriEntity string, tolerateNotFound bool) map[string]any {
-	return ReadRaw2(ctx, diags, graphClient, msgraph.Uri{Entity: uriEntity}, nil, nil, tolerateNotFound)
+	return ReadRaw2(ctx, diags, graphClient, msgraph.Uri{Entity: uriEntity}, nil, nil, tolerateNotFound, false)
 }
 
 func ReadRaw2(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph.Client, uri msgraph.Uri, odataQuery *odata.Query,
-	validStatusCodesExtra []int, tolerateNotFound bool) map[string]any {
+	validStatusCodesExtra []int, tolerateNotFound bool, disablePaging bool) map[string]any {
 
 	graphRequest := msgraph.GetHttpRequestInput{
 		Uri:              uri,
 		ValidStatusCodes: append([]int{http.StatusOK}, validStatusCodesExtra...),
+		DisablePaging:    disablePaging,
 	}
 	if odataQuery != nil {
 		graphRequest.OData = *odataQuery
@@ -272,6 +293,10 @@ func ReadRaw2(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph
 
 	rawVal := ConvertOdataJsonToRaw(ctx, diags, respBody)
 	if diags.HasError() {
+		return nil
+	}
+	if rawVal == nil {
+		diags.AddError("Invalid MS Graph response", "Expected a JSON object, received null.")
 		return nil
 	}
 
