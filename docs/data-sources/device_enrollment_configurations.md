@@ -23,16 +23,13 @@ get the real `id` directly from MS Graph using e.g. some browser's development t
 usual to see the required changes.  
 
 ### Priorities
-MS Graph seems to be quite picky about setting priorities. They have to be sequential (i.e. there cannot be gaps
-when creating) and when updating priorities, values can only be switched with another exiting config (e.g. if
-the config with priority 1 gets deleted (e.g. manually) then the list will start with priority 2 and the
-`setPriority` action will refuse to set any other config to priority 1 anymore but only to priority 2).  
-Therefore setting of configuration priorities has been implemented as best-effort only: Any errors returned from
-MS Graph during the `setPriority` action will only be shown as warnings in Terraform and more than one apply
-action may be required to actually get every priority set correctly.  
-And in case of a situation that MS Graph is not willing (or able) to fulfill, there will continously remain
-changes. If you are really, really sure that your configuration should actually be fulfillable by MS Graph, then
-it may help to destroy all configurations again and start over.  
+Enrollment configuration priorities are ordered and changes can reorder other profiles of the same type.
+Use sequential priorities when creating profiles. When priority is omitted, the provider leaves it under
+service control. When explicitly configured, the provider reads the current priority and skips `setPriority`
+if it already matches; Graph can reject these redundant requests. Actual changes call `setPriority` and
+verify the resulting priority. Action failures, unreadable priorities, or mismatched readback fail the
+operation rather than warn; state retains the last observed priority (or the prior value when no observation
+succeeded).
 
 ### Delays Between Writes
 As there have been situations during testing that resulted in multiple enrollment configurations with duplicate
