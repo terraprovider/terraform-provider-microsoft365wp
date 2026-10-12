@@ -410,6 +410,17 @@ var androidManagedAppProtectionResourceSchema = schema.Schema{
 			Computed:            true,
 			MarkdownDescription: "Defines how app messaging redirection is protected by an App Protection Policy. Default is anyApp. / Defines how app messaging redirection is protected by an App Protection Policy. Default is anyApp. <br/> _Provider_ allowed values are: `anyApp` (App protection policy will allow messaging redirection to any app.), `anyManagedApp` (App protection policy will allow messaging redirection to any managed application.), `specificApps` (App protection policy will allow messaging redirection only to specified applications in related App protection policy settings. See related settings `messagingRedirectAppDisplayName`, `messagingRedirectAppPackageId` and `messagingRedirectAppUrlScheme`.), `blocked` (App protection policy will block messaging redirection to any app.). The _provider_ default value is `\"anyApp\"`.",
 		},
+		"purview_content_evaluation_required": schema.StringAttribute{
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("notRequired", "requiredWhenOnline", "required", "unknownFutureValue"),
+			},
+			PlanModifiers: []planmodifier.String{
+				wpdefaultvaluemodifier.StringDefaultValue("notRequired"),
+			},
+			Computed:            true,
+			MarkdownDescription: "_Provider_ allowed values are: `notRequired`, `requiredWhenOnline`, `required`, `unknownFutureValue`. The _provider_ default value is `\"notRequired\"`.",
+		},
 		"save_as_blocked": schema.BoolAttribute{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
@@ -499,6 +510,13 @@ var androidManagedAppProtectionResourceSchema = schema.Schema{
 			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("block")},
 			Computed:            true,
 			MarkdownDescription: "Defines a managed app behavior, either warn or block, if the specified Android SafetyNet Attestation requirement fails. / An admin initiated action to be applied on a managed app. <br/> _Provider_ allowed values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting). The _provider_ default value is `\"block\"`.",
+		},
+		"app_action_if_developer_options_enabled": schema.StringAttribute{
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("block", "wipe", "warn", "blockWhenSettingIsSupported"),
+			},
+			MarkdownDescription: "An admin initiated action to be applied on a managed app. <br/> _Provider_ allowed values are: `block` (Indicates the user will be blocked from accessing the app and corporate data), `wipe` (Indicates the corporate data will be removed from the app), `warn` (Indicates user will be warned the when accessing the app), `blockWhenSettingIsSupported` (Indicates user will be blocked from accessing the app and corporate data if devices supports this setting).",
 		},
 		"app_action_if_device_lock_not_set": schema.StringAttribute{
 			Optional: true,

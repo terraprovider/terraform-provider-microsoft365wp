@@ -60,11 +60,6 @@ func authenticationMethodsPolicyGraphToTerraformMiddleware(ctx context.Context, 
 
 var authenticationMethodsPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // authenticationMethodsPolicy
-		"id": schema.StringAttribute{
-			Computed:            true,
-			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "The identifier of the policy.",
-		},
 		"description": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
@@ -74,6 +69,11 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 			MarkdownDescription: "The name of the policy.",
+		},
+		"id": schema.StringAttribute{
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "The identifier of the policy.",
 		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -128,7 +128,7 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 											wpdefaultvaluemodifier.StringDefaultValue("microsoftAuthenticator"),
 										},
 										Computed:            true,
-										MarkdownDescription: "The authentication method that the user is prompted to register. The value must be `microsoftAuthenticator`. <br/> The _provider_ default value is `\"microsoftAuthenticator\"`.",
+										MarkdownDescription: "The authentication method that the user is prompted to register. The value can be `Fido2` or `microsoftAuthenticator`. <br/> The _provider_ default value is `\"microsoftAuthenticator\"`.",
 									},
 									"target_type": schema.StringAttribute{
 										Required: true,
@@ -163,7 +163,7 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "Run campaigns to remind users to set up targeted authentication methods. / Represents the settings used to run campaigns to push users to set up targeted authentication methods. Users are prompted to set up the authentication method after they successfully complete a MFA challenge. Only available for the Microsoft Authenticator app for MFA. Also see [Microsoft docs for authenticationMethodsRegistrationCampaign](https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodsregistrationcampaign?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "Run campaigns to remind users to set up targeted authentication methods. / Represents the settings used to run campaigns to push users to set up targeted authentication methods. Users are prompted to set up the authentication method after they successfully complete a MFA challenge. Only available for passkey (FIDO2) and Microsoft Authenticator for MFA. Also see [Microsoft docs for authenticationMethodsRegistrationCampaign](https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodsregistrationcampaign?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
@@ -726,6 +726,10 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 						SingleNestedAttribute: schema.SingleNestedAttribute{
 							Optional: true,
 							Attributes: map[string]schema.Attribute{ // voiceAuthenticationMethodConfiguration
+								"caller_id_number": schema.StringAttribute{
+									Optional:            true,
+									MarkdownDescription: "The phone number used as the caller ID when voice call authentication is initiated.",
+								},
 								"is_office_phone_allowed": schema.BoolAttribute{
 									Optional:            true,
 									PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
@@ -924,6 +928,12 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 									PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 									Computed:            true,
 									MarkdownDescription: "Determines whether issuer(CA) hints are sent back to the client side to filter the certificates shown in certificate picker. / Determines whether issuer(CA) hints are sent back to the client side to filter the certificates shown in certificate picker. Also see [Microsoft docs for x509CertificateIssuerHintsConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/x509certificateissuerhintsconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+								},
+								"require_certificate_sid_alignment": schema.BoolAttribute{
+									Optional:            true,
+									PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+									Computed:            true,
+									MarkdownDescription: "When set to `true`, Microsoft Entra ID matches the SID in the Security Identifier (SID) extension or the SAN URI SID value from the user's X.509 certificate to the user's on-premises SID attribute for hybrid users and cloud SID for cloud-only users. Certificate-based authentication fails if the values don't match. The value can't be `null`. The default value is `false`. <br/> The _provider_ default value is `false`.",
 								},
 								"include_targets": schema.SetNestedAttribute{
 									Optional: true,

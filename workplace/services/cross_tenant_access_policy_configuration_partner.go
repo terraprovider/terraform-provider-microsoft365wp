@@ -45,6 +45,17 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 			Computed:            true,
 			MarkdownDescription: "Shows the last date and time the policy was deleted.",
 		},
+		"app_service_connect_inbound": schema.SingleNestedAttribute{
+			Optional: true,
+			Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyAppServiceConnectSetting
+				"applications": schema.SingleNestedAttribute{
+					Optional:            true,
+					Attributes:          crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetConfigurationAttributes,
+					MarkdownDescription: "Defines the target applications that are allowed for inbound app service connect across tenant boundaries. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
+				},
+			},
+			MarkdownDescription: "Defines your partner-specific configuration for inbound app service connect settings that control which applications can connect across tenant boundaries with the partner organization. <br/> Represents the inbound app service connect settings for a cross-tenant access policy that specify which applications can connect across tenant boundaries. <br/> This resource is used by the **appServiceConnectInbound** property of the [crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta) and [crossTenantAccessPolicyConfigurationPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta) resources. Also see [Microsoft docs for crossTenantAccessPolicyAppServiceConnectSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyappserviceconnectsetting?view=graph-rest-beta). <br> ",
+		},
 		"automatic_user_consent_settings": schema.SingleNestedAttribute{
 			Optional: true,
 			Attributes: map[string]schema.Attribute{ // inboundOutboundPolicyConfiguration
@@ -83,6 +94,10 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 			Description:         `b2bDirectConnectOutbound`, // custom MS Graph attribute name
 			MarkdownDescription: "Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. Also see [Microsoft docs for crossTenantAccessPolicyB2BSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta). <br> ",
 		},
+		"block_service_provider_outbound_access": schema.BoolAttribute{
+			Optional:            true,
+			MarkdownDescription: "Specifies whether users can use granular delegated admin privileges (GDAP) to sign-in and access resources in other organizations. Default value is `false`.",
+		},
 		"inbound_trust": schema.SingleNestedAttribute{
 			Optional: true,
 			Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyInboundTrust
@@ -110,6 +125,30 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 			Computed:            true,
 			MarkdownDescription: "Identifies whether the partner-specific configuration is a Cloud Service Provider for your organization.",
 		},
+		"m365_collaboration_inbound": schema.SingleNestedAttribute{
+			Optional: true,
+			Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyM365CollaborationInboundSetting
+				"users": schema.SingleNestedAttribute{
+					Optional:            true,
+					Attributes:          crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetConfigurationAttributes,
+					MarkdownDescription: "Defines the target users from other organizations who are allowed inbound Microsoft 365 collaboration with your organization. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
+				},
+			},
+			Description:         `m365CollaborationInbound`, // custom MS Graph attribute name
+			MarkdownDescription: "Defines your partner-specific configuration for inbound Microsoft 365 collaboration settings that determine which users from the partner organization can collaborate with your organization using Microsoft 365 apps. <br/> Represents the inbound Microsoft 365 collaboration settings for a cross-tenant access policy that specify which users from external organizations can collaborate with your organization using Microsoft 365 apps. <br/> This resource is used by the **m365CollaborationInbound** property of the [crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta) and [crossTenantAccessPolicyConfigurationPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta) resources. Also see [Microsoft docs for crossTenantAccessPolicyM365CollaborationInboundSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicym365collaborationinboundsetting?view=graph-rest-beta). <br> ",
+		},
+		"m365_collaboration_outbound": schema.SingleNestedAttribute{
+			Optional: true,
+			Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyM365CollaborationOutboundSetting
+				"users_and_groups": schema.SingleNestedAttribute{
+					Optional:            true,
+					Attributes:          crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetConfigurationAttributes,
+					MarkdownDescription: "Defines the target users and groups in your organization who are allowed outbound Microsoft 365 collaboration with external organizations. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
+				},
+			},
+			Description:         `m365CollaborationOutbound`, // custom MS Graph attribute name
+			MarkdownDescription: "Defines your partner-specific configuration for outbound Microsoft 365 collaboration settings that determine which users in your organization can collaborate with the partner organization using Microsoft 365 apps. <br/> Represents the outbound Microsoft 365 collaboration settings for a cross-tenant access policy that specify which users in your organization can collaborate with external organizations using Microsoft 365 apps. <br/> This resource is used by the **m365CollaborationOutbound** property of the [crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta) and [crossTenantAccessPolicyConfigurationPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta) resources. Also see [Microsoft docs for crossTenantAccessPolicyM365CollaborationOutboundSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicym365collaborationoutboundsetting?view=graph-rest-beta). <br> ",
+		},
 		"tenant_id": schema.StringAttribute{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
@@ -122,12 +161,12 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 				"applications": schema.SingleNestedAttribute{
 					Optional:            true,
 					Attributes:          crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetConfigurationAttributes,
-					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
+					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
 				},
 				"users_and_groups": schema.SingleNestedAttribute{
 					Optional:            true,
 					Attributes:          crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetConfigurationAttributes,
-					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
+					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
 				},
 				"devices": schema.SingleNestedAttribute{
 					Optional: true,
@@ -158,7 +197,7 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 				},
 				"display_name": schema.StringAttribute{
 					Computed:            true,
-					MarkdownDescription: "Display name for the cross-tenant user synchronization policy. Use the name of the partner Microsoft Entra tenant to easily identify the policy. Optional.",
+					MarkdownDescription: "Display name for the cross-tenant user and group synchronization policy. Use the name of the partner Microsoft Entra tenant to easily identify the policy. Optional.",
 				},
 				"group_sync_inbound": schema.SingleNestedAttribute{
 					Computed: true,
@@ -168,11 +207,19 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 							MarkdownDescription: "Defines whether group objects should be synchronized from the partner tenant. `false` stops any current group synchronization from the source tenant to the target tenant. This property has no impact on existing groups that were synchronized.",
 						},
 					},
-					MarkdownDescription: "Defines whether groups can be synchronized from a partner tenant. Key. / Defines whether groups can be synchronized from a partner tenant, as defined in the **groupSyncInbound** property of [crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crossTenantIdentitySyncPolicyPartner?view=graph-rest-beta) object. Also see [Microsoft docs for crossTenantGroupSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantgroupsyncinbound?view=graph-rest-beta). <br> ",
+					MarkdownDescription: "Defines whether groups can be synchronized from a partner tenant. / Defines whether groups can be synchronized from a partner tenant, as defined in the **groupSyncInbound** property of [crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crossTenantIdentitySyncPolicyPartner?view=graph-rest-beta) object. Also see [Microsoft docs for crossTenantGroupSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantgroupsyncinbound?view=graph-rest-beta). <br> ",
+				},
+				"role_enabled_group_sync_inbound": schema.SingleNestedAttribute{
+					Computed: true,
+					Attributes: map[string]schema.Attribute{ // crossTenantRoleEnabledGroupSyncInbound
+						"is_sync_allowed": schema.BoolAttribute{
+							Computed: true,
+						},
+					},
 				},
 				"tenant_id": schema.StringAttribute{
 					Computed:            true,
-					MarkdownDescription: "Tenant identifier for the partner Microsoft Entra organization. Read-only.",
+					MarkdownDescription: "Tenant identifier for the partner Microsoft Entra organization. Key. Read-only.",
 				},
 				"user_sync_inbound": schema.SingleNestedAttribute{
 					Computed: true,
@@ -182,26 +229,13 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 							MarkdownDescription: "Defines whether user objects should be synchronized from the partner tenant. `false` causes any current user synchronization from the source tenant to the target tenant to stop. This property has no impact on existing users who have already been synchronized.",
 						},
 					},
-					MarkdownDescription: "Defines whether users can be synchronized from the partner tenant. Key. / Defines whether users can be synchronized from the partner tenant. Also see [Microsoft docs for crossTenantUserSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta). <br> ",
+					MarkdownDescription: "Defines whether users can be synchronized from the partner tenant. / Defines whether users can be synchronized from the partner tenant. Also see [Microsoft docs for crossTenantUserSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta). <br> ",
 				},
 			},
-			MarkdownDescription: "Defines the cross-tenant policy for the synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multitenant organization by automating the creation, update, and deletion of users from one tenant to another. / Defines the cross-tenant policy for synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users from one tenant to another. Also see [Microsoft docs for crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "Defines the cross-tenant policy for the synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multitenant organization by automating the creation, update, and deletion of users from one tenant to another. / Defines the cross-tenant policy for synchronization of users and optionally groups from a partner tenant. Use this user and group synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users and groups from one tenant to another. Also see [Microsoft docs for crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta). <br> ",
 		},
 	},
 	MarkdownDescription: "Represents the partner-specific configuration for cross-tenant access and tenant restrictions. Cross-tenant access settings include inbound and outbound settings of Microsoft Entra B2B collaboration and B2B direct connect.\n\nFor any partner-specific property that is `null`, these settings inherit the behavior configured in your [default cross-tenant access settings](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta).\n\nAlso see [Microsoft docs for crossTenantAccessPolicyConfigurationPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta). ||| MS Graph: Cross-tenant access",
-}
-
-var crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyB2BSettingAttributes = map[string]schema.Attribute{ // crossTenantAccessPolicyB2BSetting
-	"applications": schema.SingleNestedAttribute{
-		Optional:            true,
-		Attributes:          crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetConfigurationAttributes,
-		MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
-	},
-	"users_and_groups": schema.SingleNestedAttribute{
-		Optional:            true,
-		Attributes:          crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetConfigurationAttributes,
-		MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
-	},
 }
 
 var crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetConfigurationAttributes = map[string]schema.Attribute{ // crossTenantAccessPolicyTargetConfiguration
@@ -234,5 +268,18 @@ var crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetAttr
 			stringvalidator.OneOf("user", "group", "application", "unknownFutureValue"),
 		},
 		MarkdownDescription: "The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.",
+	},
+}
+
+var crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyB2BSettingAttributes = map[string]schema.Attribute{ // crossTenantAccessPolicyB2BSetting
+	"applications": schema.SingleNestedAttribute{
+		Optional:            true,
+		Attributes:          crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetConfigurationAttributes,
+		MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
+	},
+	"users_and_groups": schema.SingleNestedAttribute{
+		Optional:            true,
+		Attributes:          crossTenantAccessPolicyConfigurationPartnerCrossTenantAccessPolicyTargetConfigurationAttributes,
+		MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
 	},
 }

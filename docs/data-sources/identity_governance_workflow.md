@@ -75,18 +75,19 @@ output "microsoft365wp_identity_governance_workflow" {
 ### Read-Only
 
 - `administration_scope_targets` (Attributes Set) The [administrative units](https://learn.microsoft.com/en-us/graph/api/resources/administrativeunit?view=graph-rest-beta) in the scope of the workflow. Optional. <br/> Supports `$expand`. <br/> Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--administration_scope_targets))
-- `category` (String) The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. Required. <br/> Supports `$filter`(`eq`,`ne`) and `$orderby` <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.
+- `category` (String) The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. Required. <br/> Supports `$filter`(`eq`,`ne`) and `$orderby` <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`, `extensibility`.
 - `created_by` (Attributes) The unique identifier of the Microsoft Entra user that created the [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) object. <br/> Supports `$filter`(`eq`, `ne`) and `$expand`. <br/> Represents an Azure Active Directory user object. Also see [Microsoft docs for user](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-user?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--created_by))
 - `created_date_time` (String) When the `workflow` was created. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
 - `deleted_date_time` (String) When the workflow was deleted. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
 - `description` (String) The description of the `workflow`. Optional. <br/>
 - `display_name` (String) The display name of the `workflow`. Required. <br/> Supports `$filter`(`eq`, `ne`) and `orderby`.
-- `execution_conditions` (Attributes) Conditions describing when to execute the workflow and the criteria to identify in-scope subject set. Required. / The workflowExecutionConditions type notes the workflow execution conditions in [workflowTemplate](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowtemplate?view=graph-rest-beta) and [workflowBase](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowbase?view=graph-rest-beta) objects. Execution conditions define when a workflow runs and rules that identify the users that are the target of the workflow. Also see [Microsoft docs for identityGovernance.workflowExecutionConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutionconditions?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions))
+- `execution_conditions` (Attributes) Conditions describing when to execute the workflow and the criteria to identify in-scope subject set. Required. / The derived types of this abstract object are configured in the **executionConditions** property of the [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta), [workflowTemplate](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowtemplate?view=graph-rest-beta), and [workflowVersion](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta) resources. Execution conditions define when a workflow runs and which users or subjects it targets. Also see [Microsoft docs for identityGovernance.workflowExecutionConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutionconditions?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions))
 - `is_enabled` (Boolean) Whether the workflow is enabled or disabled. If this setting is `true`, the workflow can be run on demand or on schedule when **isSchedulingEnabled** is `true`. Optional. Defaults to `true`. <br/> Supports `$filter`(`eq`, `ne`) and `orderBy`. <br/>
 - `is_scheduling_enabled` (Boolean) If `true`, the Lifecycle Workflow engine executes the workflow based on the schedule defined by [tenant settings](identitygovernance-lifecyclemanagementsettings.md). Cannot be `true` for a disabled workflow (where **isEnabled** is `false`). Optional. Defaults to `false`. <br/> Supports `$filter`(`eq`, `ne`) and `orderBy`. <br/>
 - `last_modified_by` (Attributes) The user who last modified the [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) object. <br/> Supports `$filter`(`eq`, `ne`) and `$expand`. <br/> Represents an Azure Active Directory user object. Also see [Microsoft docs for user](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-user?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--last_modified_by))
 - `last_modified_date_time` (String) The date time when the `workflow` was last modified. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
 - `next_schedule_run_date_time` (String) The date time when the `workflow` is expected to run next based on the schedule interval, if there are any users matching the execution conditions. <br/> Supports `$filter`(`lt`,`gt`) and `$orderby`.
+- `quarantine_details` (Attributes) The current quarantine state of the workflow. / Represents the read-only quarantine state of a [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta). This object is returned in the **quarantineDetails** property of a workflow when the workflow is automatically quarantined because a run exceeded the threshold conditions defined in its [quarantineConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-quarantineconfiguration?view=graph-rest-beta). Also see [Microsoft docs for identityGovernance.quarantineDetails](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-quarantinedetails?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--quarantine_details))
 - `tasks` (Attributes List) Represents the configured tasks to execute and their execution sequence within a [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) object. Required. / Represents a task, such as a piece of work or personal item, that can be tracked and completed. A **task** is always contained in a [base task list](basetasklist.md). Also see [Microsoft docs for identityGovernance.task](https://learn.microsoft.com/en-us/graph/api/resources/task?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--tasks))
 - `version` (Number) The current version number of the workflow. Value is 1 when the workflow is first created. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
 
@@ -111,11 +112,16 @@ Read-Only:
 
 Read-Only:
 
-- `on_demand_execution_only` (Attributes) Represents the execution condition of a [lifecycle workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) running on-demand only instead of by schedule. Also see [Microsoft docs for identityGovernance.onDemandExecutionOnly](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-ondemandexecutiononly?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--on_demand_execution_only))
+- `on_demand_execution_only` (Attributes) Represents the execution condition for a lifecycle workflow that runs on-demand only instead of by schedule. This object is configured in the **executionConditions** property of the [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta), [workflowVersion](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta), and [workflowTemplate](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowtemplate?view=graph-rest-beta) resources. Also see [Microsoft docs for identityGovernance.onDemandExecutionOnly](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-ondemandexecutiononly?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--on_demand_execution_only))
+- `provisioning_attribute_mapping` (Attributes) Represents execution conditions for provisioning workflows that use attribute mapping. This object is configured in the **executionConditions** property of the [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta), [workflowTemplate](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowtemplate?view=graph-rest-beta), and [workflowVersion](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta) resources when workflows execute based on attribute-based criteria. Also see [Microsoft docs for identityGovernance.provisioningAttributeMapping](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-provisioningattributemapping?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--provisioning_attribute_mapping))
 - `trigger_and_scope_based_conditions` (Attributes) Represents a lifecycle workflow running by schedule, who it runs for, and what triggers the workflow to run. Also see [Microsoft docs for identityGovernance.triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions))
 
 <a id="nestedatt--execution_conditions--on_demand_execution_only"></a>
 ### Nested Schema for `execution_conditions.on_demand_execution_only`
+
+
+<a id="nestedatt--execution_conditions--provisioning_attribute_mapping"></a>
+### Nested Schema for `execution_conditions.provisioning_attribute_mapping`
 
 
 <a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions"></a>
@@ -123,26 +129,38 @@ Read-Only:
 
 Read-Only:
 
-- `scope` (Attributes) Defines who the workflow runs for. <br/> A shared object that is used in entitlement management access package assignment policies, role management policies, and lifecycle workflows. <br/> This object is an abstract base type from which the following resources are derived:. Also see [Microsoft docs for subjectSet](https://learn.microsoft.com/en-us/graph/api/resources/subjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope))
-- `trigger` (Attributes) What triggers a workflow to run. / The workflowExecutionTrigger type represents the workflow execution trigger when the [workflow runs on schedule](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta). Inherited by the following derived types:. Also see [Microsoft docs for identityGovernance.workflowExecutionTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutiontrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger))
+- `scope` (Attributes) Defines who the workflow runs for. <br/> A shared object that is used in entitlement management access package assignment policies, role management policies, and lifecycle workflows through the **scope** property of the [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) resource. <br/> This object is an abstract base type from which the following resources are derived: <br/> In entitlement management, this object is configured in the following properties and relationships:. Also see [Microsoft docs for subjectSet](https://learn.microsoft.com/en-us/graph/api/resources/subjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope))
+- `trigger` (Attributes) What triggers a workflow to run. / The derived types of this abstract object are configured in the **trigger** property of the [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) resource when a lifecycle workflow runs on schedule. Inherited by the following derived types:. Also see [Microsoft docs for identityGovernance.workflowExecutionTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutiontrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger))
 
 <a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope"></a>
 ### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope`
 
 Read-Only:
 
-- `group` (Attributes) Defines the group that is the scope of a lifecycle workflow [membershipChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-membershipchangetrigger?view=graph-rest-beta) configuration. Also see [Microsoft docs for identityGovernance.groupBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-groupbasedsubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--group))
-- `rule` (Attributes) Specifies the rules to define the subjects that are the scope of a lifecycle workflow [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) configuration. Also see [Microsoft docs for identityGovernance.ruleBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-rulebasedsubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--rule))
+- `all_excluding_agent_builder_platforms` (Attributes) Represents all agent identities except those created through the specified agent builder platforms. Use this type in the **scope** property of an [agentIdentityLifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-agentidentitylifecyclepolicy?view=graph-rest-beta). Also see [Microsoft docs for identityGovernance.allExcludingAgentBuilderPlatformsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-allexcludingagentbuilderplatformssubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_agent_builder_platforms))
+- `all_excluding_groups` (Attributes) Represents a scope that includes all identities except members of the excluded groups. This type is used in the **scope** property of a [lifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclepolicy?view=graph-rest-beta) to exclude specific groups from policy evaluation. Also see [Microsoft docs for identityGovernance.allExcludingGroupsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-allexcludinggroupssubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_groups))
+- `all_excluding_specific_objects` (Attributes) Represents a scope that includes all identities except the excluded directory objects. This type is used in the **scope** property of a [lifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclepolicy?view=graph-rest-beta) to exclude specific objects from policy evaluation. Also see [Microsoft docs for identityGovernance.allExcludingSpecificObjectsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-allexcludingspecificobjectssubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_specific_objects))
+- `group_based` (Attributes) Defines the group that is the scope of a lifecycle workflow [membershipChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-membershipchangetrigger?view=graph-rest-beta) configuration. Also see [Microsoft docs for identityGovernance.groupBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-groupbasedsubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--group_based))
+- `rule_based` (Attributes) Specifies the rules that define the subjects in scope for a lifecycle workflow. This object is configured in the **scope** property of the [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) resource. Also see [Microsoft docs for identityGovernance.ruleBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-rulebasedsubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--rule_based))
+- `selected_objects` (Attributes) Represents a scope that includes only the selected directory objects. This type is used in the **scope** property of a [lifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclepolicy?view=graph-rest-beta) to target specific objects for policy evaluation. Also see [Microsoft docs for identityGovernance.selectedObjectsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-selectedobjectssubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--selected_objects))
 
-<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--group"></a>
-### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.group`
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_agent_builder_platforms"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.all_excluding_agent_builder_platforms`
 
 Read-Only:
 
-- `groups` (Attributes Set) The specific group a user is interacting with in a [membershipChangeTrigger](identitygovernance-membershipchangetrigger.md) workflow. <br/> Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group. <br/> For performance reasons, the [create](https://learn.microsoft.com/en-us/graph/api/group-post-groups?view=graph-rest-beta), [get](https://learn.microsoft.com/en-us/graph/api/group-get?view=graph-rest-beta), and [list](https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-beta) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option. Also see [Microsoft docs for group](https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--group--groups))
+- `excluded_agent_builder_platforms` (String) The agent builder platforms whose agent identities are excluded from the policy scope. This flagged enumeration allows multiple members to be selected simultaneously. <br/> _Provider_ allowed values are: `microsoftCopilotStudio`, `foundry`, `unknownFutureValue`.
 
-<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--group--groups"></a>
-### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.group.groups`
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_groups"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.all_excluding_groups`
+
+Read-Only:
+
+- `excluded_groups` (Attributes Set) The groups whose members are excluded from the policy scope. A maximum of 10 excluded groups are allowed per policy. <br/> Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group. <br/> For performance reasons, the [create](https://learn.microsoft.com/en-us/graph/api/group-post-groups?view=graph-rest-beta), [get](https://learn.microsoft.com/en-us/graph/api/group-get?view=graph-rest-beta), and [list](https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-beta) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option. Also see [Microsoft docs for group](https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_groups--excluded_groups))
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_groups--excluded_groups"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.all_excluding_groups.excluded_groups`
 
 Read-Only:
 
@@ -150,12 +168,60 @@ Read-Only:
 
 
 
-<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--rule"></a>
-### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.rule`
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_specific_objects"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.all_excluding_specific_objects`
 
 Read-Only:
 
-- `rule` (String) The rule for the subject set. Lifecycle Workflows supports a rich set of [user properties](user.md#properties) for configuring the rules using `$filter` query expressions. For more information, see [supported user and query parameters](#supported-user-properties-and-query-parameters).
+- `excluded_objects` (Attributes Set) The directory objects that are excluded from the policy scope. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_specific_objects--excluded_objects))
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_specific_objects--excluded_objects"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.all_excluding_specific_objects.excluded_objects`
+
+Read-Only:
+
+- `id` (String) The unique identifier for the object. For example, 12345678-9abc-def0-1234-56789abcde. The value of the **id** property is often but not exclusively in the form of a GUID; treat it as an opaque identifier and do not rely on it being a GUID. Key. Not nullable.
+
+
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--group_based"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.group_based`
+
+Read-Only:
+
+- `groups` (Attributes Set) The specific group a user is interacting with in a [membershipChangeTrigger](identitygovernance-membershipchangetrigger.md) workflow. <br/> Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group. <br/> For performance reasons, the [create](https://learn.microsoft.com/en-us/graph/api/group-post-groups?view=graph-rest-beta), [get](https://learn.microsoft.com/en-us/graph/api/group-get?view=graph-rest-beta), and [list](https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-beta) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option. Also see [Microsoft docs for group](https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--group_based--groups))
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--group_based--groups"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.group_based.groups`
+
+Read-Only:
+
+- `id` (String) The unique identifier for the group. <br/> Returned by default. Key. Not nullable. <br/> Supports `$filter` (`eq`, `ne`, `not`, `in`).
+
+
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--rule_based"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.rule_based`
+
+Read-Only:
+
+- `rule` (String) The rule for the subject set. Lifecycle Workflows supports a rich set of [user properties](https://learn.microsoft.com/en-us/graph/api/resources/user.md#properties) for configuring the rules using `$filter` query expressions. For more information, see [supported user and query parameters](#supported-user-properties-and-query-parameters).
+
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--selected_objects"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.selected_objects`
+
+Read-Only:
+
+- `in_scope_objects` (Attributes Set) The directory objects that are included in the policy scope. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--selected_objects--in_scope_objects))
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--selected_objects--in_scope_objects"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.selected_objects.in_scope_objects`
+
+Read-Only:
+
+- `id` (String) The unique identifier for the object. For example, 12345678-9abc-def0-1234-56789abcde. The value of the **id** property is often but not exclusively in the form of a GUID; treat it as an opaque identifier and do not rely on it being a GUID. Key. Not nullable.
+
 
 
 
@@ -164,20 +230,22 @@ Read-Only:
 
 Read-Only:
 
-- `attribute_change` (Attributes) Represents changes in user attributes that trigger the execution of workload conditions for a user. Also see [Microsoft docs for identityGovernance.attributeChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-attributechangetrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--attribute_change))
-- `membership_change` (Attributes) Represents the change in group membership that triggers the execution conditions of a workflow for a user. Also see [Microsoft docs for identityGovernance.membershipChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-membershipchangetrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--membership_change))
-- `time_based_attribute` (Attributes) Trigger based on a time-based attribute for initiating the execution of a [lifecycle workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta). The combination of scope and trigger conditions determines when a workflow is executed and on which identities. Also see [Microsoft docs for identityGovernance.timeBasedAttributeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--time_based_attribute))
-- `user_inactivity` (Attributes) Represents a trigger based on user inactivity that initiates workflow execution for a user. Also see [Microsoft docs for identityGovernance.userInactivityTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-userinactivitytrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--user_inactivity))
+- `attribute_change_trigger` (Attributes) Represents changes in user attributes that trigger the execution of workload conditions for a user. Also see [Microsoft docs for identityGovernance.attributeChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-attributechangetrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--attribute_change_trigger))
+- `guest_sponsor_trigger` (Attributes) Represents a workflow execution trigger that initiates workflow execution when a guest user has fewer than the required number of sponsors. <br/> This complex type is used in the **trigger** property of the [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) resource. Also see [Microsoft docs for identityGovernance.guestSponsorTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-guestsponsortrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--guest_sponsor_trigger))
+- `membership_change_trigger` (Attributes) Represents the change in group membership that triggers the execution conditions of a workflow for a user. Also see [Microsoft docs for identityGovernance.membershipChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-membershipchangetrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--membership_change_trigger))
+- `time_based_attribute_trigger` (Attributes) Trigger based on a time-based attribute for initiating the execution of a [lifecycle workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta). The combination of scope and trigger conditions determines when a workflow is executed and on which identities. Also see [Microsoft docs for identityGovernance.timeBasedAttributeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--time_based_attribute_trigger))
+- `time_based_attribute_trigger_v2` (Attributes) Represents an extensible time-based trigger that evaluates a user's date attribute by using a configurable operator to initiate a [lifecycle workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta). Also see [Microsoft docs for identityGovernance.timeBasedAttributeTriggerV2](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetriggerv2?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--time_based_attribute_trigger_v2))
+- `user_inactivity_trigger` (Attributes) Represents a trigger based on user inactivity that initiates workflow execution for a user. Also see [Microsoft docs for identityGovernance.userInactivityTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-userinactivitytrigger?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--user_inactivity_trigger))
 
-<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--attribute_change"></a>
-### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.attribute_change`
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--attribute_change_trigger"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.attribute_change_trigger`
 
 Read-Only:
 
-- `trigger_attributes` (Attributes Set) The trigger attribute being changed that triggers the workflowexecutiontrigger of a workflow.) / Defines the trigger attribute, which is changed to activate a workflow using an [attributeChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-attributechangetrigger?view=graph-rest-beta). Also see [Microsoft docs for identityGovernance.triggerAttribute](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerattribute?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--attribute_change--trigger_attributes))
+- `trigger_attributes` (Attributes Set) The trigger attribute being changed that triggers the workflowexecutiontrigger of a workflow.) / Defines the trigger attribute, which is changed to activate a workflow using an [attributeChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-attributechangetrigger?view=graph-rest-beta). Also see [Microsoft docs for identityGovernance.triggerAttribute](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerattribute?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--attribute_change_trigger--trigger_attributes))
 
-<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--attribute_change--trigger_attributes"></a>
-### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.attribute_change.trigger_attributes`
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--attribute_change_trigger--trigger_attributes"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.attribute_change_trigger.trigger_attributes`
 
 Read-Only:
 
@@ -185,16 +253,24 @@ Read-Only:
 
 
 
-<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--membership_change"></a>
-### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.membership_change`
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--guest_sponsor_trigger"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.guest_sponsor_trigger`
+
+Read-Only:
+
+- `minimum_required_sponsors` (Number) The minimum number of sponsors required for a guest user. When a guest has fewer sponsors than this value, the workflow is triggered.
+
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--membership_change_trigger"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.membership_change_trigger`
 
 Read-Only:
 
 - `change_type` (String) Defines what change that happens to the workflow group to trigger the [workflowExecutionTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutiontrigger?view=graph-rest-beta). <br/> _Provider_ allowed values are: `add`, `remove`, `unknownFutureValue`.
 
 
-<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--time_based_attribute"></a>
-### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.time_based_attribute`
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--time_based_attribute_trigger"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.time_based_attribute_trigger`
 
 Read-Only:
 
@@ -202,8 +278,21 @@ Read-Only:
 - `time_based_attribute` (String) Determines which time-based identity property to reference. <br/> _Provider_ allowed values are: `employeeHireDate`, `employeeLeaveDateTime`, `unknownFutureValue`, `createdDateTime`.
 
 
-<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--user_inactivity"></a>
-### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.user_inactivity`
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--time_based_attribute_trigger_v2"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.time_based_attribute_trigger_v2`
+
+Read-Only:
+
+- `attribute` (String) The name of the date-type user attribute to evaluate, such as `employeeHireDate` or `employeeLeaveDateTime`.
+- `operator` (Attributes) The operator that determines how to evaluate the date attribute. <br/> Represents an abstract operator used by a [timeBasedAttributeTriggerV2](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetriggerv2?view=graph-rest-beta) to evaluate a user's date attribute. This type can't be instantiated directly. <br/> Configure this type in the **operator** property of [timeBasedAttributeTriggerV2](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetriggerv2?view=graph-rest-beta). <br/> The following type is derived from this type: <br/> The type of an operator is differentiated by its `@odata.type` property. Also see [Microsoft docs for identityGovernance.workflowExecutionTriggerOperator](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutiontriggeroperator?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--time_based_attribute_trigger_v2--operator))
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--time_based_attribute_trigger_v2--operator"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.time_based_attribute_trigger_v2.operator`
+
+
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--trigger--user_inactivity_trigger"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.trigger.user_inactivity_trigger`
 
 Read-Only:
 
@@ -221,13 +310,23 @@ Read-Only:
 - `id` (String) The user identifier.
 
 
+<a id="nestedatt--quarantine_details"></a>
+### Nested Schema for `quarantine_details`
+
+Read-Only:
+
+- `quarantine_reason` (String) The reason the workflow was quarantined.
+- `quarantine_type` (String) The type of threshold condition that caused the workflow to be quarantined. <br/> _Provider_ allowed values are: `notQuarantined`, `countBasedThresholdExceeded`, `percentageBasedThresholdExceeded`, `multipleConditionsExceeded`, `unknownFutureValue`.
+- `quarantined_date_time` (String) The date and time when the workflow was quarantined.
+
+
 <a id="nestedatt--tasks"></a>
 ### Nested Schema for `tasks`
 
 Read-Only:
 
 - `arguments` (Attributes Set) Key value pair for storing custom settings. Also see [Microsoft docs for keyValuePair](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-keyvaluepair?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--tasks--arguments))
-- `category` (String) _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.
+- `category` (String) _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`, `extensibility`.
 - `continue_on_error` (Boolean)
 - `description` (String)
 - `display_name` (String) The name of the task.

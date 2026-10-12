@@ -1921,8 +1921,10 @@ Optional:
 - `enable_per_app` (Boolean) Setting this to true creates Per-App VPN payload which can later be associated with Apps that can trigger this VPN conneciton on the end user's iOS device.
 - `enable_split_tunneling` (Boolean) Send all network traffic through VPN. <br/> The _provider_ default value is `false`.
 - `exclude_list` (Set of String) Zscaler only. List of network addresses which are not sent through the Zscaler cloud. <br/> The _provider_ default value is `[]`.
+- `exclude_local_networks` (Boolean)
 - `excluded_domains` (Set of String) Domains that are accessed through the public internet instead of through VPN, even when per-app VPN is activated <br/> The _provider_ default value is `[]`.
 - `identifier` (String) Identifier provided by VPN vendor when connection type is set to Custom VPN. For example: Cisco AnyConnect uses an identifier of the form com.cisco.anyconnect.applevpn.plugin
+- `include_all_networks` (Boolean)
 - `login_group_or_domain` (String) Login group or domain when connection type is set to Dell SonicWALL Mobile Connection.
 - `microsoft_tunnel_site_id` (String) Microsoft Tunnel site ID.
 - `on_demand_rules` (Attributes List) On-Demand Rules. This collection can contain a maximum of 500 elements. / VPN On-Demand Rule definition. Also see [Microsoft docs for vpnOnDemandRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-vpnondemandrule?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> (see [below for nested schema](#nestedatt--ios_vpn--on_demand_rules))

@@ -483,6 +483,13 @@ var mobileAppResourceSchema = schema.Schema{
 			SingleNestedAttribute: schema.SingleNestedAttribute{
 				Optional: true,
 				Attributes: map[string]schema.Attribute{ // iosStoreApp
+					"apple_device_app_delivery_protocol_type": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("default", "mobileDeviceManagement", "declarativeDeviceManagement", "unknownFutureValue"),
+						},
+						MarkdownDescription: "Enum of the supported types of Apple delivery protocols, representing the available protocols to deliver payloads to Apple devices. <br/> _Provider_ allowed values are: `default` (Default. Set if the client hasn't specified a value for an entity. Indicates the payload will be delivered to devices using Intune's default delivery protocol, which is Mobile Device Management (MDM). This protocol is not specific to the apps payload.), `mobileDeviceManagement` (Indicates the payload will be delivered to devices using the Mobile Device Management (MDM) protocol. This protocol is not specific to the apps payload.), `declarativeDeviceManagement` (Indicates the payload will be delivered to devices using the Declarative Device Management (DDM) protocol. This protocol is not specific to the apps payload.), `unknownFutureValue` (Unknown future value, reserved for future usage as expandable enum.).",
+					},
 					"applicable_device_type": schema.SingleNestedAttribute{
 						Optional:            true,
 						Attributes:          mobileAppIosDeviceTypeAttributes,
@@ -515,6 +522,13 @@ var mobileAppResourceSchema = schema.Schema{
 			SingleNestedAttribute: schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{ // iosVppApp
+					"apple_device_app_delivery_protocol_type": schema.StringAttribute{
+						Computed: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("default", "mobileDeviceManagement", "declarativeDeviceManagement", "unknownFutureValue"),
+						},
+						MarkdownDescription: "Enum of the supported types of Apple delivery protocols, representing the available protocols to deliver payloads to Apple devices. <br/> _Provider_ allowed values are: `default` (Default. Set if the client hasn't specified a value for an entity. Indicates the payload will be delivered to devices using Intune's default delivery protocol, which is Mobile Device Management (MDM). This protocol is not specific to the apps payload.), `mobileDeviceManagement` (Indicates the payload will be delivered to devices using the Mobile Device Management (MDM) protocol. This protocol is not specific to the apps payload.), `declarativeDeviceManagement` (Indicates the payload will be delivered to devices using the Declarative Device Management (DDM) protocol. This protocol is not specific to the apps payload.), `unknownFutureValue` (Unknown future value, reserved for future usage as expandable enum.).",
+					},
 					"applicable_device_type": schema.SingleNestedAttribute{
 						Computed:            true,
 						Attributes:          mobileAppIosDeviceTypeAttributes,
@@ -961,6 +975,13 @@ var mobileAppResourceSchema = schema.Schema{
 			SingleNestedAttribute: schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{ // macOsVppApp
+					"apple_device_app_delivery_protocol_type": schema.StringAttribute{
+						Computed: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("default", "mobileDeviceManagement", "declarativeDeviceManagement", "unknownFutureValue"),
+						},
+						MarkdownDescription: "Enum of the supported types of Apple delivery protocols, representing the available protocols to deliver payloads to Apple devices. <br/> _Provider_ allowed values are: `default` (Default. Set if the client hasn't specified a value for an entity. Indicates the payload will be delivered to devices using Intune's default delivery protocol, which is Mobile Device Management (MDM). This protocol is not specific to the apps payload.), `mobileDeviceManagement` (Indicates the payload will be delivered to devices using the Mobile Device Management (MDM) protocol. This protocol is not specific to the apps payload.), `declarativeDeviceManagement` (Indicates the payload will be delivered to devices using the Declarative Device Management (DDM) protocol. This protocol is not specific to the apps payload.), `unknownFutureValue` (Unknown future value, reserved for future usage as expandable enum.).",
+					},
 					"app_store_url": schema.StringAttribute{
 						Computed:            true,
 						MarkdownDescription: "The store URL.",
@@ -1577,6 +1598,13 @@ var mobileAppResourceSchema = schema.Schema{
 								Computed:            true,
 								MarkdownDescription: "Device restart behavior. / Indicates the type of restart action. <br/> _Provider_ allowed values are: `basedOnReturnCode` (Intune will restart the device after running the app installation if the operation returns a reboot code.), `allow` (Intune will not take any specific action on reboot codes resulting from app installations. Intune will not attempt to suppress restarts for MSI apps.), `suppress` (Intune will attempt to suppress restarts for MSI apps.), `force` (Intune will force the device to restart immediately after the app installation operation.). The _provider_ default value is `\"allow\"`.",
 							},
+							"in_use_behavior": schema.StringAttribute{
+								Optional: true,
+								Validators: []validator.String{
+									stringvalidator.OneOf("notEnabled", "fail", "terminateWithoutUserInteraction", "terminateWithUserInteraction", "unknownFutureValue"),
+								},
+								MarkdownDescription: "_Provider_ allowed values are: `notEnabled`, `fail`, `terminateWithoutUserInteraction`, `terminateWithUserInteraction`, `unknownFutureValue`.",
+							},
 							"max_run_time_in_minutes": schema.Int64Attribute{
 								Optional:            true,
 								PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(60)},
@@ -1950,6 +1978,27 @@ var mobileAppResourceSchema = schema.Schema{
 											},
 										},
 										MarkdownDescription: "A complex type to store the PowerShell script rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppPowerShellScriptRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapppowershellscriptrule?view=graph-rest-beta). <br> ",
+									},
+								},
+								"process": generic.OdataDerivedTypeNestedAttributeRs{
+									DerivedType: "#microsoft.graph.win32LobAppProcessRule",
+									SingleNestedAttribute: schema.SingleNestedAttribute{
+										Computed: true,
+										Attributes: map[string]schema.Attribute{ // win32LobAppProcessRule
+											"operation_type": schema.StringAttribute{
+												Computed: true,
+												Validators: []validator.String{
+													stringvalidator.OneOf("notConfigured", "exists", "unknownFutureValue"),
+												},
+												MarkdownDescription: "_Provider_ allowed values are: `notConfigured`, `exists`, `unknownFutureValue`.",
+											},
+											"process_display_name": schema.StringAttribute{
+												Computed: true,
+											},
+											"process_name": schema.StringAttribute{
+												Computed: true,
+											},
+										},
 									},
 								},
 								"product_code": generic.OdataDerivedTypeNestedAttributeRs{
@@ -2419,43 +2468,48 @@ var mobileAppResourceSchema = schema.Schema{
 						MarkdownDescription: "The value for the minimum applicable Windows operating system. / The minimum operating system required for a Windows mobile app. Also see [Microsoft docs for windowsMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsminimumoperatingsystem?view=graph-rest-beta).  \n_Provider_ Note: v10_0 seems to be required and the only minimum OS version to be accepted by MS Graph for Univeral APPX. <br> ",
 					},
 					"committed_contained_apps": schema.SetNestedAttribute{
-						Computed: true,
+						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // mobileContainedApp
 								"id": schema.StringAttribute{
+									Optional:            true,
+									PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 									Computed:            true,
-									MarkdownDescription: "Key of the entity. This property is read-only.",
+									MarkdownDescription: "Key of the entity. This property is read-only. <br/> The _provider_ default value is `\"\"`.",
 								},
 								"microsoft_store_for_business": generic.OdataDerivedTypeNestedAttributeRs{
 									DerivedType: "#microsoft.graph.microsoftStoreForBusinessContainedApp",
 									SingleNestedAttribute: schema.SingleNestedAttribute{
-										Computed: true,
+										Optional: true,
 										Attributes: map[string]schema.Attribute{ // microsoftStoreForBusinessContainedApp
 											"app_user_model_id": schema.StringAttribute{
-												Computed:            true,
+												Optional:            true,
 												MarkdownDescription: "The app user model ID of the contained app of a MicrosoftStoreForBusinessApp.",
 											},
 										},
+										Validators:          []validator.Object{mobileAppMobileContainedAppValidator},
 										MarkdownDescription: "A class that represents a contained app of a MicrosoftStoreForBusinessApp. Also see [Microsoft docs for microsoftStoreForBusinessContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-microsoftstoreforbusinesscontainedapp?view=graph-rest-beta). <br> ",
 									},
 								},
 								"windows_universal_app_x": generic.OdataDerivedTypeNestedAttributeRs{
 									DerivedType: "#microsoft.graph.windowsUniversalAppXContainedApp",
 									SingleNestedAttribute: schema.SingleNestedAttribute{
-										Computed: true,
+										Optional: true,
 										Attributes: map[string]schema.Attribute{ // windowsUniversalAppXContainedApp
 											"app_user_model_id": schema.StringAttribute{
-												Computed:            true,
+												Optional:            true,
 												MarkdownDescription: "The app user model ID of the contained app of a WindowsUniversalAppX app.",
 											},
 										},
+										Validators:          []validator.Object{mobileAppMobileContainedAppValidator},
 										MarkdownDescription: "A class that represents a contained app of a WindowsUniversalAppX app. Also see [Microsoft docs for windowsUniversalAppXContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsuniversalappxcontainedapp?view=graph-rest-beta). <br> ",
 									},
 								},
 							},
 						},
-						PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
-						MarkdownDescription: "The collection of contained apps in the committed mobileAppContent of a windowsUniversalAppX app. This property is read-only. / An abstract class that represents a contained app in a mobileApp acting as a package. Also see [Microsoft docs for mobileContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobilecontainedapp?view=graph-rest-beta). <br> ",
+						PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+						Computed:            true,
+						MarkdownDescription: "The collection of contained apps in the committed mobileAppContent of a windowsUniversalAppX app. This property is read-only. / An abstract class that represents a contained app in a mobileApp acting as a package. Also see [Microsoft docs for mobileContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobilecontainedapp?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 					},
 					"source_file": schema.StringAttribute{
 						Required:            true,
@@ -2787,6 +2841,29 @@ var mobileAppMobileAppAssignmentAttributes = map[string]schema.Attribute{ // mob
 								},
 							},
 							MarkdownDescription: "The install time settings to apply for this app assignment. / Contains properties used to determine when to offer an app to devices and when to install the app on devices. Also see [Microsoft docs for mobileAppInstallTimeSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileappinstalltimesettings?view=graph-rest-beta). <br> ",
+						},
+						"in_use_settings": schema.SingleNestedAttribute{
+							Optional: true,
+							Attributes: map[string]schema.Attribute{ // win32LobAppInUseSettings
+								"countdown_minutes": schema.Int64Attribute{
+									Optional:            true,
+									PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(0)},
+									Computed:            true,
+									MarkdownDescription: "The _provider_ default value is `0`.",
+								},
+								"minutes_between_deferrals": schema.Int64Attribute{
+									Optional:            true,
+									PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(0)},
+									Computed:            true,
+									MarkdownDescription: "The _provider_ default value is `0`.",
+								},
+								"number_of_deferrals": schema.Int64Attribute{
+									Optional:            true,
+									PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(0)},
+									Computed:            true,
+									MarkdownDescription: "The _provider_ default value is `0`.",
+								},
+							},
 						},
 						"notifications": schema.StringAttribute{
 							Optional: true,
@@ -3152,6 +3229,13 @@ var mobileAppIosMinimumOperatingSystemAttributes = map[string]schema.Attribute{ 
 		Description:         `v26_0`, // custom MS Graph attribute name
 		MarkdownDescription: "Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 26.0 or later is required to install the app. If 'False', iOS Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
+	"v27_0": schema.BoolAttribute{
+		Optional:            true,
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+		Computed:            true,
+		Description:         `v27_0`, // custom MS Graph attribute name
+		MarkdownDescription: "The _provider_ default value is `false`.",
+	},
 	"v8_0": schema.BoolAttribute{
 		Optional:            true,
 		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
@@ -3312,6 +3396,13 @@ var mobileAppMacOSMinimumOperatingSystemAttributes = map[string]schema.Attribute
 		Description:         `v26_0`, // custom MS Graph attribute name
 		MarkdownDescription: "Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 26.0 or later is required to install the app. If 'False', OS X Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.",
 	},
+	"v27_0": schema.BoolAttribute{
+		Optional:            true,
+		PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+		Computed:            true,
+		Description:         `v27_0`, // custom MS Graph attribute name
+		MarkdownDescription: "The _provider_ default value is `false`.",
+	},
 }
 
 var mobileAppWin32LobAppDetectionValidator = wpvalidator.ExactlyOneOfSiblings(
@@ -3330,6 +3421,7 @@ var mobileAppWin32LobAppRequirementValidator = wpvalidator.ExactlyOneOfSiblings(
 var mobileAppWin32LobAppRuleValidator = wpvalidator.ExactlyOneOfSiblings(
 	"filesystem",
 	"powershell_script",
+	"process",
 	"product_code",
 	"registry",
 )

@@ -45,11 +45,6 @@ var (
 
 var authenticationStrengthPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // authenticationStrengthPolicy
-		"id": schema.StringAttribute{
-			Computed:            true,
-			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "The system-generated identifier for this mode.",
-		},
 		"allowed_combinations": schema.SetAttribute{
 			ElementType: types.StringType,
 			Required:    true,
@@ -74,6 +69,11 @@ var authenticationStrengthPolicyResourceSchema = schema.Schema{
 		"display_name": schema.StringAttribute{
 			Required:            true,
 			MarkdownDescription: "The human-readable display name of this policy. <br/> Supports `$filter` (`eq`, `ne`, `not` , and `in`).",
+		},
+		"id": schema.StringAttribute{
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "The system-generated identifier for this mode.",
 		},
 		"modified_date_time": schema.StringAttribute{
 			Computed:            true,

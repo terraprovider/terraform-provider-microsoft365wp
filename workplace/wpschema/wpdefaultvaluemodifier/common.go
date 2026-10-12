@@ -19,6 +19,7 @@ package wpdefaultvaluemodifier
 
 import (
 	"context"
+	"strings"
 	"sync"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpschemautil"
 
@@ -37,9 +38,30 @@ type defaultValueAttributePlanModifier struct{}
 type cachedDefaultValueAttributePlanModifier struct {
 	defaultValueAttributePlanModifier
 
+	// A single plan modifier instance may be shared by multiple attributes (e.g. if defined once in a var) and these
+	// attributes may have different types. Therefore the cache needs to be kept per attribute (i.e. per schema path).
+	cache sync.Map // schema path (string) -> *cachedDefaultValue
+}
+
+type cachedDefaultValue struct {
 	initOnce          sync.Once
 	defaultValue      attr.Value
 	defaultValueDiags diag.Diagnostics
+}
+
+// getSchemaPathKey returns a key that is the same for all values of the same attribute, i.e. set, list and map elements
+// are not distinguished from each other (as they all share the same type and therefore the same default value).
+func getSchemaPathKey(p path.Path) string {
+	var sb strings.Builder
+	for _, step := range p.Steps() {
+		if attributeName, ok := step.(path.PathStepAttributeName); ok {
+			sb.WriteString(".")
+			sb.WriteString(string(attributeName))
+		} else {
+			sb.WriteString("[]")
+		}
+	}
+	return sb.String()
 }
 
 func (attributePlanModifier defaultValueAttributePlanModifier) Description(_ context.Context) string {
@@ -51,18 +73,20 @@ func (attributePlanModifier defaultValueAttributePlanModifier) MarkdownDescripti
 }
 
 func getCachedDefaultValue[T attr.Value](ctx context.Context, diags *diag.Diagnostics, schema rsschema.Schema, path path.Path, defaultValueRaw any, attributePlanModifier *cachedDefaultValueAttributePlanModifier) T {
-	attributePlanModifier.initOnce.Do(func() {
-		attributePlanModifier.defaultValue = wpschemautil.GetFwTypedValueFromAny[T](ctx, &attributePlanModifier.defaultValueDiags, &schema, path, defaultValueRaw)
+	cachedAny, _ := attributePlanModifier.cache.LoadOrStore(getSchemaPathKey(path), &cachedDefaultValue{})
+	cached := cachedAny.(*cachedDefaultValue)
+	cached.initOnce.Do(func() {
+		cached.defaultValue = wpschemautil.GetFwTypedValueFromAny[T](ctx, &cached.defaultValueDiags, &schema, path, defaultValueRaw)
 	})
 
-	diags.Append(attributePlanModifier.defaultValueDiags...)
+	diags.Append(cached.defaultValueDiags...)
 
-	if attributePlanModifier.defaultValue == nil {
+	if cached.defaultValue == nil {
 		var zero T
 		return zero
 	}
 
-	defaultValue, ok := attributePlanModifier.defaultValue.(T)
+	defaultValue, ok := cached.defaultValue.(T)
 	if !ok {
 		panic("cached default value has unexpected type")
 	}

@@ -79,7 +79,7 @@ output "microsoft365wp_identity_governance_task_definitions" {
 
 Read-Only:
 
-- `category` (String) The category of the HR function that the tasks created using this definition can be used with. This is a multi-valued enumeration whose allowed combinations are `joiner`, `joiner,leaver`, or `leaver`. <br/> Supports `$filter`(`eq`, `ne`, `has`) and `$orderby`. <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.
+- `category` (String) The category of the HR function that the tasks created using this definition can be used with. This flagged enumeration allows multiple members to be selected simultaneously. <br/> Supports `$filter`(`eq`, `ne`, `has`) and `$orderby`. <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`, `extensibility`.
 - `display_name` (String) The display name of the taskDefinition. <br/> Supports `$filter`(`eq`, `ne`) and `$orderby`.
 - `id` (String) The unique identifier for the taskDefinition.
 - `version` (Number) The version number of the taskDefinition. New records are pushed when we add support for new parameters. <br/> Supports `$filter`(`ge`, `gt`, `le`, `lt`, `eq`, `ne`) and `$orderby`.

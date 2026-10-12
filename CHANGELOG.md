@@ -1,5 +1,24 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.20.0 (2026-10-12)
+
+### added
+
+- [mobile_threat_defense_connector_microsoft_defender](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_threat_defense_connector_microsoft_defender): New singleton resource and data source for the settings of the Microsoft Defender for Endpoint connector in Intune
+- [cloud_pc_provisioning_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cloud_pc_provisioning_policy): Add `snapshot_reset_mode` (value from MS Graph is kept if not configured)
+- [cross_tenant_access_policy_configuration_default](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cross_tenant_access_policy_configuration_default): Add `app_service_connect_inbound`, `block_service_provider_outbound_access`, `m365_collaboration_inbound` and `m365_collaboration_outbound` (values from MS Graph are kept if not configured)
+- [identity_governance_workflow](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/identity_governance_workflow): Add read-only `quarantine_details`
+
+### fixed
+
+- [authentication_methods_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authentication_methods_policy): Fix `Invalid Object Attribute Type` error on plan if `include_targets` attributes are not configured (default values had been mixed up between attributes of different types since 0.18.4)
+
+### changed
+
+- Update dependencies
+- Update MS Graph metadata & docs (adds new attributes to several resources, e.g. agent conditions for `conditional_access_policy`)
+
+
 ## 0.19.0 (2026-09-25)
 
 ### added

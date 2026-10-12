@@ -410,6 +410,17 @@ var iosManagedAppProtectionResourceSchema = schema.Schema{
 			Computed:            true,
 			MarkdownDescription: "Defines how app messaging redirection is protected by an App Protection Policy. Default is anyApp. / Defines how app messaging redirection is protected by an App Protection Policy. Default is anyApp. <br/> _Provider_ allowed values are: `anyApp` (App protection policy will allow messaging redirection to any app.), `anyManagedApp` (App protection policy will allow messaging redirection to any managed application.), `specificApps` (App protection policy will allow messaging redirection only to specified applications in related App protection policy settings. See related settings `messagingRedirectAppDisplayName`, `messagingRedirectAppPackageId` and `messagingRedirectAppUrlScheme`.), `blocked` (App protection policy will block messaging redirection to any app.). The _provider_ default value is `\"anyApp\"`.",
 		},
+		"purview_content_evaluation_required": schema.StringAttribute{
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("notRequired", "requiredWhenOnline", "required", "unknownFutureValue"),
+			},
+			PlanModifiers: []planmodifier.String{
+				wpdefaultvaluemodifier.StringDefaultValue("notRequired"),
+			},
+			Computed:            true,
+			MarkdownDescription: "_Provider_ allowed values are: `notRequired`, `requiredWhenOnline`, `required`, `unknownFutureValue`. The _provider_ default value is `\"notRequired\"`.",
+		},
 		"save_as_blocked": schema.BoolAttribute{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},

@@ -87,6 +87,13 @@ var deviceComplianceScriptResourceSchema = schema.Schema{
 			Computed:            true,
 			MarkdownDescription: "The timestamp of when the device compliance script was modified. This property is read-only.",
 		},
+		"platform": schema.StringAttribute{
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("windows10", "linux", "macOS", "unknownFutureValue"),
+			},
+			MarkdownDescription: "_Provider_ allowed values are: `windows10`, `linux`, `macOS`, `unknownFutureValue`.",
+		},
 		"publisher": schema.StringAttribute{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},

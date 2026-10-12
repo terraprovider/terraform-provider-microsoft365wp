@@ -52,9 +52,9 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 		"category": schema.StringAttribute{
 			Required: true,
 			Validators: []validator.String{
-				stringvalidator.OneOf("joiner", "leaver", "unknownFutureValue", "mover"),
+				stringvalidator.OneOf("joiner", "leaver", "unknownFutureValue", "mover", "extensibility"),
 			},
-			MarkdownDescription: "The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. Required. <br/> Supports `$filter`(`eq`,`ne`) and `$orderby` <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.",
+			MarkdownDescription: "The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. Required. <br/> Supports `$filter`(`eq`,`ne`) and `$orderby` <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`, `extensibility`.",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -83,7 +83,19 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 						Validators: []validator.Object{
 							identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionConditionsValidator,
 						},
-						MarkdownDescription: "Represents the execution condition of a [lifecycle workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) running on-demand only instead of by schedule. Also see [Microsoft docs for identityGovernance.onDemandExecutionOnly](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-ondemandexecutiononly?view=graph-rest-beta). <br> ",
+						MarkdownDescription: "Represents the execution condition for a lifecycle workflow that runs on-demand only instead of by schedule. This object is configured in the **executionConditions** property of the [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta), [workflowVersion](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta), and [workflowTemplate](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowtemplate?view=graph-rest-beta) resources. Also see [Microsoft docs for identityGovernance.onDemandExecutionOnly](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-ondemandexecutiononly?view=graph-rest-beta). <br> ",
+					},
+				},
+				"provisioning_attribute_mapping": generic.OdataDerivedTypeNestedAttributeRs{
+					DerivedType: "#microsoft.graph.identityGovernance.provisioningAttributeMapping",
+					SingleNestedAttribute: schema.SingleNestedAttribute{
+						Optional:   true,
+						Attributes: map[string]schema.Attribute{ // identityGovernance.provisioningAttributeMapping
+						},
+						Validators: []validator.Object{
+							identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionConditionsValidator,
+						},
+						MarkdownDescription: "Represents execution conditions for provisioning workflows that use attribute mapping. This object is configured in the **executionConditions** property of the [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta), [workflowTemplate](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowtemplate?view=graph-rest-beta), and [workflowVersion](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta) resources when workflows execute based on attribute-based criteria. Also see [Microsoft docs for identityGovernance.provisioningAttributeMapping](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-provisioningattributemapping?view=graph-rest-beta). <br> ",
 					},
 				},
 				"trigger_and_scope_based_conditions": generic.OdataDerivedTypeNestedAttributeRs{
@@ -94,7 +106,68 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 							"scope": schema.SingleNestedAttribute{
 								Required: true,
 								Attributes: map[string]schema.Attribute{ // subjectSet
-									"group": generic.OdataDerivedTypeNestedAttributeRs{
+									"all_excluding_agent_builder_platforms": generic.OdataDerivedTypeNestedAttributeRs{
+										DerivedType: "#microsoft.graph.identityGovernance.allExcludingAgentBuilderPlatformsSubjectSet",
+										SingleNestedAttribute: schema.SingleNestedAttribute{
+											Optional: true,
+											Attributes: map[string]schema.Attribute{ // identityGovernance.allExcludingAgentBuilderPlatformsSubjectSet
+												"excluded_agent_builder_platforms": schema.StringAttribute{
+													Required: true,
+													Validators: []validator.String{
+														wpvalidator.FlagEnumValues("microsoftCopilotStudio", "foundry", "unknownFutureValue"),
+													},
+													MarkdownDescription: "The agent builder platforms whose agent identities are excluded from the policy scope. This flagged enumeration allows multiple members to be selected simultaneously. <br/> _Provider_ allowed values are: `microsoftCopilotStudio`, `foundry`, `unknownFutureValue`.",
+												},
+											},
+											Validators:          []validator.Object{identityGovernanceWorkflowSubjectSetValidator},
+											MarkdownDescription: "Represents all agent identities except those created through the specified agent builder platforms. Use this type in the **scope** property of an [agentIdentityLifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-agentidentitylifecyclepolicy?view=graph-rest-beta). Also see [Microsoft docs for identityGovernance.allExcludingAgentBuilderPlatformsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-allexcludingagentbuilderplatformssubjectset?view=graph-rest-beta). <br> ",
+										},
+									},
+									"all_excluding_groups": generic.OdataDerivedTypeNestedAttributeRs{
+										DerivedType: "#microsoft.graph.identityGovernance.allExcludingGroupsSubjectSet",
+										SingleNestedAttribute: schema.SingleNestedAttribute{
+											Optional: true,
+											Attributes: map[string]schema.Attribute{ // identityGovernance.allExcludingGroupsSubjectSet
+												"excluded_groups": schema.SetNestedAttribute{
+													Optional: true,
+													NestedObject: schema.NestedAttributeObject{
+														Attributes: map[string]schema.Attribute{ // group
+															"id": schema.StringAttribute{
+																Required:            true,
+																MarkdownDescription: "The unique identifier for the group. <br/> Returned by default. Key. Not nullable. Read-only. <br/> Supports `$filter` (`eq`, `ne`, `not`, `in`).",
+															},
+														},
+													},
+													MarkdownDescription: "The groups whose members are excluded from the policy scope. A maximum of 10 excluded groups are allowed per policy. <br/> Represents a Microsoft Entra group, which can be a Microsoft 365 group, a team in Microsoft Teams, or a security group. <br/> For performance reasons, the [create](https://learn.microsoft.com/en-us/graph/api/group-post-groups?view=graph-rest-beta), [get](https://learn.microsoft.com/en-us/graph/api/group-get?view=graph-rest-beta), and [list](https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-beta) operations return only a subset of more commonly used properties by default. These _default_ properties are noted in the [Properties](#properties) section. To get any of the properties not returned by default, specify them in a `$select` OData query option. Also see [Microsoft docs for group](https://learn.microsoft.com/en-us/graph/api/resources/group?view=graph-rest-beta). <br> ",
+												},
+											},
+											Validators:          []validator.Object{identityGovernanceWorkflowSubjectSetValidator},
+											MarkdownDescription: "Represents a scope that includes all identities except members of the excluded groups. This type is used in the **scope** property of a [lifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclepolicy?view=graph-rest-beta) to exclude specific groups from policy evaluation. Also see [Microsoft docs for identityGovernance.allExcludingGroupsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-allexcludinggroupssubjectset?view=graph-rest-beta). <br> ",
+										},
+									},
+									"all_excluding_specific_objects": generic.OdataDerivedTypeNestedAttributeRs{
+										DerivedType: "#microsoft.graph.identityGovernance.allExcludingSpecificObjectsSubjectSet",
+										SingleNestedAttribute: schema.SingleNestedAttribute{
+											Optional: true,
+											Attributes: map[string]schema.Attribute{ // identityGovernance.allExcludingSpecificObjectsSubjectSet
+												"excluded_objects": schema.SetNestedAttribute{
+													Optional: true,
+													NestedObject: schema.NestedAttributeObject{
+														Attributes: map[string]schema.Attribute{ // directoryObject
+															"id": schema.StringAttribute{
+																Required:            true,
+																MarkdownDescription: "The unique identifier for the object. For example, 12345678-9abc-def0-1234-56789abcde. The value of the **id** property is often but not exclusively in the form of a GUID; treat it as an opaque identifier and do not rely on it being a GUID. Key. Not nullable. Read-only.",
+															},
+														},
+													},
+													MarkdownDescription: "The directory objects that are excluded from the policy scope. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br> ",
+												},
+											},
+											Validators:          []validator.Object{identityGovernanceWorkflowSubjectSetValidator},
+											MarkdownDescription: "Represents a scope that includes all identities except the excluded directory objects. This type is used in the **scope** property of a [lifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclepolicy?view=graph-rest-beta) to exclude specific objects from policy evaluation. Also see [Microsoft docs for identityGovernance.allExcludingSpecificObjectsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-allexcludingspecificobjectssubjectset?view=graph-rest-beta). <br> ",
+										},
+									},
+									"group_based": generic.OdataDerivedTypeNestedAttributeRs{
 										DerivedType: "#microsoft.graph.identityGovernance.groupBasedSubjectSet",
 										SingleNestedAttribute: schema.SingleNestedAttribute{
 											Optional: true,
@@ -116,27 +189,49 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 											MarkdownDescription: "Defines the group that is the scope of a lifecycle workflow [membershipChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-membershipchangetrigger?view=graph-rest-beta) configuration. Also see [Microsoft docs for identityGovernance.groupBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-groupbasedsubjectset?view=graph-rest-beta). <br> ",
 										},
 									},
-									"rule": generic.OdataDerivedTypeNestedAttributeRs{
+									"rule_based": generic.OdataDerivedTypeNestedAttributeRs{
 										DerivedType: "#microsoft.graph.identityGovernance.ruleBasedSubjectSet",
 										SingleNestedAttribute: schema.SingleNestedAttribute{
 											Optional: true,
 											Attributes: map[string]schema.Attribute{ // identityGovernance.ruleBasedSubjectSet
 												"rule": schema.StringAttribute{
 													Required:            true,
-													MarkdownDescription: "The rule for the subject set. Lifecycle Workflows supports a rich set of [user properties](user.md#properties) for configuring the rules using `$filter` query expressions. For more information, see [supported user and query parameters](#supported-user-properties-and-query-parameters).",
+													MarkdownDescription: "The rule for the subject set. Lifecycle Workflows supports a rich set of [user properties](https://learn.microsoft.com/en-us/graph/api/resources/user.md#properties) for configuring the rules using `$filter` query expressions. For more information, see [supported user and query parameters](#supported-user-properties-and-query-parameters).",
 												},
 											},
 											Validators:          []validator.Object{identityGovernanceWorkflowSubjectSetValidator},
-											MarkdownDescription: "Specifies the rules to define the subjects that are the scope of a lifecycle workflow [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) configuration. Also see [Microsoft docs for identityGovernance.ruleBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-rulebasedsubjectset?view=graph-rest-beta). <br> ",
+											MarkdownDescription: "Specifies the rules that define the subjects in scope for a lifecycle workflow. This object is configured in the **scope** property of the [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) resource. Also see [Microsoft docs for identityGovernance.ruleBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-rulebasedsubjectset?view=graph-rest-beta). <br> ",
+										},
+									},
+									"selected_objects": generic.OdataDerivedTypeNestedAttributeRs{
+										DerivedType: "#microsoft.graph.identityGovernance.selectedObjectsSubjectSet",
+										SingleNestedAttribute: schema.SingleNestedAttribute{
+											Optional: true,
+											Attributes: map[string]schema.Attribute{ // identityGovernance.selectedObjectsSubjectSet
+												"in_scope_objects": schema.SetNestedAttribute{
+													Optional: true,
+													NestedObject: schema.NestedAttributeObject{
+														Attributes: map[string]schema.Attribute{ // directoryObject
+															"id": schema.StringAttribute{
+																Required:            true,
+																MarkdownDescription: "The unique identifier for the object. For example, 12345678-9abc-def0-1234-56789abcde. The value of the **id** property is often but not exclusively in the form of a GUID; treat it as an opaque identifier and do not rely on it being a GUID. Key. Not nullable. Read-only.",
+															},
+														},
+													},
+													MarkdownDescription: "The directory objects that are included in the policy scope. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br> ",
+												},
+											},
+											Validators:          []validator.Object{identityGovernanceWorkflowSubjectSetValidator},
+											MarkdownDescription: "Represents a scope that includes only the selected directory objects. This type is used in the **scope** property of a [lifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclepolicy?view=graph-rest-beta) to target specific objects for policy evaluation. Also see [Microsoft docs for identityGovernance.selectedObjectsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-selectedobjectssubjectset?view=graph-rest-beta). <br> ",
 										},
 									},
 								},
-								MarkdownDescription: "Defines who the workflow runs for. <br/> A shared object that is used in entitlement management access package assignment policies, role management policies, and lifecycle workflows. <br/> This object is an abstract base type from which the following resources are derived:. Also see [Microsoft docs for subjectSet](https://learn.microsoft.com/en-us/graph/api/resources/subjectset?view=graph-rest-beta). <br> ",
+								MarkdownDescription: "Defines who the workflow runs for. <br/> A shared object that is used in entitlement management access package assignment policies, role management policies, and lifecycle workflows through the **scope** property of the [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) resource. <br/> This object is an abstract base type from which the following resources are derived: <br/> In entitlement management, this object is configured in the following properties and relationships:. Also see [Microsoft docs for subjectSet](https://learn.microsoft.com/en-us/graph/api/resources/subjectset?view=graph-rest-beta). <br> ",
 							},
 							"trigger": schema.SingleNestedAttribute{
 								Required: true,
 								Attributes: map[string]schema.Attribute{ // identityGovernance.workflowExecutionTrigger
-									"attribute_change": generic.OdataDerivedTypeNestedAttributeRs{
+									"attribute_change_trigger": generic.OdataDerivedTypeNestedAttributeRs{
 										DerivedType: "#microsoft.graph.identityGovernance.attributeChangeTrigger",
 										SingleNestedAttribute: schema.SingleNestedAttribute{
 											Optional: true,
@@ -160,7 +255,23 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 											MarkdownDescription: "Represents changes in user attributes that trigger the execution of workload conditions for a user. Also see [Microsoft docs for identityGovernance.attributeChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-attributechangetrigger?view=graph-rest-beta). <br> ",
 										},
 									},
-									"membership_change": generic.OdataDerivedTypeNestedAttributeRs{
+									"guest_sponsor_trigger": generic.OdataDerivedTypeNestedAttributeRs{
+										DerivedType: "#microsoft.graph.identityGovernance.guestSponsorTrigger",
+										SingleNestedAttribute: schema.SingleNestedAttribute{
+											Optional: true,
+											Attributes: map[string]schema.Attribute{ // identityGovernance.guestSponsorTrigger
+												"minimum_required_sponsors": schema.Int64Attribute{
+													Required:            true,
+													MarkdownDescription: "The minimum number of sponsors required for a guest user. When a guest has fewer sponsors than this value, the workflow is triggered.",
+												},
+											},
+											Validators: []validator.Object{
+												identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionTriggerValidator,
+											},
+											MarkdownDescription: "Represents a workflow execution trigger that initiates workflow execution when a guest user has fewer than the required number of sponsors. <br/> This complex type is used in the **trigger** property of the [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) resource. Also see [Microsoft docs for identityGovernance.guestSponsorTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-guestsponsortrigger?view=graph-rest-beta). <br> ",
+										},
+									},
+									"membership_change_trigger": generic.OdataDerivedTypeNestedAttributeRs{
 										DerivedType: "#microsoft.graph.identityGovernance.membershipChangeTrigger",
 										SingleNestedAttribute: schema.SingleNestedAttribute{
 											Optional: true,
@@ -179,7 +290,7 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 											MarkdownDescription: "Represents the change in group membership that triggers the execution conditions of a workflow for a user. Also see [Microsoft docs for identityGovernance.membershipChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-membershipchangetrigger?view=graph-rest-beta). <br> ",
 										},
 									},
-									"time_based_attribute": generic.OdataDerivedTypeNestedAttributeRs{
+									"time_based_attribute_trigger": generic.OdataDerivedTypeNestedAttributeRs{
 										DerivedType: "#microsoft.graph.identityGovernance.timeBasedAttributeTrigger",
 										SingleNestedAttribute: schema.SingleNestedAttribute{
 											Optional: true,
@@ -202,7 +313,29 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 											MarkdownDescription: "Trigger based on a time-based attribute for initiating the execution of a [lifecycle workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta). The combination of scope and trigger conditions determines when a workflow is executed and on which identities. Also see [Microsoft docs for identityGovernance.timeBasedAttributeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetrigger?view=graph-rest-beta). <br> ",
 										},
 									},
-									"user_inactivity": generic.OdataDerivedTypeNestedAttributeRs{
+									"time_based_attribute_trigger_v2": generic.OdataDerivedTypeNestedAttributeRs{
+										DerivedType: "#microsoft.graph.identityGovernance.timeBasedAttributeTriggerV2",
+										SingleNestedAttribute: schema.SingleNestedAttribute{
+											Optional: true,
+											Attributes: map[string]schema.Attribute{ // identityGovernance.timeBasedAttributeTriggerV2
+												"attribute": schema.StringAttribute{
+													Required:            true,
+													MarkdownDescription: "The name of the date-type user attribute to evaluate, such as `employeeHireDate` or `employeeLeaveDateTime`.",
+												},
+												"operator": schema.SingleNestedAttribute{
+													Required:   true,
+													Attributes: map[string]schema.Attribute{ // identityGovernance.workflowExecutionTriggerOperator
+													},
+													MarkdownDescription: "The operator that determines how to evaluate the date attribute. <br/> Represents an abstract operator used by a [timeBasedAttributeTriggerV2](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetriggerv2?view=graph-rest-beta) to evaluate a user's date attribute. This type can't be instantiated directly. <br/> Configure this type in the **operator** property of [timeBasedAttributeTriggerV2](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetriggerv2?view=graph-rest-beta). <br/> The following type is derived from this type: <br/> The type of an operator is differentiated by its `@odata.type` property. Also see [Microsoft docs for identityGovernance.workflowExecutionTriggerOperator](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutiontriggeroperator?view=graph-rest-beta). <br> ",
+												},
+											},
+											Validators: []validator.Object{
+												identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionTriggerValidator,
+											},
+											MarkdownDescription: "Represents an extensible time-based trigger that evaluates a user's date attribute by using a configurable operator to initiate a [lifecycle workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta). Also see [Microsoft docs for identityGovernance.timeBasedAttributeTriggerV2](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-timebasedattributetriggerv2?view=graph-rest-beta). <br> ",
+										},
+									},
+									"user_inactivity_trigger": generic.OdataDerivedTypeNestedAttributeRs{
 										DerivedType: "#microsoft.graph.identityGovernance.userInactivityTrigger",
 										SingleNestedAttribute: schema.SingleNestedAttribute{
 											Optional: true,
@@ -219,7 +352,7 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 										},
 									},
 								},
-								MarkdownDescription: "What triggers a workflow to run. / The workflowExecutionTrigger type represents the workflow execution trigger when the [workflow runs on schedule](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta). Inherited by the following derived types:. Also see [Microsoft docs for identityGovernance.workflowExecutionTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutiontrigger?view=graph-rest-beta). <br> ",
+								MarkdownDescription: "What triggers a workflow to run. / The derived types of this abstract object are configured in the **trigger** property of the [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) resource when a lifecycle workflow runs on schedule. Inherited by the following derived types:. Also see [Microsoft docs for identityGovernance.workflowExecutionTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutiontrigger?view=graph-rest-beta). <br> ",
 							},
 						},
 						Validators: []validator.Object{
@@ -229,7 +362,7 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 					},
 				},
 			},
-			MarkdownDescription: "Conditions describing when to execute the workflow and the criteria to identify in-scope subject set. Required. / The workflowExecutionConditions type notes the workflow execution conditions in [workflowTemplate](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowtemplate?view=graph-rest-beta) and [workflowBase](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowbase?view=graph-rest-beta) objects. Execution conditions define when a workflow runs and rules that identify the users that are the target of the workflow. Also see [Microsoft docs for identityGovernance.workflowExecutionConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutionconditions?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "Conditions describing when to execute the workflow and the criteria to identify in-scope subject set. Required. / The derived types of this abstract object are configured in the **executionConditions** property of the [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta), [workflowTemplate](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowtemplate?view=graph-rest-beta), and [workflowVersion](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta) resources. Execution conditions define when a workflow runs and which users or subjects it targets. Also see [Microsoft docs for identityGovernance.workflowExecutionConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowexecutionconditions?view=graph-rest-beta). <br> ",
 		},
 		"is_enabled": schema.BoolAttribute{
 			Optional:            true,
@@ -312,9 +445,9 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 					"category": schema.StringAttribute{
 						Required: true,
 						Validators: []validator.String{
-							wpvalidator.FlagEnumValues("joiner", "leaver", "unknownFutureValue", "mover"),
+							wpvalidator.FlagEnumValues("joiner", "leaver", "unknownFutureValue", "mover", "extensibility"),
 						},
-						MarkdownDescription: "_Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.",
+						MarkdownDescription: "_Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`, `extensibility`.",
 					},
 					"continue_on_error": schema.BoolAttribute{
 						Optional:            true,
@@ -361,6 +494,27 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 			Computed:            true,
 			MarkdownDescription: "The date time when the `workflow` is expected to run next based on the schedule interval, if there are any users matching the execution conditions. <br/> Supports `$filter`(`lt`,`gt`) and `$orderby`.",
 		},
+		"quarantine_details": schema.SingleNestedAttribute{
+			Computed: true,
+			Attributes: map[string]schema.Attribute{ // identityGovernance.quarantineDetails
+				"quarantined_date_time": schema.StringAttribute{
+					Computed:            true,
+					MarkdownDescription: "The date and time when the workflow was quarantined.",
+				},
+				"quarantine_reason": schema.StringAttribute{
+					Computed:            true,
+					MarkdownDescription: "The reason the workflow was quarantined.",
+				},
+				"quarantine_type": schema.StringAttribute{
+					Computed: true,
+					Validators: []validator.String{
+						stringvalidator.OneOf("notQuarantined", "countBasedThresholdExceeded", "percentageBasedThresholdExceeded", "multipleConditionsExceeded", "unknownFutureValue"),
+					},
+					MarkdownDescription: "The type of threshold condition that caused the workflow to be quarantined. <br/> _Provider_ allowed values are: `notQuarantined`, `countBasedThresholdExceeded`, `percentageBasedThresholdExceeded`, `multipleConditionsExceeded`, `unknownFutureValue`.",
+				},
+			},
+			MarkdownDescription: "The current quarantine state of the workflow. Read-only. / Represents the read-only quarantine state of a [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta). This object is returned in the **quarantineDetails** property of a workflow when the workflow is automatically quarantined because a run exceeded the threshold conditions defined in its [quarantineConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-quarantineconfiguration?view=graph-rest-beta). Also see [Microsoft docs for identityGovernance.quarantineDetails](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-quarantinedetails?view=graph-rest-beta). <br> ",
+		},
 		"version": schema.Int64Attribute{
 			Computed:            true,
 			MarkdownDescription: "The current version number of the workflow. Value is 1 when the workflow is first created. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.",
@@ -371,17 +525,24 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 
 var identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionConditionsValidator = wpvalidator.ExactlyOneOfSiblings(
 	"on_demand_execution_only",
+	"provisioning_attribute_mapping",
 	"trigger_and_scope_based_conditions",
 )
 
 var identityGovernanceWorkflowSubjectSetValidator = wpvalidator.ExactlyOneOfSiblings(
-	"group",
-	"rule",
+	"all_excluding_agent_builder_platforms",
+	"all_excluding_groups",
+	"all_excluding_specific_objects",
+	"group_based",
+	"rule_based",
+	"selected_objects",
 )
 
 var identityGovernanceWorkflowIdentityGovernanceWorkflowExecutionTriggerValidator = wpvalidator.ExactlyOneOfSiblings(
-	"attribute_change",
-	"membership_change",
-	"time_based_attribute",
-	"user_inactivity",
+	"attribute_change_trigger",
+	"guest_sponsor_trigger",
+	"membership_change_trigger",
+	"time_based_attribute_trigger",
+	"time_based_attribute_trigger_v2",
+	"user_inactivity_trigger",
 )

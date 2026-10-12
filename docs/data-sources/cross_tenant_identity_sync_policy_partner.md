@@ -5,7 +5,7 @@ subcategory: "MS Graph: Cross-tenant access"
 
 # microsoft365wp_cross_tenant_identity_sync_policy_partner (Data Source)
 
-Defines the cross-tenant policy for synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users from one tenant to another. <br/> Also see [Microsoft docs for crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta).
+Defines the cross-tenant policy for synchronization of users and optionally groups from a partner tenant. Use this user and group synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users and groups from one tenant to another. <br/> Also see [Microsoft docs for crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta).
 
 ## Documentation Disclaimer
 
@@ -68,9 +68,10 @@ output "microsoft365wp_cross_tenant_identity_sync_policy_partner" {
 ### Read-Only
 
 - `deleted_date_time` (String) Shows the last date and time the policy was deleted.
-- `display_name` (String) Display name for the cross-tenant user synchronization policy. Use the name of the partner Microsoft Entra tenant to easily identify the policy. Optional.
-- `group_sync_inbound` (Attributes) Defines whether groups can be synchronized from a partner tenant. Key. / Defines whether groups can be synchronized from a partner tenant, as defined in the **groupSyncInbound** property of [crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crossTenantIdentitySyncPolicyPartner?view=graph-rest-beta) object. Also see [Microsoft docs for crossTenantGroupSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantgroupsyncinbound?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--group_sync_inbound))
-- `user_sync_inbound` (Attributes) Defines whether users can be synchronized from the partner tenant. Key. / Defines whether users can be synchronized from the partner tenant. Also see [Microsoft docs for crossTenantUserSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--user_sync_inbound))
+- `display_name` (String) Display name for the cross-tenant user and group synchronization policy. Use the name of the partner Microsoft Entra tenant to easily identify the policy. Optional.
+- `group_sync_inbound` (Attributes) Defines whether groups can be synchronized from a partner tenant. / Defines whether groups can be synchronized from a partner tenant, as defined in the **groupSyncInbound** property of [crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crossTenantIdentitySyncPolicyPartner?view=graph-rest-beta) object. Also see [Microsoft docs for crossTenantGroupSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantgroupsyncinbound?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--group_sync_inbound))
+- `role_enabled_group_sync_inbound` (Attributes) (see [below for nested schema](#nestedatt--role_enabled_group_sync_inbound))
+- `user_sync_inbound` (Attributes) Defines whether users can be synchronized from the partner tenant. / Defines whether users can be synchronized from the partner tenant. Also see [Microsoft docs for crossTenantUserSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--user_sync_inbound))
 
 <a id="nestedatt--group_sync_inbound"></a>
 ### Nested Schema for `group_sync_inbound`
@@ -78,6 +79,14 @@ output "microsoft365wp_cross_tenant_identity_sync_policy_partner" {
 Read-Only:
 
 - `is_sync_allowed` (Boolean) Defines whether group objects should be synchronized from the partner tenant. `false` stops any current group synchronization from the source tenant to the target tenant. This property has no impact on existing groups that were synchronized. <br/>
+
+
+<a id="nestedatt--role_enabled_group_sync_inbound"></a>
+### Nested Schema for `role_enabled_group_sync_inbound`
+
+Read-Only:
+
+- `is_sync_allowed` (Boolean)
 
 
 <a id="nestedatt--user_sync_inbound"></a>

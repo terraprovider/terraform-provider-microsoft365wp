@@ -79,6 +79,7 @@ output "microsoft365wp_device_compliance_script" {
 - `detection_script_content` (String) The entire content of the detection powershell script
 - `enforce_signature_check` (Boolean) Indicate whether the script signature needs be checked <br/>
 - `last_modified_date_time` (String) The timestamp of when the device compliance script was modified. This property is
+- `platform` (String) _Provider_ allowed values are: `windows10`, `linux`, `macOS`, `unknownFutureValue`.
 - `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for the device compliance script <br/>
 - `run_as_32_bit` (Boolean) Indicate whether PowerShell script(s) should run as 32-bit <br/>
 - `version` (String) Version of the device compliance script

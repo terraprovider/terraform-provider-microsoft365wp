@@ -72,6 +72,7 @@ type ReadOptions struct {
 	ODataSelect              []string
 	SingleItemUseODataFilter bool
 	ValidStatusCodesExtra    []int
+	NotFoundHint             string // extra explanation for users if the entity does not exist in MS Graph (e.g. for entities that cannot be created by the provider)
 	ExtraRequests            []ReadExtraRequest
 	ExtraRequestsCustom      []ReadExtraRequestCustom
 	DataSource               DataSourceOptions

@@ -47,12 +47,65 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 		"conditions": schema.SingleNestedAttribute{
 			Required: true,
 			Attributes: map[string]schema.Attribute{ // conditionalAccessConditionSet
+				"agent_context": schema.SingleNestedAttribute{
+					Optional: true,
+					Attributes: map[string]schema.Attribute{ // conditionalAccessAgentContext
+						"exclude_agent_contexts": schema.SetAttribute{
+							ElementType:         types.StringType,
+							Optional:            true,
+							PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+							Computed:            true,
+							MarkdownDescription: "The _provider_ default value is `[]`.",
+						},
+						"include_agent_contexts": schema.SetAttribute{
+							ElementType:         types.StringType,
+							Optional:            true,
+							PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+							Computed:            true,
+							MarkdownDescription: "The _provider_ default value is `[]`.",
+						},
+					},
+				},
 				"agent_id_risk_levels": schema.StringAttribute{
 					Optional: true,
 					Validators: []validator.String{
 						wpvalidator.FlagEnumValues("low", "medium", "high", "unknownFutureValue"),
 					},
 					MarkdownDescription: "Agent identity risk levels included in the policy. This enumeration is multivalued. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `unknownFutureValue`.",
+				},
+				"agents": schema.SingleNestedAttribute{
+					Optional: true,
+					Attributes: map[string]schema.Attribute{ // conditionalAccessAgents
+						"agent_filter": schema.SingleNestedAttribute{
+							Optional: true,
+							Attributes: map[string]schema.Attribute{ // conditionalAccessFilter
+								"mode": schema.StringAttribute{
+									Required:            true,
+									Validators:          []validator.String{stringvalidator.OneOf("include", "exclude")},
+									MarkdownDescription: "Mode to use for the filter. Possible values are `include` or `exclude`. <br/> _Provider_ allowed values are: `include`, `exclude`.",
+								},
+								"rule": schema.StringAttribute{
+									Required:            true,
+									MarkdownDescription: "Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)",
+								},
+							},
+							MarkdownDescription: "Represents filter in the policy scope. Also see [Microsoft docs for conditionalAccessFilter](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta). <br> ",
+						},
+						"exclude_agent_users": schema.SetAttribute{
+							ElementType:         types.StringType,
+							Optional:            true,
+							PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+							Computed:            true,
+							MarkdownDescription: "The _provider_ default value is `[]`.",
+						},
+						"include_agent_users": schema.SetAttribute{
+							ElementType:         types.StringType,
+							Optional:            true,
+							PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
+							Computed:            true,
+							MarkdownDescription: "The _provider_ default value is `[]`.",
+						},
+					},
 				},
 				"applications": schema.SingleNestedAttribute{
 					Optional: true,
@@ -533,7 +586,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-			MarkdownDescription: "The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Readonly.",
+			MarkdownDescription: "The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Read-only.",
 		},
 		"display_name": schema.StringAttribute{
 			Required:            true,
@@ -576,10 +629,6 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 				"authentication_strength": schema.SingleNestedAttribute{
 					Optional: true,
 					Attributes: map[string]schema.Attribute{ // authenticationStrengthPolicy
-						"id": schema.StringAttribute{
-							Required:            true,
-							MarkdownDescription: "The system-generated identifier for this mode.",
-						},
 						"allowed_combinations": schema.SetAttribute{
 							ElementType: types.StringType,
 							Computed:    true,
@@ -605,6 +654,10 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 							Computed:            true,
 							PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 							MarkdownDescription: "The human-readable display name of this policy. <br/> Supports `$filter` (`eq`, `ne`, `not` , and `in`).",
+						},
+						"id": schema.StringAttribute{
+							Required:            true,
+							MarkdownDescription: "The system-generated identifier for this mode.",
 						},
 						"modified_date_time": schema.StringAttribute{
 							Computed:            true,

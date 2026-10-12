@@ -52,7 +52,7 @@ var groupResourceSchema = schema.Schema{
 					},
 				},
 			},
-			MarkdownDescription: "The licenses that are assigned to the group. <br/> Returned only on `$select`. Supports `$filter` (`eq`). Read-only. <br/> Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. Also see [Microsoft docs for assignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "The licenses that are assigned to the group. <br/> Requires `$select` to retrieve. Supports `$filter` (`eq`). Read-only. <br/> Represents a license assigned to a user or group. The **assignedLicenses** property of the [user](user.md) or [group](group.md) entitity is a collection of **assignedLicense** objects. Also see [Microsoft docs for assignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/assignedlicense?view=graph-rest-beta). <br> ",
 		},
 		"display_name": schema.StringAttribute{
 			Optional:            true,

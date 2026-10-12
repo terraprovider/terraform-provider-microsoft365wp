@@ -374,6 +374,7 @@ Optional:
 Optional:
 
 - `advanced_threat_protection_required_security_level` (String) MDATP Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API. <br/> _Provider_ allowed values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.). The _provider_ default value is `"unavailable"`.
+- `device_compliance_policy_script` (Attributes) Also see [Microsoft docs for deviceCompliancePolicyScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicecompliancepolicyscript?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos--device_compliance_policy_script))
 - `device_threat_protection_enabled` (Boolean) Require that devices have enabled device threat protection. <br/> The _provider_ default value is `false`.
 - `device_threat_protection_required_security_level` (String) Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API. <br/> _Provider_ allowed values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.). The _provider_ default value is `"unavailable"`.
 - `firewall_block_all_incoming` (Boolean) Corresponds to the “Block all incoming connections” option. <br/> The _provider_ default value is `false`.
@@ -394,6 +395,16 @@ Optional:
 - `password_required_type` (String) The required password type. / Possible values of required passwords. <br/> _Provider_ allowed values are: `deviceDefault` (Device default value, no intent.), `alphanumeric` (Alphanumeric password required.), `numeric` (Numeric password required.). The _provider_ default value is `"deviceDefault"`.
 - `storage_require_encryption` (Boolean) Require encryption on Mac OS devices. <br/> The _provider_ default value is `false`.
 - `system_integrity_protection_enabled` (Boolean) Require that devices have enabled system integrity protection. <br/> The _provider_ default value is `false`.
+
+<a id="nestedatt--macos--device_compliance_policy_script"></a>
+### Nested Schema for `macos.device_compliance_policy_script`
+
+Optional:
+
+- `device_compliance_script_id` (String) Device compliance script Id.
+- `rules_content` (String) Json of the rules.
+- `run_interval_in_minutes` (Number)
+
 
 
 <a id="nestedatt--windows10"></a>
@@ -446,6 +457,7 @@ Optional:
 
 - `device_compliance_script_id` (String) Device compliance script Id.
 - `rules_content` (String) Json of the rules.
+- `run_interval_in_minutes` (Number)
 
 
 <a id="nestedatt--windows10--valid_operating_system_build_ranges"></a>

@@ -501,6 +501,7 @@ Optional:
 
 Optional:
 
+- `caller_id_number` (String) The phone number used as the caller ID when voice call authentication is initiated.
 - `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. Expanded by default. / A collection of groups enabled to use voice call authentication via the [voice call authentication methods policy](https://learn.microsoft.com/en-us/graph/api/resources/voiceAuthenticationMethodConfiguration?view=graph-rest-beta) in Microsoft Entra ID. Also see [Microsoft docs for voiceAuthenticationMethodTarget](https://learn.microsoft.com/en-us/graph/api/resources/voiceauthenticationmethodtarget?view=graph-rest-beta). <br/> The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. <br> (see [below for nested schema](#nestedatt--authentication_method_configurations--voice--include_targets))
 - `is_office_phone_allowed` (Boolean) `true` if users can register office phones, otherwise, `false`. <br/> The _provider_ default value is `false`.
 
@@ -528,6 +529,7 @@ Optional:
 - `certificate_user_bindings` (Attributes Set) Defines fields in the X.509 certificate that map to attributes of the Microsoft Entra user object in order to bind the certificate to the user. The **priority** of the object determines the order in which the binding is carried out. The first binding that matches will be used and the rest ignored. / Defines the fields in the X.509 certificate that map to attributes of the Microsoft Entra user object in order to bind the certificate to the user account. Also see [Microsoft docs for x509CertificateUserBinding](https://learn.microsoft.com/en-us/graph/api/resources/x509certificateuserbinding?view=graph-rest-beta). <br/> The _provider_ default value is `authenticationMethodsPolicyX509CertificateUserBindingsDefault`. <br> (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--certificate_user_bindings))
 - `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups that are enabled to use an authentication method as part of an authentication method policy in Microsoft Entra ID. Also see [Microsoft docs for authenticationMethodTarget](https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodtarget?view=graph-rest-beta). <br/> The _provider_ default value is `authenticationMethodsPolicyTargetsDefaultAllUsers`. <br> (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--include_targets))
 - `issuer_hints_configuration` (Attributes) Determines whether issuer(CA) hints are sent back to the client side to filter the certificates shown in certificate picker. / Determines whether issuer(CA) hints are sent back to the client side to filter the certificates shown in certificate picker. Also see [Microsoft docs for x509CertificateIssuerHintsConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/x509certificateissuerhintsconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--authentication_method_configurations--x509_certificate--issuer_hints_configuration))
+- `require_certificate_sid_alignment` (Boolean) When set to `true`, Microsoft Entra ID matches the SID in the Security Identifier (SID) extension or the SAN URI SID value from the user's X.509 certificate to the user's on-premises SID attribute for hybrid users and cloud SID for cloud-only users. Certificate-based authentication fails if the values don't match. The value can't be `null`. The default value is `false`. <br/> The _provider_ default value is `false`.
 
 <a id="nestedatt--authentication_method_configurations--x509_certificate--authentication_mode_configuration"></a>
 ### Nested Schema for `authentication_method_configurations.x509_certificate.authentication_mode_configuration`
@@ -616,7 +618,7 @@ Optional:
 
 Optional:
 
-- `authentication_methods_registration_campaign` (Attributes) Run campaigns to remind users to set up targeted authentication methods. / Represents the settings used to run campaigns to push users to set up targeted authentication methods. Users are prompted to set up the authentication method after they successfully complete a MFA challenge. Only available for the Microsoft Authenticator app for MFA. Also see [Microsoft docs for authenticationMethodsRegistrationCampaign](https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodsregistrationcampaign?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--registration_enforcement--authentication_methods_registration_campaign))
+- `authentication_methods_registration_campaign` (Attributes) Run campaigns to remind users to set up targeted authentication methods. / Represents the settings used to run campaigns to push users to set up targeted authentication methods. Users are prompted to set up the authentication method after they successfully complete a MFA challenge. Only available for passkey (FIDO2) and Microsoft Authenticator for MFA. Also see [Microsoft docs for authenticationMethodsRegistrationCampaign](https://learn.microsoft.com/en-us/graph/api/resources/authenticationmethodsregistrationcampaign?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--registration_enforcement--authentication_methods_registration_campaign))
 
 <a id="nestedatt--registration_enforcement--authentication_methods_registration_campaign"></a>
 ### Nested Schema for `registration_enforcement.authentication_methods_registration_campaign`
@@ -648,7 +650,7 @@ Required:
 
 Optional:
 
-- `targeted_authentication_method` (String) The authentication method that the user is prompted to register. The value must be `microsoftAuthenticator`. <br/> The _provider_ default value is `"microsoftAuthenticator"`.
+- `targeted_authentication_method` (String) The authentication method that the user is prompted to register. The value can be `Fido2` or `microsoftAuthenticator`. <br/> The _provider_ default value is `"microsoftAuthenticator"`.
 
 
 

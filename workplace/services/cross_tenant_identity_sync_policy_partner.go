@@ -64,7 +64,7 @@ var crossTenantIdentitySyncPolicyPartnerResourceSchema = schema.Schema{
 		},
 		"display_name": schema.StringAttribute{
 			Optional:            true,
-			MarkdownDescription: "Display name for the cross-tenant user synchronization policy. Use the name of the partner Microsoft Entra tenant to easily identify the policy. Optional.",
+			MarkdownDescription: "Display name for the cross-tenant user and group synchronization policy. Use the name of the partner Microsoft Entra tenant to easily identify the policy. Optional.",
 		},
 		"group_sync_inbound": schema.SingleNestedAttribute{
 			Optional: true,
@@ -76,7 +76,18 @@ var crossTenantIdentitySyncPolicyPartnerResourceSchema = schema.Schema{
 					MarkdownDescription: "Defines whether group objects should be synchronized from the partner tenant. `false` stops any current group synchronization from the source tenant to the target tenant. This property has no impact on existing groups that were synchronized. <br/> The _provider_ default value is `false`.",
 				},
 			},
-			MarkdownDescription: "Defines whether groups can be synchronized from a partner tenant. Key. / Defines whether groups can be synchronized from a partner tenant, as defined in the **groupSyncInbound** property of [crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crossTenantIdentitySyncPolicyPartner?view=graph-rest-beta) object. Also see [Microsoft docs for crossTenantGroupSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantgroupsyncinbound?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "Defines whether groups can be synchronized from a partner tenant. / Defines whether groups can be synchronized from a partner tenant, as defined in the **groupSyncInbound** property of [crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crossTenantIdentitySyncPolicyPartner?view=graph-rest-beta) object. Also see [Microsoft docs for crossTenantGroupSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantgroupsyncinbound?view=graph-rest-beta). <br> ",
+		},
+		"role_enabled_group_sync_inbound": schema.SingleNestedAttribute{
+			Optional: true,
+			Attributes: map[string]schema.Attribute{ // crossTenantRoleEnabledGroupSyncInbound
+				"is_sync_allowed": schema.BoolAttribute{
+					Optional:            true,
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+					Computed:            true,
+					MarkdownDescription: "The _provider_ default value is `false`.",
+				},
+			},
 		},
 		"user_sync_inbound": schema.SingleNestedAttribute{
 			Required: true,
@@ -86,8 +97,8 @@ var crossTenantIdentitySyncPolicyPartnerResourceSchema = schema.Schema{
 					MarkdownDescription: "Defines whether user objects should be synchronized from the partner tenant. `false` causes any current user synchronization from the source tenant to the target tenant to stop. This property has no impact on existing users who have already been synchronized.",
 				},
 			},
-			MarkdownDescription: "Defines whether users can be synchronized from the partner tenant. Key. / Defines whether users can be synchronized from the partner tenant. Also see [Microsoft docs for crossTenantUserSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "Defines whether users can be synchronized from the partner tenant. / Defines whether users can be synchronized from the partner tenant. Also see [Microsoft docs for crossTenantUserSyncInbound](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantusersyncinbound?view=graph-rest-beta). <br> ",
 		},
 	},
-	MarkdownDescription: "Defines the cross-tenant policy for synchronization of users from a partner tenant. Use this user synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users from one tenant to another. <br/> Also see [Microsoft docs for crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta). ||| MS Graph: Cross-tenant access",
+	MarkdownDescription: "Defines the cross-tenant policy for synchronization of users and optionally groups from a partner tenant. Use this user and group synchronization policy to streamline collaboration between users in a multi-tenant organization by automating the creation, update, and deletion of users and groups from one tenant to another. <br/> Also see [Microsoft docs for crossTenantIdentitySyncPolicyPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantidentitysyncpolicypartner?view=graph-rest-beta). ||| MS Graph: Cross-tenant access",
 }

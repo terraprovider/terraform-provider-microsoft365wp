@@ -79,10 +79,10 @@ output "microsoft365wp_identity_governance_task_definition_2" {
 
 ### Read-Only
 
-- `category` (String) The category of the HR function that the tasks created using this definition can be used with. This is a multi-valued enumeration whose allowed combinations are `joiner`, `joiner,leaver`, or `leaver`. <br/> Supports `$filter`(`eq`, `ne`, `has`) and `$orderby`. <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.
+- `category` (String) The category of the HR function that the tasks created using this definition can be used with. This flagged enumeration allows multiple members to be selected simultaneously. <br/> Supports `$filter`(`eq`, `ne`, `has`) and `$orderby`. <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`, `extensibility`.
 - `continue_on_error` (Boolean) Defines if the workflow will continue if the task has an error.
 - `description` (String) The description of the taskDefinition.
-- `parameters` (Attributes Set) The parameters that must be supplied when creating a workflow task object. <br/> Supports `$filter`(`any`). <br/> Represents the allowed arguments that are defined in a [taskDefinition](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-taskdefinition?view=graph-rest-beta) for built-in lifecycle workflow tasks. Also see [Microsoft docs for identityGovernance.parameter](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-parameter?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--parameters))
+- `parameters` (Attributes Set) The parameters that must be supplied when creating a workflow task object. <br/> Supports `$filter`(`any`). <br/> Represents the allowed arguments that are defined in the **parameters** property of the [taskDefinition](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-taskdefinition?view=graph-rest-beta) resource for built-in lifecycle workflow tasks. Also see [Microsoft docs for identityGovernance.parameter](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-parameter?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--parameters))
 - `version` (Number) The version number of the taskDefinition. New records are pushed when we add support for new parameters. <br/> Supports `$filter`(`ge`, `gt`, `le`, `lt`, `eq`, `ne`) and `$orderby`.
 
 <a id="nestedatt--parameters"></a>

@@ -79,8 +79,9 @@ var cloudPcDeviceImageResourceSchema = schema.Schema{
 			MarkdownDescription: "The operating system version of this image. For example, `10.0.22000.296`. Read-only.",
 		},
 		"scope_ids": schema.SetAttribute{
-			ElementType: types.StringType,
-			Optional:    true,
+			ElementType:         types.StringType,
+			Optional:            true,
+			MarkdownDescription: "The scope IDs of the corresponding permission. Currently, it's the Intune scope tag ID. Read-only.",
 		},
 		"size_in_gb": schema.Int64Attribute{
 			Optional:            true,

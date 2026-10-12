@@ -71,7 +71,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					MarkdownDescription: "The unique identifier (ID) of a Windows Autopatch group. An Autopatch group is a logical container or unit that groups several Microsoft Entra groups and software update policies. Devices with the same Autopatch group ID share unified software update management. The default value is `null` that indicates that no Autopatch group is associated with the provisioning policy.",
 				},
 			},
-			MarkdownDescription: "Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. The settings take effect when the tenant enrolls in Autopatch and the **managedType** of the **microsoftManagedDesktop** property is set as `starterManaged`. Supports `$select`. / Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. Also see [Microsoft docs for cloudPcProvisioningPolicyAutopatch](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicyautopatch?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. The settings take effect when the tenant enrolls in Autopatch and the **managedType** of the **microsoftManagedDesktop** property is set as `starterManaged`. When you create or update a provisioning policy with **autopatch**, you must use a delegated token and the signed-in user must have the Intune Administrator role. Supports `$select`. / Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. Also see [Microsoft docs for cloudPcProvisioningPolicyAutopatch](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicyautopatch?view=graph-rest-beta). <br> ",
 		},
 		"autopilot_configuration": schema.SingleNestedAttribute{
 			Optional: true,
@@ -89,7 +89,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					MarkdownDescription: "Indicates whether the access to the device is allowed when the application of Autopilot device preparation profile (DPP) configurations fails or times out. If `true`, the **status** of the device is `failed` and the device is unable to access; otherwise, the **status** of the device is `provisionedWithWarnings` and the device is allowed to access. The default value is `false`. Required.",
 				},
 			},
-			MarkdownDescription: "The specific settings for Windows Autopilot that enable Windows 365 customers to experience it on Cloud PC. Supports `$select`. / Represents specific settings for Windows Autopilot that enable Windows 365 customers to experience it on Cloud PC. Also see [Microsoft docs for cloudPcAutopilotConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcautopilotconfiguration?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "The specific settings for Windows Autopilot that enable Windows 365 customers to experience it on Cloud PC. When you create or update a provisioning policy with **autopilotConfiguration**, use the required Microsoft Graph permissions listed on the corresponding create and update API pages. In delegated scenarios, the signed-in user must also have the `Microsoft.Intune/DeviceConfigurations/Assign` Intune RBAC permission. Supports `$select`. / Represents specific settings for Windows Autopilot that enable Windows 365 customers to experience it on Cloud PC. Also see [Microsoft docs for cloudPcAutopilotConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcautopilotconfiguration?view=graph-rest-beta). <br> ",
 		},
 		"cloud_pc_group_display_name": schema.StringAttribute{
 			Optional:            true,
@@ -137,10 +137,10 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					"geographic_location_type": schema.StringAttribute{
 						Computed: true,
 						Validators: []validator.String{
-							stringvalidator.OneOf("default", "asia", "australasia", "canada", "europe", "india", "africa", "usCentral", "usEast", "usWest", "southAmerica", "middleEast", "centralAmerica", "usGovernment", "unknownFutureValue", "mexico"),
+							stringvalidator.OneOf("default", "asia", "australasia", "canada", "europe", "india", "africa", "usCentral", "usEast", "usWest", "southAmerica", "middleEast", "centralAmerica", "usGovernment", "unknownFutureValue", "mexico", "australiaNewZealand"),
 						},
 						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-						MarkdownDescription: "The geographic location where the region is located. Read-only. <br/> Represents the geographic location where a region is located for Microsoft-hosted network for backup Cloud PCs. <br/> This is an evolvable enumeration. <br/> _Provider_ allowed values are: `default`, `asia`, `australasia`, `canada`, `europe`, `india`, `africa`, `usCentral`, `usEast`, `usWest`, `southAmerica`, `middleEast`, `centralAmerica`, `usGovernment`, `unknownFutureValue`, `mexico`.",
+						MarkdownDescription: "The geographic location where the region is located. Read-only. <br/> Represents the geographic location where a region is located for Microsoft-hosted network for backup Cloud PCs. <br/> The **cloudPcGeographicLocationType** type is an evolvable enumeration. <br/> _Provider_ allowed values are: `default`, `asia`, `australasia`, `canada`, `europe`, `india`, `africa`, `usCentral`, `usEast`, `usWest`, `southAmerica`, `middleEast`, `centralAmerica`, `usGovernment`, `unknownFutureValue`, `mexico`, `australiaNewZealand`.",
 					},
 					"on_premises_connection_id": schema.StringAttribute{
 						Optional:            true,
@@ -274,7 +274,16 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 			Optional:            true,
 			PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValue([]any{"0"})},
 			Computed:            true,
-			MarkdownDescription: "The _provider_ default value is `[\"0\"]`.",
+			MarkdownDescription: "The list of scope tag IDs for this resource. Read-only. <br/> The _provider_ default value is `[\"0\"]`.",
+		},
+		"snapshot_reset_mode": schema.StringAttribute{
+			Computed: true,
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("notApplicable", "enabled", "disabled", "unknownFutureValue"),
+			},
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "Indicates whether snapshot reset is available for this provisioning policy. The default value is `notApplicable`. <br/> _Provider_ allowed values are: `notApplicable`, `enabled`, `disabled`, `unknownFutureValue`.",
 		},
 		"user_experience_type": schema.StringAttribute{
 			Optional: true,
@@ -356,9 +365,86 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 								Computed:            true,
 								MarkdownDescription: "Indicates the unique identifier for the Cloud PC user settings persistence configuration for a single policy collection. Required. Read-only.",
 							},
+							"auto_cleanup_detail": schema.SingleNestedAttribute{
+								Computed: true,
+								Attributes: map[string]schema.Attribute{ // cloudPCUserSettingsPersistenceAutoCleanupDetail
+									"auto_cleanup_mode": schema.StringAttribute{
+										Computed: true,
+										Validators: []validator.String{
+											wpvalidator.FlagEnumValues("none", "scheduled", "onQuotaExceeded", "unknownFutureValue"),
+										},
+										MarkdownDescription: "_Provider_ allowed values are: `none`, `scheduled`, `onQuotaExceeded`, `unknownFutureValue`.",
+									},
+									"inactive_profile_retention_days": schema.Int64Attribute{
+										Computed: true,
+									},
+								},
+							},
 							"grace_period_end_date_time": schema.StringAttribute{
 								Computed:            true,
 								MarkdownDescription: "Indicates the grace period end time when user settings persistence exceeds the available quota. If usage exceeds the available quota when the grace period expires, the system automatically deletes the profile with the oldest last attached timestamp. The timestamp type represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Read-only.",
+							},
+							"snapshot_configuration": schema.SingleNestedAttribute{
+								Computed: true,
+								Attributes: map[string]schema.Attribute{ // cloudPcUserSettingsPersistenceSnapshotConfiguration
+									"auto_snapshot_frequency_in_days": schema.Int64Attribute{
+										Computed: true,
+									},
+								},
+							},
+							"storage_configuration": schema.SingleNestedAttribute{
+								Computed: true,
+								Attributes: map[string]schema.Attribute{ // cloudPcStorageConfiguration
+									"allocated_storage_size_category": schema.StringAttribute{
+										Computed: true,
+										Validators: []validator.String{
+											stringvalidator.OneOf("fourGB", "eightGB", "sixteenGB", "thirtyTwoGB", "sixtyFourGB", "unknownFutureValue"),
+										},
+										MarkdownDescription: "_Provider_ allowed values are: `fourGB`, `eightGB`, `sixteenGB`, `thirtyTwoGB`, `sixtyFourGB`, `unknownFutureValue`.",
+									},
+									"storage_sizing_type": schema.StringAttribute{
+										Computed: true,
+										Validators: []validator.String{
+											stringvalidator.OneOf("dynamic", "fixed", "unknownFutureValue"),
+										},
+										MarkdownDescription: "_Provider_ allowed values are: `dynamic`, `fixed`, `unknownFutureValue`.",
+									},
+								},
+							},
+							"user_profile_snapshots": schema.SetNestedAttribute{
+								Computed: true,
+								NestedObject: schema.NestedAttributeObject{
+									Attributes: map[string]schema.Attribute{ // cloudPcUserProfileSnapshot
+										"id": schema.StringAttribute{
+											Computed: true,
+										},
+										"cloud_profile_id": schema.StringAttribute{
+											Computed: true,
+										},
+										"created_date_time": schema.StringAttribute{
+											Computed: true,
+										},
+										"expiration_date_time": schema.StringAttribute{
+											Computed: true,
+										},
+										"last_restored_date_time": schema.StringAttribute{
+											Computed: true,
+										},
+										"snapshot_size_in_g_b": schema.Int64Attribute{
+											Computed: true,
+										},
+										"snapshot_type": schema.StringAttribute{
+											Computed: true,
+											Validators: []validator.String{
+												stringvalidator.OneOf("automatic", "manual", "unknownFutureValue"),
+											},
+											MarkdownDescription: "_Provider_ allowed values are: `automatic`, `manual`, `unknownFutureValue`.",
+										},
+										"user_principal_name": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+								},
 							},
 						},
 						PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},

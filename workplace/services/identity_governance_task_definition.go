@@ -43,9 +43,9 @@ var identityGovernanceTaskDefinitionResourceSchema = schema.Schema{
 		},
 		"category": schema.StringAttribute{
 			Validators: []validator.String{
-				wpvalidator.FlagEnumValues("joiner", "leaver", "unknownFutureValue", "mover"),
+				wpvalidator.FlagEnumValues("joiner", "leaver", "unknownFutureValue", "mover", "extensibility"),
 			},
-			MarkdownDescription: "The category of the HR function that the tasks created using this definition can be used with. This is a multi-valued enumeration whose allowed combinations are `joiner`, `joiner,leaver`, or `leaver`. <br/> Supports `$filter`(`eq`, `ne`, `has`) and `$orderby`. <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.",
+			MarkdownDescription: "The category of the HR function that the tasks created using this definition can be used with. This flagged enumeration allows multiple members to be selected simultaneously. <br/> Supports `$filter`(`eq`, `ne`, `has`) and `$orderby`. <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`, `extensibility`.",
 		},
 		"continue_on_error": schema.BoolAttribute{
 			MarkdownDescription: "Defines if the workflow will continue if the task has an error.",
@@ -76,7 +76,7 @@ var identityGovernanceTaskDefinitionResourceSchema = schema.Schema{
 					},
 				},
 			},
-			MarkdownDescription: "The parameters that must be supplied when creating a workflow task object. <br/> Supports `$filter`(`any`). <br/> Represents the allowed arguments that are defined in a [taskDefinition](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-taskdefinition?view=graph-rest-beta) for built-in lifecycle workflow tasks. Also see [Microsoft docs for identityGovernance.parameter](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-parameter?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "The parameters that must be supplied when creating a workflow task object. <br/> Supports `$filter`(`any`). <br/> Represents the allowed arguments that are defined in the **parameters** property of the [taskDefinition](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-taskdefinition?view=graph-rest-beta) resource for built-in lifecycle workflow tasks. Also see [Microsoft docs for identityGovernance.parameter](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-parameter?view=graph-rest-beta). <br> ",
 		},
 		"version": schema.Int64Attribute{
 			MarkdownDescription: "The version number of the taskDefinition. New records are pushed when we add support for new parameters. <br/> Supports `$filter`(`ge`, `gt`, `le`, `lt`, `eq`, `ne`) and `$orderby`.",

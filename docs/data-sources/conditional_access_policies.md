@@ -78,6 +78,6 @@ output "microsoft365wp_conditional_access_policies" {
 
 Read-Only:
 
-- `created_date_time` (String) The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Readonly.
+- `created_date_time` (String) The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`.
 - `display_name` (String) Specifies a display name for the conditionalAccessPolicy object.
 - `id` (String) Specifies the identifier of a conditionalAccessPolicy object.

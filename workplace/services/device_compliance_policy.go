@@ -894,6 +894,24 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "MDATP Require Mobile Threat Protection minimum risk level to report noncompliance. / Device threat protection levels for the Device Threat Protection API. <br/> _Provider_ allowed values are: `unavailable` (Default Value. Do not use.), `secured` (Device Threat Level requirement: Secured. This is the most secure level, and represents that no threats were found on the device.), `low` (Device Threat Protection level requirement: Low. Low represents a severity of threat that poses minimal risk to the device or device data.), `medium` (Device Threat Protection level requirement: Medium. Medium represents a severity of threat that poses moderate risk to the device or device data.), `high` (Device Threat Protection level requirement: High. High represents a severity of threat that poses severe risk to the device or device data.), `notSet` (Device Threat Protection level requirement: Not Set. Not set represents that there is no requirement for the device to meet a Threat Protection level.). The _provider_ default value is `\"unavailable\"`.",
 					},
+					"device_compliance_policy_script": schema.SingleNestedAttribute{
+						Optional: true,
+						Attributes: map[string]schema.Attribute{ // deviceCompliancePolicyScript
+							"device_compliance_script_id": schema.StringAttribute{
+								Optional:            true,
+								MarkdownDescription: "Device compliance script Id.",
+							},
+							"rules_content": schema.StringAttribute{
+								Optional:            true,
+								Validators:          []validator.String{wpvalidator.TranslateValueEncodeBase64()},
+								MarkdownDescription: "Json of the rules.",
+							},
+							"run_interval_in_minutes": schema.Int64Attribute{
+								Optional: true,
+							},
+						},
+						MarkdownDescription: "Also see [Microsoft docs for deviceCompliancePolicyScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicecompliancepolicyscript?view=graph-rest-beta). <br> ",
+					},
 					"device_threat_protection_enabled": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
@@ -1081,6 +1099,9 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 								Optional:            true,
 								Validators:          []validator.String{wpvalidator.TranslateValueEncodeBase64()},
 								MarkdownDescription: "Json of the rules.",
+							},
+							"run_interval_in_minutes": schema.Int64Attribute{
+								Optional: true,
 							},
 						},
 						MarkdownDescription: "Also see [Microsoft docs for deviceCompliancePolicyScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicecompliancepolicyscript?view=graph-rest-beta). <br> ",

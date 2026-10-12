@@ -77,6 +77,14 @@ var deviceAndAppManagementAssignmentFilterResourceSchema = schema.Schema{
 			Required:            true,
 			MarkdownDescription: "The name of the Assignment Filter.",
 		},
+		"evaluation_mode": schema.StringAttribute{
+			Computed: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("checkinTimeEvaluation", "inventoryEvaluation", "mixedEvaluation", "disabled", "unknownFutureValue"),
+			},
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "_Provider_ allowed values are: `checkinTimeEvaluation`, `inventoryEvaluation`, `mixedEvaluation`, `disabled`, `unknownFutureValue`.",
+		},
 		"last_modified_date_time": schema.StringAttribute{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},

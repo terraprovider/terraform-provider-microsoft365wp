@@ -167,7 +167,7 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Defines the setting of the Cloud PC notification prompts for the Cloud PC user. / Represents specific settings of notification prompt. Also see [Microsoft docs for cloudPcNotificationSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcnotificationsetting?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+			MarkdownDescription: "Represents specific settings of notification prompt. Also see [Microsoft docs for cloudPcNotificationSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcnotificationsetting?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 		"provisioning_source_type": schema.StringAttribute{
 			Optional: true,

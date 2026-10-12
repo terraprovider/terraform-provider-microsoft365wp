@@ -3677,9 +3677,15 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "Domains that are accessed through the public internet instead of through VPN, even when per-app VPN is activated <br/> The _provider_ default value is `[]`.",
 					},
+					"exclude_local_networks": schema.BoolAttribute{
+						Optional: true,
+					},
 					"identifier": schema.StringAttribute{
 						Optional:            true,
 						MarkdownDescription: "Identifier provided by VPN vendor when connection type is set to Custom VPN. For example: Cisco AnyConnect uses an identifier of the form com.cisco.anyconnect.applevpn.plugin",
+					},
+					"include_all_networks": schema.BoolAttribute{
+						Optional: true,
 					},
 					"login_group_or_domain": schema.StringAttribute{
 						Optional:            true,

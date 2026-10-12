@@ -59,6 +59,7 @@ resource "microsoft365wp_device_compliance_script" "test" {
 - `assignments` (Attributes Set) The list of assignments. (see [below for nested schema](#nestedatt--assignments))
 - `description` (String) Description of the device compliance script <br/> The _provider_ default value is `""`.
 - `enforce_signature_check` (Boolean) Indicate whether the script signature needs be checked <br/> The _provider_ default value is `false`.
+- `platform` (String) _Provider_ allowed values are: `windows10`, `linux`, `macOS`, `unknownFutureValue`.
 - `publisher` (String) Name of the device compliance script publisher <br/> The _provider_ default value is `""`.
 - `role_scope_tag_ids` (Set of String) List of Scope Tag IDs for the device compliance script <br/> The _provider_ default value is `["0"]`.
 - `run_as_32_bit` (Boolean) Indicate whether PowerShell script(s) should run as 32-bit <br/> The _provider_ default value is `false`.

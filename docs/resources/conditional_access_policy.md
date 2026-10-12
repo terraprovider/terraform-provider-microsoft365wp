@@ -131,7 +131,7 @@ All the session controls inherit from [conditionalAccessSessionControl](conditio
 
 ### Read-Only
 
-- `created_date_time` (String) The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Readonly.
+- `created_date_time` (String) The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Read-only.
 - `id` (String) Specifies the identifier of a conditionalAccessPolicy object. Read-only.
 
 <a id="nestedatt--conditions"></a>
@@ -139,7 +139,9 @@ All the session controls inherit from [conditionalAccessSessionControl](conditio
 
 Optional:
 
+- `agent_context` (Attributes) (see [below for nested schema](#nestedatt--conditions--agent_context))
 - `agent_id_risk_levels` (String) Agent identity risk levels included in the policy. This enumeration is multivalued. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `unknownFutureValue`.
+- `agents` (Attributes) (see [below for nested schema](#nestedatt--conditions--agents))
 - `applications` (Attributes) Applications and user actions included in and excluded from the policy. Required. / Represents the applications and user actions included in and excluded from the conditional access policy. Also see [Microsoft docs for conditionalAccessApplications](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessapplications?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--applications))
 - `authentication_flows` (Attributes) Authentication flows included in the policy scope. For more information, see [Conditional Access: Authentication flows](https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-authentication-flows). / Represents the authentication flows in scope for the policy. Also see [Microsoft docs for conditionalAccessAuthenticationFlows](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessauthenticationflows?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--authentication_flows))
 - `client_app_types` (Set of String) Client application types included in the policy. Required. <br/> The `easUnsupported` enumeration member is deprecated in favor of `exchangeActiveSync`, which includes EAS supported and unsupported platforms. <br/> _Provider_ allowed values are: `all`, `browser`, `mobileAppsAndDesktopClients`, `exchangeActiveSync`, `easSupported`, `other`, `unknownFutureValue`. The _provider_ default value is `["all"]`.
@@ -153,6 +155,34 @@ Optional:
 - `sign_in_risk_levels` (Set of String) Sign-in risk levels included in the policy. Required. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.
 - `user_risk_levels` (Set of String) User risk levels included in the policy. Required. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.
 - `users` (Attributes) Users, groups, and roles included in and excluded from the policy. Either **users** or **clientApplications** is required. / Represents users, groups, and roles included in and excluded from the policy scope. Also see [Microsoft docs for conditionalAccessUsers](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessusers?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--users))
+
+<a id="nestedatt--conditions--agent_context"></a>
+### Nested Schema for `conditions.agent_context`
+
+Optional:
+
+- `exclude_agent_contexts` (Set of String) The _provider_ default value is `[]`.
+- `include_agent_contexts` (Set of String) The _provider_ default value is `[]`.
+
+
+<a id="nestedatt--conditions--agents"></a>
+### Nested Schema for `conditions.agents`
+
+Optional:
+
+- `agent_filter` (Attributes) Represents filter in the policy scope. Also see [Microsoft docs for conditionalAccessFilter](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccessfilter?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--conditions--agents--agent_filter))
+- `exclude_agent_users` (Set of String) The _provider_ default value is `[]`.
+- `include_agent_users` (Set of String) The _provider_ default value is `[]`.
+
+<a id="nestedatt--conditions--agents--agent_filter"></a>
+### Nested Schema for `conditions.agents.agent_filter`
+
+Required:
+
+- `mode` (String) Mode to use for the filter. Possible values are `include` or `exclude`. <br/> _Provider_ allowed values are: `include`, `exclude`.
+- `rule` (String) Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. For details, see [rules with multiple expressions](https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership#rules-with-multiple-expressions)
+
+
 
 <a id="nestedatt--conditions--applications"></a>
 ### Nested Schema for `conditions.applications`

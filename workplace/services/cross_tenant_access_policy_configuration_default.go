@@ -35,6 +35,46 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 			Computed:      true,
 			PlanModifiers: []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 		},
+		"app_service_connect_inbound": schema.SingleNestedAttribute{
+			Computed: true,
+			Optional: true,
+			Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyAppServiceConnectSetting
+				"applications": schema.SingleNestedAttribute{
+					Optional: true,
+					Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyTargetConfiguration
+						"access_type": schema.StringAttribute{
+							Optional: true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("allowed", "blocked", "unknownFutureValue"),
+							},
+							MarkdownDescription: "Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.",
+						},
+						"targets": schema.SetNestedAttribute{
+							Optional: true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyTarget
+									"target": schema.StringAttribute{
+										Required:            true,
+										MarkdownDescription: "Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.",
+									},
+									"target_type": schema.StringAttribute{
+										Required: true,
+										Validators: []validator.String{
+											stringvalidator.OneOf("user", "group", "application", "unknownFutureValue"),
+										},
+										MarkdownDescription: "The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.",
+									},
+								},
+							},
+							MarkdownDescription: "Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br> ",
+						},
+					},
+					MarkdownDescription: "Defines the target applications that are allowed for inbound app service connect across tenant boundaries. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
+				},
+			},
+			PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
+			MarkdownDescription: "Defines your default configuration for inbound app service connect settings that control which applications can connect across tenant boundaries. <br/> Represents the inbound app service connect settings for a cross-tenant access policy that specify which applications can connect across tenant boundaries. <br/> This resource is used by the **appServiceConnectInbound** property of the [crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta) and [crossTenantAccessPolicyConfigurationPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta) resources. Also see [Microsoft docs for crossTenantAccessPolicyAppServiceConnectSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyappserviceconnectsetting?view=graph-rest-beta). <br> ",
+		},
 		"automatic_user_consent_settings": schema.SingleNestedAttribute{
 			Optional: true,
 			Attributes: map[string]schema.Attribute{ // inboundOutboundPolicyConfiguration
@@ -104,7 +144,7 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 				"users_and_groups": schema.SingleNestedAttribute{
 					Optional: true,
@@ -150,7 +190,7 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
@@ -207,7 +247,7 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 				"users_and_groups": schema.SingleNestedAttribute{
 					Optional: true,
@@ -253,7 +293,7 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
@@ -310,7 +350,7 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 				"users_and_groups": schema.SingleNestedAttribute{
 					Optional: true,
@@ -356,7 +396,7 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
@@ -413,7 +453,7 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 				"users_and_groups": schema.SingleNestedAttribute{
 					Optional: true,
@@ -459,13 +499,19 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
 			Description:         `b2bDirectConnectOutbound`, // custom MS Graph attribute name
 			MarkdownDescription: "Defines your default configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. Also see [Microsoft docs for crossTenantAccessPolicyB2BSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+		},
+		"block_service_provider_outbound_access": schema.BoolAttribute{
+			Computed:            true,
+			Optional:            true,
+			PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
+			MarkdownDescription: "Specifies whether users can use granular delegated admin privileges (GDAP) to sign-in and access resources in other organizations. Default value is `false`.",
 		},
 		"inbound_trust": schema.SingleNestedAttribute{
 			Optional: true,
@@ -532,6 +578,88 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 			PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
 			MarkdownDescription: "If `true`, the default configuration is set to the system default configuration. If `false`, the default settings are customized.",
 		},
+		"m365_collaboration_inbound": schema.SingleNestedAttribute{
+			Computed: true,
+			Optional: true,
+			Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyM365CollaborationInboundSetting
+				"users": schema.SingleNestedAttribute{
+					Optional: true,
+					Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyTargetConfiguration
+						"access_type": schema.StringAttribute{
+							Optional: true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("allowed", "blocked", "unknownFutureValue"),
+							},
+							MarkdownDescription: "Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.",
+						},
+						"targets": schema.SetNestedAttribute{
+							Optional: true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyTarget
+									"target": schema.StringAttribute{
+										Required:            true,
+										MarkdownDescription: "Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.",
+									},
+									"target_type": schema.StringAttribute{
+										Required: true,
+										Validators: []validator.String{
+											stringvalidator.OneOf("user", "group", "application", "unknownFutureValue"),
+										},
+										MarkdownDescription: "The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.",
+									},
+								},
+							},
+							MarkdownDescription: "Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br> ",
+						},
+					},
+					MarkdownDescription: "Defines the target users from other organizations who are allowed inbound Microsoft 365 collaboration with your organization. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
+				},
+			},
+			PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
+			Description:         `m365CollaborationInbound`, // custom MS Graph attribute name
+			MarkdownDescription: "Defines your default configuration for inbound Microsoft 365 collaboration settings that determine which users from other organizations can collaborate with your organization using Microsoft 365 apps. <br/> Represents the inbound Microsoft 365 collaboration settings for a cross-tenant access policy that specify which users from external organizations can collaborate with your organization using Microsoft 365 apps. <br/> This resource is used by the **m365CollaborationInbound** property of the [crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta) and [crossTenantAccessPolicyConfigurationPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta) resources. Also see [Microsoft docs for crossTenantAccessPolicyM365CollaborationInboundSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicym365collaborationinboundsetting?view=graph-rest-beta). <br> ",
+		},
+		"m365_collaboration_outbound": schema.SingleNestedAttribute{
+			Computed: true,
+			Optional: true,
+			Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyM365CollaborationOutboundSetting
+				"users_and_groups": schema.SingleNestedAttribute{
+					Optional: true,
+					Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyTargetConfiguration
+						"access_type": schema.StringAttribute{
+							Optional: true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("allowed", "blocked", "unknownFutureValue"),
+							},
+							MarkdownDescription: "Defines whether access is allowed or blocked. <br/> _Provider_ allowed values are: `allowed`, `blocked`, `unknownFutureValue`.",
+						},
+						"targets": schema.SetNestedAttribute{
+							Optional: true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyTarget
+									"target": schema.StringAttribute{
+										Required:            true,
+										MarkdownDescription: "Defines the target for cross-tenant access policy settings and can have one of the following values: <br/> - The unique identifier of the user, group, or application <br/> - `AllUsers` <br/> - `AllApplications` - Refers to any [Microsoft cloud application](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#microsoft-cloud-applications). <br/> - `Office365` - Includes the applications mentioned as part of the [Office 365](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps#office-365) suite.",
+									},
+									"target_type": schema.StringAttribute{
+										Required: true,
+										Validators: []validator.String{
+											stringvalidator.OneOf("user", "group", "application", "unknownFutureValue"),
+										},
+										MarkdownDescription: "The type of resource that you want to target. <br/> _Provider_ allowed values are: `user`, `group`, `application`, `unknownFutureValue`.",
+									},
+								},
+							},
+							MarkdownDescription: "Specifies whether to target users, groups, or applications with this rule. / Defines how to target your cross-tenant access policy settings. Settings can be targeted to specific users, groups, or applications. You can also use keywords to target specific groups or applications. Also see [Microsoft docs for crossTenantAccessPolicyTarget](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytarget?view=graph-rest-beta). <br> ",
+						},
+					},
+					MarkdownDescription: "Defines the target users and groups in your organization who are allowed outbound Microsoft 365 collaboration with external organizations. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br> ",
+				},
+			},
+			PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
+			Description:         `m365CollaborationOutbound`, // custom MS Graph attribute name
+			MarkdownDescription: "Defines your default configuration for outbound Microsoft 365 collaboration settings that determine which users in your organization can collaborate with other organizations using Microsoft 365 apps. <br/> Represents the outbound Microsoft 365 collaboration settings for a cross-tenant access policy that specify which users in your organization can collaborate with external organizations using Microsoft 365 apps. <br/> This resource is used by the **m365CollaborationOutbound** property of the [crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta) and [crossTenantAccessPolicyConfigurationPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta) resources. Also see [Microsoft docs for crossTenantAccessPolicyM365CollaborationOutboundSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicym365collaborationoutboundsetting?view=graph-rest-beta). <br> ",
+		},
 		"tenant_restrictions": schema.SingleNestedAttribute{
 			Optional: true,
 			Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyTenantRestrictions
@@ -581,7 +709,7 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "The list of applications targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 				"users_and_groups": schema.SingleNestedAttribute{
 					Optional: true,
@@ -627,7 +755,7 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					},
 					PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. / Defines the target of a cross-tenant access policy setting configuration. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+					MarkdownDescription: "The list of users and groups targeted with your cross-tenant access policy. <br/> Defines the target of a cross-tenant access policy setting configuration. <br/> This resource is used by the following properties:. Also see [Microsoft docs for crossTenantAccessPolicyTargetConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytargetconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 				},
 				"devices": schema.SingleNestedAttribute{
 					Optional: true,

@@ -80,7 +80,7 @@ output "microsoft365wp_identity_governance_workflows" {
 
 Read-Only:
 
-- `category` (String) The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. Required. <br/> Supports `$filter`(`eq`,`ne`) and `$orderby` <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`.
+- `category` (String) The category of the HR function supported by the workflows created using this template. A workflow can only belong to one category. Required. <br/> Supports `$filter`(`eq`,`ne`) and `$orderby` <br/> _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`, `extensibility`.
 - `created_date_time` (String) When the `workflow` was created. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
 - `deleted_date_time` (String) When the workflow was deleted. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
 - `display_name` (String) The display name of the `workflow`. Required. <br/> Supports `$filter`(`eq`, `ne`) and `orderby`.

@@ -710,6 +710,7 @@ Optional:
 
 - `auto_update_settings` (Attributes) The auto-update settings to apply for this app assignment. / Contains properties used to perform the auto-update of an application. Also see [Microsoft docs for win32LobAppAutoUpdateSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-win32lobappautoupdatesettings?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--settings--win32_lob--auto_update_settings))
 - `delivery_optimization_priority` (String) The delivery optimization priority for this app assignment. This setting is not supported in National Cloud environments. / Contains value for delivery optimization priority. <br/> _Provider_ allowed values are: `notConfigured` (Not configured or background normal delivery optimization priority.), `foreground` (Foreground delivery optimization priority.). The _provider_ default value is `"notConfigured"`.
+- `in_use_settings` (Attributes) (see [below for nested schema](#nestedatt--assignments--settings--win32_lob--in_use_settings))
 - `install_time_settings` (Attributes) The install time settings to apply for this app assignment. / Contains properties used to determine when to offer an app to devices and when to install the app on devices. Also see [Microsoft docs for mobileAppInstallTimeSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mobileappinstalltimesettings?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--settings--win32_lob--install_time_settings))
 - `notifications` (String) The notification status for this app assignment. / Contains value for notification status. <br/> _Provider_ allowed values are: `showAll` (Show all notifications.), `showReboot` (Only show restart notification and suppress other notifications.), `hideAll` (Hide all notifications.). The _provider_ default value is `"showAll"`.
 - `restart_settings` (Attributes) The reboot settings to apply for this app assignment. / Contains properties describing restart coordination following an app installation. Also see [Microsoft docs for win32LobAppRestartSettings](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-win32lobapprestartsettings?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--settings--win32_lob--restart_settings))
@@ -720,6 +721,16 @@ Optional:
 Optional:
 
 - `auto_update_superseded_apps_state` (String) Contains value for auto-update superseded apps. <br/> _Provider_ allowed values are: `notConfigured` (Indicates that the auto-update superseded apps state is not configured and the app will not auto-update the superseded apps.), `enabled` (Indicates that the auto-update superseded apps state is enabled and the app will auto-update the superseded apps if the superseded apps are installed on the device.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `"notConfigured"`.
+
+
+<a id="nestedatt--assignments--settings--win32_lob--in_use_settings"></a>
+### Nested Schema for `assignments.settings.win32_lob.in_use_settings`
+
+Optional:
+
+- `countdown_minutes` (Number) The _provider_ default value is `0`.
+- `minutes_between_deferrals` (Number) The _provider_ default value is `0`.
+- `number_of_deferrals` (Number) The _provider_ default value is `0`.
 
 
 <a id="nestedatt--assignments--settings--win32_lob--install_time_settings"></a>
@@ -804,6 +815,7 @@ Required:
 
 Optional:
 
+- `apple_device_app_delivery_protocol_type` (String) Enum of the supported types of Apple delivery protocols, representing the available protocols to deliver payloads to Apple devices. <br/> _Provider_ allowed values are: `default` (Default. Set if the client hasn't specified a value for an entity. Indicates the payload will be delivered to devices using Intune's default delivery protocol, which is Mobile Device Management (MDM). This protocol is not specific to the apps payload.), `mobileDeviceManagement` (Indicates the payload will be delivered to devices using the Mobile Device Management (MDM) protocol. This protocol is not specific to the apps payload.), `declarativeDeviceManagement` (Indicates the payload will be delivered to devices using the Declarative Device Management (DDM) protocol. This protocol is not specific to the apps payload.), `unknownFutureValue` (Unknown future value, reserved for future usage as expandable enum.).
 - `applicable_device_type` (Attributes) The iOS architecture for which this app can run on. / Contains properties of the possible iOS device types the mobile app can run on. Also see [Microsoft docs for iosDeviceType](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> (see [below for nested schema](#nestedatt--ios_store--applicable_device_type))
 
 Read-Only:
@@ -825,6 +837,7 @@ Optional:
 - `v17_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 17.0 or later is required to install the app. If 'False', iOS Version 17.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v18_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 18.0 or later is required to install the app. If 'False', iOS Version 18.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v26_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 26.0 or later is required to install the app. If 'False', iOS Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v27_0` (Boolean) The _provider_ default value is `false`.
 - `v8_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 8.0 or later is required to install the app. If 'False', iOS Version 8.0  is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v9_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 9.0 or later is required to install the app. If 'False', iOS Version 9.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 
@@ -915,6 +928,7 @@ Optional:
 - `v14_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 14.0 or later is required to install the app. If 'False', OS X Version 14.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v15_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 15.0 or later is required to install the app. If 'False', OS X Version 15.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v26_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 26.0 or later is required to install the app. If 'False', OS X Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v27_0` (Boolean) The _provider_ default value is `false`.
 
 
 
@@ -987,6 +1001,7 @@ Optional:
 - `v14_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 14.0 or later is required to install the app. If 'False', OS X Version 14.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v15_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 15.0 or later is required to install the app. If 'False', OS X Version 15.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v26_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 26.0 or later is required to install the app. If 'False', OS X Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v27_0` (Boolean) The _provider_ default value is `false`.
 
 
 <a id="nestedatt--macos_pkg--post_install_script"></a>
@@ -1094,6 +1109,7 @@ Optional:
 - `v17_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 17.0 or later is required to install the app. If 'False', iOS Version 17.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v18_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 18.0 or later is required to install the app. If 'False', iOS Version 18.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v26_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 26.0 or later is required to install the app. If 'False', iOS Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v27_0` (Boolean) The _provider_ default value is `false`.
 - `v8_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 8.0 or later is required to install the app. If 'False', iOS Version 8.0  is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v9_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 9.0 or later is required to install the app. If 'False', iOS Version 9.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 
@@ -1248,6 +1264,7 @@ Optional:
 Optional:
 
 - `device_restart_behavior` (String) Device restart behavior. / Indicates the type of restart action. <br/> _Provider_ allowed values are: `basedOnReturnCode` (Intune will restart the device after running the app installation if the operation returns a reboot code.), `allow` (Intune will not take any specific action on reboot codes resulting from app installations. Intune will not attempt to suppress restarts for MSI apps.), `suppress` (Intune will attempt to suppress restarts for MSI apps.), `force` (Intune will force the device to restart immediately after the app installation operation.). The _provider_ default value is `"allow"`.
+- `in_use_behavior` (String) _Provider_ allowed values are: `notEnabled`, `fail`, `terminateWithoutUserInteraction`, `terminateWithUserInteraction`, `unknownFutureValue`.
 - `max_run_time_in_minutes` (Number) The number of minutes the system will wait for install program to finish. Default value is 60 minutes. <br/> The _provider_ default value is `60`.
 - `run_as_account` (String) Indicates the type of execution context the app runs in. / Indicates the type of execution context the app runs in. <br/> _Provider_ allowed values are: `system` (System context), `user` (User context). The _provider_ default value is `"system"`.
 
@@ -1342,6 +1359,7 @@ Read-Only:
 
 - `filesystem` (Attributes) A complex type to store file or folder rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppFileSystemRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappfilesystemrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--win32_lob--rules--filesystem))
 - `powershell_script` (Attributes) A complex type to store the PowerShell script rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppPowerShellScriptRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapppowershellscriptrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--win32_lob--rules--powershell_script))
+- `process` (Attributes) (see [below for nested schema](#nestedatt--win32_lob--rules--process))
 - `product_code` (Attributes) A complex type to store the product code and version rule data for a Win32 LOB app. This rule is not supported as a requirement rule. Also see [Microsoft docs for win32LobAppProductCodeRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappproductcoderule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--win32_lob--rules--product_code))
 - `registry` (Attributes) A complex type to store registry rule data for a Win32 LOB app. Also see [Microsoft docs for win32LobAppRegistryRule](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobappregistryrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--win32_lob--rules--registry))
 - `rule_type` (String) The rule type indicating the purpose of the rule. / Contains rule types for Win32 LOB apps. <br/> _Provider_ allowed values are: `detection` (Detection rule.), `requirement` (Requirement rule.).
@@ -1372,6 +1390,16 @@ Read-Only:
 - `run_as_32_bit` (Boolean) A value indicating whether the script should run as 32-bit.
 - `run_as_account` (String) The execution context of the script. Do not specify this value if the rule is used for detection. Script detection rules will run in the same context as the associated app install context. / Indicates the type of execution context the app runs in. <br/> _Provider_ allowed values are: `system` (System context), `user` (User context).
 - `script_content` (String) The base64-encoded script content.
+
+
+<a id="nestedatt--win32_lob--rules--process"></a>
+### Nested Schema for `win32_lob.rules.process`
+
+Read-Only:
+
+- `operation_type` (String) _Provider_ allowed values are: `notConfigured`, `exists`, `unknownFutureValue`.
+- `process_display_name` (String)
+- `process_name` (String)
 
 
 <a id="nestedatt--win32_lob--rules--product_code"></a>
@@ -1500,13 +1528,13 @@ _Provider_ Note: v10_0 seems to be required and the only minimum OS version to b
 
 Optional:
 
+- `committed_contained_apps` (Attributes Set) The collection of contained apps in the committed mobileAppContent of a windowsUniversalAppX app. This property is read-only. / An abstract class that represents a contained app in a mobileApp acting as a package. Also see [Microsoft docs for mobileContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobilecontainedapp?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> (see [below for nested schema](#nestedatt--windows_universal_appx--committed_contained_apps))
 - `identity_name` (String) The Identity Name of the app, parsed from the appx file when it is uploaded through the Intune MEM console. For example: "Contoso.DemoApp".
 - `identity_resource_identifier` (String) The Identity Resource Identifier of the app, parsed from the appx file when it is uploaded through the Intune MEM console. For example: "TestResourceId".
 - `is_bundle` (Boolean) Whether or not the app is a bundle. If TRUE, app is a bundle; if FALSE, app is not a bundle. <br/> The _provider_ default value is `false`.
 
 Read-Only:
 
-- `committed_contained_apps` (Attributes Set) The collection of contained apps in the committed mobileAppContent of a windowsUniversalAppX app. This property is read-only. / An abstract class that represents a contained app in a mobileApp acting as a package. Also see [Microsoft docs for mobileContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobilecontainedapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows_universal_appx--committed_contained_apps))
 - `committed_content_version` (String) The internal committed content version.
 - `size` (Number) The total size, including all uploaded files. This property is read-only.
 
@@ -1533,16 +1561,16 @@ Optional:
 <a id="nestedatt--windows_universal_appx--committed_contained_apps"></a>
 ### Nested Schema for `windows_universal_appx.committed_contained_apps`
 
-Read-Only:
+Optional:
 
-- `id` (String) Key of the entity. This property is read-only.
+- `id` (String) Key of the entity. This property is read-only. <br/> The _provider_ default value is `""`.
 - `microsoft_store_for_business` (Attributes) A class that represents a contained app of a MicrosoftStoreForBusinessApp. Also see [Microsoft docs for microsoftStoreForBusinessContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-microsoftstoreforbusinesscontainedapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows_universal_appx--committed_contained_apps--microsoft_store_for_business))
 - `windows_universal_app_x` (Attributes) A class that represents a contained app of a WindowsUniversalAppX app. Also see [Microsoft docs for windowsUniversalAppXContainedApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-windowsuniversalappxcontainedapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--windows_universal_appx--committed_contained_apps--windows_universal_app_x))
 
 <a id="nestedatt--windows_universal_appx--committed_contained_apps--microsoft_store_for_business"></a>
 ### Nested Schema for `windows_universal_appx.committed_contained_apps.microsoft_store_for_business`
 
-Read-Only:
+Optional:
 
 - `app_user_model_id` (String) The app user model ID of the contained app of a MicrosoftStoreForBusinessApp.
 
@@ -1550,7 +1578,7 @@ Read-Only:
 <a id="nestedatt--windows_universal_appx--committed_contained_apps--windows_universal_app_x"></a>
 ### Nested Schema for `windows_universal_appx.committed_contained_apps.windows_universal_app_x`
 
-Read-Only:
+Optional:
 
 - `app_user_model_id` (String) The app user model ID of the contained app of a WindowsUniversalAppX app.
 
@@ -1680,6 +1708,7 @@ Optional:
 - `v17_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 17.0 or later is required to install the app. If 'False', iOS Version 17.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v18_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 18.0 or later is required to install the app. If 'False', iOS Version 18.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v26_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 26.0 or later is required to install the app. If 'False', iOS Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v27_0` (Boolean) The _provider_ default value is `false`.
 - `v8_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 8.0 or later is required to install the app. If 'False', iOS Version 8.0  is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v9_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 9.0 or later is required to install the app. If 'False', iOS Version 9.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 
@@ -1691,6 +1720,7 @@ Optional:
 Read-Only:
 
 - `app_store_url` (String) The store URL.
+- `apple_device_app_delivery_protocol_type` (String) Enum of the supported types of Apple delivery protocols, representing the available protocols to deliver payloads to Apple devices. <br/> _Provider_ allowed values are: `default` (Default. Set if the client hasn't specified a value for an entity. Indicates the payload will be delivered to devices using Intune's default delivery protocol, which is Mobile Device Management (MDM). This protocol is not specific to the apps payload.), `mobileDeviceManagement` (Indicates the payload will be delivered to devices using the Mobile Device Management (MDM) protocol. This protocol is not specific to the apps payload.), `declarativeDeviceManagement` (Indicates the payload will be delivered to devices using the Declarative Device Management (DDM) protocol. This protocol is not specific to the apps payload.), `unknownFutureValue` (Unknown future value, reserved for future usage as expandable enum.).
 - `applicable_device_type` (Attributes) The applicable iOS Device Type. / Contains properties of the possible iOS device types the mobile app can run on. Also see [Microsoft docs for iosDeviceType](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosdevicetype?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--ios_vpp--applicable_device_type))
 - `assigned_licenses` (Attributes Set) The licenses assigned to this app. / iOS Volume Purchase Program license assignment. This class does not support Create, Delete, or Update. Also see [Microsoft docs for iosVppAppAssignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosvppappassignedlicense?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--ios_vpp--assigned_licenses))
 - `bundle_id` (String) The Identity Name.
@@ -1802,6 +1832,7 @@ Optional:
 - `v14_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 14.0 or later is required to install the app. If 'False', OS X Version 14.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v15_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 15.0 or later is required to install the app. If 'False', OS X Version 15.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v26_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 26.0 or later is required to install the app. If 'False', OS X Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v27_0` (Boolean) The _provider_ default value is `false`.
 
 
 
@@ -1811,6 +1842,7 @@ Optional:
 Read-Only:
 
 - `app_store_url` (String) The store URL.
+- `apple_device_app_delivery_protocol_type` (String) Enum of the supported types of Apple delivery protocols, representing the available protocols to deliver payloads to Apple devices. <br/> _Provider_ allowed values are: `default` (Default. Set if the client hasn't specified a value for an entity. Indicates the payload will be delivered to devices using Intune's default delivery protocol, which is Mobile Device Management (MDM). This protocol is not specific to the apps payload.), `mobileDeviceManagement` (Indicates the payload will be delivered to devices using the Mobile Device Management (MDM) protocol. This protocol is not specific to the apps payload.), `declarativeDeviceManagement` (Indicates the payload will be delivered to devices using the Declarative Device Management (DDM) protocol. This protocol is not specific to the apps payload.), `unknownFutureValue` (Unknown future value, reserved for future usage as expandable enum.).
 - `assigned_licenses` (Attributes Set) The licenses assigned to this app. / MacOS Volume Purchase Program license assignment. This class does not support Create, Delete, or Update. Also see [Microsoft docs for macOsVppAppAssignedLicense](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosvppappassignedlicense?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_vpp--assigned_licenses))
 - `bundle_id` (String) The Identity Name.
 - `licensing_type` (Attributes) The supported License Type. / Contains properties for iOS Volume-Purchased Program (Vpp) Licensing Type. Also see [Microsoft docs for vppLicensingType](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-vpplicensingtype?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_vpp--licensing_type))
@@ -1950,5 +1982,6 @@ Optional:
 - `v17_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 17.0 or later is required to install the app. If 'False', iOS Version 17.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v18_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 18.0 or later is required to install the app. If 'False', iOS Version 18.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v26_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 26.0 or later is required to install the app. If 'False', iOS Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v27_0` (Boolean) The _provider_ default value is `false`.
 - `v8_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 8.0 or later is required to install the app. If 'False', iOS Version 8.0  is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
 - `v9_0` (Boolean) Indicates the minimum iOS version support required for the managed device. When 'True', iOS with OS Version 9.0 or later is required to install the app. If 'False', iOS Version 9.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.

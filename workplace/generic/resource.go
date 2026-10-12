@@ -25,6 +25,9 @@ var (
 	_ resource.ResourceWithUpgradeState     = &GenericResource{}
 )
 
+// Private state key that gets set by ImportState and removed again by the first successful Read.
+const privateKeyImportPending = "import_pending"
+
 // Resource implementation.
 type GenericResource struct {
 	TypeNameSuffix           string
@@ -82,6 +85,10 @@ func (r *GenericResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 
+	// only ever set for entities with a NotFoundHint (see ImportState)
+	importPending, _ := req.Private.GetKey(ctx, privateKeyImportPending)
+	isImport := len(importPending) > 0
+
 	if !tfVal.IsNull() {
 		newState := tfsdk.State{
 			Schema: req.State.Schema,
@@ -89,8 +96,18 @@ func (r *GenericResource) Read(ctx context.Context, req resource.ReadRequest, re
 		}
 		r.AccessParams.PopulateStateParentIdsFromRequest(ctx, &resp.Diagnostics, &newState, req.State)
 		resp.State = newState
+		if isImport {
+			resp.Diagnostics.Append(resp.Private.SetKey(ctx, privateKeyImportPending, nil)...)
+		}
+	} else if isImport {
+		// TF does not show any warnings if the entity to import does not exist (but only its own generic error), so we
+		// need to return an error ourselves for the hint to reach the users
+		resp.Diagnostics.AddError("Entity to import not found in MS Graph", r.AccessParams.ReadOptions.NotFoundHint)
 	} else {
 		// item not found (anymore), remove from state
+		if r.AccessParams.ReadOptions.NotFoundHint != "" {
+			resp.Diagnostics.AddWarning("Entity not found in MS Graph, removing resource from state", r.AccessParams.ReadOptions.NotFoundHint)
+		}
 		resp.State.RemoveResource(ctx)
 	}
 }
@@ -187,6 +204,11 @@ func (r *GenericResource) ImportState(ctx context.Context, req resource.ImportSt
 
 	for i, v := range idComponents {
 		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, importPaths[i], strings.Trim(v, " "))...)
+	}
+
+	if r.AccessParams.ReadOptions.NotFoundHint != "" {
+		// let the following Read know that it needs to return an error (containing the hint) if the entity does not exist
+		resp.Diagnostics.Append(resp.Private.SetKey(ctx, privateKeyImportPending, []byte("true"))...)
 	}
 }
 

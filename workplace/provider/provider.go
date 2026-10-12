@@ -493,6 +493,9 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 		func() datasource.DataSource { return &services.MobileAppPluralDataSource },
 		func() datasource.DataSource { return &services.MobileAppCategorySingularDataSource },
 		func() datasource.DataSource { return &services.MobileAppCategoryPluralDataSource },
+		func() datasource.DataSource {
+			return &services.MobileThreatDefenseConnectorMicrosoftDefenderSingularDataSource
+		},
 		func() datasource.DataSource { return &services.MobilityManagementPolicySingularDataSource },
 		func() datasource.DataSource { return &services.MobilityManagementPolicyPluralDataSource },
 		func() datasource.DataSource { return &services.NetworkaccessTenantStatusSingularDataSource },
@@ -573,6 +576,7 @@ func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resou
 		func() resource.Resource { return &services.ManagedDeviceMobileAppConfigurationResource },
 		func() resource.Resource { return &services.MobileAppResource },
 		func() resource.Resource { return &services.MobileAppCategoryResource },
+		func() resource.Resource { return &services.MobileThreatDefenseConnectorMicrosoftDefenderResource },
 		func() resource.Resource { return &services.MobilityManagementPolicyResource },
 		func() resource.Resource { return &services.NetworkaccessTenantStatusResource },
 		func() resource.Resource { return &services.NotificationMessageTemplateResource },

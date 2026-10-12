@@ -9,6 +9,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -71,7 +72,7 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 						Validators: []validator.Object{
 							identityGovernanceCustomTaskExtensionCustomExtensionAuthenticationConfigurationValidator,
 						},
-						MarkdownDescription: "Defines the Proof Of Possession (PoP) token authentication model to authenticate a logic app with a [accessPackageAssignmentRequestWorkflowExtensions](https://learn.microsoft.com/en-us/graph/api/resources/accessPackageAssignmentRequestWorkflowExtension?view=graph-rest-beta) or a [accessPackageAssignmentWorkflowExtensions](https://learn.microsoft.com/en-us/graph/api/resources/accessPackageAssignmentWorkflowExtension?view=graph-rest-beta) object. Also see [Microsoft docs for azureAdPopTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadpoptokenauthentication?view=graph-rest-beta). <br> ",
+						MarkdownDescription: "Defines the Proof Of Possession (PoP) token authentication model to authenticate a logic app with a:. Also see [Microsoft docs for azureAdPopTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadpoptokenauthentication?view=graph-rest-beta). <br> ",
 					},
 				},
 				"azure_ad_token": generic.OdataDerivedTypeNestedAttributeRs{
@@ -87,7 +88,7 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 						Validators: []validator.Object{
 							identityGovernanceCustomTaskExtensionCustomExtensionAuthenticationConfigurationValidator,
 						},
-						MarkdownDescription: "Defines the Microsoft Entra application used to authenticate a logic app with a [custom access package workflow extension](https://learn.microsoft.com/en-us/graph/api/resources/customaccesspackageworkflowextension?view=graph-rest-beta) or a [custom task extension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta). Only the app ID of the application is required. Derived from [customExtensionAuthenticationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionauthenticationconfiguration?view=graph-rest-beta). Also see [Microsoft docs for azureAdTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadtokenauthentication?view=graph-rest-beta). <br> ",
+						MarkdownDescription: "Defines the Microsoft Entra application used to authenticate a logic app with a [customAccessPackageWorkflowExtension](https://learn.microsoft.com/en-us/graph/api/resources/customaccesspackageworkflowextension?view=graph-rest-beta) or a [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta). This object is configured in the **authenticationConfiguration** property of those resources. Only the app ID of the application is required. Derived from [customExtensionAuthenticationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionauthenticationconfiguration?view=graph-rest-beta). Also see [Microsoft docs for azureAdTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadtokenauthentication?view=graph-rest-beta). <br> ",
 					},
 				},
 			},
@@ -97,7 +98,7 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 				}),
 			},
 			Computed:            true,
-			MarkdownDescription: "Configuration for securing the API call to the logic app. Required. <br/> Abstract base type that exposes the configuration for the **authenticationConfiguration** property of the derived types that inherit from the [customCalloutExtension](customcalloutextension.md) abstract type. <br/> This abstract type is inherited by the following resource types: <br/> The type of token authentication used depends on the token security. If the token security value is normal, you use the [azureAdTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadtokenauthentication?view=graph-rest-beta) resource type. If the value is Proof of Possession, you use the [azureAdPopTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureAdPopTokenAuthentication?view=graph-rest-beta) resource type. Also see [Microsoft docs for customExtensionAuthenticationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionauthenticationconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{\"azure_ad_pop_token\":{}}`. <br> ",
+			MarkdownDescription: "Configuration for securing the API call to the logic app. Required. <br/> Abstract base type that exposes the configuration for the **authenticationConfiguration** property of the derived types that inherit from the [customCalloutExtension](https://learn.microsoft.com/en-us/graph/api/resources/customcalloutextension?view=graph-rest-beta) abstract type. <br/> This abstract type is inherited by the following resource types: <br/> The type of token authentication used depends on the token security. If the token security value is normal, you use the [azureAdTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadtokenauthentication?view=graph-rest-beta) resource type. If the value is Proof of Possession, you use the [azureAdPopTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadpoptokenauthentication?view=graph-rest-beta) resource type. Also see [Microsoft docs for customExtensionAuthenticationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionauthenticationconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{\"azure_ad_pop_token\":{}}`. <br> ",
 		},
 		"client_configuration": schema.SingleNestedAttribute{
 			Optional: true,
@@ -117,7 +118,7 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "HTTP connection settings that define how long Microsoft Entra ID can wait for a connection to a logic app, how many times you can retry a timed-out connection and the exception scenarios when retries are allowed. / Connection settings that define how long Microsoft Entra ID can wait for a response from an external app before it shuts down the connection when trying to trigger the external app. Also see [Microsoft docs for customExtensionClientConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionclientconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+			MarkdownDescription: "HTTP connection settings that define how long Microsoft Entra ID can wait for a connection to a logic app, how many times you can retry a timed-out connection and the exception scenarios when retries are allowed. <br/> Connection settings that define how long Microsoft Entra ID can wait for a response from an external app before it shuts down the connection when trying to trigger the external app. This object is configured in the **clientConfiguration** property of the [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta) resource. <br/> In entitlement management, this object is configured in the **clientConfiguration** property of:. Also see [Microsoft docs for customExtensionClientConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionclientconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
@@ -175,11 +176,11 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 						Validators: []validator.Object{
 							identityGovernanceCustomTaskExtensionCustomExtensionEndpointConfigurationValidator,
 						},
-						MarkdownDescription: "The configuration details for the logic app's endpoint that is associated with a custom access package workflow extension. Derived from the [customExtensionEndpointConfiguration](customextensionendpointconfiguration.md) abstract type. Also see [Microsoft docs for logicAppTriggerEndpointConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/logicapptriggerendpointconfiguration?view=graph-rest-beta). <br> ",
+						MarkdownDescription: "The configuration details for the logic app's endpoint that is associated with a [custom access package workflow extension](https://learn.microsoft.com/en-us/graph/api/resources/customaccesspackageworkflowextension?view=graph-rest-beta). Derived from the [customExtensionEndpointConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionendpointconfiguration?view=graph-rest-beta) abstract type. <br/> This object is configured in the **endpointConfiguration** property of the [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta) resource. Also see [Microsoft docs for logicAppTriggerEndpointConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/logicapptriggerendpointconfiguration?view=graph-rest-beta). <br> ",
 					},
 				},
 			},
-			MarkdownDescription: "Details for allowing the custom task extension to call the logic app. / Abstract base type that exposes the derived types used to configure the **endpointConfiguration** property of a custom extension. This abstract type is inherited by the following types:. Also see [Microsoft docs for customExtensionEndpointConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionendpointconfiguration?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "Details for allowing the custom task extension to call the logic app. / Abstract base type that exposes the derived types used to configure the **endpointConfiguration** property of a custom extension. In Lifecycle Workflows, the derived types of this object are configured in the **endpointConfiguration** property of the [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta) resource. This abstract type is inherited by the following types:. Also see [Microsoft docs for customExtensionEndpointConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionendpointconfiguration?view=graph-rest-beta). <br> ",
 		},
 		"callback_configuration": schema.SingleNestedAttribute{
 			Optional: true,
@@ -213,11 +214,11 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 						Validators: []validator.Object{
 							identityGovernanceCustomTaskExtensionCustomExtensionCallbackConfigurationValidator,
 						},
-						MarkdownDescription: "Defines if, and in, which time span a callback is expected from the Azure Logic App. Also see [Microsoft docs for identityGovernance.customTaskExtensionCallbackConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextensioncallbackconfiguration?view=graph-rest-beta). <br> ",
+						MarkdownDescription: "Defines if, and in, which time span a callback is expected from the Azure Logic App. This object is configured in the **callbackConfiguration** property of the [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta) resource. Also see [Microsoft docs for identityGovernance.customTaskExtensionCallbackConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextensioncallbackconfiguration?view=graph-rest-beta). <br> ",
 					},
 				},
 			},
-			MarkdownDescription: "The callback configuration for a custom task extension. / Callback settings that define how long Microsoft Entra ID can wait for a resume signal for the callout that it made to the logic app. This is an abstract type that's inherited by [customTaskExtensionCallbackConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextensioncallbackconfiguration?view=graph-rest-beta). Also see [Microsoft docs for customExtensionCallbackConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensioncallbackconfiguration?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "The callback configuration for a custom task extension. <br/> Callback settings that define how long Microsoft Entra ID can wait for a resume signal for the callout that it made to the logic app. This abstract type is inherited by [customTaskExtensionCallbackConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextensioncallbackconfiguration?view=graph-rest-beta). In Lifecycle Workflows, the derived types of this object are configured in the **callbackConfiguration** property of the [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta) resource. <br/> In entitlement management, the derived types of this object are configured in the **callbackConfiguration** property of:. Also see [Microsoft docs for customExtensionCallbackConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensioncallbackconfiguration?view=graph-rest-beta). <br> ",
 		},
 		"created_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -228,6 +229,15 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 			Computed:            true,
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 			MarkdownDescription: "When the custom extension was last modified. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.",
+		},
+		"reply_mode": schema.StringAttribute{
+			Optional: true,
+			Validators: []validator.String{
+				stringvalidator.OneOf("none", "callback", "response", "unknownFutureValue"),
+			},
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("none")},
+			Computed:            true,
+			MarkdownDescription: "Specifies how the custom task extension replies to the lifecycle workflows service. <br/> _Provider_ allowed values are: `none`, `callback`, `response`, `unknownFutureValue`. The _provider_ default value is `\"none\"`.",
 		},
 		"created_by": schema.SingleNestedAttribute{
 			Computed: true,
