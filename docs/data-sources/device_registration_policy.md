@@ -77,7 +77,7 @@ output "microsoft365wp_device_registration_policy" {
 Read-Only:
 
 - `allowed_to_join` (Attributes) Determines if Microsoft Entra join is allowed. / An abstract resource type indicating the scope that a [device registration policy](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta) applies to. The derived types are [noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta), [allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta) and [enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). Also see [Microsoft docs for deviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--azure_ad_join--allowed_to_join))
-- `is_admin_configurable` (Boolean) Determines if administrators can modify this policy. <br/>
+- `is_admin_configurable` (Boolean) Determines if administrators can modify this policy.
 - `local_admins` (Attributes) Determines who becomes a local administrator on joined devices. / Controls local administrators on Microsoft Entra-joined devices in a device registration policy. Configured on the **localAdmins** property of [azureADJoinPolicy](https://learn.microsoft.com/en-us/graph/api/resources/azureadjoinpolicy?view=graph-rest-beta). Also see [Microsoft docs for localAdminSettings](https://learn.microsoft.com/en-us/graph/api/resources/localadminsettings?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--azure_ad_join--local_admins))
 
 <a id="nestedatt--azure_ad_join--allowed_to_join"></a>
@@ -150,7 +150,7 @@ Read-Only:
 Read-Only:
 
 - `allowed_to_register` (Attributes) Determines if Microsoft Entra registered is allowed. / An abstract resource type indicating the scope that a [device registration policy](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta) applies to. The derived types are [noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta), [allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta) and [enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). Also see [Microsoft docs for deviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--azure_ad_registration--allowed_to_register))
-- `is_admin_configurable` (Boolean) Determines if administrators can modify this policy. <br/>
+- `is_admin_configurable` (Boolean) Determines if administrators can modify this policy.
 
 <a id="nestedatt--azure_ad_registration--allowed_to_register"></a>
 ### Nested Schema for `azure_ad_registration.allowed_to_register`

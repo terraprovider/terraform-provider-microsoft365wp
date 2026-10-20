@@ -107,7 +107,7 @@ output "microsoft365wp_mobile_app" {
 - `notes` (String) Notes for the app.
 - `owner` (String) The owner of the app.
 - `privacy_information_url` (String) The privacy statement Url.
-- `publisher` (String) The publisher of the app.
+- `publisher` (String) The publisher of the app. <br/>
 - `publishing_state` (String) The publishing state for the app. The app cannot be assigned unless the app is published. / Indicates the publishing state of an app. <br/> _Provider_ allowed values are: `notPublished` (The app is not yet published.), `processing` (The app is pending service-side processing.), `published` (The app is published.).
 - `role_scope_tag_ids` (Set of String) List of scope tag ids for this mobile app. <br/>
 - `superseded_app_count` (Number)

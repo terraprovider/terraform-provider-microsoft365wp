@@ -5,6 +5,7 @@ package services
 import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -57,17 +58,23 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 			MarkdownDescription: "Defines your partner-specific configuration for inbound app service connect settings that control which applications can connect across tenant boundaries with the partner organization. <br/> Represents the inbound app service connect settings for a cross-tenant access policy that specify which applications can connect across tenant boundaries. <br/> This resource is used by the **appServiceConnectInbound** property of the [crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta) and [crossTenantAccessPolicyConfigurationPartner](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationpartner?view=graph-rest-beta) resources. Also see [Microsoft docs for crossTenantAccessPolicyAppServiceConnectSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyappserviceconnectsetting?view=graph-rest-beta). <br> ",
 		},
 		"automatic_user_consent_settings": schema.SingleNestedAttribute{
+			Computed: true,
 			Optional: true,
 			Attributes: map[string]schema.Attribute{ // inboundOutboundPolicyConfiguration
 				"inbound_allowed": schema.BoolAttribute{
+					Computed:            true,
 					Optional:            true,
+					PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
 					MarkdownDescription: "Defines whether external users coming inbound are allowed.",
 				},
 				"outbound_allowed": schema.BoolAttribute{
+					Computed:            true,
 					Optional:            true,
+					PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
 					MarkdownDescription: "Defines whether internal users are allowed to go outbound.",
 				},
 			},
+			PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
 			MarkdownDescription: "Determines the partner-specific configuration for automatic user consent settings. Unless configured, the **inboundAllowed** and **outboundAllowed** properties are `null` and inherit from the default settings, which is always `false`. / Defines the inbound and outbound rulesets for particular configurations within cross-tenant access settings. Also see [Microsoft docs for inboundOutboundPolicyConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/inboundoutboundpolicyconfiguration?view=graph-rest-beta). <br> ",
 		},
 		"b2b_collaboration_inbound": schema.SingleNestedAttribute{
@@ -95,7 +102,7 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 			MarkdownDescription: "Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. Also see [Microsoft docs for crossTenantAccessPolicyB2BSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta). <br> ",
 		},
 		"block_service_provider_outbound_access": schema.BoolAttribute{
-			Optional:            true,
+			Computed:            true,
 			MarkdownDescription: "Specifies whether users can use granular delegated admin privileges (GDAP) to sign-in and access resources in other organizations. Default value is `false`.",
 		},
 		"inbound_trust": schema.SingleNestedAttribute{

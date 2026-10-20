@@ -3,12 +3,14 @@
 package services
 
 import (
+	"context"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -25,12 +27,24 @@ var (
 			WriteOptions: generic.WriteOptions{
 				UsePutForUpdate: true,
 			},
+			TerraformToGraphMiddleware: deviceRegistrationPolicyTerraformToGraphMiddleware,
 		},
 	}
 
 	DeviceRegistrationPolicySingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&DeviceRegistrationPolicyResource)
 )
+
+func deviceRegistrationPolicyTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+	for attrName, isAdminConfigurable := range map[string]bool{"azureADJoin": true, "azureADRegistration": false} {
+		if policy, ok := params.RawVal[attrName].(map[string]any); ok {
+			if _, ok := policy["isAdminConfigurable"]; !ok {
+				policy["isAdminConfigurable"] = isAdminConfigurable
+			}
+		}
+	}
+	return nil
+}
 
 var deviceRegistrationPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // deviceRegistrationPolicy
@@ -50,10 +64,9 @@ var deviceRegistrationPolicyResourceSchema = schema.Schema{
 					MarkdownDescription: "Determines if Microsoft Entra join is allowed. / An abstract resource type indicating the scope that a [device registration policy](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta) applies to. The derived types are [noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta), [allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta) and [enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). Also see [Microsoft docs for deviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta). <br/> The _provider_ default value is `deviceRegistrationPolicyAll`. <br> ",
 				},
 				"is_admin_configurable": schema.BoolAttribute{
-					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
 					Computed:            true,
-					MarkdownDescription: "Determines if administrators can modify this policy. <br/> The _provider_ default value is `true`.",
+					PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
+					MarkdownDescription: "Determines if administrators can modify this policy.",
 				},
 				"local_admins": schema.SingleNestedAttribute{
 					Optional: true,
@@ -93,10 +106,9 @@ var deviceRegistrationPolicyResourceSchema = schema.Schema{
 					MarkdownDescription: "Determines if Microsoft Entra registered is allowed. / An abstract resource type indicating the scope that a [device registration policy](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta) applies to. The derived types are [noDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/nodeviceregistrationmembership?view=graph-rest-beta), [allDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/alldeviceregistrationmembership?view=graph-rest-beta) and [enumeratedDeviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/enumerateddeviceregistrationmembership?view=graph-rest-beta). Also see [Microsoft docs for deviceRegistrationMembership](https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationmembership?view=graph-rest-beta). <br/> The _provider_ default value is `deviceRegistrationPolicyAll`. <br> ",
 				},
 				"is_admin_configurable": schema.BoolAttribute{
-					Optional:            true,
-					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 					Computed:            true,
-					MarkdownDescription: "Determines if administrators can modify this policy. <br/> The _provider_ default value is `false`.",
+					PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
+					MarkdownDescription: "Determines if administrators can modify this policy.",
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},

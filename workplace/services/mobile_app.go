@@ -182,7 +182,9 @@ var mobileAppResourceSchema = schema.Schema{
 		},
 		"publisher": schema.StringAttribute{
 			Optional:            true,
-			MarkdownDescription: "The publisher of the app.",
+			PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
+			Computed:            true,
+			MarkdownDescription: "The publisher of the app. <br/> The _provider_ default value is `\"\"`.",
 		},
 		"publishing_state": schema.StringAttribute{
 			Computed: true,

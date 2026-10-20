@@ -471,7 +471,7 @@ resource "microsoft365wp_mobile_app" "windows_universal_appx" {
 - `notes` (String) Notes for the app.
 - `owner` (String) The owner of the app.
 - `privacy_information_url` (String) The privacy statement Url.
-- `publisher` (String) The publisher of the app.
+- `publisher` (String) The publisher of the app. <br/> The _provider_ default value is `""`.
 - `role_scope_tag_ids` (Set of String) List of scope tag ids for this mobile app. <br/> The _provider_ default value is `["0"]`.
 - `web_link` (Attributes) Contains properties and inherited properties for web apps. Also see [Microsoft docs for webApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-webapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--web_link))
 - `win32_lob` (Attributes) Contains properties and inherited properties for Win32 apps. Also see [Microsoft docs for win32LobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-win32lobapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--win32_lob))

@@ -1,5 +1,15 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.20.1 (2026-10-20)
+
+### fixed
+
+- [cross_tenant_access_policy_configuration_partner](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cross_tenant_access_policy_configuration_partner): Make `block_service_provider_outbound_access` read-only as MS Graph rejects it for partners (every update failed with `Invalid properties in the request body` since 0.20.0) (GH #34)
+- [cross_tenant_access_policy_configuration_partner](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cross_tenant_access_policy_configuration_partner): Keep MS Graph value of `automatic_user_consent_settings` if not configured (fixes perpetual diff and failing update with HTTP 400) (GH #35)
+- [device_registration_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_registration_policy): Make `azure_ad_join.is_admin_configurable` and `azure_ad_registration.is_admin_configurable` read-only as MS Graph ignores them on write (configured values other than the ones from MS Graph showed up as a diff on every plan). **Remove these attributes from your configuration.** (GH #19)
+- [mobile_app](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_app): Default `publisher` to an empty string as Intune requires it (e.g. `winget` apps did not get installed otherwise) (GH #16)
+
+
 ## 0.20.0 (2026-10-12)
 
 ### added
