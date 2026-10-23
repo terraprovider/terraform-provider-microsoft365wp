@@ -48,8 +48,11 @@ data "microsoft365wp_unified_role_management_policy_assignment" "main" {
 
 locals {
   urm_policy = data.microsoft365wp_unified_role_management_policy_assignment.main.policy
-  urm_policy_rules = [for r in local.urm_policy.rules :
-    merge(r, r.id == "Approval_EndUser_Assignment" ? {
+  # The resource keeps rules sorted by id, but the data source returns them in MS Graph order, so sort them here
+  # to avoid a diff where every rule is compared against the wrong one.
+  urm_policy_rules_by_id = { for r in local.urm_policy.rules : r.id => r }
+  urm_policy_rules = [for id in sort(keys(local.urm_policy_rules_by_id)) :
+    merge(local.urm_policy_rules_by_id[id], id == "Approval_EndUser_Assignment" ? {
       approval = {
         setting = {
           is_approval_required                = true
@@ -121,6 +124,7 @@ Optional:
 
 - `approval` (Attributes) A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines rules for approving a role assignment. Also see [Microsoft docs for unifiedRoleManagementPolicyApprovalRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyapprovalrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--rules--approval))
 - `authentication_context` (Attributes) A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the authentication context rule for the conditional access policy associated with a role management policy. Also see [Microsoft docs for unifiedRoleManagementPolicyAuthenticationContextRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyauthenticationcontextrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--rules--authentication_context))
+- `custom_extension` (Attributes) (see [below for nested schema](#nestedatt--rules--custom_extension))
 - `enablement` (Attributes) A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the rules to enable the assignment, for example, enable MFA, justification on assignments or ticketing information. Also see [Microsoft docs for unifiedRoleManagementPolicyEnablementRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyenablementrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--rules--enablement))
 - `expiration` (Attributes) A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the maximum duration a role can be assigned to a principal (either through direct assignment or through activation of eligibility. Also see [Microsoft docs for unifiedRoleManagementPolicyExpirationRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyexpirationrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--rules--expiration))
 - `id` (String) Identifier for the rule. Read-only. <br/> The _provider_ default value is `""`.
@@ -323,6 +327,17 @@ Optional:
 - `is_enabled` (Boolean) Whether this rule is enabled.
 
 
+<a id="nestedatt--rules--custom_extension"></a>
+### Nested Schema for `rules.custom_extension`
+
+Optional:
+
+- `custom_attributes` (Set of String) The _provider_ default value is `[]`.
+- `custom_extension_id` (String)
+- `display_name` (String)
+- `is_enabled` (Boolean)
+
+
 <a id="nestedatt--rules--enablement"></a>
 ### Nested Schema for `rules.enablement`
 
@@ -372,6 +387,7 @@ Read-Only:
 
 - `approval` (Attributes) A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines rules for approving a role assignment. Also see [Microsoft docs for unifiedRoleManagementPolicyApprovalRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyapprovalrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--effective_rules--approval))
 - `authentication_context` (Attributes) A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the authentication context rule for the conditional access policy associated with a role management policy. Also see [Microsoft docs for unifiedRoleManagementPolicyAuthenticationContextRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyauthenticationcontextrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--effective_rules--authentication_context))
+- `custom_extension` (Attributes) (see [below for nested schema](#nestedatt--effective_rules--custom_extension))
 - `enablement` (Attributes) A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the rules to enable the assignment, for example, enable MFA, justification on assignments or ticketing information. Also see [Microsoft docs for unifiedRoleManagementPolicyEnablementRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyenablementrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--effective_rules--enablement))
 - `expiration` (Attributes) A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the maximum duration a role can be assigned to a principal (either through direct assignment or through activation of eligibility. Also see [Microsoft docs for unifiedRoleManagementPolicyExpirationRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyexpirationrule?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--effective_rules--expiration))
 - `id` (String) Identifier for the rule. Read-only.
@@ -572,6 +588,17 @@ Read-Only:
 
 - `claim_value` (String) The value of the authentication context claim.
 - `is_enabled` (Boolean) Whether this rule is enabled.
+
+
+<a id="nestedatt--effective_rules--custom_extension"></a>
+### Nested Schema for `effective_rules.custom_extension`
+
+Read-Only:
+
+- `custom_attributes` (Set of String)
+- `custom_extension_id` (String)
+- `display_name` (String)
+- `is_enabled` (Boolean)
 
 
 <a id="nestedatt--effective_rules--enablement"></a>

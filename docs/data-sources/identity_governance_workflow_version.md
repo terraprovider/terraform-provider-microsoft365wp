@@ -88,7 +88,7 @@ output "microsoft365wp_identity_governance_workflow_version" {
 - `last_modified_date_time` (String) The date time when the `workflow` was last modified. <br/> Supports `$filter`(`lt`, `le`, `gt`, `ge`, `eq`, `ne`) and `$orderby`.
 - `settings` (Attributes) The settings of the workflow version, including its quarantine configuration. / Represents the configurable settings of a [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) or a [workflowVersion](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowversion?view=graph-rest-beta). This object is configured in the **settings** property of those resources. Also see [Microsoft docs for identityGovernance.workflowSetting](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflowsetting?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--settings))
 - `target_subject_type` (String) _Provider_ allowed values are: `user`, `agentIdentity`, `unknownFutureValue`, `provisioningObject`.
-- `tasks` (Attributes Set) The tasks in the workflow. / Represents a task, such as a piece of work or personal item, that can be tracked and completed. A **task** is always contained in a [base task list](basetasklist.md). Also see [Microsoft docs for identityGovernance.task](https://learn.microsoft.com/en-us/graph/api/resources/task?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--tasks))
+- `tasks` (Attributes Set) The tasks in the workflow. / A Planner V4 task. `planId` routes the task back to its parent [plan](plan.md). Unlike the V3 **plannerTask**/**plannerTaskDetails** split, a V4 task has no separate details object - description, notes, checklist, assignments, and links are properties and sub-collections directly on the task. Also see [Microsoft docs for identityGovernance.task](https://learn.microsoft.com/en-us/graph/api/resources/task?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--tasks))
 
 <a id="nestedatt--administration_scope_targets"></a>
 ### Nested Schema for `administration_scope_targets`
@@ -141,6 +141,8 @@ Read-Only:
 - `all_excluding_specific_objects` (Attributes) Represents a scope that includes all identities except the excluded directory objects. This type is used in the **scope** property of a [lifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclepolicy?view=graph-rest-beta) to exclude specific objects from policy evaluation. Also see [Microsoft docs for identityGovernance.allExcludingSpecificObjectsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-allexcludingspecificobjectssubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_specific_objects))
 - `group_based` (Attributes) Defines the group that is the scope of a lifecycle workflow [membershipChangeTrigger](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-membershipchangetrigger?view=graph-rest-beta) configuration. Also see [Microsoft docs for identityGovernance.groupBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-groupbasedsubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--group_based))
 - `rule_based` (Attributes) Specifies the rules that define the subjects in scope for a lifecycle workflow. This object is configured in the **scope** property of the [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) resource. Also see [Microsoft docs for identityGovernance.ruleBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-rulebasedsubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--rule_based))
+- `selected_agent_builder_platforms` (Attributes) Represents an inclusion scope that selects agent identities created by one or more agent builder platforms. Use this type in the **scope** property of an [agentIdentityLifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-agentidentitylifecyclepolicy?view=graph-rest-beta) resource. This type is valid only for agent identity lifecycle policies; using it with another lifecycle policy type returns `400 Bad Request`. Also see [Microsoft docs for identityGovernance.selectedAgentBuilderPlatformsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-selectedagentbuilderplatformssubjectset?view=graph-rest-beta).  
+_Provider_ Note: _Provider_ Note: Although listed in the MS Graph metadata for workflows, MS Graph currently rejects this scope type for lifecycle workflows (`Workflow execution conditions not supported`) as it is intended for agent identity lifecycle policies (2026-10). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--selected_agent_builder_platforms))
 - `selected_objects` (Attributes) Represents a scope that includes only the selected directory objects. This type is used in the **scope** property of a [lifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecyclepolicy?view=graph-rest-beta) to target specific objects for policy evaluation. Also see [Microsoft docs for identityGovernance.selectedObjectsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-selectedobjectssubjectset?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--selected_objects))
 
 <a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--all_excluding_agent_builder_platforms"></a>
@@ -205,6 +207,14 @@ Read-Only:
 Read-Only:
 
 - `rule` (String) The rule for the subject set. Lifecycle Workflows supports a rich set of [user properties](https://learn.microsoft.com/en-us/graph/api/resources/user.md#properties) for configuring the rules using `$filter` query expressions. For more information, see [supported user and query parameters](#supported-user-properties-and-query-parameters).
+
+
+<a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--selected_agent_builder_platforms"></a>
+### Nested Schema for `execution_conditions.trigger_and_scope_based_conditions.scope.selected_agent_builder_platforms`
+
+Read-Only:
+
+- `included_agent_builder_platforms` (String) The agent builder platforms whose agent identities are included in the policy scope. This flags enumeration supports combining values in a comma-separated string. An agent is included when its builder platform matches any selected value. You must specify at least one supported value. The `unknownFutureValue` value is reserved for future use and isn't supported in create or update requests. <br/> _Provider_ allowed values are: `microsoftCopilotStudio`, `foundry`, `unknownFutureValue`.
 
 
 <a id="nestedatt--execution_conditions--trigger_and_scope_based_conditions--scope--selected_objects"></a>
@@ -339,9 +349,9 @@ Read-Only:
 - `category` (String) _Provider_ allowed values are: `joiner`, `leaver`, `unknownFutureValue`, `mover`, `extensibility`.
 - `continue_on_error` (Boolean)
 - `description` (String)
-- `display_name` (String) The name of the task.
+- `display_name` (String) Title of the task.
 - `execution_sequence` (Number)
-- `id` (String) Unique identifier for the task. By default, this value will not change if a task is moved from one list to another.
+- `id` (String) The unique identifier of the entity.
 - `is_enabled` (Boolean)
 - `task_definition_id` (String)
 

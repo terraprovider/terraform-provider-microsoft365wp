@@ -25,8 +25,11 @@ data "microsoft365wp_unified_role_management_policy_assignment" "main" {
 
 locals {
   urm_policy = data.microsoft365wp_unified_role_management_policy_assignment.main.policy
-  urm_policy_rules = [for r in local.urm_policy.rules :
-    merge(r, r.id == "Approval_EndUser_Assignment" ? {
+  # The resource keeps rules sorted by id, but the data source returns them in MS Graph order, so sort them here
+  # to avoid a diff where every rule is compared against the wrong one.
+  urm_policy_rules_by_id = { for r in local.urm_policy.rules : r.id => r }
+  urm_policy_rules = [for id in sort(keys(local.urm_policy_rules_by_id)) :
+    merge(local.urm_policy_rules_by_id[id], id == "Approval_EndUser_Assignment" ? {
       approval = {
         setting = {
           is_approval_required                = true

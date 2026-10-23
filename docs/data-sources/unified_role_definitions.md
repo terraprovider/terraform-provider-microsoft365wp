@@ -83,6 +83,7 @@ output "microsoft365wp_unified_role_definitions" {
 Read-Only:
 
 - `allowed_principal_types` (String) Types of principals that can be assigned the role. This is a multi-valued enumeration that can contain up to three values as a comma-separated string. For example, `user, group`. Supports `$filter` (`eq`). <br/> _Provider_ allowed values are: `user`, `servicePrincipal`, `group`, `unknownFutureValue`.
+- `deleted_date_time` (String) The date and time when the custom role definition was deleted. The value is `null` for active and restored role definitions.
 - `display_name` (String) The display name for the unifiedRoleDefinition. Read-only when **isBuiltIn** is `true`. Required.  Supports `$filter` (`eq` and `startsWith`).
 - `id` (String) The unique identifier for the unifiedRoleDefinition. Key, not nullable,  Supports `$filter` (`eq` operator only).
 - `is_built_in` (Boolean) Flag indicating if the unifiedRoleDefinition is part of the default set included with the product or custom.  Supports `$filter` (`eq`).

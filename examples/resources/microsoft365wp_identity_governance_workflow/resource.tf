@@ -29,13 +29,13 @@ resource "microsoft365wp_identity_governance_workflow" "test" {
   execution_conditions = {
     trigger_and_scope_based_conditions = {
       trigger = {
-        time_based_attribute = {
+        time_based_attribute_trigger = {
           time_based_attribute = "employeeHireDate"
           offset_in_days       = 7
         }
       }
       scope = {
-        rule = { rule = "(department eq 'Marketing')" }
+        rule_based = { rule = "(department eq 'Marketing')" }
       }
     }
   }

@@ -470,6 +470,27 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the authentication context rule for the conditional access policy associated with a role management policy. Also see [Microsoft docs for unifiedRoleManagementPolicyAuthenticationContextRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyauthenticationcontextrule?view=graph-rest-beta). <br> ",
 								},
 							},
+							"custom_extension": generic.OdataDerivedTypeNestedAttributeRs{
+								DerivedType: "#microsoft.graph.unifiedRoleManagementPolicyCustomExtensionRule",
+								SingleNestedAttribute: schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{ // unifiedRoleManagementPolicyCustomExtensionRule
+										"custom_attributes": schema.SetAttribute{
+											ElementType: types.StringType,
+											Computed:    true,
+										},
+										"custom_extension_id": schema.StringAttribute{
+											Computed: true,
+										},
+										"display_name": schema.StringAttribute{
+											Computed: true,
+										},
+										"is_enabled": schema.BoolAttribute{
+											Computed: true,
+										},
+									},
+								},
+							},
 							"enablement": generic.OdataDerivedTypeNestedAttributeRs{
 								DerivedType: "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
 								SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -896,6 +917,27 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									MarkdownDescription: "A type derived from the [unifiedRoleManagementPolicyRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyrule?view=graph-rest-beta) resource type that defines the authentication context rule for the conditional access policy associated with a role management policy. Also see [Microsoft docs for unifiedRoleManagementPolicyAuthenticationContextRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicyauthenticationcontextrule?view=graph-rest-beta). <br> ",
 								},
 							},
+							"custom_extension": generic.OdataDerivedTypeNestedAttributeRs{
+								DerivedType: "#microsoft.graph.unifiedRoleManagementPolicyCustomExtensionRule",
+								SingleNestedAttribute: schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{ // unifiedRoleManagementPolicyCustomExtensionRule
+										"custom_attributes": schema.SetAttribute{
+											ElementType: types.StringType,
+											Computed:    true,
+										},
+										"custom_extension_id": schema.StringAttribute{
+											Computed: true,
+										},
+										"display_name": schema.StringAttribute{
+											Computed: true,
+										},
+										"is_enabled": schema.BoolAttribute{
+											Computed: true,
+										},
+									},
+								},
+							},
 							"enablement": generic.OdataDerivedTypeNestedAttributeRs{
 								DerivedType: "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
 								SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -971,6 +1013,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 var unifiedRoleManagementPolicyAssignmentUnifiedRoleManagementPolicyRuleValidator = wpvalidator.ExactlyOneOfSiblings(
 	"approval",
 	"authentication_context",
+	"custom_extension",
 	"enablement",
 	"expiration",
 	"notification",

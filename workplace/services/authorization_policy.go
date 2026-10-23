@@ -124,6 +124,12 @@ var authorizationPolicyResourceSchema = schema.Schema{
 					Computed:            true,
 					MarkdownDescription: "Indicates whether the default user role can read other users. **DO NOT SET THIS VALUE TO `false`**. <br/> The _provider_ default value is `true`.",
 				},
+				"allowed_to_create_agent_identity_blueprints": schema.BoolAttribute{
+					Optional:            true,
+					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(true)},
+					Computed:            true,
+					MarkdownDescription: "The _provider_ default value is `true`.  \n_Provider_ Note: Indicates whether the default user role can create agent identity blueprints (\"Users can register agent identity blueprints\").",
+				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,

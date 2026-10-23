@@ -67,6 +67,11 @@ var unifiedRoleDefinitionResourceSchema = schema.Schema{
 			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 			MarkdownDescription: "Types of principals that can be assigned the role. Read-only. This is a multi-valued enumeration that can contain up to three values as a comma-separated string. For example, `user, group`. Supports `$filter` (`eq`). <br/> _Provider_ allowed values are: `user`, `servicePrincipal`, `group`, `unknownFutureValue`.",
 		},
+		"deleted_date_time": schema.StringAttribute{
+			Computed:            true,
+			PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+			MarkdownDescription: "The date and time when the custom role definition was deleted. The value is `null` for active and restored role definitions. Read-only.",
+		},
 		"description": schema.StringAttribute{
 			Optional:            true,
 			MarkdownDescription: "The description for the unifiedRoleDefinition. Read-only when **isBuiltIn** is `true`.",
@@ -129,6 +134,11 @@ var unifiedRoleDefinitionResourceSchema = schema.Schema{
 						Computed:            true,
 						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
 						MarkdownDescription: "The unique identifier for the unifiedRoleDefinition. Key, not nullable, Read-only.  Supports `$filter` (`eq` operator only).",
+					},
+					"deleted_date_time": schema.StringAttribute{
+						Computed:            true,
+						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+						MarkdownDescription: "The date and time when the custom role definition was deleted. The value is `null` for active and restored role definitions. Read-only.",
 					},
 				},
 			},

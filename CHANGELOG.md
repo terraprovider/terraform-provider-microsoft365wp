@@ -1,5 +1,23 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.20.2 (2026-10-23)
+
+### added
+
+- [authorization_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authorization_policy): Add `default_user_role_permissions.allowed_to_create_agent_identity_blueprints` (_Users can register agent identity blueprints_). Microsoft enables this setting for all users on 2026-11-04 unless it is disabled beforehand; the provider default `true` matches MS Graph
+- [identity_governance_workflow](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/identity_governance_workflow): Add scope `selected_agent_builder_platforms` (currently rejected by MS Graph for workflows)
+- [unified_role_definition](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/unified_role_definition): Add read-only `deleted_date_time`
+- [unified_role_management_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/unified_role_management_policy): Add rule type `custom_extension`
+
+### fixed
+
+- Docs: Fix examples for `identity_governance_workflow` (outdated attribute names) and `unified_role_management_policy` (sort rules from the data source by id to avoid a diff on every rule)
+
+### changed
+
+- Update MS Graph metadata & docs
+
+
 ## 0.20.1 (2026-10-20)
 
 ### fixed

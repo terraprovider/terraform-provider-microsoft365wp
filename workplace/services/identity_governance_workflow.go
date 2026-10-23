@@ -203,6 +203,23 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 											MarkdownDescription: "Specifies the rules that define the subjects in scope for a lifecycle workflow. This object is configured in the **scope** property of the [triggerAndScopeBasedConditions](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-triggerandscopebasedconditions?view=graph-rest-beta) resource. Also see [Microsoft docs for identityGovernance.ruleBasedSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-rulebasedsubjectset?view=graph-rest-beta). <br> ",
 										},
 									},
+									"selected_agent_builder_platforms": generic.OdataDerivedTypeNestedAttributeRs{
+										DerivedType: "#microsoft.graph.identityGovernance.selectedAgentBuilderPlatformsSubjectSet",
+										SingleNestedAttribute: schema.SingleNestedAttribute{
+											Optional: true,
+											Attributes: map[string]schema.Attribute{ // identityGovernance.selectedAgentBuilderPlatformsSubjectSet
+												"included_agent_builder_platforms": schema.StringAttribute{
+													Required: true,
+													Validators: []validator.String{
+														wpvalidator.FlagEnumValues("microsoftCopilotStudio", "foundry", "unknownFutureValue"),
+													},
+													MarkdownDescription: "The agent builder platforms whose agent identities are included in the policy scope. This flags enumeration supports combining values in a comma-separated string. An agent is included when its builder platform matches any selected value. You must specify at least one supported value. The `unknownFutureValue` value is reserved for future use and isn't supported in create or update requests. <br/> _Provider_ allowed values are: `microsoftCopilotStudio`, `foundry`, `unknownFutureValue`.",
+												},
+											},
+											Validators:          []validator.Object{identityGovernanceWorkflowSubjectSetValidator},
+											MarkdownDescription: "Represents an inclusion scope that selects agent identities created by one or more agent builder platforms. Use this type in the **scope** property of an [agentIdentityLifecyclePolicy](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-agentidentitylifecyclepolicy?view=graph-rest-beta) resource. This type is valid only for agent identity lifecycle policies; using it with another lifecycle policy type returns `400 Bad Request`. Also see [Microsoft docs for identityGovernance.selectedAgentBuilderPlatformsSubjectSet](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-selectedagentbuilderplatformssubjectset?view=graph-rest-beta).  \n_Provider_ Note: _Provider_ Note: Although listed in the MS Graph metadata for workflows, MS Graph currently rejects this scope type for lifecycle workflows (`Workflow execution conditions not supported`) as it is intended for agent identity lifecycle policies (2026-10). <br> ",
+										},
+									},
 									"selected_objects": generic.OdataDerivedTypeNestedAttributeRs{
 										DerivedType: "#microsoft.graph.identityGovernance.selectedObjectsSubjectSet",
 										SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -422,7 +439,7 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 					"id": schema.StringAttribute{
 						Computed:            true,
 						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
-						MarkdownDescription: "Unique identifier for the task. By default, this value will not change if a task is moved from one list to another.",
+						MarkdownDescription: "The unique identifier of the entity. Read-only.",
 					},
 					"arguments": schema.SetNestedAttribute{
 						Optional: true,
@@ -463,7 +480,7 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 					},
 					"display_name": schema.StringAttribute{
 						Required:            true,
-						MarkdownDescription: "The name of the task.",
+						MarkdownDescription: "Title of the task.",
 					},
 					"execution_sequence": schema.Int64Attribute{
 						Computed:      true,
@@ -479,7 +496,7 @@ var identityGovernanceWorkflowResourceSchema = schema.Schema{
 			},
 			PlanModifiers:       []planmodifier.List{wpdefaultvaluemodifier.ListDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "Represents the configured tasks to execute and their execution sequence within a [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) object. Required. / Represents a task, such as a piece of work or personal item, that can be tracked and completed. A **task** is always contained in a [base task list](basetasklist.md). Also see [Microsoft docs for identityGovernance.task](https://learn.microsoft.com/en-us/graph/api/resources/task?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
+			MarkdownDescription: "Represents the configured tasks to execute and their execution sequence within a [workflow](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-workflow?view=graph-rest-beta) object. Required. / A Planner V4 task. `planId` routes the task back to its parent [plan](plan.md). Unlike the V3 **plannerTask**/**plannerTaskDetails** split, a V4 task has no separate details object - description, notes, checklist, assignments, and links are properties and sub-collections directly on the task. Also see [Microsoft docs for identityGovernance.task](https://learn.microsoft.com/en-us/graph/api/resources/task?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 		"deleted_date_time": schema.StringAttribute{
 			Computed:            true,
@@ -535,6 +552,7 @@ var identityGovernanceWorkflowSubjectSetValidator = wpvalidator.ExactlyOneOfSibl
 	"all_excluding_specific_objects",
 	"group_based",
 	"rule_based",
+	"selected_agent_builder_platforms",
 	"selected_objects",
 )
 
