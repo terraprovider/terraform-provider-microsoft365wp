@@ -23,16 +23,13 @@ get the real `id` directly from MS Graph using e.g. some browser's development t
 usual to see the required changes.  
 
 ### Priorities
-MS Graph seems to be quite picky about setting priorities. They have to be sequential (i.e. there cannot be gaps
-when creating) and when updating priorities, values can only be switched with another exiting config (e.g. if
-the config with priority 1 gets deleted (e.g. manually) then the list will start with priority 2 and the
-`setPriority` action will refuse to set any other config to priority 1 anymore but only to priority 2).  
-Therefore setting of configuration priorities has been implemented as best-effort only: Any errors returned from
-MS Graph during the `setPriority` action will only be shown as warnings in Terraform and more than one apply
-action may be required to actually get every priority set correctly.  
-And in case of a situation that MS Graph is not willing (or able) to fulfill, there will continously remain
-changes. If you are really, really sure that your configuration should actually be fulfillable by MS Graph, then
-it may help to destroy all configurations again and start over.  
+Enrollment configuration priorities are ordered and changes can reorder other profiles of the same type.
+Use sequential priorities when creating profiles. When priority is omitted, the provider leaves it under
+service control. When explicitly configured, the provider reads the current priority and skips `setPriority`
+if it already matches; Graph can reject these redundant requests. Actual changes call `setPriority` and
+verify the resulting priority. Action failures, unreadable priorities, or mismatched readback fail the
+operation rather than warn; state retains the last observed priority (or the prior value when no observation
+succeeded).
 
 ### Delays Between Writes
 As there have been situations during testing that resulted in multiple enrollment configurations with duplicate
@@ -273,10 +270,12 @@ Read-Only:
 - `allow_device_reset_on_install_failure` (Boolean) When TRUE, allows device reset on installation failure. When false, reset is blocked. The default is false. <br/>
 - `allow_device_use_on_install_failure` (Boolean) When TRUE, allows the user to continue using the device on installation failure. When false, blocks the user on installation failure. The default is false. <br/>
 - `allow_log_collection_on_install_failure` (Boolean) When TRUE, allows log collection on installation failure. When false, log collection is not allowed. The default is false. <br/>
+- `allow_non_blocking_app_installation` (Boolean) Allows non-blocking app installation failures during the technician phase.
 - `block_device_setup_retry_by_user` (Boolean) When TRUE, blocks user from retrying the setup on installation failure. When false, user is allowed to retry. The default is false. <br/>
 - `custom_error_message` (String) The custom error message to show upon installation failure. Max length is 10000. example: "Setup could not be completed. Please try again or contact your support person for help." <br/> could not be completed. Please try again or contact your support person for help."`.
 - `disable_user_status_tracking_after_first_user` (Boolean) When TRUE, disables showing installation progress for first user post enrollment. When false, enables showing progress. The default is false. <br/>
 - `install_progress_timeout_in_minutes` (Number) The installation progress timeout in minutes. Default is 60 minutes. <br/>
+- `install_quality_updates` (Boolean) Allows quality updates installation during OOBE.
 - `selected_mobile_app_ids` (Set of String) Selected applications to track the installation status. It is in the form of an array of GUIDs. <br/>
 - `show_installation_progress` (Boolean) When TRUE, shows installation progress to user. When false, hides installation progress. The default is false. <br/>
 - `track_install_progress_for_autopilot_only` (Boolean) When TRUE, installation progress is tracked for only Autopilot enrollment scenarios. When false, other scenarios are tracked as well. The default is false. <br/>
