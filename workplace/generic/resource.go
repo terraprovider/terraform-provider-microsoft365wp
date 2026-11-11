@@ -168,6 +168,7 @@ func (r *GenericResource) Delete(ctx context.Context, req resource.DeleteRequest
 				BaseUri:      baseUri,
 				Id:           id,
 				IdAttributer: thisIdAttributer,
+				ReqState:     &req.State,
 			}
 			r.AccessParams.DeleteReplaceFunc(ctx, diags, &params)
 		}
@@ -354,6 +355,7 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 				Id:           id,
 				IdAttributer: thisIdAttributer,
 				RawVal:       rawVal,
+				ReqState:     requestState,
 			}
 			r.AccessParams.UpdateReplaceFunc(ctx, diags, &params)
 			if params.RawResult != nil {

@@ -563,6 +563,32 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 						SingleNestedAttribute: schema.SingleNestedAttribute{
 							Optional: true,
 							Attributes: map[string]schema.Attribute{ // smsAuthenticationMethodConfiguration
+								"telecom_provider_settings": schema.SingleNestedAttribute{
+									Optional: true,
+									Attributes: map[string]schema.Attribute{ // telecomProviderSettings
+										"app_id": schema.StringAttribute{
+											Required:            true,
+											MarkdownDescription: "The application (client) ID used to authenticate to the telecom provider.",
+										},
+										"is_evaluation_mode_enabled": schema.BoolAttribute{
+											Optional:            true,
+											PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+											Computed:            true,
+											MarkdownDescription: "`true` to run the telecom provider integration in evaluation (nonenforcing) mode; otherwise, `false`. <br/> The _provider_ default value is `false`.",
+										},
+										"migration_percentage": schema.Int64Attribute{
+											Optional:            true,
+											PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(0)},
+											Computed:            true,
+											MarkdownDescription: "The percentage of authentication traffic routed to the telecom provider. Valid values range from 0 through 100. <br/> The _provider_ default value is `0`.",
+										},
+										"url": schema.StringAttribute{
+											Required:            true,
+											MarkdownDescription: "The endpoint URL of the telecom provider integration.",
+										},
+									},
+									MarkdownDescription: "Settings for routing SMS authentication traffic through a telecom provider integration. / Represents configuration for routing SMS and voice authentication traffic through a telecom provider integration. This complex type is used by the **telecomProviderSettings** property of the [smsAuthenticationMethodConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/smsauthenticationmethodconfiguration?view=graph-rest-beta) and [voiceAuthenticationMethodConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/voiceauthenticationmethodconfiguration?view=graph-rest-beta) resources. Also see [Microsoft docs for telecomProviderSettings](https://learn.microsoft.com/en-us/graph/api/resources/telecomprovidersettings?view=graph-rest-beta). <br> ",
+								},
 								"include_targets": schema.SetNestedAttribute{
 									Optional: true,
 									NestedObject: schema.NestedAttributeObject{
@@ -735,6 +761,32 @@ var authenticationMethodsPolicyResourceSchema = schema.Schema{
 									PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 									Computed:            true,
 									MarkdownDescription: "`true` if users can register office phones, otherwise, `false`. <br/> The _provider_ default value is `false`.",
+								},
+								"telecom_provider_settings": schema.SingleNestedAttribute{
+									Optional: true,
+									Attributes: map[string]schema.Attribute{ // telecomProviderSettings
+										"app_id": schema.StringAttribute{
+											Required:            true,
+											MarkdownDescription: "The application (client) ID used to authenticate to the telecom provider.",
+										},
+										"is_evaluation_mode_enabled": schema.BoolAttribute{
+											Optional:            true,
+											PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+											Computed:            true,
+											MarkdownDescription: "`true` to run the telecom provider integration in evaluation (nonenforcing) mode; otherwise, `false`. <br/> The _provider_ default value is `false`.",
+										},
+										"migration_percentage": schema.Int64Attribute{
+											Optional:            true,
+											PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(0)},
+											Computed:            true,
+											MarkdownDescription: "The percentage of authentication traffic routed to the telecom provider. Valid values range from 0 through 100. <br/> The _provider_ default value is `0`.",
+										},
+										"url": schema.StringAttribute{
+											Required:            true,
+											MarkdownDescription: "The endpoint URL of the telecom provider integration.",
+										},
+									},
+									MarkdownDescription: "Settings for routing voice authentication traffic through a telecom provider integration. / Represents configuration for routing SMS and voice authentication traffic through a telecom provider integration. This complex type is used by the **telecomProviderSettings** property of the [smsAuthenticationMethodConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/smsauthenticationmethodconfiguration?view=graph-rest-beta) and [voiceAuthenticationMethodConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/voiceauthenticationmethodconfiguration?view=graph-rest-beta) resources. Also see [Microsoft docs for telecomProviderSettings](https://learn.microsoft.com/en-us/graph/api/resources/telecomprovidersettings?view=graph-rest-beta). <br> ",
 								},
 								"include_targets": schema.SetNestedAttribute{
 									Optional: true,

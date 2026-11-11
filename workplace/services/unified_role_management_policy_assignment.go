@@ -290,7 +290,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																		},
 																	},
 																},
-																MarkdownDescription: "The users who are asked to approve requests if escalation is enabled and the primary approvers don't respond before the escalation time. This property can be a collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), and [externalSponsors](externalsponsors.md). When you create or update a [policy](accesspackageassignmentpolicy.md), if there are no escalation approvers, or escalation approvers aren't required for the stage, assign an empty collection to this property. <br/> Used in the request, approval, and assignment review settings of an [access package assignment policy](https://learn.microsoft.com/en-us/graph/api/resources/accesspackageassignmentpolicy?view=graph-rest-beta). It's an abstract base type inherited by the following resource types: <br/> In entitlement management, the derived types of this object are configured in the following properties and relationships:. Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
+																MarkdownDescription: "The users who are asked to approve requests if escalation is enabled and the primary approvers don't respond before the escalation time. This property can be a collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), and [externalSponsors](externalsponsors.md). When you create or update a [policy](accesspackageassignmentpolicy.md), if there are no escalation approvers, or escalation approvers aren't required for the stage, assign an empty collection to this property. <br/> Used in the request, approval, and assignment review settings of an [access package assignment policy](https://learn.microsoft.com/en-us/graph/api/resources/accesspackageassignmentpolicy?view=graph-rest-beta). It's an abstract base type inherited by the following resource types: <br/> In entitlement management, the derived types of this object are configured in the following properties and relationships: <br/> In approval delegation, the derived types of this object are configured in the **delegate** property of [approverDelegate](https://learn.microsoft.com/en-us/graph/api/resources/approverdelegate?view=graph-rest-beta). Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
 															},
 															"escalation_time_in_minutes": schema.Int64Attribute{
 																Computed:            true,
@@ -428,7 +428,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																		},
 																	},
 																},
-																MarkdownDescription: "The users who are asked to approve requests. A collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), [externalSponsors](externalsponsors.md), and [targetUserSponsors](targetusersponsors.md). When creating or updating a [policy](accesspackageassignmentpolicy.md), include at least one **userSet** in this collection. <br/> Used in the request, approval, and assignment review settings of an [access package assignment policy](https://learn.microsoft.com/en-us/graph/api/resources/accesspackageassignmentpolicy?view=graph-rest-beta). It's an abstract base type inherited by the following resource types: <br/> In entitlement management, the derived types of this object are configured in the following properties and relationships:. Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
+																MarkdownDescription: "The users who are asked to approve requests. A collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), [externalSponsors](externalsponsors.md), and [targetUserSponsors](targetusersponsors.md). When creating or updating a [policy](accesspackageassignmentpolicy.md), include at least one **userSet** in this collection. <br/> Used in the request, approval, and assignment review settings of an [access package assignment policy](https://learn.microsoft.com/en-us/graph/api/resources/accesspackageassignmentpolicy?view=graph-rest-beta). It's an abstract base type inherited by the following resource types: <br/> In entitlement management, the derived types of this object are configured in the following properties and relationships: <br/> In approval delegation, the derived types of this object are configured in the **delegate** property of [approverDelegate](https://learn.microsoft.com/en-us/graph/api/resources/approverdelegate?view=graph-rest-beta). Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
 															},
 														},
 													},
@@ -476,19 +476,24 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{ // unifiedRoleManagementPolicyCustomExtensionRule
 										"custom_attributes": schema.SetAttribute{
-											ElementType: types.StringType,
-											Computed:    true,
+											ElementType:         types.StringType,
+											Computed:            true,
+											MarkdownDescription: "The custom attributes associated with the policy rule. Read-only.",
 										},
 										"custom_extension_id": schema.StringAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "The unique identifier of the [roleManagementCustomCalloutExtension](https://learn.microsoft.com/en-us/graph/api/resources/rolemanagementcustomcalloutextension?view=graph-rest-beta) associated with this rule.",
 										},
 										"display_name": schema.StringAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "The display name of the policy rule. Read-only.",
 										},
 										"is_enabled": schema.BoolAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "Indicates whether the custom extension rule is enabled.",
 										},
 									},
+									MarkdownDescription: "Defines a rule that associates a Privileged Identity Management (PIM) custom extension with a role management policy. The rule controls whether the custom extension is invoked for role assignment operations targeted by the policy. <br/> Objects of this type belong to the **rules** relationship of [unifiedRoleManagementPolicy](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicy?view=graph-rest-beta). Also see [Microsoft docs for unifiedRoleManagementPolicyCustomExtensionRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicycustomextensionrule?view=graph-rest-beta). <br> ",
 								},
 							},
 							"enablement": generic.OdataDerivedTypeNestedAttributeRs{
@@ -737,7 +742,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																		},
 																	},
 																},
-																MarkdownDescription: "The users who are asked to approve requests if escalation is enabled and the primary approvers don't respond before the escalation time. This property can be a collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), and [externalSponsors](externalsponsors.md). When you create or update a [policy](accesspackageassignmentpolicy.md), if there are no escalation approvers, or escalation approvers aren't required for the stage, assign an empty collection to this property. <br/> Used in the request, approval, and assignment review settings of an [access package assignment policy](https://learn.microsoft.com/en-us/graph/api/resources/accesspackageassignmentpolicy?view=graph-rest-beta). It's an abstract base type inherited by the following resource types: <br/> In entitlement management, the derived types of this object are configured in the following properties and relationships:. Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
+																MarkdownDescription: "The users who are asked to approve requests if escalation is enabled and the primary approvers don't respond before the escalation time. This property can be a collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), and [externalSponsors](externalsponsors.md). When you create or update a [policy](accesspackageassignmentpolicy.md), if there are no escalation approvers, or escalation approvers aren't required for the stage, assign an empty collection to this property. <br/> Used in the request, approval, and assignment review settings of an [access package assignment policy](https://learn.microsoft.com/en-us/graph/api/resources/accesspackageassignmentpolicy?view=graph-rest-beta). It's an abstract base type inherited by the following resource types: <br/> In entitlement management, the derived types of this object are configured in the following properties and relationships: <br/> In approval delegation, the derived types of this object are configured in the **delegate** property of [approverDelegate](https://learn.microsoft.com/en-us/graph/api/resources/approverdelegate?view=graph-rest-beta). Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
 															},
 															"escalation_time_in_minutes": schema.Int64Attribute{
 																Computed:            true,
@@ -875,7 +880,7 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 																		},
 																	},
 																},
-																MarkdownDescription: "The users who are asked to approve requests. A collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), [externalSponsors](externalsponsors.md), and [targetUserSponsors](targetusersponsors.md). When creating or updating a [policy](accesspackageassignmentpolicy.md), include at least one **userSet** in this collection. <br/> Used in the request, approval, and assignment review settings of an [access package assignment policy](https://learn.microsoft.com/en-us/graph/api/resources/accesspackageassignmentpolicy?view=graph-rest-beta). It's an abstract base type inherited by the following resource types: <br/> In entitlement management, the derived types of this object are configured in the following properties and relationships:. Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
+																MarkdownDescription: "The users who are asked to approve requests. A collection of [singleUser](singleuser.md), [groupMembers](groupmembers.md), [requestorManager](requestormanager.md), [internalSponsors](internalsponsors.md), [externalSponsors](externalsponsors.md), and [targetUserSponsors](targetusersponsors.md). When creating or updating a [policy](accesspackageassignmentpolicy.md), include at least one **userSet** in this collection. <br/> Used in the request, approval, and assignment review settings of an [access package assignment policy](https://learn.microsoft.com/en-us/graph/api/resources/accesspackageassignmentpolicy?view=graph-rest-beta). It's an abstract base type inherited by the following resource types: <br/> In entitlement management, the derived types of this object are configured in the following properties and relationships: <br/> In approval delegation, the derived types of this object are configured in the **delegate** property of [approverDelegate](https://learn.microsoft.com/en-us/graph/api/resources/approverdelegate?view=graph-rest-beta). Also see [Microsoft docs for userSet](https://learn.microsoft.com/en-us/graph/api/resources/userset?view=graph-rest-beta). <br> ",
 															},
 														},
 													},
@@ -923,19 +928,24 @@ var unifiedRoleManagementPolicyAssignmentResourceSchema = schema.Schema{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{ // unifiedRoleManagementPolicyCustomExtensionRule
 										"custom_attributes": schema.SetAttribute{
-											ElementType: types.StringType,
-											Computed:    true,
+											ElementType:         types.StringType,
+											Computed:            true,
+											MarkdownDescription: "The custom attributes associated with the policy rule. Read-only.",
 										},
 										"custom_extension_id": schema.StringAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "The unique identifier of the [roleManagementCustomCalloutExtension](https://learn.microsoft.com/en-us/graph/api/resources/rolemanagementcustomcalloutextension?view=graph-rest-beta) associated with this rule.",
 										},
 										"display_name": schema.StringAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "The display name of the policy rule. Read-only.",
 										},
 										"is_enabled": schema.BoolAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "Indicates whether the custom extension rule is enabled.",
 										},
 									},
+									MarkdownDescription: "Defines a rule that associates a Privileged Identity Management (PIM) custom extension with a role management policy. The rule controls whether the custom extension is invoked for role assignment operations targeted by the policy. <br/> Objects of this type belong to the **rules** relationship of [unifiedRoleManagementPolicy](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicy?view=graph-rest-beta). Also see [Microsoft docs for unifiedRoleManagementPolicyCustomExtensionRule](https://learn.microsoft.com/en-us/graph/api/resources/unifiedrolemanagementpolicycustomextensionrule?view=graph-rest-beta). <br> ",
 								},
 							},
 							"enablement": generic.OdataDerivedTypeNestedAttributeRs{

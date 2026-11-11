@@ -336,6 +336,7 @@ Read-Only:
 Read-Only:
 
 - `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. / A collection of groups enabled to use [text message authentication methods policy](https://learn.microsoft.com/en-us/graph/api/resources/smsAuthenticationMethodConfiguration?view=graph-rest-beta) in Microsoft Entra ID. Also see [Microsoft docs for smsAuthenticationMethodTarget](https://learn.microsoft.com/en-us/graph/api/resources/smsauthenticationmethodtarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--authentication_method_configurations--sms--include_targets))
+- `telecom_provider_settings` (Attributes) Settings for routing SMS authentication traffic through a telecom provider integration. / Represents configuration for routing SMS and voice authentication traffic through a telecom provider integration. This complex type is used by the **telecomProviderSettings** property of the [smsAuthenticationMethodConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/smsauthenticationmethodconfiguration?view=graph-rest-beta) and [voiceAuthenticationMethodConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/voiceauthenticationmethodconfiguration?view=graph-rest-beta) resources. Also see [Microsoft docs for telecomProviderSettings](https://learn.microsoft.com/en-us/graph/api/resources/telecomprovidersettings?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--authentication_method_configurations--sms--telecom_provider_settings))
 
 <a id="nestedatt--authentication_method_configurations--sms--include_targets"></a>
 ### Nested Schema for `authentication_method_configurations.sms.include_targets`
@@ -346,6 +347,17 @@ Read-Only:
 - `is_registration_required` (Boolean) Determines whether the user is enforced to register the authentication method. **Not supported**. <br/>
 - `is_usable_for_sign_in` (Boolean) Determines if users can use this authentication method to sign in to Microsoft Entra ID. `true` if users can use this method for primary authentication, otherwise `false`. <br/>
 - `target_type` (String) From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. <br/> _Provider_ allowed values are: `user`, `group`, `unknownFutureValue`.
+
+
+<a id="nestedatt--authentication_method_configurations--sms--telecom_provider_settings"></a>
+### Nested Schema for `authentication_method_configurations.sms.telecom_provider_settings`
+
+Read-Only:
+
+- `app_id` (String) The application (client) ID used to authenticate to the telecom provider.
+- `is_evaluation_mode_enabled` (Boolean) `true` to run the telecom provider integration in evaluation (nonenforcing) mode; otherwise, `false`. <br/>
+- `migration_percentage` (Number) The percentage of authentication traffic routed to the telecom provider. Valid values range from 0 through 100. <br/>
+- `url` (String) The endpoint URL of the telecom provider integration.
 
 
 
@@ -417,6 +429,7 @@ Read-Only:
 - `caller_id_number` (String) The phone number used as the caller ID when voice call authentication is initiated.
 - `include_targets` (Attributes Set) A collection of groups that are enabled to use the authentication method. Expanded by default. / A collection of groups enabled to use voice call authentication via the [voice call authentication methods policy](https://learn.microsoft.com/en-us/graph/api/resources/voiceAuthenticationMethodConfiguration?view=graph-rest-beta) in Microsoft Entra ID. Also see [Microsoft docs for voiceAuthenticationMethodTarget](https://learn.microsoft.com/en-us/graph/api/resources/voiceauthenticationmethodtarget?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--authentication_method_configurations--voice--include_targets))
 - `is_office_phone_allowed` (Boolean) `true` if users can register office phones, otherwise, `false`. <br/>
+- `telecom_provider_settings` (Attributes) Settings for routing voice authentication traffic through a telecom provider integration. / Represents configuration for routing SMS and voice authentication traffic through a telecom provider integration. This complex type is used by the **telecomProviderSettings** property of the [smsAuthenticationMethodConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/smsauthenticationmethodconfiguration?view=graph-rest-beta) and [voiceAuthenticationMethodConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/voiceauthenticationmethodconfiguration?view=graph-rest-beta) resources. Also see [Microsoft docs for telecomProviderSettings](https://learn.microsoft.com/en-us/graph/api/resources/telecomprovidersettings?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--authentication_method_configurations--voice--telecom_provider_settings))
 
 <a id="nestedatt--authentication_method_configurations--voice--include_targets"></a>
 ### Nested Schema for `authentication_method_configurations.voice.include_targets`
@@ -426,6 +439,17 @@ Read-Only:
 - `id` (String) Object ID of a Microsoft Entra group.
 - `is_registration_required` (Boolean) Determines whether the user is enforced to register the authentication method. **Not supported**. <br/>
 - `target_type` (String) From December 2022, targeting individual users using `user` is no longer recommended. Existing targets remain but we recommend moving the individual users to a targeted group. <br/> _Provider_ allowed values are: `user`, `group`, `unknownFutureValue`.
+
+
+<a id="nestedatt--authentication_method_configurations--voice--telecom_provider_settings"></a>
+### Nested Schema for `authentication_method_configurations.voice.telecom_provider_settings`
+
+Read-Only:
+
+- `app_id` (String) The application (client) ID used to authenticate to the telecom provider.
+- `is_evaluation_mode_enabled` (Boolean) `true` to run the telecom provider integration in evaluation (nonenforcing) mode; otherwise, `false`. <br/>
+- `migration_percentage` (Number) The percentage of authentication traffic routed to the telecom provider. Valid values range from 0 through 100. <br/>
+- `url` (String) The endpoint URL of the telecom provider integration.
 
 
 

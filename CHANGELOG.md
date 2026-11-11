@@ -1,5 +1,19 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.20.3 (2026-11-11)
+
+### added
+
+- [group_assigned_licenses](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/group_assigned_licenses): New resource that manages the licenses directly assigned to a group as one unit. Every change is written with a single `assignLicense` call, which avoids the lost assignments of `group_assigned_license` when several licenses of one group change in the same run. Creating it applies the configured licenses on top of existing ones (no import needed); `authoritative = true` also removes all other licenses of the group
+- [profile_card_property](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/profile_card_property): New resource and data sources for the profile card properties of the organization
+- [authentication_methods_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authentication_methods_policy): Add `telecom_provider_settings` to the SMS and voice method configurations
+
+### changed
+
+- [group_assigned_license](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/group_assigned_license): Document that changes to several licenses of the same group in one run may get lost and point to `group_assigned_licenses`
+- Update MS Graph metadata & docs
+
+
 ## 0.20.2 (2026-10-23)
 
 ### added

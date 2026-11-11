@@ -182,6 +182,7 @@ type UpdateReplaceFuncParams struct {
 	IdAttributer GetAttributer
 	RawVal       map[string]any
 	RawResult    map[string]any
+	ReqState     *tfsdk.State // prior state
 }
 
 type DeleteReplaceFuncParams struct {
@@ -190,6 +191,7 @@ type DeleteReplaceFuncParams struct {
 	BaseUri      string
 	Id           string
 	IdAttributer GetAttributer
+	ReqState     *tfsdk.State // prior state
 }
 
 // lifted from github.com/hashicorp/terraform-plugin-framework/internal/privatestate

@@ -82,13 +82,13 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 						Attributes: map[string]schema.Attribute{ // azureAdTokenAuthentication
 							"resource_id": schema.StringAttribute{
 								Required:            true,
-								MarkdownDescription: "The **appID** of the Microsoft Entra application to use to authenticate a logic app with a custom access package workflow extension.",
+								MarkdownDescription: "The app ID or identifier URI of the Microsoft Entra application used to authenticate calls to the external app.",
 							},
 						},
 						Validators: []validator.Object{
 							identityGovernanceCustomTaskExtensionCustomExtensionAuthenticationConfigurationValidator,
 						},
-						MarkdownDescription: "Defines the Microsoft Entra application used to authenticate a logic app with a [customAccessPackageWorkflowExtension](https://learn.microsoft.com/en-us/graph/api/resources/customaccesspackageworkflowextension?view=graph-rest-beta) or a [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta). This object is configured in the **authenticationConfiguration** property of those resources. Only the app ID of the application is required. Derived from [customExtensionAuthenticationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionauthenticationconfiguration?view=graph-rest-beta). Also see [Microsoft docs for azureAdTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadtokenauthentication?view=graph-rest-beta). <br> ",
+						MarkdownDescription: "Defines the Microsoft Entra application used to authenticate an external app with a [customAccessPackageWorkflowExtension](https://learn.microsoft.com/en-us/graph/api/resources/customaccesspackageworkflowextension?view=graph-rest-beta), a [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta), or a [roleManagementCustomCalloutExtension](https://learn.microsoft.com/en-us/graph/api/resources/rolemanagementcustomcalloutextension?view=graph-rest-beta). This object is configured in the **authenticationConfiguration** property of those resources. Only the app ID or identifier URI of the application is required. Derived from [customExtensionAuthenticationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionauthenticationconfiguration?view=graph-rest-beta). Also see [Microsoft docs for azureAdTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadtokenauthentication?view=graph-rest-beta). <br> ",
 					},
 				},
 			},
@@ -98,7 +98,7 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 				}),
 			},
 			Computed:            true,
-			MarkdownDescription: "Configuration for securing the API call to the logic app. Required. <br/> Abstract base type that exposes the configuration for the **authenticationConfiguration** property of the derived types that inherit from the [customCalloutExtension](https://learn.microsoft.com/en-us/graph/api/resources/customcalloutextension?view=graph-rest-beta) abstract type. <br/> This abstract type is inherited by the following resource types: <br/> The type of token authentication used depends on the token security. If the token security value is normal, you use the [azureAdTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadtokenauthentication?view=graph-rest-beta) resource type. If the value is Proof of Possession, you use the [azureAdPopTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadpoptokenauthentication?view=graph-rest-beta) resource type. Also see [Microsoft docs for customExtensionAuthenticationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionauthenticationconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{\"azure_ad_pop_token\":{}}`. <br> ",
+			MarkdownDescription: "Configuration for securing the API call to the logic app. Required. <br/> Exposes the configuration for the **authenticationConfiguration** property of the derived types that inherit from the [customCalloutExtension](https://learn.microsoft.com/en-us/graph/api/resources/customcalloutextension?view=graph-rest-beta) abstract type, including [roleManagementCustomCalloutExtension](https://learn.microsoft.com/en-us/graph/api/resources/rolemanagementcustomcalloutextension?view=graph-rest-beta). This abstract type can't be instantiated directly. <br/> This abstract type is inherited by the following resource types: <br/> The type of token authentication used depends on the token security. If the token security value is normal, you use the [azureAdTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadtokenauthentication?view=graph-rest-beta) resource type. If the value is Proof of Possession, you use the [azureAdPopTokenAuthentication](https://learn.microsoft.com/en-us/graph/api/resources/azureadpoptokenauthentication?view=graph-rest-beta) resource type. Also see [Microsoft docs for customExtensionAuthenticationConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionauthenticationconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{\"azure_ad_pop_token\":{}}`. <br> ",
 		},
 		"client_configuration": schema.SingleNestedAttribute{
 			Optional: true,
@@ -107,18 +107,18 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 					Optional:            true,
 					PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(1)},
 					Computed:            true,
-					MarkdownDescription: "The max number of retries that Microsoft Entra ID makes to the external API. Values of 0 or 1 are supported. If `null`, the default for the service applies. <br/> The _provider_ default value is `1`.",
+					MarkdownDescription: "The maximum number of retries that Microsoft Entra ID makes to the external API. For a **roleManagementCustomCalloutExtension**, the valid range is from `0` through `5`. For other custom extensions, values of `0` or `1` are supported. If `null`, the default for the service applies. <br/> The _provider_ default value is `1`.",
 				},
 				"timeout_in_milliseconds": schema.Int64Attribute{
 					Optional:            true,
 					PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(1000)},
 					Computed:            true,
-					MarkdownDescription: "The max duration in milliseconds that Microsoft Entra ID waits for a response from the external app before it shuts down the connection. The valid range is between `200` and `2000` milliseconds. If `null`, the default for the service applies. <br/> The _provider_ default value is `1000`.",
+					MarkdownDescription: "The maximum duration in milliseconds that Microsoft Entra ID waits for a response from the external app before it closes the connection. For a **roleManagementCustomCalloutExtension**, the valid range is from `1000` through `60000` milliseconds. For other custom extensions, the valid range is from `200` through `2000` milliseconds. If `null`, the default for the service applies. <br/> The _provider_ default value is `1000`.",
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
 			Computed:            true,
-			MarkdownDescription: "HTTP connection settings that define how long Microsoft Entra ID can wait for a connection to a logic app, how many times you can retry a timed-out connection and the exception scenarios when retries are allowed. <br/> Connection settings that define how long Microsoft Entra ID can wait for a response from an external app before it shuts down the connection when trying to trigger the external app. This object is configured in the **clientConfiguration** property of the [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta) resource. <br/> In entitlement management, this object is configured in the **clientConfiguration** property of:. Also see [Microsoft docs for customExtensionClientConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionclientconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
+			MarkdownDescription: "HTTP connection settings that define how long Microsoft Entra ID can wait for a connection to a logic app, how many times you can retry a timed-out connection and the exception scenarios when retries are allowed. <br/> Defines connection settings that control how long Microsoft Entra ID waits for a response from an external app before it closes the connection. This object is configured in the **clientConfiguration** property of the [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta) and [roleManagementCustomCalloutExtension](https://learn.microsoft.com/en-us/graph/api/resources/rolemanagementcustomcalloutextension?view=graph-rest-beta) resources. <br/> In entitlement management, this object is configured in the **clientConfiguration** property of:. Also see [Microsoft docs for customExtensionClientConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionclientconfiguration?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 		"description": schema.StringAttribute{
 			Optional:            true,
@@ -140,13 +140,13 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 						Attributes: map[string]schema.Attribute{ // httpRequestEndpoint
 							"target_url": schema.StringAttribute{
 								Required:            true,
-								MarkdownDescription: "The HTTP endpoint that a custom extension calls.",
+								MarkdownDescription: "The URL of the HTTP endpoint that Microsoft Entra ID calls for the custom extension.",
 							},
 						},
 						Validators: []validator.Object{
 							identityGovernanceCustomTaskExtensionCustomExtensionEndpointConfigurationValidator,
 						},
-						MarkdownDescription: "The HTTP endpoint that a custom extension calls. Also see [Microsoft docs for httpRequestEndpoint](https://learn.microsoft.com/en-us/graph/api/resources/httprequestendpoint?view=graph-rest-beta). <br> ",
+						MarkdownDescription: "Defines the HTTP endpoint that Microsoft Entra ID calls for a custom extension, such as a [roleManagementCustomCalloutExtension](https://learn.microsoft.com/en-us/graph/api/resources/rolemanagementcustomcalloutextension?view=graph-rest-beta). Also see [Microsoft docs for httpRequestEndpoint](https://learn.microsoft.com/en-us/graph/api/resources/httprequestendpoint?view=graph-rest-beta). <br> ",
 					},
 				},
 				"logic_app_trigger": generic.OdataDerivedTypeNestedAttributeRs{
@@ -180,7 +180,7 @@ var identityGovernanceCustomTaskExtensionResourceSchema = schema.Schema{
 					},
 				},
 			},
-			MarkdownDescription: "Details for allowing the custom task extension to call the logic app. / Abstract base type that exposes the derived types used to configure the **endpointConfiguration** property of a custom extension. In Lifecycle Workflows, the derived types of this object are configured in the **endpointConfiguration** property of the [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta) resource. This abstract type is inherited by the following types:. Also see [Microsoft docs for customExtensionEndpointConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionendpointconfiguration?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "Details for allowing the custom task extension to call the logic app. / Exposes the derived types used to configure the **endpointConfiguration** property of a custom extension. This abstract type can't be instantiated directly. In Lifecycle Workflows, its derived types are configured in the **endpointConfiguration** property of the [customTaskExtension](https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-customtaskextension?view=graph-rest-beta) resource. In Privileged Identity Management, they're configured in the **endpointConfiguration** property of the [roleManagementCustomCalloutExtension](https://learn.microsoft.com/en-us/graph/api/resources/rolemanagementcustomcalloutextension?view=graph-rest-beta) resource. This abstract type is inherited by the following types:. Also see [Microsoft docs for customExtensionEndpointConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/customextensionendpointconfiguration?view=graph-rest-beta). <br> ",
 		},
 		"callback_configuration": schema.SingleNestedAttribute{
 			Optional: true,
