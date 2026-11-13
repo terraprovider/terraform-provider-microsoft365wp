@@ -3,12 +3,17 @@
 package services
 
 import (
+	"context"
+	"net/http"
+	"terraform-provider-microsoft365wp/workplace/external/msgraph"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -20,14 +25,73 @@ var (
 		TypeNameSuffix: "cross_tenant_access_policy_configuration_default",
 		SpecificSchema: crossTenantAccessPolicyConfigurationDefaultResourceSchema,
 		AccessParams: generic.AccessParams{
-			BaseUri:     "/policies/crossTenantAccessPolicy/default",
-			IsSingleton: true,
+			BaseUri:           "/policies/crossTenantAccessPolicy/default",
+			IsSingleton:       true,
+			UpdateReplaceFunc: crossTenantAccessPolicyConfigurationDefaultUpdateReplaceFunc,
 		},
 	}
 
 	CrossTenantAccessPolicyConfigurationDefaultSingularDataSource = generic.CreateGenericDataSourceSingularFromResource(
 		&CrossTenantAccessPolicyConfigurationDefaultResource)
 )
+
+func crossTenantAccessPolicyConfigurationDefaultUpdateReplaceFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.UpdateReplaceFuncParams) {
+	const blockAttrGraph = "blockServiceProviderOutboundAccess"
+	targetBlock, hasTargetBlock := params.RawVal[blockAttrGraph].(bool)
+	delete(params.RawVal, blockAttrGraph)
+
+	params.R.AccessParams.UpdateRaw(ctx, diags, params.BaseUri, params.Id, params.IdAttributer, params.RawVal)
+	if diags.HasError() || !hasTargetBlock {
+		return
+	}
+
+	var currentBlock *bool
+	if params.ReqState != nil {
+		var priorBlock types.Bool
+		diags.Append(params.ReqState.GetAttribute(ctx, path.Root("block_service_provider_outbound_access"), &priorBlock)...)
+		if diags.HasError() {
+			return
+		}
+		if !priorBlock.IsNull() && !priorBlock.IsUnknown() {
+			currentBlock = priorBlock.ValueBoolPointer()
+		}
+	} else {
+		// singleton gets adopted on resource creation, so there is no prior state to compare with
+		uri := params.R.AccessParams.GetUriWithIdForUD(ctx, diags, params.BaseUri, params.Id, params.IdAttributer)
+		if diags.HasError() {
+			return
+		}
+		currentRaw := params.R.AccessParams.ReadRaw2(ctx, diags, uri, "", "", []string{blockAttrGraph}, false)
+		if diags.HasError() {
+			return
+		}
+		if v, ok := currentRaw[blockAttrGraph].(bool); ok {
+			currentBlock = &v
+		}
+	}
+	if currentBlock != nil && *currentBlock == targetBlock {
+		return
+	}
+
+	uri := params.R.AccessParams.GetUriWithIdForUD(ctx, diags, params.BaseUri, params.Id, params.IdAttributer)
+	if diags.HasError() {
+		return
+	}
+	jsonBody := generic.ConvertOdataRawToJson(ctx, diags, map[string]any{blockAttrGraph: targetBlock}, "Plan")
+	if diags.HasError() {
+		return
+	}
+	_, _, _, err := params.Client.Patch(ctx, msgraph.PatchHttpRequestInput{
+		Uri:              uri,
+		Body:             jsonBody,
+		ValidStatusCodes: []int{http.StatusOK, http.StatusNoContent},
+		// MS Graph may briefly return 404 right after the preceding write
+		ConsistencyFailureFunc: msgraph.RetryOn404ConsistencyFailureFunc,
+	})
+	if err != nil {
+		diags.AddError("Unable to update block_service_provider_outbound_access with MS Graph", err.Error())
+	}
+}
 
 var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // crossTenantAccessPolicyConfigurationDefault

@@ -10,6 +10,7 @@ package generic
 import (
 	"context"
 	"fmt"
+	"slices"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -87,6 +88,25 @@ func SetUnknownValuesFromResourceModel(ctx context.Context, state *tfsdk.State, 
 	src := tfsdk.State{
 		Schema: state.Schema,
 		Raw:    val,
+	}
+
+	// Unknown values inside set elements cannot be copied by path: set elements are addressed by their value (which
+	// includes the unknown values), so the source never contains a matching element, and once one unknown value of an
+	// element has been set, the paths to further unknown values of the same element do not match anymore (and setting
+	// them would add new, broken elements). Therefore set all of them to null in one pass (they will be read from
+	// MS Graph on the next refresh).
+	if slices.ContainsFunc(unknowns, attributePathContainsSetElement) {
+		newRaw, err := tftypes.Transform(state.Raw, func(p *tftypes.AttributePath, v tftypes.Value) (tftypes.Value, error) {
+			if !v.IsKnown() && attributePathContainsSetElement(p) {
+				return tftypes.NewValue(v.Type(), nil), nil
+			}
+			return v, nil
+		})
+		if err != nil {
+			return err
+		}
+		state.Raw = newRaw
+		unknowns = slices.DeleteFunc(slices.Clone(unknowns), attributePathContainsSetElement)
 	}
 
 	// Copy all unknown values from val to destination State.
@@ -222,4 +242,14 @@ func value(ctx context.Context, tfType tftypes.Value, attrType attr.Type) (attr.
 	}
 
 	return attrValue, nil
+}
+
+func attributePathContainsSetElement(p *tftypes.AttributePath) bool {
+	if p == nil {
+		return false
+	}
+	return slices.ContainsFunc(p.Steps(), func(s tftypes.AttributePathStep) bool {
+		_, ok := s.(tftypes.ElementKeyValue)
+		return ok
+	})
 }

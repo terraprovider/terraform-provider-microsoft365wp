@@ -1,5 +1,21 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.20.4 (2026-11-13)
+
+### fixed
+
+- [cloud_pc_provisioning_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cloud_pc_provisioning_policy): Fix updates failing with "Target Geography is invalid" (e.g. for region group `ireland`) and differences on every plan for `microsoft_managed_desktop.profile` and `user_settings_persistence_configuration` (GH #27)
+- [cloud_pc_provisioning_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cloud_pc_provisioning_policy): Fix differences on every plan if only one of `region_group` and `region_name` is configured, if `provisioning_type` is not configured or if `local_admin_enabled` is configured
+- [cross_tenant_access_policy_configuration_default](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cross_tenant_access_policy_configuration_default): Fix updates failing with 403 "Invalid properties in the request body" by sending `block_service_provider_outbound_access` separately and only if it changes (GH #38)
+- [mobile_app](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_app): Fix `windows_office_suite` configured with `office_configuration_xml` (designer settings are not sent to MS Graph anymore, which led to differences on every plan and to failing updates or replacements) (GH #26)
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): Fix "Provider returned invalid result object after apply" if several values inside the same element of a set are only known after apply
+
+### changed
+
+- [cloud_pc_provisioning_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cloud_pc_provisioning_policy): Changing `provisioning_type` forces replacement now (MS Graph silently ignores changes), `local_admin_enabled` is deprecated as MS Graph ignores it (use `local_admin_enabled` of `cloud_pc_user_setting` instead)
+- [mobile_app](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_app): Setting or removing `windows_office_suite.office_configuration_xml` forces replacement now (MS Graph does not allow to switch between XML and designer configuration)
+
+
 ## 0.20.3 (2026-11-11)
 
 ### added

@@ -3,17 +3,27 @@
 package services
 
 import (
+	"context"
+	"slices"
+	"strings"
+	"terraform-provider-microsoft365wp/workplace/external/msgraph"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
+	"github.com/hashicorp/go-azure-sdk/sdk/odata"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 var (
@@ -24,6 +34,10 @@ var (
 			BaseUri: "/deviceManagement/virtualEndpoint/provisioningPolicies",
 			ReadOptions: generic.ReadOptions{
 				ODataExpand: "assignments",
+				ExtraRequestsCustom: []generic.ReadExtraRequestCustom{
+					cloudPcProvisioningPolicyReadUserSettingsPersistenceRerc,
+					cloudPcProvisioningPolicyKeepLocalAdminEnabledRerc,
+				},
 				DataSource: generic.DataSourceOptions{
 					NoFilterSupport: true,
 					Plural: generic.PluralOptions{
@@ -42,6 +56,7 @@ var (
 					},
 				},
 			},
+			UpdateReplaceFunc: cloudPcProvisioningPolicyUpdateReplaceFunc,
 		},
 	}
 
@@ -51,6 +66,215 @@ var (
 	CloudPcProvisioningPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&CloudPcProvisioningPolicyResource, "")
 )
+
+func cloudPcProvisioningPolicyUpdateReplaceFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.UpdateReplaceFuncParams) {
+	cloudPcProvisioningPolicyAddGeographicLocationTypes(ctx, diags, params.Client, params.RawVal)
+	if diags.HasError() {
+		return
+	}
+	params.R.AccessParams.UpdateRaw(ctx, diags, params.BaseUri, params.Id, params.IdAttributer, params.RawVal)
+	if diags.HasError() && params.RawVal["provisioningType"] == "sharedByEntraGroup" {
+		for _, d := range diags.Errors() {
+			if strings.Contains(d.Detail(), "Failed to validate parameters") {
+				diags.AddError("Hint for cloud_pc_provisioning_policy",
+					"MS Graph does not allow to change region_group or region_name of policies with provisioning_type sharedByEntraGroup.")
+				break
+			}
+		}
+	}
+}
+
+// MS Graph only returns userSettingsPersistenceConfiguration when it is explicitly requested using $select (not even
+// in the response to a POST), see GitHub issue #27.
+func cloudPcProvisioningPolicyReadUserSettingsPersistenceRerc(ctx context.Context, diags *diag.Diagnostics, params generic.ReadExtraRequestCustomParams) {
+	if _, ok := params.RawVal["userSettingsPersistenceConfiguration"]; ok {
+		return
+	}
+	uri := params.Uri
+	uri.Params = nil
+	selectRaw := generic.ReadRaw2(ctx, diags, params.Client, uri,
+		&odata.Query{Select: []string{"id", "userSettingsPersistenceConfiguration"}}, nil, params.TolerateNotFound)
+	if diags.HasError() || selectRaw == nil {
+		return
+	}
+	v, ok := selectRaw["userSettingsPersistenceConfiguration"]
+	if !ok {
+		return
+	}
+	// For policies without user settings persistence (e.g. all dedicated ones) MS Graph returns
+	// {"userSettingsPersistenceEnabled": false, "userSettingsPersistenceStorageSizeCategory": null} instead of null.
+	// Keep that as null unless it has been configured that way (i.e. prior state is not null).
+	if vMap, isMap := v.(map[string]any); isMap && vMap["userSettingsPersistenceEnabled"] != true && vMap["userSettingsPersistenceStorageSizeCategory"] == nil {
+		var prior types.Object
+		if params.ReqState != nil && !params.ReqState.Raw.IsNull() {
+			diags.Append(params.ReqState.GetAttribute(ctx, path.Root("user_settings_persistence_configuration"), &prior)...)
+			if diags.HasError() {
+				return
+			}
+		}
+		if prior.IsNull() || prior.IsUnknown() {
+			return
+		}
+	}
+	params.RawVal["userSettingsPersistenceConfiguration"] = v
+}
+
+// MS Graph accepts localAdminEnabled on write but neither stores nor returns it (not even with $select), so keep
+// the value from prior state to avoid a perpetual diff.
+func cloudPcProvisioningPolicyKeepLocalAdminEnabledRerc(ctx context.Context, diags *diag.Diagnostics, params generic.ReadExtraRequestCustomParams) {
+	if v, ok := params.RawVal["localAdminEnabled"]; ok && v != nil {
+		return // just in case MS Graph starts returning it
+	}
+	if params.ReqState == nil || params.ReqState.Raw.IsNull() {
+		return
+	}
+	var prior types.Bool
+	diags.Append(params.ReqState.GetAttribute(ctx, path.Root("local_admin_enabled"), &prior)...)
+	if diags.HasError() || prior.IsNull() || prior.IsUnknown() {
+		return
+	}
+	params.RawVal["localAdminEnabled"] = prior.ValueBool()
+}
+
+// When PATCHing domainJoinConfigurations, MS Graph requires geographicLocationType to be sent along with regionGroup
+// for newer region groups (e.g. `ireland`, otherwise 400 "Target Geography is invalid.") and it must match the region
+// (otherwise 400 "Target Geography does not match the target Region", e.g. when keeping the old value on a region
+// change). On POST MS Graph derives it by itself. Since geographicLocationType is read-only for the provider, derive
+// it from the supported regions for every domain join configuration with a regionGroup, see GitHub issue #27.
+func cloudPcProvisioningPolicyAddGeographicLocationTypes(ctx context.Context, diags *diag.Diagnostics, client *msgraph.Client, rawVal map[string]any) {
+	djcs, _ := rawVal["domainJoinConfigurations"].([]any)
+	needed := false
+	for _, djc := range djcs {
+		if djcMap, ok := djc.(map[string]any); ok {
+			if regionGroup, _ := djcMap["regionGroup"].(string); regionGroup != "" {
+				needed = true
+			}
+		}
+	}
+	if !needed {
+		return
+	}
+
+	regionsRaw := generic.ReadRaw(ctx, diags, client, "/deviceManagement/virtualEndpoint/supportedRegions", false)
+	if diags.HasError() {
+		return
+	}
+	regions, _ := regionsRaw["value"].([]any)
+
+	for _, djc := range djcs {
+		djcMap, ok := djc.(map[string]any)
+		if !ok {
+			continue
+		}
+		regionGroup, _ := djcMap["regionGroup"].(string)
+		if regionGroup == "" {
+			continue
+		}
+		regionName, _ := djcMap["regionName"].(string)
+		geoExact, geoGroup := "", ""
+		for _, region := range regions {
+			regionMap, ok := region.(map[string]any)
+			if !ok || regionMap["regionGroup"] != regionGroup {
+				continue
+			}
+			geo, _ := regionMap["geographicLocationType"].(string)
+			if geo == "" {
+				continue // legacy entries of a region do not have a geographicLocationType
+			}
+			if geoGroup == "" {
+				geoGroup = geo
+			}
+			if regionName != "" && regionMap["displayName"] == regionName {
+				geoExact = geo
+				break
+			}
+		}
+		switch {
+		case geoExact != "":
+			djcMap["geographicLocationType"] = geoExact
+		case geoGroup != "":
+			djcMap["geographicLocationType"] = geoGroup
+		default:
+			// e.g. legacy region groups like `europeUnion`, MS Graph derives the value itself for those
+			tflog.Debug(ctx, "cloudPcProvisioningPolicyAddGeographicLocationTypes: no geographicLocationType found",
+				map[string]any{"regionGroup": regionGroup, "regionName": regionName})
+		}
+	}
+}
+
+// MS Graph derives region_group from region_name and vice versa (and geographic_location_type from both). If only
+// one of them is configured, the other one is computed: keep its value from state only as long as the configured
+// sibling(s) stay unchanged, otherwise it is unknown until after apply (and sent as null, so MS Graph derives it).
+//
+// domain_join_configurations is a set, so sibling values cannot be read by path. Like the framework itself, pair the
+// elements of plan, config and state by their index in the respective set.
+func cloudPcDomainJoinElements(ctx context.Context, req planmodifier.StringRequest) (types.Object, types.Object, bool) {
+	elemPath := req.Path.ParentPath()
+	steps := elemPath.Steps()
+	if len(steps) == 0 {
+		return types.Object{}, types.Object{}, false
+	}
+	elemStep, ok := steps[len(steps)-1].(path.PathStepElementKeyValue)
+	if !ok {
+		return types.Object{}, types.Object{}, false
+	}
+	setPath := elemPath.ParentPath()
+	var planSet, configSet, stateSet types.Set
+	if req.Plan.GetAttribute(ctx, setPath, &planSet).HasError() ||
+		req.Config.GetAttribute(ctx, setPath, &configSet).HasError() ||
+		req.State.GetAttribute(ctx, setPath, &stateSet).HasError() {
+		return types.Object{}, types.Object{}, false
+	}
+	idx := slices.IndexFunc(planSet.Elements(), func(e attr.Value) bool { return e.Equal(elemStep.Value) })
+	configElems, stateElems := configSet.Elements(), stateSet.Elements()
+	if idx < 0 || idx >= len(configElems) || idx >= len(stateElems) {
+		return types.Object{}, types.Object{}, false // e.g. new element
+	}
+	configElem, ok1 := configElems[idx].(types.Object)
+	stateElem, ok2 := stateElems[idx].(types.Object)
+	return configElem, stateElem, ok1 && ok2
+}
+
+type cloudPcDomainJoinRegionModifier struct {
+	siblings []string
+}
+
+// region_group, region_name: use value from state if not configured and siblings unchanged
+func cloudPcDomainJoinRegionUseStateUnlessChanged(siblings ...string) planmodifier.String {
+	return cloudPcDomainJoinRegionModifier{siblings: siblings}
+}
+
+// geographic_location_type (read-only): use value from state if region_group and region_name unchanged
+func cloudPcDomainJoinGeographicLocationTypeUnknownOnRegionChange() planmodifier.String {
+	return cloudPcDomainJoinRegionModifier{siblings: []string{"region_group", "region_name"}}
+}
+
+func (m cloudPcDomainJoinRegionModifier) Description(ctx context.Context) string {
+	return "If not configured, the value is unknown until after apply if the region changes."
+}
+
+func (m cloudPcDomainJoinRegionModifier) MarkdownDescription(ctx context.Context) string {
+	return m.Description(ctx)
+}
+
+func (m cloudPcDomainJoinRegionModifier) PlanModifyString(ctx context.Context, req planmodifier.StringRequest, resp *planmodifier.StringResponse) {
+	if !req.ConfigValue.IsNull() || req.State.Raw.IsNull() || req.Plan.Raw.IsNull() || !resp.PlanValue.IsUnknown() {
+		return
+	}
+	configElem, stateElem, ok := cloudPcDomainJoinElements(ctx, req)
+	if !ok {
+		return
+	}
+	for _, sibling := range m.siblings {
+		configValue, _ := configElem.Attributes()[sibling].(types.String)
+		stateValue, _ := stateElem.Attributes()[sibling].(types.String)
+		// null in config means computed, i.e. it follows the configured sibling and counts as unchanged
+		if !configValue.IsNull() && !configValue.Equal(stateValue) {
+			return // stays unknown
+		}
+	}
+	resp.PlanValue = req.StateValue
+}
 
 var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // cloudPcProvisioningPolicy
@@ -139,7 +363,9 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 						Validators: []validator.String{
 							stringvalidator.OneOf("default", "asia", "australasia", "canada", "europe", "india", "africa", "usCentral", "usEast", "usWest", "southAmerica", "middleEast", "centralAmerica", "usGovernment", "unknownFutureValue", "mexico", "australiaNewZealand"),
 						},
-						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+						PlanModifiers: []planmodifier.String{
+							cloudPcDomainJoinGeographicLocationTypeUnknownOnRegionChange(),
+						},
 						MarkdownDescription: "The geographic location where the region is located. Read-only. <br/> Represents the geographic location where a region is located for Microsoft-hosted network for backup Cloud PCs. <br/> The **cloudPcGeographicLocationType** type is an evolvable enumeration. <br/> _Provider_ allowed values are: `default`, `asia`, `australasia`, `canada`, `europe`, `india`, `africa`, `usCentral`, `usEast`, `usWest`, `southAmerica`, `middleEast`, `centralAmerica`, `usGovernment`, `unknownFutureValue`, `mexico`, `australiaNewZealand`.",
 					},
 					"on_premises_connection_id": schema.StringAttribute{
@@ -147,14 +373,22 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 						MarkdownDescription: "The Azure network connection ID that matches the virtual network IT admins want the provisioning policy to use when they create Cloud PCs. You can use this property in both domain join types: _Azure AD joined_ or _Hybrid Microsoft Entra joined_. If you enter an **onPremisesConnectionId**, leave the **regionName** property empty.",
 					},
 					"region_group": schema.StringAttribute{
+						Computed: true,
 						Optional: true,
 						Validators: []validator.String{
 							stringvalidator.OneOf("default", "australia", "canada", "usCentral", "usEast", "usWest", "france", "germany", "europeUnion", "unitedKingdom", "japan", "asia", "india", "southAmerica", "euap", "usGovernment", "usGovernmentDOD", "unknownFutureValue", "norway", "switzerland", "southKorea", "middleEast", "mexico", "australasia", "europe", "singapore", "hongKong", "ireland", "sweden", "poland", "italy", "spain", "netherlands", "brazil", "israel", "automatic", "indonesia", "taiwan", "malaysia", "newZealand", "austria", "denmark", "belgium", "kenya"),
 						},
+						PlanModifiers: []planmodifier.String{
+							cloudPcDomainJoinRegionUseStateUnlessChanged("region_name"),
+						},
 						MarkdownDescription: "The logical geographic group this region belongs to. Multiple regions can belong to one region group. A customer can select a **regionGroup** when they provision a Cloud PC, and the Cloud PC is put in one of the regions in the group based on resource status. For example, the Europe region group contains the Northern Europe and Western Europe regions. Read-only. <br/> Represents the logical geographic group that a region belongs to for Microsoft-hosted network for backup Cloud PCs. Multiple regions can belong to one region group. <br/> This is an evolvable enumeration. <br/> _Provider_ allowed values are: `default`, `australia`, `canada`, `usCentral`, `usEast`, `usWest`, `france`, `germany`, `europeUnion`, `unitedKingdom`, `japan`, `asia`, `india`, `southAmerica`, `euap`, `usGovernment`, `usGovernmentDOD`, `unknownFutureValue`, `norway`, `switzerland`, `southKorea`, `middleEast`, `mexico`, `australasia`, `europe`, `singapore`, `hongKong`, `ireland`, `sweden`, `poland`, `italy`, `spain`, `netherlands`, `brazil`, `israel`, `automatic`, `indonesia`, `taiwan`, `malaysia`, `newZealand`, `austria`, `denmark`, `belgium`, `kenya`.",
 					},
 					"region_name": schema.StringAttribute{
-						Optional:            true,
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.String{
+							cloudPcDomainJoinRegionUseStateUnlessChanged("region_group"),
+						},
 						MarkdownDescription: "The supported Azure region where the IT admin wants the provisioning policy to create Cloud PCs. The underlying virtual network is created and managed by the Windows 365 service. This can only be entered if the IT admin chooses Microsoft Entra joined as the domain join type. If you enter a **regionName**, leave the **onPremisesConnectionId** property empty.",
 					},
 					"type": schema.StringAttribute{
@@ -170,7 +404,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					},
 				},
 			},
-			MarkdownDescription: "Specifies a list ordered by priority on how Cloud PCs join Microsoft Entra ID (Azure AD). Supports `$select`. / Represents a defined configuration of how a provisioned Cloud PC device joins to Microsoft Entra ID. Also see [Microsoft docs for cloudPcDomainJoinConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdomainjoinconfiguration?view=graph-rest-beta). <br> ",
+			MarkdownDescription: "Specifies a list ordered by priority on how Cloud PCs join Microsoft Entra ID (Azure AD). Supports `$select`. / Represents a defined configuration of how a provisioned Cloud PC device joins to Microsoft Entra ID. Also see [Microsoft docs for cloudPcDomainJoinConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcdomainjoinconfiguration?view=graph-rest-beta).  \n_Provider_ Note: MS Graph does not allow to change `region_group` or `region_name` of policies with `provisioning_type` `sharedByEntraGroup` (400 \"Failed to validate parameters.\"). MS Graph also replaces legacy region groups like `europeUnion` with their current counterparts (e.g. `ireland`), so use the current region groups to avoid differences on the next plan. <br> ",
 		},
 		"enable_single_sign_on": schema.BoolAttribute{
 			Optional:            true,
@@ -213,7 +447,8 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 		},
 		"local_admin_enabled": schema.BoolAttribute{
 			Optional:            true,
-			MarkdownDescription: "When `true`, the local admin is enabled for Cloud PCs; `false` indicates that the local admin isn't enabled for Cloud PCs. The default value is `false`. Supports `$filter`, `$select`, and `$orderBy`.",
+			MarkdownDescription: "When `true`, the local admin is enabled for Cloud PCs; `false` indicates that the local admin isn't enabled for Cloud PCs. The default value is `false`. Supports `$filter`, `$select`, and `$orderBy`.  \n_Provider_ Note: MS Graph accepts this value but neither stores nor returns it (the setting is now available as local_admin_enabled of microsoft365wp_cloud_pc_user_setting). The provider only keeps the configured value in Terraform state.",
+			DeprecationMessage:  "MS Graph ignores local_admin_enabled of provisioning policies (it is neither stored nor returned). Use local_admin_enabled of microsoft365wp_cloud_pc_user_setting instead.",
 		},
 		"managed_by": schema.StringAttribute{
 			Optional: true,
@@ -241,7 +476,10 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					MarkdownDescription: "Indicates the provisioning policy associated with Microsoft Managed Desktop settings. The default value is `notManaged`. <br/> _Provider_ allowed values are: `notManaged`, `premiumManaged`, `standardManaged`, `starterManaged`, `unknownFutureValue`. The _provider_ default value is `\"notManaged\"`.",
 				},
 				"profile": schema.StringAttribute{
-					Optional:            true,
+					Optional: true,
+					Validators: []validator.String{
+						wpvalidator.TranslateGraphNullWithTfDefault(tftypes.String),
+					},
 					PlanModifiers:       []planmodifier.String{wpdefaultvaluemodifier.StringDefaultValue("")},
 					Computed:            true,
 					MarkdownDescription: "The name of the Microsoft Managed Desktop profile that the Windows 365 Cloud PC is associated with. <br/> The _provider_ default value is `\"\"`.",
@@ -263,9 +501,14 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 			MarkdownDescription: "The specific settings to **microsoftManagedDesktop** that enables Microsoft Managed Desktop customers to get device managed experience for Cloud PC. To enable **microsoftManagedDesktop** to provide more value, an admin needs to specify certain settings in it. Supports `$filter`, `$select`, and `$orderBy`. / Represents specific settings for the Microsoft Managed Desktop that enables customers to get a managed device experience for a Cloud PC. Also see [Microsoft docs for microsoftManagedDesktop](https://learn.microsoft.com/en-us/graph/api/resources/microsoftmanageddesktop?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 		"provisioning_type": schema.StringAttribute{
+			Computed: true,
 			Optional: true,
 			Validators: []validator.String{
 				stringvalidator.OneOf("dedicated", "shared", "unknownFutureValue", "sharedByUser", "sharedByEntraGroup", "reserve"),
+			},
+			PlanModifiers: []planmodifier.String{
+				wpplanmodifier.StringUseStateForUnknown(),
+				stringplanmodifier.RequiresReplace(),
 			},
 			MarkdownDescription: "Specifies the type of licenses to be used when provisioning Cloud PCs using this policy. The possible values are `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`, `reserve`. The `shared` member is deprecated and will stop returning on April 30, 2027; going forward, use the `sharedByUser` member. For example, a `dedicated` service plan can be assigned to only one user and provision only one Cloud PC. The `shared` and `sharedByUser` plans require customers to purchase a shared service plan. Each shared license purchased can enable up to three Cloud PCs, with only one user signed in at a time. The `sharedByEntraGroup` plan also requires the purchase of a shared service plan. Each shared license under this plan can enable one Cloud PC, which is shared for the group according to the assignments of this policy. By default, the license type is `dedicated` if the **provisioningType** isn't specified when you create the **cloudPcProvisioningPolicy**. You can't change this property after the **cloudPcProvisioningPolicy** is created. <br/> _Provider_ allowed values are: `dedicated`, `shared`, `unknownFutureValue`, `sharedByUser`, `sharedByEntraGroup`, `reserve`.",
 		},

@@ -33,6 +33,7 @@ var (
 				ODataExpand: "categories,assignments",
 				ExtraRequestsCustom: []generic.ReadExtraRequestCustom{
 					mobileapputils.CheckContentStateInGraphRerc,
+					mobileapputils.OfficeSuiteKeepDesignerStateRerc,
 				},
 			},
 			WriteOptions: generic.WriteOptions{
@@ -99,6 +100,8 @@ func mobileAppTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagno
 			delete(params.RawVal, "isBundle")
 		}
 	}
+	// MS Graph rejects designer settings for Office suite apps configured with an XML file (see GitHub issue #26)
+	mobileapputils.OfficeSuiteRemoveDesignerProperties(params.RawVal)
 	return nil
 }
 
@@ -2314,8 +2317,11 @@ var mobileAppResourceSchema = schema.Schema{
 						MarkdownDescription: "The property to represent the locales which are installed when the apps from Office365 is installed. It uses standard RFC 6033. Ref: https://technet.microsoft.com/library/cc179219(v=office.16).aspx <br/> The _provider_ default value is `[]`.",
 					},
 					"office_configuration_xml": schema.StringAttribute{
-						Optional:            true,
-						MarkdownDescription: "The property to represent the XML configuration file that can be specified for Office ProPlus Apps. Takes precedence over all other properties. When present, the XML configuration file will be used to create the app.",
+						Optional: true,
+						PlanModifiers: []planmodifier.String{
+							mobileapputils.OfficeSuiteXmlModeChangeRequiresReplace(),
+						},
+						MarkdownDescription: "The property to represent the XML configuration file that can be specified for Office ProPlus Apps. Takes precedence over all other properties. When present, the XML configuration file will be used to create the app.  \n_Provider_ Note: When set, Intune uses only this XML file: all other attributes of `windows_office_suite` are not sent to MS Graph and their values are only kept in Terraform state. An app cannot be switched between XML and designer configuration, so setting or removing this attribute recreates the app (changing the XML updates it in place).",
 					},
 					"office_platform_architecture": schema.StringAttribute{
 						Optional: true,
@@ -2324,7 +2330,7 @@ var mobileAppResourceSchema = schema.Schema{
 						},
 						PlanModifiers: []planmodifier.String{
 							wpdefaultvaluemodifier.StringDefaultValue("x64"),
-							stringplanmodifier.RequiresReplace(),
+							mobileapputils.OfficeSuiteDesignerOnlyRequiresReplace(),
 						},
 						Computed:            true,
 						MarkdownDescription: "The property to represent the Office365 app suite version. / Contains properties for Windows architecture. <br/> _Provider_ allowed values are: `none` (No flags set.), `x86` (Whether or not the X86 Windows architecture type is supported.), `x64` (Whether or not the X64 Windows architecture type is supported.), `arm` (Whether or not the Arm Windows architecture type is supported.), `neutral` (Whether or not the Neutral Windows architecture type is supported.), `arm64` (Whether or not the Arm64 Windows architecture type is supported.). The _provider_ default value is `\"x64\"`.",
