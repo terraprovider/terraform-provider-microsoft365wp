@@ -4785,6 +4785,12 @@ var deviceConfigurationResourceSchema = schema.Schema{
 						Optional:            true,
 						MarkdownDescription: "Number of days before quality updates are installed automatically with valid range from 0 to 30 days. Returned by default. Query parameters are not supported.",
 					},
+					"deadline_grace_period_for_feature_updates_in_days": schema.Int64Attribute{
+						Optional: true,
+					},
+					"deadline_grace_period_for_quality_updates_in_days": schema.Int64Attribute{
+						Optional: true,
+					},
 					"deadline_grace_period_in_days": schema.Int64Attribute{
 						Optional:            true,
 						MarkdownDescription: "Number of days after deadline until restarts occur automatically with valid range from 0 to 7 days. Returned by default. Query parameters are not supported.",
@@ -4914,6 +4920,28 @@ var deviceConfigurationResourceSchema = schema.Schema{
 					"postpone_reboot_until_after_deadline": schema.BoolAttribute{
 						Optional:            true,
 						MarkdownDescription: "When TRUE the device should wait until deadline for rebooting outside of active hours. When FALSE the device should not wait until deadline for rebooting outside of active hours. Returned by default. Query parameters are not supported.",
+					},
+					"postpone_reboot_until_after_deadline_for_feature_updates": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
+					},
+					"postpone_reboot_until_after_deadline_for_quality_updates": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("notConfigured", "enabled", "disabled"),
+						},
+						PlanModifiers: []planmodifier.String{
+							wpdefaultvaluemodifier.StringDefaultValue("notConfigured"),
+						},
+						Computed:            true,
+						MarkdownDescription: "Possible values of a property. <br/> _Provider_ allowed values are: `notConfigured` (Device default value, no intent.), `enabled` (Enables the setting on the device.), `disabled` (Disables the setting on the device.). The _provider_ default value is `\"notConfigured\"`.",
 					},
 					"prerelease_features": schema.StringAttribute{
 						Optional: true,

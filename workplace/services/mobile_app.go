@@ -37,6 +37,7 @@ var (
 				},
 			},
 			WriteOptions: generic.WriteOptions{
+				ReadAfterCreate: true,
 				SubActions: []generic.WriteSubAction{
 					&mobileapputils.CheckPublishingStateWsa{MessageSuffix: "after write", AllowNotPublished: true},
 					&mobileapputils.WriteContentWsa{},
@@ -712,8 +713,11 @@ var mobileAppResourceSchema = schema.Schema{
 				Optional: true,
 				Attributes: map[string]schema.Attribute{ // macOSDmgApp
 					"committed_content_version": schema.StringAttribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.String{
+							wpplanmodifier.StringUseStateForUnknown(),
+							mobileapputils.StringUnknownOnContentChange(),
+						},
 						MarkdownDescription: "The internal committed content version.",
 					},
 					"file_name": schema.StringAttribute{
@@ -721,8 +725,11 @@ var mobileAppResourceSchema = schema.Schema{
 						MarkdownDescription: "The name of the main Lob application file.",
 					},
 					"size": schema.Int64Attribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.Int64{
+							wpplanmodifier.Int64UseStateForUnknown(),
+							mobileapputils.Int64UnknownOnContentChange(),
+						},
 						MarkdownDescription: "The total size, including all uploaded files. This property is read-only.",
 					},
 					"ignore_version_detection": schema.BoolAttribute{
@@ -769,82 +776,104 @@ var mobileAppResourceSchema = schema.Schema{
 		"macos_lob": generic.OdataDerivedTypeNestedAttributeRs{
 			DerivedType: "#microsoft.graph.macOSLobApp",
 			SingleNestedAttribute: schema.SingleNestedAttribute{
-				Computed: true,
+				Optional: true,
 				Attributes: map[string]schema.Attribute{ // macOSLobApp
 					"committed_content_version": schema.StringAttribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.String{
+							wpplanmodifier.StringUseStateForUnknown(),
+							mobileapputils.StringUnknownOnContentChange(),
+						},
 						MarkdownDescription: "The internal committed content version.",
 					},
 					"file_name": schema.StringAttribute{
-						Computed:            true,
+						Required:            true,
 						MarkdownDescription: "The name of the main Lob application file.",
 					},
 					"size": schema.Int64Attribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.Int64{
+							wpplanmodifier.Int64UseStateForUnknown(),
+							mobileapputils.Int64UnknownOnContentChange(),
+						},
 						MarkdownDescription: "The total size, including all uploaded files. This property is read-only.",
 					},
 					"build_number": schema.StringAttribute{
-						Computed:            true,
-						MarkdownDescription: "The build number of the package. This should match the package CFBundleShortVersionString of the .pkg file.",
+						Required:            true,
+						MarkdownDescription: "The build number of the package. This should match the package CFBundleShortVersionString of the .pkg file.  \n_Provider_ Note: Use the `CFBundleShortVersionString` of the primary app here (e.g. `5.2610.0`), as the Intune portal does.",
 					},
 					"bundle_id": schema.StringAttribute{
-						Computed:            true,
-						MarkdownDescription: "The primary bundleId of the package.",
+						Required:            true,
+						PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
+						MarkdownDescription: "The primary bundleId of the package.  \n_Provider_ Note: The bundle ID of the primary app. It should also be listed in `child_apps`. Changing this attribute will recreate the app (MS Graph does not update the bundle ID in the manifest of an already uploaded file).",
 					},
 					"child_apps": schema.SetNestedAttribute{
-						Computed: true,
+						Required: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{ // macOSLobChildApp
 								"build_number": schema.StringAttribute{
-									Computed:            true,
+									Optional:            true,
 									MarkdownDescription: "The build number of the app.",
 								},
 								"bundle_id": schema.StringAttribute{
-									Computed:            true,
+									Optional:            true,
 									MarkdownDescription: "The bundleId of the app.",
 								},
 								"version_number": schema.StringAttribute{
-									Computed:            true,
+									Optional:            true,
 									MarkdownDescription: "The version number of the app.",
 								},
 							},
 						},
+						Validators:          []validator.Set{setvalidator.SizeAtLeast(1)},
 						MarkdownDescription: "List of ComplexType macOSLobChildApp objects. Represents the apps expected to be installed by the package. / Contains properties of a macOS .app in the package. Also see [Microsoft docs for macOSLobChildApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobchildapp?view=graph-rest-beta). <br> ",
 					},
 					"ignore_version_detection": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "When TRUE, indicates that the app's version will NOT be used to detect if the app is installed on a device. When FALSE, indicates that the app's version will be used to detect if the app is installed on a device. Set this to true for apps that use a self update feature. The default value is FALSE.",
+						MarkdownDescription: "When TRUE, indicates that the app's version will NOT be used to detect if the app is installed on a device. When FALSE, indicates that the app's version will be used to detect if the app is installed on a device. Set this to true for apps that use a self update feature. The default value is FALSE. <br/> The _provider_ default value is `false`.  \n_Provider_ Note: The Intune portal sets this to `true` by default, which is recommended for apps that update themselves.",
 					},
 					"install_as_managed": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 						Computed:            true,
-						MarkdownDescription: "When TRUE, indicates that the app will be installed as managed (requires macOS 11.0 and other managed package restrictions). When FALSE, indicates that the app will be installed as unmanaged. The default value is FALSE.",
+						MarkdownDescription: "When TRUE, indicates that the app will be installed as managed (requires macOS 11.0 and other managed package restrictions). When FALSE, indicates that the app will be installed as unmanaged. The default value is FALSE. <br/> The _provider_ default value is `false`.",
 					},
 					"md5_hash": schema.SetAttribute{
 						ElementType:         types.StringType,
 						Computed:            true,
+						PlanModifiers:       []planmodifier.Set{wpplanmodifier.SetUseStateForUnknown()},
 						Description:         `md5Hash`, // custom MS Graph attribute name
 						MarkdownDescription: "The MD5 hash codes. This is empty if the package was uploaded directly. If the Intune App Wrapping Tool is used to create a .intunemac, this value can be found inside the Detection.xml file.",
 					},
 					"md5_hash_chunk_size": schema.Int64Attribute{
 						Computed:            true,
+						PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
 						Description:         `md5HashChunkSize`, // custom MS Graph attribute name
 						MarkdownDescription: "The chunk size for MD5 hash. This is '0' or empty if the package was uploaded directly. If the Intune App Wrapping Tool is used to create a .intunemac, this value can be found inside the Detection.xml file.",
 					},
 					"minimum_supported_operating_system": schema.SingleNestedAttribute{
-						Computed:            true,
+						Required:            true,
 						Attributes:          mobileAppMacOSMinimumOperatingSystemAttributes,
 						MarkdownDescription: "ComplexType macOSMinimumOperatingSystem that indicates the minimum operating system applicable for the application. / The minimum operating system required for a macOS app. Also see [Microsoft docs for macOSMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosminimumoperatingsystem?view=graph-rest-beta). <br> ",
 					},
 					"version_number": schema.StringAttribute{
-						Computed:            true,
-						MarkdownDescription: "The version number of the package. This should match the package CFBundleVersion in the packageinfo file.",
+						Optional:            true,
+						MarkdownDescription: "The version number of the package. This should match the package CFBundleVersion in the packageinfo file.  \n_Provider_ Note: The Intune portal leaves this empty (and sets `0.0` for `child_apps`).",
+					},
+					"source_file": schema.StringAttribute{
+						Required:            true,
+						MarkdownDescription: "_Provider_ Note: The path to the PKG file to be uploaded.",
+					},
+					"source_sha256": schema.StringAttribute{
+						Required:            true,
+						Description:         `sourceSha256`, // custom MS Graph attribute name
+						MarkdownDescription: "_Provider_ Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.",
 					},
 				},
 				Validators:          []validator.Object{mobileAppMobileAppValidator},
-				PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},
-				MarkdownDescription: "Contains properties and inherited properties for the macOS LOB App. Also see [Microsoft docs for macOSLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobapp?view=graph-rest-beta). <br> ",
+				MarkdownDescription: "Contains properties and inherited properties for the macOS LOB App. Also see [Microsoft docs for macOSLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobapp?view=graph-rest-beta).  \n_Provider_ Note: _Provider_ Note: MS Graph does not check any of the metadata against the uploaded package (bundle IDs, versions, signature). The Intune portal reads them from the package's Distribution file and puts every bundle found into `child_apps`. To get the values, run `pkgutil --expand <file>.pkg <dir>` and look at `<dir>/Distribution` and `<dir>/*.pkg/PackageInfo`. <br> ",
 			},
 		},
 		"macos_ms_defender": generic.OdataDerivedTypeNestedAttributeRs{
@@ -895,8 +924,11 @@ var mobileAppResourceSchema = schema.Schema{
 				Optional: true,
 				Attributes: map[string]schema.Attribute{ // macOSPkgApp
 					"committed_content_version": schema.StringAttribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.String{
+							wpplanmodifier.StringUseStateForUnknown(),
+							mobileapputils.StringUnknownOnContentChange(),
+						},
 						MarkdownDescription: "The internal committed content version.",
 					},
 					"file_name": schema.StringAttribute{
@@ -904,8 +936,11 @@ var mobileAppResourceSchema = schema.Schema{
 						MarkdownDescription: "The name of the main Lob application file.",
 					},
 					"size": schema.Int64Attribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.Int64{
+							wpplanmodifier.Int64UseStateForUnknown(),
+							mobileapputils.Int64UnknownOnContentChange(),
+						},
 						MarkdownDescription: "The total size, including all uploaded files. This property is read-only.",
 					},
 					"ignore_version_detection": schema.BoolAttribute{
@@ -1368,8 +1403,11 @@ var mobileAppResourceSchema = schema.Schema{
 				Optional: true,
 				Attributes: map[string]schema.Attribute{ // win32LobApp
 					"committed_content_version": schema.StringAttribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.String{
+							wpplanmodifier.StringUseStateForUnknown(),
+							mobileapputils.StringUnknownOnContentChange(),
+						},
 						MarkdownDescription: "The internal committed content version.",
 					},
 					"file_name": schema.StringAttribute{
@@ -1377,8 +1415,11 @@ var mobileAppResourceSchema = schema.Schema{
 						MarkdownDescription: "The name of the main Lob application file.",
 					},
 					"size": schema.Int64Attribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.Int64{
+							wpplanmodifier.Int64UseStateForUnknown(),
+							mobileapputils.Int64UnknownOnContentChange(),
+						},
 						MarkdownDescription: "The total size, including all uploaded files. This property is read-only.",
 					},
 					"active_install_script": schema.SingleNestedAttribute{
@@ -2129,8 +2170,11 @@ var mobileAppResourceSchema = schema.Schema{
 				Optional: true,
 				Attributes: map[string]schema.Attribute{ // windowsMobileMSI
 					"committed_content_version": schema.StringAttribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.String{
+							wpplanmodifier.StringUseStateForUnknown(),
+							mobileapputils.StringUnknownOnContentChange(),
+						},
 						MarkdownDescription: "The internal committed content version.",
 					},
 					"file_name": schema.StringAttribute{
@@ -2138,8 +2182,11 @@ var mobileAppResourceSchema = schema.Schema{
 						MarkdownDescription: "The name of the main Lob application file.",
 					},
 					"size": schema.Int64Attribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.Int64{
+							wpplanmodifier.Int64UseStateForUnknown(),
+							mobileapputils.Int64UnknownOnContentChange(),
+						},
 						MarkdownDescription: "The total size, including all uploaded files. This property is read-only.",
 					},
 					"command_line": schema.StringAttribute{
@@ -2418,8 +2465,11 @@ var mobileAppResourceSchema = schema.Schema{
 				Optional: true,
 				Attributes: map[string]schema.Attribute{ // windowsUniversalAppX
 					"committed_content_version": schema.StringAttribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.String{wpplanmodifier.StringUseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.String{
+							wpplanmodifier.StringUseStateForUnknown(),
+							mobileapputils.StringUnknownOnContentChange(),
+						},
 						MarkdownDescription: "The internal committed content version.",
 					},
 					"file_name": schema.StringAttribute{
@@ -2427,8 +2477,11 @@ var mobileAppResourceSchema = schema.Schema{
 						MarkdownDescription: "The name of the main Lob application file.",
 					},
 					"size": schema.Int64Attribute{
-						Computed:            true,
-						PlanModifiers:       []planmodifier.Int64{wpplanmodifier.Int64UseStateForUnknown()},
+						Computed: true,
+						PlanModifiers: []planmodifier.Int64{
+							wpplanmodifier.Int64UseStateForUnknown(),
+							mobileapputils.Int64UnknownOnContentChange(),
+						},
 						MarkdownDescription: "The total size, including all uploaded files. This property is read-only.",
 					},
 					"applicable_architectures": schema.StringAttribute{

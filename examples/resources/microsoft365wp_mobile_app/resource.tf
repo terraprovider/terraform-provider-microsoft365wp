@@ -337,6 +337,40 @@ resource "microsoft365wp_mobile_app" "macos_pkg" {
 
 
 locals {
+  # e.g. the Intune Company Portal from https://go.microsoft.com/fwlink/?linkid=853070
+  macos_lob_source_file = "${path.module}/CompanyPortal-Installer.pkg"
+  # values from `pkgutil --expand CompanyPortal-Installer.pkg x` (see x/Distribution and x/*.pkg/PackageInfo)
+  macos_lob_child_apps = [
+    { bundle_id = "com.microsoft.CompanyPortalMac", build_number = "5.2610.0" },
+    { bundle_id = "com.microsoft.autoupdate2", build_number = "4.85" },
+  ]
+}
+
+resource "microsoft365wp_mobile_app" "macos_lob" {
+  display_name = "TF Test macos_lob"
+
+  macos_lob = {
+    file_name = basename(local.macos_lob_source_file)
+
+    child_apps   = local.macos_lob_child_apps
+    bundle_id    = local.macos_lob_child_apps[0].bundle_id
+    build_number = local.macos_lob_child_apps[0].build_number # CFBundleShortVersionString
+
+    ignore_version_detection = true # the app updates itself
+
+    source_file   = local.macos_lob_source_file
+    source_sha256 = filesha256(local.macos_lob_source_file)
+
+    minimum_supported_operating_system = { v13_0 = true }
+  }
+
+  assignments = [
+    { target = { group = { group_id = "298fded6-b252-4166-a473-f405e935f58d" } } },
+  ]
+}
+
+
+locals {
   windows_msi_source_file = "${path.module}/test.msi"
   windows_msi_version     = "4.19.9"
 

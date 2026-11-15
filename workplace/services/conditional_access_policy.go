@@ -600,12 +600,12 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 					Optional:    true,
 					Validators: []validator.Set{
 						setvalidator.ValueStringsAre(
-							stringvalidator.OneOf("block", "mfa", "compliantDevice", "domainJoinedDevice", "approvedApplication", "compliantApplication", "passwordChange", "unknownFutureValue", "riskRemediation"),
+							stringvalidator.OneOf("block", "mfa", "compliantDevice", "domainJoinedDevice", "approvedApplication", "compliantApplication", "passwordChange", "unknownFutureValue", "riskRemediation", "verifiedID"),
 						),
 					},
 					PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "List of values of built-in controls required by the policy. Possible values: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`, `riskRemediation`. Use the `Prefer: include-unknown-enum-members` request header to get the following value in this evolvable enum: `riskRemediation`. <br/> _Provider_ allowed values are: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`, `riskRemediation`. The _provider_ default value is `[]`.",
+					MarkdownDescription: "List of values of built-in controls required by the policy. Possible values: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`, `riskRemediation`. Use the `Prefer: include-unknown-enum-members` request header to get the following value in this evolvable enum: `riskRemediation`. <br/> _Provider_ allowed values are: `block`, `mfa`, `compliantDevice`, `domainJoinedDevice`, `approvedApplication`, `compliantApplication`, `passwordChange`, `unknownFutureValue`, `riskRemediation`, `verifiedID`. The _provider_ default value is `[]`.",
 				},
 				"custom_authentication_factors": schema.SetAttribute{
 					ElementType:         types.StringType,

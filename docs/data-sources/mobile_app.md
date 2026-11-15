@@ -93,7 +93,8 @@ output "microsoft365wp_mobile_app" {
 - `large_icon` (Attributes) The large icon, to be displayed in the app details and used for upload of the icon. / Contains properties for a generic mime content. Also see [Microsoft docs for mimeContent](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--large_icon))
 - `last_modified_date_time` (String) The date and time the app was last modified.
 - `macos_dmg` (Attributes) Contains properties and inherited properties for the MacOS DMG (Apple Disk Image) App. Also see [Microsoft docs for macOSDmgApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosdmgapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_dmg))
-- `macos_lob` (Attributes) Contains properties and inherited properties for the macOS LOB App. Also see [Microsoft docs for macOSLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_lob))
+- `macos_lob` (Attributes) Contains properties and inherited properties for the macOS LOB App. Also see [Microsoft docs for macOSLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobapp?view=graph-rest-beta).  
+_Provider_ Note: _Provider_ Note: MS Graph does not check any of the metadata against the uploaded package (bundle IDs, versions, signature). The Intune portal reads them from the package's Distribution file and puts every bundle found into `child_apps`. To get the values, run `pkgutil --expand <file>.pkg <dir>` and look at `<dir>/Distribution` and `<dir>/*.pkg/PackageInfo`. <br> (see [below for nested schema](#nestedatt--macos_lob))
 - `macos_ms_defender` (Attributes) Contains properties and inherited properties for the macOS Microsoft Defender App. Also see [Microsoft docs for macOSMicrosoftDefenderApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosmicrosoftdefenderapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_ms_defender))
 - `macos_ms_edge` (Attributes) Contains properties and inherited properties for the macOS Microsoft Edge App. Also see [Microsoft docs for macOSMicrosoftEdgeApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosmicrosoftedgeapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_ms_edge))
 - `macos_office_suite` (Attributes) Contains properties and inherited properties for the MacOS Office Suite App. Also see [Microsoft docs for macOSOfficeSuiteApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosofficesuiteapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_office_suite))
@@ -697,18 +698,24 @@ Read-Only:
 
 Read-Only:
 
-- `build_number` (String) The build number of the package. This should match the package CFBundleShortVersionString of the .pkg file.
-- `bundle_id` (String) The primary bundleId of the package.
+- `build_number` (String) The build number of the package. This should match the package CFBundleShortVersionString of the .pkg file.  
+_Provider_ Note: Use the `CFBundleShortVersionString` of the primary app here (e.g. `5.2610.0`), as the Intune portal does.
+- `bundle_id` (String) The primary bundleId of the package.  
+_Provider_ Note: The bundle ID of the primary app. It should also be listed in `child_apps`. Changing this attribute will recreate the app (MS Graph does not update the bundle ID in the manifest of an already uploaded file).
 - `child_apps` (Attributes Set) List of ComplexType macOSLobChildApp objects. Represents the apps expected to be installed by the package. / Contains properties of a macOS .app in the package. Also see [Microsoft docs for macOSLobChildApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobchildapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_lob--child_apps))
 - `committed_content_version` (String) The internal committed content version.
 - `file_name` (String) The name of the main Lob application file.
-- `ignore_version_detection` (Boolean) When TRUE, indicates that the app's version will NOT be used to detect if the app is installed on a device. When FALSE, indicates that the app's version will be used to detect if the app is installed on a device. Set this to true for apps that use a self update feature.
-- `install_as_managed` (Boolean) When TRUE, indicates that the app will be installed as managed (requires macOS 11.0 and other managed package restrictions). When FALSE, indicates that the app will be installed as unmanaged.
+- `ignore_version_detection` (Boolean) When TRUE, indicates that the app's version will NOT be used to detect if the app is installed on a device. When FALSE, indicates that the app's version will be used to detect if the app is installed on a device. Set this to true for apps that use a self update feature. <br/>  
+_Provider_ Note: The Intune portal sets this to `true` by default, which is recommended for apps that update themselves.
+- `install_as_managed` (Boolean) When TRUE, indicates that the app will be installed as managed (requires macOS 11.0 and other managed package restrictions). When FALSE, indicates that the app will be installed as unmanaged. <br/>
 - `md5_hash` (Set of String) The MD5 hash codes. This is empty if the package was uploaded directly. If the Intune App Wrapping Tool is used to create a .intunemac, this value can be found inside the Detection.xml file.
 - `md5_hash_chunk_size` (Number) The chunk size for MD5 hash. This is '0' or empty if the package was uploaded directly. If the Intune App Wrapping Tool is used to create a .intunemac, this value can be found inside the Detection.xml file.
 - `minimum_supported_operating_system` (Attributes) ComplexType macOSMinimumOperatingSystem that indicates the minimum operating system applicable for the application. / The minimum operating system required for a macOS app. Also see [Microsoft docs for macOSMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosminimumoperatingsystem?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_lob--minimum_supported_operating_system))
 - `size` (Number) The total size, including all uploaded files. This property is
-- `version_number` (String) The version number of the package. This should match the package CFBundleVersion in the packageinfo file.
+- `source_file` (String) _Provider_ Note: The path to the PKG file to be uploaded.
+- `source_sha256` (String) _Provider_ Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.
+- `version_number` (String) The version number of the package. This should match the package CFBundleVersion in the packageinfo file.  
+_Provider_ Note: The Intune portal leaves this empty (and sets `0.0` for `child_apps`).
 
 <a id="nestedatt--macos_lob--child_apps"></a>
 ### Nested Schema for `macos_lob.child_apps`

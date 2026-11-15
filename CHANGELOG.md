@@ -1,5 +1,25 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.20.5 (2026-11-15)
+
+### security
+
+- Update `golang.org/x/net` to v0.62.0 (GO-2026-6866, GO-2026-6860; not reachable from provider code according to `govulncheck`)
+
+### added
+
+- [device_configuration](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_configuration): Add `postpone_reboot_until_after_deadline_for_feature_updates`, `postpone_reboot_until_after_deadline_for_quality_updates`, `deadline_grace_period_for_feature_updates_in_days` and `deadline_grace_period_for_quality_updates_in_days` to `windows_update_for_business`
+- [mobile_app](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_app): Support creating and updating `macos_lob` (macOS line-of-business app) with a `.pkg` upload, e.g. for the Intune Company Portal that Platform SSO registration during Automated Device Enrollment requires. Changing `bundle_id` forces replacement (GH #39)
+
+### fixed
+
+- [mobile_app](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/mobile_app): Fix outdated values of `publishing_state`, `upload_state`, `committed_content_version` and `size` in the state after creating an app with a file upload or uploading a new file (they were only corrected by the next refresh)
+
+### changed
+
+- Update MS Graph metadata & docs
+
+
 ## 0.20.4 (2026-11-13)
 
 ### fixed

@@ -30,7 +30,6 @@ type AccessParams struct {
 	GraphToTerraformMiddlewareTargetSetRunOnRawVal bool
 	TerraformToGraphMiddleware                     TerraformToGraphMiddlewareFunc
 
-
 	CreateModifyFunc func(context.Context, *diag.Diagnostics, *CreateModifyFuncParams) // pass pointer to allow modifications
 	UpdateModifyFunc func(context.Context, *diag.Diagnostics, *UpdateModifyFuncParams)
 	DeleteModifyFunc func(context.Context, *diag.Diagnostics, *DeleteModifyFuncParams)
@@ -118,6 +117,7 @@ type WriteOptions struct {
 	UsePutForUpdate        bool
 	SkipDelete             bool // just remove from TF state but do not try to delete from graph (e.g. for singletons)
 	SubActions             []WriteSubAction
+	ReadAfterCreate        bool // fill unknown values after create from a fresh read instead of the POST response (e.g. if sub-actions change computed values)
 	SerializeWrites        bool
 	SerialWritesDelay      time.Duration
 }

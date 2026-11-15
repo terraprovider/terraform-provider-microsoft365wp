@@ -357,6 +357,40 @@ resource "microsoft365wp_mobile_app" "macos_pkg" {
 
 
 locals {
+  # e.g. the Intune Company Portal from https://go.microsoft.com/fwlink/?linkid=853070
+  macos_lob_source_file = "${path.module}/CompanyPortal-Installer.pkg"
+  # values from `pkgutil --expand CompanyPortal-Installer.pkg x` (see x/Distribution and x/*.pkg/PackageInfo)
+  macos_lob_child_apps = [
+    { bundle_id = "com.microsoft.CompanyPortalMac", build_number = "5.2610.0" },
+    { bundle_id = "com.microsoft.autoupdate2", build_number = "4.85" },
+  ]
+}
+
+resource "microsoft365wp_mobile_app" "macos_lob" {
+  display_name = "TF Test macos_lob"
+
+  macos_lob = {
+    file_name = basename(local.macos_lob_source_file)
+
+    child_apps   = local.macos_lob_child_apps
+    bundle_id    = local.macos_lob_child_apps[0].bundle_id
+    build_number = local.macos_lob_child_apps[0].build_number # CFBundleShortVersionString
+
+    ignore_version_detection = true # the app updates itself
+
+    source_file   = local.macos_lob_source_file
+    source_sha256 = filesha256(local.macos_lob_source_file)
+
+    minimum_supported_operating_system = { v13_0 = true }
+  }
+
+  assignments = [
+    { target = { group = { group_id = "298fded6-b252-4166-a473-f405e935f58d" } } },
+  ]
+}
+
+
+locals {
   windows_msi_source_file = "${path.module}/test.msi"
   windows_msi_version     = "4.19.9"
 
@@ -461,6 +495,8 @@ resource "microsoft365wp_mobile_app" "windows_universal_appx" {
 - `is_featured` (Boolean) The value indicating whether the app is marked as featured by the admin. <br/> The _provider_ default value is `false`.
 - `large_icon` (Attributes) The large icon, to be displayed in the app details and used for upload of the icon. / Contains properties for a generic mime content. Also see [Microsoft docs for mimeContent](https://learn.microsoft.com/en-us/graph/api/resources/intune-shared-mimecontent?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--large_icon))
 - `macos_dmg` (Attributes) Contains properties and inherited properties for the MacOS DMG (Apple Disk Image) App. Also see [Microsoft docs for macOSDmgApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosdmgapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_dmg))
+- `macos_lob` (Attributes) Contains properties and inherited properties for the macOS LOB App. Also see [Microsoft docs for macOSLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobapp?view=graph-rest-beta).  
+_Provider_ Note: _Provider_ Note: MS Graph does not check any of the metadata against the uploaded package (bundle IDs, versions, signature). The Intune portal reads them from the package's Distribution file and puts every bundle found into `child_apps`. To get the values, run `pkgutil --expand <file>.pkg <dir>` and look at `<dir>/Distribution` and `<dir>/*.pkg/PackageInfo`. <br> (see [below for nested schema](#nestedatt--macos_lob))
 - `macos_ms_defender` (Attributes) Contains properties and inherited properties for the macOS Microsoft Defender App. Also see [Microsoft docs for macOSMicrosoftDefenderApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosmicrosoftdefenderapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_ms_defender))
 - `macos_ms_edge` (Attributes) Contains properties and inherited properties for the macOS Microsoft Edge App. Also see [Microsoft docs for macOSMicrosoftEdgeApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosmicrosoftedgeapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_ms_edge))
 - `macos_office_suite` (Attributes) Contains properties and inherited properties for the MacOS Office Suite App. Also see [Microsoft docs for macOSOfficeSuiteApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosofficesuiteapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_office_suite))
@@ -494,7 +530,6 @@ resource "microsoft365wp_mobile_app" "windows_universal_appx" {
 - `ios_vpp` (Attributes) Contains properties and inherited properties for iOS Volume-Purchased Program (VPP) Apps. Also see [Microsoft docs for iosVppApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-iosvppapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--ios_vpp))
 - `is_assigned` (Boolean) The value indicating whether the app is assigned to at least one group.
 - `last_modified_date_time` (String) The date and time the app was last modified.
-- `macos_lob` (Attributes) Contains properties and inherited properties for the macOS LOB App. Also see [Microsoft docs for macOSLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_lob))
 - `macos_vpp` (Attributes) Contains properties and inherited properties for MacOS Volume-Purchased Program (VPP) Apps. Also see [Microsoft docs for macOsVppApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosvppapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_vpp))
 - `managed_android_lob` (Attributes) Contains properties and inherited properties for Managed Android Line Of Business apps. Also see [Microsoft docs for managedAndroidLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-managedandroidlobapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--managed_android_lob))
 - `managed_ios_lob` (Attributes) Contains properties and inherited properties for Managed iOS Line Of Business apps. Also see [Microsoft docs for managedIOSLobApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-managedioslobapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--managed_ios_lob))
@@ -910,6 +945,70 @@ Required:
 
 <a id="nestedatt--macos_dmg--minimum_supported_operating_system"></a>
 ### Nested Schema for `macos_dmg.minimum_supported_operating_system`
+
+Optional:
+
+- `v10_10` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.10 or later is required to install the app. If 'False', OS X Version 10.10 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v10_11` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.11 or later is required to install the app. If 'False', OS X Version 10.11 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v10_12` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.12 or later is required to install the app. If 'False', OS X Version 10.12 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v10_13` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.13 or later is required to install the app. If 'False', OS X Version 10.13 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v10_14` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.14 or later is required to install the app. If 'False', OS X Version 10.14 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v10_15` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.15 or later is required to install the app. If 'False', OS X Version 10.15 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v10_7` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.7 or later is required to install the app. If 'False', OS X Version 10.7 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v10_8` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.8 or later is required to install the app. If 'False', OS X Version 10.8 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v10_9` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.9 or later is required to install the app. If 'False', OS X Version 10.9 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v11_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 11.0 or later is required to install the app. If 'False', OS X Version 11.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v12_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 12.0 or later is required to install the app. If 'False', OS X Version 12.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v13_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 13.0 or later is required to install the app. If 'False', OS X Version 13.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v14_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 14.0 or later is required to install the app. If 'False', OS X Version 14.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v15_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 15.0 or later is required to install the app. If 'False', OS X Version 15.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v26_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 26.0 or later is required to install the app. If 'False', OS X Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
+- `v27_0` (Boolean) The _provider_ default value is `false`.
+
+
+
+<a id="nestedatt--macos_lob"></a>
+### Nested Schema for `macos_lob`
+
+Required:
+
+- `build_number` (String) The build number of the package. This should match the package CFBundleShortVersionString of the .pkg file.  
+_Provider_ Note: Use the `CFBundleShortVersionString` of the primary app here (e.g. `5.2610.0`), as the Intune portal does.
+- `bundle_id` (String) The primary bundleId of the package.  
+_Provider_ Note: The bundle ID of the primary app. It should also be listed in `child_apps`. Changing this attribute will recreate the app (MS Graph does not update the bundle ID in the manifest of an already uploaded file).
+- `child_apps` (Attributes Set) List of ComplexType macOSLobChildApp objects. Represents the apps expected to be installed by the package. / Contains properties of a macOS .app in the package. Also see [Microsoft docs for macOSLobChildApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobchildapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_lob--child_apps))
+- `file_name` (String) The name of the main Lob application file.
+- `minimum_supported_operating_system` (Attributes) ComplexType macOSMinimumOperatingSystem that indicates the minimum operating system applicable for the application. / The minimum operating system required for a macOS app. Also see [Microsoft docs for macOSMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosminimumoperatingsystem?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_lob--minimum_supported_operating_system))
+- `source_file` (String) _Provider_ Note: The path to the PKG file to be uploaded.
+- `source_sha256` (String) _Provider_ Note: The SHA-256 sum of the source file (see example). Changing this attribute will trigger a new upload of the source file.
+
+Optional:
+
+- `ignore_version_detection` (Boolean) When TRUE, indicates that the app's version will NOT be used to detect if the app is installed on a device. When FALSE, indicates that the app's version will be used to detect if the app is installed on a device. Set this to true for apps that use a self update feature. The default value is FALSE. <br/> The _provider_ default value is `false`.  
+_Provider_ Note: The Intune portal sets this to `true` by default, which is recommended for apps that update themselves.
+- `install_as_managed` (Boolean) When TRUE, indicates that the app will be installed as managed (requires macOS 11.0 and other managed package restrictions). When FALSE, indicates that the app will be installed as unmanaged. The default value is FALSE. <br/> The _provider_ default value is `false`.
+- `version_number` (String) The version number of the package. This should match the package CFBundleVersion in the packageinfo file.  
+_Provider_ Note: The Intune portal leaves this empty (and sets `0.0` for `child_apps`).
+
+Read-Only:
+
+- `committed_content_version` (String) The internal committed content version.
+- `md5_hash` (Set of String) The MD5 hash codes. This is empty if the package was uploaded directly. If the Intune App Wrapping Tool is used to create a .intunemac, this value can be found inside the Detection.xml file.
+- `md5_hash_chunk_size` (Number) The chunk size for MD5 hash. This is '0' or empty if the package was uploaded directly. If the Intune App Wrapping Tool is used to create a .intunemac, this value can be found inside the Detection.xml file.
+- `size` (Number) The total size, including all uploaded files. This property is read-only.
+
+<a id="nestedatt--macos_lob--child_apps"></a>
+### Nested Schema for `macos_lob.child_apps`
+
+Optional:
+
+- `build_number` (String) The build number of the app.
+- `bundle_id` (String) The bundleId of the app.
+- `version_number` (String) The version number of the app.
+
+
+<a id="nestedatt--macos_lob--minimum_supported_operating_system"></a>
+### Nested Schema for `macos_lob.minimum_supported_operating_system`
 
 Optional:
 
@@ -1782,58 +1881,6 @@ Read-Only:
 - `start_date_time` (String) Time the action was initiated
 - `total_licenses_count` (Number) A count of the number of licenses for which revoke was attempted.
 - `user_id` (String) UserId associated with the action.
-
-
-
-<a id="nestedatt--macos_lob"></a>
-### Nested Schema for `macos_lob`
-
-Read-Only:
-
-- `build_number` (String) The build number of the package. This should match the package CFBundleShortVersionString of the .pkg file.
-- `bundle_id` (String) The primary bundleId of the package.
-- `child_apps` (Attributes Set) List of ComplexType macOSLobChildApp objects. Represents the apps expected to be installed by the package. / Contains properties of a macOS .app in the package. Also see [Microsoft docs for macOSLobChildApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macoslobchildapp?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_lob--child_apps))
-- `committed_content_version` (String) The internal committed content version.
-- `file_name` (String) The name of the main Lob application file.
-- `ignore_version_detection` (Boolean) When TRUE, indicates that the app's version will NOT be used to detect if the app is installed on a device. When FALSE, indicates that the app's version will be used to detect if the app is installed on a device. Set this to true for apps that use a self update feature. The default value is FALSE.
-- `install_as_managed` (Boolean) When TRUE, indicates that the app will be installed as managed (requires macOS 11.0 and other managed package restrictions). When FALSE, indicates that the app will be installed as unmanaged. The default value is FALSE.
-- `md5_hash` (Set of String) The MD5 hash codes. This is empty if the package was uploaded directly. If the Intune App Wrapping Tool is used to create a .intunemac, this value can be found inside the Detection.xml file.
-- `md5_hash_chunk_size` (Number) The chunk size for MD5 hash. This is '0' or empty if the package was uploaded directly. If the Intune App Wrapping Tool is used to create a .intunemac, this value can be found inside the Detection.xml file.
-- `minimum_supported_operating_system` (Attributes) ComplexType macOSMinimumOperatingSystem that indicates the minimum operating system applicable for the application. / The minimum operating system required for a macOS app. Also see [Microsoft docs for macOSMinimumOperatingSystem](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-macosminimumoperatingsystem?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--macos_lob--minimum_supported_operating_system))
-- `size` (Number) The total size, including all uploaded files. This property is read-only.
-- `version_number` (String) The version number of the package. This should match the package CFBundleVersion in the packageinfo file.
-
-<a id="nestedatt--macos_lob--child_apps"></a>
-### Nested Schema for `macos_lob.child_apps`
-
-Read-Only:
-
-- `build_number` (String) The build number of the app.
-- `bundle_id` (String) The bundleId of the app.
-- `version_number` (String) The version number of the app.
-
-
-<a id="nestedatt--macos_lob--minimum_supported_operating_system"></a>
-### Nested Schema for `macos_lob.minimum_supported_operating_system`
-
-Optional:
-
-- `v10_10` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.10 or later is required to install the app. If 'False', OS X Version 10.10 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v10_11` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.11 or later is required to install the app. If 'False', OS X Version 10.11 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v10_12` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.12 or later is required to install the app. If 'False', OS X Version 10.12 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v10_13` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.13 or later is required to install the app. If 'False', OS X Version 10.13 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v10_14` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.14 or later is required to install the app. If 'False', OS X Version 10.14 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v10_15` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.15 or later is required to install the app. If 'False', OS X Version 10.15 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v10_7` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.7 or later is required to install the app. If 'False', OS X Version 10.7 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v10_8` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.8 or later is required to install the app. If 'False', OS X Version 10.8 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v10_9` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 10.9 or later is required to install the app. If 'False', OS X Version 10.9 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v11_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 11.0 or later is required to install the app. If 'False', OS X Version 11.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v12_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 12.0 or later is required to install the app. If 'False', OS X Version 12.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v13_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 13.0 or later is required to install the app. If 'False', OS X Version 13.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v14_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 14.0 or later is required to install the app. If 'False', OS X Version 14.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v15_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 15.0 or later is required to install the app. If 'False', OS X Version 15.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v26_0` (Boolean) Indicates the minimum OS X version support required for the managed device. When 'True', macOS with OS X 26.0 or later is required to install the app. If 'False', OS X Version 26.0 is not the minimum version. Default value is False. Exactly one of the minimum operating system boolean values will be TRUE. <br/> The _provider_ default value is `false`.
-- `v27_0` (Boolean) The _provider_ default value is `false`.
 
 
 

@@ -20,6 +20,8 @@ func getNestedPathFromOdataType(ctx context.Context, odataType string) path.Path
 	switch odataType {
 	case "#microsoft.graph.macOSDmgApp":
 		nestedPath = path.Root("macos_dmg")
+	case "#microsoft.graph.macOSLobApp":
+		nestedPath = path.Root("macos_lob")
 	case "#microsoft.graph.macOSPkgApp":
 		nestedPath = path.Root("macos_pkg")
 	case "#microsoft.graph.win32LobApp":

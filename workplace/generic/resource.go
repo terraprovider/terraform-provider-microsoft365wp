@@ -383,6 +383,12 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 		if id == "" {
 			id = r.AccessParams.GetId(ctx, diags, id, parentIdAttributer)
 		}
+		if r.AccessParams.WriteOptions.ReadAfterCreate {
+			// Sub-actions may change computed values after the POST (e.g. the content upload of mobile apps). Discard
+			// the POST response so that populateUnknownValues reads the entity again after all sub-actions have run
+			// (as it already does after updates).
+			createUpdateResultRaw = nil
+		}
 	}
 	if diags.HasError() {
 		return
