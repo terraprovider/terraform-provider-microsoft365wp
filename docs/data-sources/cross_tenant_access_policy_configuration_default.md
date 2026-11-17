@@ -7,6 +7,8 @@ subcategory: "MS Graph: Cross-tenant access"
 
 Represents the default configuration for cross-tenant access and tenant restrictions. Cross-tenant access settings include inbound and outbound settings of Microsoft Entra B2B collaboration and B2B direct connect. <br/> Also see [Microsoft docs for crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta).
 
+_Provider_ Note: Note: MS Graph serves stale reads of this policy for a while after it has been changed (observed: up to about a minute). After each update, the provider waits until MS Graph returns the written values, but a plan run within the following minute might still read old values and show differences that are not real, or miss differences that are.
+
 ## Documentation Disclaimer
 
 Please note that almost all information on this page has been sourced literally from the official Microsoft Graph API 
@@ -68,7 +70,8 @@ output "microsoft365wp_cross_tenant_access_policy_configuration_default" {
 - `b2b_collaboration_outbound` (Attributes) Defines your default configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B collaboration. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. Also see [Microsoft docs for crossTenantAccessPolicyB2BSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_collaboration_outbound))
 - `b2b_direct_connect_inbound` (Attributes) Defines your default configuration for users from other organizations accessing your resources via Microsoft Entra B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. Also see [Microsoft docs for crossTenantAccessPolicyB2BSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_inbound))
 - `b2b_direct_connect_outbound` (Attributes) Defines your default configuration for users in your organization going outbound to access resources in another organization via Microsoft Entra B2B direct connect. / Defines the inbound and outbound rulesets for Microsoft Entra B2B collaboration. Also see [Microsoft docs for crossTenantAccessPolicyB2BSetting](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyb2bsetting?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--b2b_direct_connect_outbound))
-- `block_service_provider_outbound_access` (Boolean) Specifies whether users can use granular delegated admin privileges (GDAP) to sign-in and access resources in other organizations.
+- `block_service_provider_outbound_access` (Boolean) Specifies whether users can use granular delegated admin privileges (GDAP) to sign-in and access resources in other organizations.  
+_Provider_ Note: Read-only (it was writable in versions 0.20.0 to 0.20.5): MS Graph rejected setting it to `true` (403 "Insufficient privileges") in tests (2026-11) for every identity tried, app-only with `Policy.ReadWrite.CrossTenantAccess` (also with the Entra role Security Administrator) and a delegated Global Administrator.
 - `id` (String) The ID of this resource.
 - `inbound_trust` (Attributes) Determines the default configuration for trusting other Conditional Access claims from external Microsoft Entra organizations. / Defines the Conditional Access claims you want to accept from other Microsoft Entra organizations via your cross-tenant access policy configuration. These can be configured in your default configuration, partner-specific configuration, or both. Also see [Microsoft docs for crossTenantAccessPolicyInboundTrust](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyinboundtrust?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--inbound_trust))
 - `invitation_redemption_identity_provider_configuration` (Attributes) Defines the priority order based on which an identity provider is selected during invitation redemption for a guest user. / Defines the invitation redemption provider configuration to set redemption flow settings for Microsoft Entra ID B2B collaboration. Also see [Microsoft docs for defaultInvitationRedemptionIdentityProviderConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/defaultinvitationredemptionidentityproviderconfiguration?view=graph-rest-beta). <br/> <br> (see [below for nested schema](#nestedatt--invitation_redemption_identity_provider_configuration))
@@ -298,6 +301,7 @@ Read-Only:
 Read-Only:
 
 - `is_compliant_device_accepted` (Boolean) Specifies whether compliant devices from external Microsoft Entra organizations are trusted. <br/>
+- `is_compliant_network_accepted` (Boolean) Specifies whether compliant network from external Microsoft Entra organizations is trusted.
 - `is_hybrid_azure_ad_joined_device_accepted` (Boolean) Specifies whether Microsoft Entra hybrid joined devices from external Microsoft Entra organizations are trusted. <br/>
 - `is_mfa_accepted` (Boolean) Specifies whether MFA from external Microsoft Entra organizations is trusted. <br/>
 

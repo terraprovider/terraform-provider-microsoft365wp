@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/go-azure-sdk/sdk/auth"
 	"github.com/hashicorp/go-azure-sdk/sdk/environments"
@@ -35,6 +36,47 @@ type ResponseMiddleware func(*http.Request, *http.Response) (*http.Response, err
 // RetryOn404ConsistencyFailureFunc can be used to retry a request when a 404 response is received
 func RetryOn404ConsistencyFailureFunc(resp *http.Response, _ *odata.OData) bool {
 	return resp != nil && resp.StatusCode == http.StatusNotFound
+}
+
+// RetryOn404ConsistencyFailureFuncFor returns a ConsistencyFailureFunc that retries a request on 404 responses, but only
+// for the given duration (counted from the call of this function). Use it when a 404 might be caused by eventual
+// consistency, but might also be a valid result (e.g. if the entity has been deleted in the meantime).
+func RetryOn404ConsistencyFailureFuncFor(d time.Duration) ConsistencyFailureFunc {
+	deadline := time.Now().Add(d)
+	return func(resp *http.Response, _ *odata.OData) bool {
+		return resp != nil && resp.StatusCode == http.StatusNotFound && time.Now().Before(deadline)
+	}
+}
+
+type retryContextKey struct{}
+
+type retryContext struct {
+	input          HttpRequestInput
+	disableRetries bool
+}
+
+// checkRetry is the CheckRetry policy of the RetryableClient. It is set once (instead of per request) since the
+// RetryableClient is shared by all (concurrent) requests; request specific settings are taken from the request context.
+func checkRetry(ctx context.Context, resp *http.Response, err error) (bool, error) {
+	rc, _ := ctx.Value(retryContextKey{}).(retryContext)
+	if resp != nil && !rc.disableRetries {
+		if resp.StatusCode == http.StatusFailedDependency {
+			return true, nil
+		}
+
+		o, err := odata.FromResponse(resp)
+		if err != nil {
+			return false, err
+		}
+
+		if rc.input != nil {
+			f := rc.input.GetConsistencyFailureFunc()
+			if f != nil && f(resp, o) {
+				return true, nil
+			}
+		}
+	}
+	return retryablehttp.DefaultRetryPolicy(ctx, resp, err)
 }
 
 // ValidStatusFunc is a function that tests whether an HTTP response is considered valid for the particular request.
@@ -99,6 +141,7 @@ type Client struct {
 func NewClient(apiVersion ApiVersion) Client {
 	r := retryablehttp.NewClient()
 	r.ErrorHandler = RetryableErrorHandler
+	r.CheckRetry = checkRetry
 	r.Logger = nil
 
 	var endpoint string
@@ -161,24 +204,8 @@ func (c Client) performRequest(req *http.Request, input HttpRequestInput) (*http
 		}
 	}
 
-	c.RetryableClient.CheckRetry = func(ctx context.Context, resp *http.Response, err error) (bool, error) {
-		if resp != nil && !c.DisableRetries {
-			if resp.StatusCode == http.StatusFailedDependency {
-				return true, nil
-			}
-
-			o, err = odata.FromResponse(resp)
-			if err != nil {
-				return false, err
-			}
-
-			f := input.GetConsistencyFailureFunc()
-			if f != nil && f(resp, o) {
-				return true, nil
-			}
-		}
-		return retryablehttp.DefaultRetryPolicy(ctx, resp, err)
-	}
+	// pass the request specific retry settings to checkRetry (the RetryableClient is shared by all requests)
+	req = req.WithContext(context.WithValue(req.Context(), retryContextKey{}, retryContext{input: input, disableRetries: c.DisableRetries}))
 
 	req.Body = io.NopCloser(bytes.NewBuffer(reqBody))
 

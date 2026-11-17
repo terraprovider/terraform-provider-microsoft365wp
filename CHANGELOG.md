@@ -1,5 +1,23 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.21.0 (2026-11-17)
+
+### added
+
+- [directory_setting](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/directory_setting): New resource and data sources for tenant-wide directory settings (e.g. `Group.Unified` or `Password Rule Settings`). `values` is a map, and only the configured names are managed. Existing settings can be imported by their template id, so the same import block works in every tenant (GH #37)
+- [cross_tenant_access_policy_configuration_default](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cross_tenant_access_policy_configuration_default), [cross_tenant_access_policy_configuration_partner](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cross_tenant_access_policy_configuration_partner): Add `inbound_trust.is_compliant_network_accepted` (keeps the value from MS Graph if not configured)
+
+### fixed
+
+- [cross_tenant_access_policy_configuration_default](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cross_tenant_access_policy_configuration_default), [cross_tenant_access_policy_configuration_partner](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cross_tenant_access_policy_configuration_partner): Updates of `inbound_trust` no longer reset the compliant network trust setting of the tenant (MS Graph replaces the whole object)
+- [cross_tenant_access_policy_configuration_default](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cross_tenant_access_policy_configuration_default): Fix updates failing with 404 shortly after a preceding write, and differences in a plan right after an apply (the provider now waits until MS Graph returns the written values)
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): Fix concurrent requests to MS Graph interfering with each other's retry handling (e.g. a request losing its retry on 404)
+
+### breaking
+
+- [cross_tenant_access_policy_configuration_default](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/cross_tenant_access_policy_configuration_default): `block_service_provider_outbound_access` is read-only now, as MS Graph rejected setting it to `true` for every identity tried. Remove it from configurations
+
+
 ## 0.20.5 (2026-11-15)
 
 ### security

@@ -196,7 +196,22 @@ func (r *GenericResource) ImportState(ctx context.Context, req resource.ImportSt
 	importPaths = append(importPaths, path.Root(r.AccessParams.EntityId.AttrNameTf))
 	importAttributeNames = append(importAttributeNames, r.AccessParams.EntityId.AttrNameTf)
 
-	idComponents := strings.Split(req.ID, "/")
+	importId := req.ID
+	if r.AccessParams.ImportModifyFunc != nil {
+		params := ImportModifyFuncParams{
+			R:      r,
+			Client: r.AccessParams.graphClient,
+			Req:    req,
+			Id:     importId,
+		}
+		r.AccessParams.ImportModifyFunc(ctx, &resp.Diagnostics, &params)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		importId = params.Id
+	}
+
+	idComponents := strings.Split(importId, "/")
 	if len(idComponents) != len(importPaths) {
 		resp.Diagnostics.AddError("Id for import does not have the correct format",
 			fmt.Sprintf("To import this resource, an id with the following component(s) must be specified: '%s' (separated by forward slashes in case of multiple components)", strings.Join(importAttributeNames, "/")))

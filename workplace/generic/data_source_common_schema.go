@@ -47,6 +47,12 @@ func convertResourceAttr2DataSourceAttr(rsAttribute rsschema.Attribute, required
 		typed.Computed = computed
 		typed.MarkdownDescription = descCleanupRegex.ReplaceAllLiteralString(typed.MarkdownDescription, "")
 		return typed
+	case rsschema.MapAttribute:
+		typed.Required = required
+		typed.Optional = optional
+		typed.Computed = computed
+		typed.MarkdownDescription = descCleanupRegex.ReplaceAllLiteralString(typed.MarkdownDescription, "")
+		return typed
 	case rsschema.SingleNestedAttribute:
 		dsAttributes := make(map[string]dsschema.Attribute)
 		for nKey, nValue := range typed.Attributes {

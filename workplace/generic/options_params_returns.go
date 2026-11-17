@@ -38,6 +38,8 @@ type AccessParams struct {
 	UpdateReplaceFunc func(context.Context, *diag.Diagnostics, *UpdateReplaceFuncParams)
 	DeleteReplaceFunc func(context.Context, *diag.Diagnostics, *DeleteReplaceFuncParams)
 
+	ImportModifyFunc func(context.Context, *diag.Diagnostics, *ImportModifyFuncParams)
+
 	initializeOnce sync.Once
 
 	graphClient *msgraph.Client
@@ -71,7 +73,8 @@ type ReadOptions struct {
 	ODataSelect              []string
 	SingleItemUseODataFilter bool
 	ValidStatusCodesExtra    []int
-	NotFoundHint             string // extra explanation for users if the entity does not exist in MS Graph (e.g. for entities that cannot be created by the provider)
+	NotFoundHint             string        // extra explanation for users if the entity does not exist in MS Graph (e.g. for entities that cannot be created by the provider)
+	RetryNotFoundFor         time.Duration // retry reads that return 404 for this long (for entities that MS Graph reports as missing for a while after they have been written)
 	ExtraRequests            []ReadExtraRequest
 	ExtraRequestsCustom      []ReadExtraRequestCustom
 	DataSource               DataSourceOptions
@@ -162,6 +165,13 @@ type DeleteModifyFuncParams struct {
 	BaseUri    string
 	Id         string
 	SkipDelete bool
+}
+
+type ImportModifyFuncParams struct {
+	R      *GenericResource
+	Client *msgraph.Client
+	Req    resource.ImportStateRequest
+	Id     string // the import id as specified by the user, can be modified (e.g. to resolve another unique key to the id)
 }
 
 type CreateReplaceFuncParams struct {

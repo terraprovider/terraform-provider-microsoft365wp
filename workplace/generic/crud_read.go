@@ -112,7 +112,6 @@ func (aps *AccessParams) ReadSingleCompleteTf3(ctx context.Context, diags *diag.
 		}
 	}
 
-
 	tfVal := ConvertOdataRawToTerraform(ctx, diags, schema, rawVal, "", aps.GraphToTerraformMiddleware, id, aps.GraphToTerraformMiddlewareTargetSetRunOnRawVal, reqState)
 	if diags.HasError() {
 		return tftypes.Value{}
@@ -152,7 +151,11 @@ func (aps *AccessParams) ReadRaw3(ctx context.Context, diags *diag.Diagnostics, 
 		}
 		uri.Params.Set("$orderby", odataOrderby)
 	}
-	return ReadRaw3(ctx, diags, aps.graphClient, uri, &odataQuery, aps.ReadOptions.ValidStatusCodesExtra, tolerateNotFound, aps.ReadOptions.NotFoundHint)
+	var consistencyFailureFunc msgraph.ConsistencyFailureFunc
+	if aps.ReadOptions.RetryNotFoundFor > 0 {
+		consistencyFailureFunc = msgraph.RetryOn404ConsistencyFailureFuncFor(aps.ReadOptions.RetryNotFoundFor)
+	}
+	return ReadRaw4(ctx, diags, aps.graphClient, uri, &odataQuery, aps.ReadOptions.ValidStatusCodesExtra, tolerateNotFound, aps.ReadOptions.NotFoundHint, consistencyFailureFunc)
 }
 
 func (aps *AccessParams) ReadId(ctx context.Context, diags *diag.Diagnostics,
@@ -238,10 +241,16 @@ func ReadRaw2(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph
 
 func ReadRaw3(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph.Client, uri msgraph.Uri, odataQuery *odata.Query,
 	validStatusCodesExtra []int, tolerateNotFound bool, notFoundHint string) map[string]any {
+	return ReadRaw4(ctx, diags, graphClient, uri, odataQuery, validStatusCodesExtra, tolerateNotFound, notFoundHint, nil)
+}
+
+func ReadRaw4(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph.Client, uri msgraph.Uri, odataQuery *odata.Query,
+	validStatusCodesExtra []int, tolerateNotFound bool, notFoundHint string, consistencyFailureFunc msgraph.ConsistencyFailureFunc) map[string]any {
 
 	graphRequest := msgraph.GetHttpRequestInput{
-		Uri:              uri,
-		ValidStatusCodes: append([]int{http.StatusOK}, validStatusCodesExtra...),
+		Uri:                    uri,
+		ValidStatusCodes:       append([]int{http.StatusOK}, validStatusCodesExtra...),
+		ConsistencyFailureFunc: consistencyFailureFunc,
 	}
 	if odataQuery != nil {
 		graphRequest.OData = *odataQuery

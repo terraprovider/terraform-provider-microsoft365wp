@@ -9,11 +9,11 @@ import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -36,48 +36,12 @@ var (
 )
 
 func crossTenantAccessPolicyConfigurationDefaultUpdateReplaceFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.UpdateReplaceFuncParams) {
-	const blockAttrGraph = "blockServiceProviderOutboundAccess"
-	targetBlock, hasTargetBlock := params.RawVal[blockAttrGraph].(bool)
-	delete(params.RawVal, blockAttrGraph)
-
-	params.R.AccessParams.UpdateRaw(ctx, diags, params.BaseUri, params.Id, params.IdAttributer, params.RawVal)
-	if diags.HasError() || !hasTargetBlock {
-		return
-	}
-
-	var currentBlock *bool
-	if params.ReqState != nil {
-		var priorBlock types.Bool
-		diags.Append(params.ReqState.GetAttribute(ctx, path.Root("block_service_provider_outbound_access"), &priorBlock)...)
-		if diags.HasError() {
-			return
-		}
-		if !priorBlock.IsNull() && !priorBlock.IsUnknown() {
-			currentBlock = priorBlock.ValueBoolPointer()
-		}
-	} else {
-		// singleton gets adopted on resource creation, so there is no prior state to compare with
-		uri := params.R.AccessParams.GetUriWithIdForUD(ctx, diags, params.BaseUri, params.Id, params.IdAttributer)
-		if diags.HasError() {
-			return
-		}
-		currentRaw := params.R.AccessParams.ReadRaw2(ctx, diags, uri, "", "", []string{blockAttrGraph}, false)
-		if diags.HasError() {
-			return
-		}
-		if v, ok := currentRaw[blockAttrGraph].(bool); ok {
-			currentBlock = &v
-		}
-	}
-	if currentBlock != nil && *currentBlock == targetBlock {
-		return
-	}
-
 	uri := params.R.AccessParams.GetUriWithIdForUD(ctx, diags, params.BaseUri, params.Id, params.IdAttributer)
 	if diags.HasError() {
 		return
 	}
-	jsonBody := generic.ConvertOdataRawToJson(ctx, diags, map[string]any{blockAttrGraph: targetBlock}, "Plan")
+
+	jsonBody := generic.ConvertOdataRawToJson(ctx, diags, params.RawVal, "Plan")
 	if diags.HasError() {
 		return
 	}
@@ -85,12 +49,19 @@ func crossTenantAccessPolicyConfigurationDefaultUpdateReplaceFunc(ctx context.Co
 		Uri:              uri,
 		Body:             jsonBody,
 		ValidStatusCodes: []int{http.StatusOK, http.StatusNoContent},
-		// MS Graph may briefly return 404 right after the preceding write
-		ConsistencyFailureFunc: msgraph.RetryOn404ConsistencyFailureFunc,
+		// MS Graph sometimes returns 404 for a PATCH right after a preceding write (observed 2026-11-13 and
+		// 2026-11-17), so retry 404 for a while (the policy always exists)
+		ConsistencyFailureFunc: msgraph.RetryOn404ConsistencyFailureFuncFor(30 * time.Second),
 	})
 	if err != nil {
-		diags.AddError("Unable to update block_service_provider_outbound_access with MS Graph", err.Error())
+		diags.AddError("Unable to update with MS Graph", err.Error())
+		return
 	}
+
+	// MS Graph serves stale reads of the policy for several seconds after a PATCH (observed 2026-11-17: a read 4 s after
+	// the PATCH still returned the old value), so wait for the written values to avoid differences in a plan run right
+	// after an apply
+	generic.WaitForRawValues(ctx, diags, params.Client, uri, params.RawVal, generic.DefaultWaitForRawValuesOptions)
 }
 
 var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
@@ -573,9 +544,8 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 		},
 		"block_service_provider_outbound_access": schema.BoolAttribute{
 			Computed:            true,
-			Optional:            true,
 			PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
-			MarkdownDescription: "Specifies whether users can use granular delegated admin privileges (GDAP) to sign-in and access resources in other organizations. Default value is `false`.",
+			MarkdownDescription: "Specifies whether users can use granular delegated admin privileges (GDAP) to sign-in and access resources in other organizations. Default value is `false`.  \n_Provider_ Note: Read-only (it was writable in versions 0.20.0 to 0.20.5): MS Graph rejected setting it to `true` (403 \"Insufficient privileges\") in tests (2026-11) for every identity tried, app-only with `Policy.ReadWrite.CrossTenantAccess` (also with the Entra role Security Administrator) and a delegated Global Administrator.",
 		},
 		"inbound_trust": schema.SingleNestedAttribute{
 			Optional: true,
@@ -598,6 +568,12 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 					PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 					Computed:            true,
 					MarkdownDescription: "Specifies whether MFA from external Microsoft Entra organizations is trusted. <br/> The _provider_ default value is `false`.",
+				},
+				"is_compliant_network_accepted": schema.BoolAttribute{
+					Computed:            true,
+					Optional:            true,
+					PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
+					MarkdownDescription: "Specifies whether compliant network from external Microsoft Entra organizations is trusted.",
 				},
 			},
 			PlanModifiers:       []planmodifier.Object{wpdefaultvaluemodifier.ObjectDefaultValueEmpty()},
@@ -844,5 +820,5 @@ var crossTenantAccessPolicyConfigurationDefaultResourceSchema = schema.Schema{
 			MarkdownDescription: "Defines the default tenant restrictions configuration for users in your organization who access an external organization on your network or devices. / Defines how to target your tenant restrictions settings. Tenant restrictions give you control over the external organizations that your users can access from your network or devices when they use external identities. Settings can be targeted to specific users, groups, or applications. Also see [Microsoft docs for crossTenantAccessPolicyTenantRestrictions](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicytenantrestrictions?view=graph-rest-beta). <br/> The _provider_ default value is `{}`. <br> ",
 		},
 	},
-	MarkdownDescription: "Represents the default configuration for cross-tenant access and tenant restrictions. Cross-tenant access settings include inbound and outbound settings of Microsoft Entra B2B collaboration and B2B direct connect. <br/> Also see [Microsoft docs for crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta). ||| MS Graph: Cross-tenant access",
+	MarkdownDescription: "Represents the default configuration for cross-tenant access and tenant restrictions. Cross-tenant access settings include inbound and outbound settings of Microsoft Entra B2B collaboration and B2B direct connect. <br/> Also see [Microsoft docs for crossTenantAccessPolicyConfigurationDefault](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyconfigurationdefault?view=graph-rest-beta).\n\n_Provider_ Note: Note: MS Graph serves stale reads of this policy for a while after it has been changed (observed: up to about a minute). After each update, the provider waits until MS Graph returns the written values, but a plan run within the following minute might still read old values and show differences that are not real, or miss differences that are. ||| MS Graph: Cross-tenant access",
 }

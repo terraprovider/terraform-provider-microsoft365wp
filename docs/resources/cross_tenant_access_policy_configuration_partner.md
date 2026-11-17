@@ -292,6 +292,7 @@ Required:
 Optional:
 
 - `is_compliant_device_accepted` (Boolean) Specifies whether compliant devices from external Microsoft Entra organizations are trusted.
+- `is_compliant_network_accepted` (Boolean) Specifies whether compliant network from external Microsoft Entra organizations is trusted.
 - `is_hybrid_azure_ad_joined_device_accepted` (Boolean) Specifies whether Microsoft Entra hybrid joined devices from external Microsoft Entra organizations are trusted.
 - `is_mfa_accepted` (Boolean) Specifies whether MFA from external Microsoft Entra organizations is trusted.
 

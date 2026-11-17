@@ -121,6 +121,12 @@ var crossTenantAccessPolicyConfigurationPartnerResourceSchema = schema.Schema{
 					Optional:            true,
 					MarkdownDescription: "Specifies whether MFA from external Microsoft Entra organizations is trusted.",
 				},
+				"is_compliant_network_accepted": schema.BoolAttribute{
+					Computed:            true,
+					Optional:            true,
+					PlanModifiers:       []planmodifier.Bool{wpplanmodifier.BoolUseStateForUnknown()},
+					MarkdownDescription: "Specifies whether compliant network from external Microsoft Entra organizations is trusted.",
+				},
 			},
 			MarkdownDescription: "Determines the partner-specific configuration for trusting other Conditional Access claims from external Microsoft Entra organizations. / Defines the Conditional Access claims you want to accept from other Microsoft Entra organizations via your cross-tenant access policy configuration. These can be configured in your default configuration, partner-specific configuration, or both. Also see [Microsoft docs for crossTenantAccessPolicyInboundTrust](https://learn.microsoft.com/en-us/graph/api/resources/crosstenantaccesspolicyinboundtrust?view=graph-rest-beta). <br> ",
 		},

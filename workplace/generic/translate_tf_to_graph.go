@@ -164,7 +164,11 @@ func (t *ToFromGraphTranslator) rawFromTerraformValue(ctx context.Context, path 
 			if v == nil && !t.IncludeNullObjectsInJson {
 				continue
 			}
-			odataType, ok := t.OdataTypeByTerraformAttributeName(parentSchemaAttribute, name)
+			// map keys are data, not attribute names, so they cannot denote a derived OData type
+			odataType, ok := "", false
+			if typ.Is(tftypes.Object{}) {
+				odataType, ok = t.OdataTypeByTerraformAttributeName(parentSchemaAttribute, name)
+			}
 			if ok {
 				if v != nil {
 					leaf, ok := v.(map[string]any)
