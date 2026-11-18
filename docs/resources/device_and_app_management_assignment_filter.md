@@ -83,3 +83,14 @@ resource "microsoft365wp_device_and_app_management_assignment_filter" "apps_ios"
 - `evaluation_mode` (String) _Provider_ allowed values are: `checkinTimeEvaluation`, `inventoryEvaluation`, `mixedEvaluation`, `disabled`, `unknownFutureValue`.
 - `id` (String) Key of the Assignment Filter.
 - `last_modified_date_time` (String) Last modified time of the Assignment Filter. The timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 would look like this: '2014-01-01T00:00:00Z'
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_device_and_app_management_assignment_filter.example
+  id = "<id>"
+}
+```

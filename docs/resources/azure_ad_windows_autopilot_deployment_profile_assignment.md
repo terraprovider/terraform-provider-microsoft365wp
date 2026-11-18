@@ -5,7 +5,7 @@ subcategory: "MS Graph: Corporate enrollment"
 
 # microsoft365wp_azure_ad_windows_autopilot_deployment_profile_assignment (Resource)
 
-_Provider_ Note: To import this resource, an ID consisting of `azure_ad_windows_autopilot_deployment_profile_id` and `id` being joined by a forward slash (`/`) must be used.
+An assignment of a `microsoft365wp_azure_ad_windows_autopilot_deployment_profile`.
 
 ## Documentation Disclaimer
 
@@ -63,3 +63,14 @@ Required:
 Required:
 
 - `group_id` (String) The group Id that is the target of the assignment.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the values of `azure_ad_windows_autopilot_deployment_profile_id`, `id`, separated by slashes:
+
+```terraform
+import {
+  to = microsoft365wp_azure_ad_windows_autopilot_deployment_profile_assignment.example
+  id = "<azure_ad_windows_autopilot_deployment_profile_id>/<id>"
+}
+```

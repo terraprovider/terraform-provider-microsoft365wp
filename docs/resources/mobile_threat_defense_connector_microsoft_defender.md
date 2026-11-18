@@ -102,3 +102,14 @@ setting has been turned off in the Microsoft Defender portal.
 - `windows_device_blocked_on_missing_partner_data` (Boolean) When TRUE, indicates that Intune must receive data from the data sync partner prior to marking a device compliant for Windows. When FALSE, indicates that Intune may mark a device compliant without receiving data from the data sync partner for Windows. Default value is FALSE.  
 _Provider_ Note: MS Graph derives this value from the corresponding `*_enabled` attribute and silently ignores any value
 written to it (as of 2026-10), therefore it is read-only.
+
+## Import
+
+This resource manages settings that always exist in MS Graph (a singleton), so an import is not required: creating the resource applies the configuration to the existing settings, including the provider default values of all attributes that are not configured. Importing first can still be useful, as the plan then shows the changes compared to the current settings. Any id can be used for the import, since the actual id is read from MS Graph:
+
+```terraform
+import {
+  to = microsoft365wp_mobile_threat_defense_connector_microsoft_defender.example
+  id = "singleton"
+}
+```

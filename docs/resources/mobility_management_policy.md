@@ -104,3 +104,14 @@ Required:
 Read-Only:
 
 - `display_name` (String) The display name for the group. Required. Maximum length is 256 characters. <br/> Returned by default. Supports `$filter` (`eq`, `ne`, `not`, `ge`, `le`, `in`, `startsWith`, and `eq` on `null` values), `$search`, and `$orderby`.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the values of `policy_type`, `id`, separated by slashes:
+
+```terraform
+import {
+  to = microsoft365wp_mobility_management_policy.example
+  id = "<policy_type>/<id>"
+}
+```

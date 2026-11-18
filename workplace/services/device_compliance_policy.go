@@ -1306,7 +1306,7 @@ var deviceCompliancePolicyResourceSchema = schema.Schema{
 			},
 		},
 	},
-	MarkdownDescription: "This is the base class for Compliance policy. Compliance policies are platform specific and individual per-platform compliance policies inherit from here. <br/> Also see [Microsoft docs for deviceCompliancePolicy](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicecompliancepolicy?view=graph-rest-beta). ||| MS Graph: Device configuration",
+	MarkdownDescription: "This is the base class for Compliance policy. Compliance policies are platform specific and individual per-platform compliance policies inherit from here. <br/> Also see [Microsoft docs for deviceCompliancePolicy](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-devicecompliancepolicy?view=graph-rest-beta). ||| MS Graph: Device configuration ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_device_compliance_policy.example\n  id = \"<id>\"\n}\n```",
 }
 
 var deviceCompliancePolicyDeviceCompliancePolicyValidator = wpvalidator.ExactlyOneOfSiblings(

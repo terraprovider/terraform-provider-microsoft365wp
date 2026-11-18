@@ -670,7 +670,7 @@ var deviceManagementIntentResourceSchema = schema.Schema{
 			MarkdownDescription: "Collection of all settings to be applied / Base type for a setting instance. Also see [Microsoft docs for deviceManagementSettingInstance](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementsettinginstance?view=graph-rest-beta). <br> ",
 		},
 	},
-	MarkdownDescription: "Entity that represents an intent to apply settings to a device <br/> Also see [Microsoft docs for deviceManagementIntent](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintent?view=graph-rest-beta). ||| MS Graph: Device management",
+	MarkdownDescription: "Entity that represents an intent to apply settings to a device <br/> Also see [Microsoft docs for deviceManagementIntent](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceintent-devicemanagementintent?view=graph-rest-beta). ||| MS Graph: Device management ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_device_management_intent.example\n  id = \"<id>\"\n}\n```",
 }
 
 var deviceManagementIntentDeviceManagementSettingInstanceValidator = wpvalidator.ExactlyOneOfSiblings(

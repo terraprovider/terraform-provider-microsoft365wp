@@ -125,5 +125,5 @@ var connectorGroupMemberConnectorResourceSchema = schema.Schema{
 			MarkdownDescription: "The name of the computer on which the connector is installed and runs on.",
 		},
 	},
-	MarkdownDescription: "Use this resource to add/assign an existing connector to a connector group.\n\nNotes:  \n  - When deleting this resource, the connector will be assigned back to the default connector group.  \n  - To import this resource, an ID consisting of `connector_group_id` and `id` being joined by a forward slash (`/`) must be used. ||| MS Graph: On-premises publishing",
+	MarkdownDescription: "Use this resource to add/assign an existing connector to a connector group.\n\nNotes:  \n  - When deleting this resource, the connector will be assigned back to the default connector group.  \n  - To import this resource, an ID consisting of `connector_group_id` and `id` being joined by a forward slash (`/`) must be used. ||| MS Graph: On-premises publishing ||| Import is supported using an `import` block (or the `terraform import` command) with the values of `connector_group_id`, `id`, separated by slashes:\n\n```terraform\nimport {\n  to = microsoft365wp_connector_group_member_connector.example\n  id = \"<connector_group_id>/<id>\"\n}\n```",
 }

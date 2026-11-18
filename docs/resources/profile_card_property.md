@@ -82,3 +82,14 @@ Optional:
 
 - `display_name` (String) If present, the value of this field contains the **displayName** string that has been set for the language present in the **languageTag** field.
 - `language_tag` (String) Provides the language culture-code and friendly name of the language that the **displayName** field has been provided in.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `directory_property_name`:
+
+```terraform
+import {
+  to = microsoft365wp_profile_card_property.example
+  id = "<directory_property_name>"
+}
+```

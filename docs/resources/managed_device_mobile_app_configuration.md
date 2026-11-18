@@ -205,3 +205,14 @@ Required:
 - `app_config_key` (String) app configuration key.
 - `app_config_key_type` (String) app configuration key type. / App configuration key types. <br/> _Provider_ allowed values are: `stringType`, `integerType`, `realType`, `booleanType`, `tokenType`.
 - `app_config_key_value` (String) app configuration key value.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_managed_device_mobile_app_configuration.example
+  id = "<id>"
+}
+```

@@ -129,5 +129,5 @@ var deviceComplianceScriptResourceSchema = schema.Schema{
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: "Intune will provide customer the ability to run their Powershell Compliance scripts (detection) on the enrolled windows 10 Azure Active Directory joined devices. <br/> Also see [Microsoft docs for deviceComplianceScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecompliancescript?view=graph-rest-beta). ||| MS Graph: Device management",
+	MarkdownDescription: "Intune will provide customer the ability to run their Powershell Compliance scripts (detection) on the enrolled windows 10 Azure Active Directory joined devices. <br/> Also see [Microsoft docs for deviceComplianceScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecompliancescript?view=graph-rest-beta). ||| MS Graph: Device management ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_device_compliance_script.example\n  id = \"<id>\"\n}\n```",
 }

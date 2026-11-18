@@ -49,3 +49,14 @@ resource "microsoft365wp_external_identities_policy" "test" {
 - `description` (String)
 - `display_name` (String) The policy name.
 - `id` (String) The ID of this resource.
+
+## Import
+
+This resource manages settings that always exist in MS Graph (a singleton), so an import is not required: creating the resource applies the configuration to the existing settings, including the provider default values of all attributes that are not configured. Importing first can still be useful, as the plan then shows the changes compared to the current settings. Any id can be used for the import, since the actual id is read from MS Graph:
+
+```terraform
+import {
+  to = microsoft365wp_external_identities_policy.example
+  id = "singleton"
+}
+```

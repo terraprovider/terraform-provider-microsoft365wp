@@ -497,3 +497,14 @@ Optional:
 - `is_enabled` (Boolean) Specifies whether the session control is enabled.
 - `type` (String) if **frequencyInterval** is `everyTime` . <br/> _Provider_ allowed values are: `days`, `hours`.
 - `value` (Number) The number of `days` or `hours`.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_conditional_access_policy.example
+  id = "<id>"
+}
+```

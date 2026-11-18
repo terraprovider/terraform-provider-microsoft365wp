@@ -56,3 +56,14 @@ Optional:
 
 - `sender_domain` (String) Specifies the [domain](https://learn.microsoft.com/en-us/graph/api/resources/domain?view=graph-rest-beta) that should be used when sending email notifications. This domain must be [verified](https://learn.microsoft.com/en-us/graph/api/domain-verify?view=graph-rest-beta) in order to be used. We recommend that you use a domain that has the appropriate DNS records to facilitate email validation, like SPF, DKIM, DMARC, and MX, because this then complies with the [RFC compliance](https://www.ietf.org/rfc/rfc2142.txt) for sending and receiving email. For details, see [Learn more about Exchange Online Email Routing](https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/mail-flow-best-practices). <br/> The _provider_ default value is `"microsoft.com"`.
 - `use_company_branding` (Boolean) Specifies if the organization’s banner logo should be included in email notifications. The banner logo will replace the Microsoft logo at the top of the email notification. If `true` the banner logo will be taken from the tenant’s [branding settings](https://learn.microsoft.com/en-us/graph/api/resources/organizationalbranding?view=graph-rest-beta). This value can only be set to `true` if the [organizationalBranding](https://learn.microsoft.com/en-us/graph/api/resources/organizationalbranding?view=graph-rest-beta) **bannerLogo** property is set. <br/> The _provider_ default value is `false`.
+
+## Import
+
+This resource manages settings that always exist in MS Graph (a singleton), so an import is not required: creating the resource applies the configuration to the existing settings, including the provider default values of all attributes that are not configured. Importing first can still be useful, as the plan then shows the changes compared to the current settings. Any id can be used for the import, since the actual id is read from MS Graph:
+
+```terraform
+import {
+  to = microsoft365wp_identity_governance_lifecycle_management_settings.example
+  id = "singleton"
+}
+```

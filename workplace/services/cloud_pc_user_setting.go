@@ -254,7 +254,7 @@ var cloudPcUserSettingResourceSchema = schema.Schema{
 			MarkdownDescription: "Represents the set of Microsoft 365 groups and security groups in Microsoft Entra ID that have **cloudPCUserSetting** assigned. Returned only on `$expand`. For an example, see [Get cloudPcUserSettingample](https://learn.microsoft.com/en-us/graph/api/cloudpcusersetting-get?view=graph-rest-beta). / Represents a defined collection of user setting assignments. Also see [Microsoft docs for cloudPcUserSettingAssignment](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingassignment?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 	},
-	MarkdownDescription: "Represents a Cloud PC user setting. <br/> Also see [Microsoft docs for cloudPcUserSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersetting?view=graph-rest-beta). ||| MS Graph: Cloud PC",
+	MarkdownDescription: "Represents a Cloud PC user setting. <br/> Also see [Microsoft docs for cloudPcUserSetting](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersetting?view=graph-rest-beta). ||| MS Graph: Cloud PC ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_cloud_pc_user_setting.example\n  id = \"<id>\"\n}\n```",
 }
 
 var cloudPcUserSettingCloudPcDisasterRecoveryNetworkSettingValidator = wpvalidator.ExactlyOneOfSiblings(

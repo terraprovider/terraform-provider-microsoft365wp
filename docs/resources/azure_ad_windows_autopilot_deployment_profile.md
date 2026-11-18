@@ -102,3 +102,14 @@ Optional:
 - `keyboard_selection_page_skipped` (Boolean) When TRUE, the keyboard selection page is hidden to the end user during OOBE if Language and Region are set. When FALSE, the keyboard selection page is skipped during OOBE. <br/> The _provider_ default value is `false`.
 - `privacy_settings_hidden` (Boolean) When TRUE, privacy settings is hidden to the end user during OOBE. When FALSE, privacy settings is shown to the end user during OOBE. Default value is FALSE. <br/> The _provider_ default value is `false`.
 - `user_type` (String) The type of user. Possible values are administrator and standard. Default value is administrator. Yes No <br/> _Provider_ allowed values are: `administrator` (Indicates that the user has administrator privileges.), `standard` (Indicates that the user is a low-rights user without administrator privileges.), `unknownFutureValue` (Evolvable enumeration sentinel value. Do not use.). The _provider_ default value is `"administrator"`.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_azure_ad_windows_autopilot_deployment_profile.example
+  id = "<id>"
+}
+```

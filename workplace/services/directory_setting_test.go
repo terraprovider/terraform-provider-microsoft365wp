@@ -34,6 +34,11 @@ func directorySettingTestSchema(t *testing.T) schema.Schema {
 
 func directorySettingTestValue(t *testing.T, s schema.Schema, id any, templateId string, values map[string]string) tftypes.Value {
 	t.Helper()
+	return directorySettingTestValueResetOnly(t, s, id, templateId, values, false)
+}
+
+func directorySettingTestValueResetOnly(t *testing.T, s schema.Schema, id any, templateId string, values map[string]string, resetOnly bool) tftypes.Value {
+	t.Helper()
 	objType := s.Type().TerraformType(context.Background()).(tftypes.Object)
 	valuesTf := map[string]tftypes.Value{}
 	for k, v := range values {
@@ -44,10 +49,11 @@ func directorySettingTestValue(t *testing.T, s schema.Schema, id any, templateId
 		idVal = tftypes.NewValue(tftypes.String, id)
 	}
 	return tftypes.NewValue(objType, map[string]tftypes.Value{
-		"id":           idVal,
-		"display_name": tftypes.NewValue(tftypes.String, tftypes.UnknownValue),
-		"template_id":  tftypes.NewValue(tftypes.String, templateId),
-		"values":       tftypes.NewValue(objType.AttributeTypes["values"], valuesTf),
+		"id":                                 idVal,
+		"display_name":                       tftypes.NewValue(tftypes.String, tftypes.UnknownValue),
+		"template_id":                        tftypes.NewValue(tftypes.String, templateId),
+		"values":                             tftypes.NewValue(objType.AttributeTypes["values"], valuesTf),
+		"destroy_resets_managed_values_only": tftypes.NewValue(tftypes.Bool, resetOnly),
 	})
 }
 
@@ -77,13 +83,13 @@ func TestDirectorySettingTerraformToGraph(t *testing.T) {
 	s := directorySettingTestSchema(t)
 	diags := diag.Diagnostics{}
 
-	plan := directorySettingTestValue(t, s, nil, "tmpl", map[string]string{"B": "2", "A": "true"})
+	plan := directorySettingTestValueResetOnly(t, s, nil, "tmpl", map[string]string{"B": "2", "A": "true"}, true)
 	raw := generic.ConvertTerraformToOdataRaw(ctx, &diags, s, false, plan, false, tfsdk.Config{}, directorySettingTerraformToGraphMiddleware, "Plan")
 	if diags.HasError() {
 		t.Fatalf("diags: %v", diags)
 	}
 
-	got, _ := json.Marshal(raw)
+	got, _ := json.Marshal(raw) // destroy_resets_managed_values_only is Terraform-only
 	want := `{"templateId":"tmpl","values":[{"name":"A","value":"true"},{"name":"B","value":"2"}]}`
 	if string(got) != want {
 		t.Errorf("got %s, want %s", got, want)
@@ -338,5 +344,89 @@ func TestDirectorySettingCreateRetriesTemplateConflict(t *testing.T) {
 				t.Errorf("expected 3 POSTs, got %d", got)
 			}
 		})
+	}
+}
+
+func TestDirectorySettingReadSetsResetOnlyFromState(t *testing.T) {
+	ctx := context.Background()
+	s := directorySettingTestSchema(t)
+
+	for _, tc := range []struct {
+		name       string
+		priorState *bool // nil: no prior state (import)
+		want       bool
+	}{
+		{"no prior state", nil, false},
+		{"prior state false", new(false), false},
+		{"prior state true", new(true), true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var reqState *tfsdk.State
+			if tc.priorState != nil {
+				reqState = &tfsdk.State{Schema: s, Raw: directorySettingTestValueResetOnly(t, s, "s1", "tmpl", map[string]string{}, *tc.priorState)}
+			}
+			raw := map[string]any{"id": "s1", "templateId": "tmpl", "values": []any{}}
+			diags := diag.Diagnostics{}
+			directorySettingReadExtraRequestCustom(ctx, &diags, generic.ReadExtraRequestCustomParams{ReqState: reqState, RawVal: raw})
+			if diags.HasError() {
+				t.Fatalf("diags: %v", diags)
+			}
+			if got := raw["destroyResetsManagedValuesOnly"]; got != tc.want {
+				t.Errorf("got %v, want %v", got, tc.want)
+			}
+		})
+	}
+}
+
+func TestDirectorySettingDeleteResetsManagedValuesOnly(t *testing.T) {
+	oldInterval := directorySettingWaitPollInterval
+	directorySettingWaitPollInterval = time.Millisecond
+	t.Cleanup(func() { directorySettingWaitPollInterval = oldInterval })
+
+	var patchBody atomic.Value
+	client := directorySettingTestClient(t, func(w http.ResponseWriter, req *http.Request) {
+		if req.Method == http.MethodGet {
+			w.Header().Set("Content-Type", "application/json")
+		}
+		switch {
+		case req.Method == http.MethodGet && req.URL.Path == "/beta/directorySettingTemplates/tmpl":
+			_, _ = io.WriteString(w, `{"id":"tmpl","displayName":"Group.Unified","values":[
+				{"name":"EnableGroupCreation","type":"System.Boolean","defaultValue":"true"},
+				{"name":"AllowToAddGuests","type":"System.Boolean","defaultValue":"true"},
+				{"name":"UsageGuidelinesUrl","type":"System.String","defaultValue":""}]}`)
+		case req.Method == http.MethodPatch && req.URL.Path == "/beta/settings/s1":
+			body, _ := io.ReadAll(req.Body)
+			patchBody.Store(string(body))
+			w.WriteHeader(http.StatusNoContent)
+		case req.Method == http.MethodGet && req.URL.Path == "/beta/settings/s1":
+			_, _ = io.WriteString(w, `{"id":"s1","templateId":"tmpl","values":[
+				{"name":"EnableGroupCreation","value":"true"},
+				{"name":"AllowToAddGuests","value":"false"},
+				{"name":"UsageGuidelinesUrl","value":""}]}`)
+		default:
+			t.Errorf("unexpected request: %s %s", req.Method, req.URL)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+	})
+
+	s := directorySettingTestSchema(t)
+	reqState := &tfsdk.State{Schema: s, Raw: directorySettingTestValueResetOnly(t, s, "s1", "tmpl",
+		map[string]string{"enablegroupcreation": "false", "UsageGuidelinesUrl": "https://example.invalid", "NotInTemplate": "x"}, true)}
+
+	r := &generic.GenericResource{AccessParams: generic.AccessParams{BaseUri: "/settings"}}
+	diags := diag.Diagnostics{}
+	params := generic.DeleteReplaceFuncParams{R: r, Client: client, Id: "s1", ReqState: reqState}
+	directorySettingDeleteReplaceFunc(context.Background(), &diags, &params)
+
+	if diags.HasError() {
+		t.Fatalf("unexpected error: %v", diags)
+	}
+	// AllowToAddGuests is not managed and must not be sent; names get the spelling of the template
+	want := `{"values":[{"name":"UsageGuidelinesUrl","value":""},{"name":"EnableGroupCreation","value":"true"}]}`
+	if got, _ := patchBody.Load().(string); got != want {
+		t.Errorf("PATCH body: got %s, want %s", got, want)
+	}
+	if diags.WarningsCount() != 1 || !strings.Contains(diags.Warnings()[0].Detail(), "NotInTemplate") {
+		t.Errorf("expected one warning about NotInTemplate, got %v", diags)
 	}
 }

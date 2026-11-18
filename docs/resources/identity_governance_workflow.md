@@ -390,3 +390,14 @@ Read-Only:
 - `quarantine_reason` (String) The reason the workflow was quarantined.
 - `quarantine_type` (String) The type of threshold condition that caused the workflow to be quarantined. <br/> _Provider_ allowed values are: `notQuarantined`, `countBasedThresholdExceeded`, `percentageBasedThresholdExceeded`, `multipleConditionsExceeded`, `unknownFutureValue`.
 - `quarantined_date_time` (String) The date and time when the workflow was quarantined.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_identity_governance_workflow.example
+  id = "<id>"
+}
+```

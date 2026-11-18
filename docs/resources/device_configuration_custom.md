@@ -282,3 +282,14 @@ Required:
 Optional:
 
 - `file_name` (String) File name associated with the Value property (*.xml).
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_device_configuration_custom.example
+  id = "<id>"
+}
+```

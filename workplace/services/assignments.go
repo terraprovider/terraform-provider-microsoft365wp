@@ -158,8 +158,13 @@ func GetAssignmentChildResource(parentResource *generic.GenericResource, singleI
 		TypeNameSuffix: fmt.Sprintf("%s_assignment", parentResource.TypeNameSuffix),
 		SpecificSchema: schema.Schema{
 			Attributes: attributes,
-			MarkdownDescription: fmt.Sprintf("\n\n_Provider_ Note: To import this resource, an ID consisting of `%s` and `id` being joined by a forward slash (`/`) must be used.", parentIdFieldName) +
-				generic.GetSubcategorySuffixFromMarkdownDescription(parentResource.SpecificSchema.MarkdownDescription),
+			// segments separated by " ||| ": description, docs subcategory and the "Import" docs section (as generated
+			// by edmx2go for the other resources, see docs-templates-extra/resources.md.tmpl)
+			MarkdownDescription: fmt.Sprintf("An assignment of a `microsoft365wp_%s`.", parentResource.TypeNameSuffix) +
+				generic.GetSubcategorySuffixFromMarkdownDescription(parentResource.SpecificSchema.MarkdownDescription) +
+				fmt.Sprintf(" ||| Import is supported using an `import` block (or the `terraform import` command) with the "+
+					"values of `%[1]s`, `id`, separated by slashes:\n\n```terraform\nimport {\n  to = microsoft365wp_%[2]s_assignment.example\n"+
+					"  id = \"<%[1]s>/<id>\"\n}\n```", parentIdFieldName, parentResource.TypeNameSuffix),
 		},
 		AccessParams: generic.AccessParams{
 			BaseUri: parentResource.AccessParams.BaseUri,

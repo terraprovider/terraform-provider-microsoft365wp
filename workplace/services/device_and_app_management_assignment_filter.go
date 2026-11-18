@@ -110,5 +110,5 @@ var deviceAndAppManagementAssignmentFilterResourceSchema = schema.Schema{
 			MarkdownDescription: "Rule definition of the assignment filter.",
 		},
 	},
-	MarkdownDescription: "A class containing the properties used for Assignment Filter. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentFilter](https://learn.microsoft.com/en-us/graph/api/resources/intune-policyset-deviceandappmanagementassignmentfilter?view=graph-rest-beta). ||| MS Graph: Assignments",
+	MarkdownDescription: "A class containing the properties used for Assignment Filter. <br/> Also see [Microsoft docs for deviceAndAppManagementAssignmentFilter](https://learn.microsoft.com/en-us/graph/api/resources/intune-policyset-deviceandappmanagementassignmentfilter?view=graph-rest-beta). ||| MS Graph: Assignments ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_device_and_app_management_assignment_filter.example\n  id = \"<id>\"\n}\n```",
 }

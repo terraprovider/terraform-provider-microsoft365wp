@@ -6,12 +6,14 @@ import (
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
 var (
@@ -79,7 +81,10 @@ var authorizationPolicyResourceSchema = schema.Schema{
 			MarkdownDescription: "Indicates who can invite guests to the organization. `everyone` is the default setting for all cloud environments except US Government. For more information, see [allowInvitesFrom values](#allowinvitesfrom-values). <br/> _Provider_ allowed values are: `none`, `adminsAndGuestInviters`, `adminsGuestInvitersAndAllMembers`, `everyone`, `unknownFutureValue`. The _provider_ default value is `\"everyone\"`.",
 		},
 		"allow_user_consent_for_risky_apps": schema.BoolAttribute{
-			Optional:            true,
+			Optional: true,
+			Validators: []validator.Bool{
+				wpvalidator.TranslateValueToTerraformOnly([]wpvalidator.TranslationTuple{{GraphValue: nil, TerraformValue: tftypes.NewValue(tftypes.Bool, false)}}),
+			},
 			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
 			Computed:            true,
 			MarkdownDescription: "Indicates whether [user consent for risky apps](https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/configure-risk-based-step-up-consent) is allowed. Default value is `false`. We recommend that you keep the value set to `false`. <br/> The _provider_ default value is `false`.",
@@ -165,5 +170,5 @@ var authorizationPolicyResourceSchema = schema.Schema{
 			MarkdownDescription: "Indicates if user consent to apps is allowed, and if it is, the [app consent policy](https://learn.microsoft.com/en-us/graph/api/resources/permissiongrantpolicy?view=graph-rest-beta) that governs the permission for users to grant consent. Values should be in the format `managePermissionGrantsForSelf.{id}` for user consent policies or `managePermissionGrantsForOwnedResource.{id}` for resource-specific consent policies, where `{id}` is the **id** of a built-in or custom app consent policy. An empty list indicates user consent to apps is disabled. <br/> The _provider_ default value is `[\"ManagePermissionGrantsForSelf.microsoft-user-default-recommended\",\"ManagePermissionGrantsForSelf.microsoft-user-default-allow-consent-apps\",\"ManagePermissionGrantsForOwnedResource.microsoft-dynamically-managed-permissions-for-team\",\"ManagePermissionGrantsForOwnedResource.microsoft-dynamically-managed-permissions-for-chat\"]`.",
 		},
 	},
-	MarkdownDescription: "Represents a policy that can control Microsoft Entra authorization settings. It's a singleton that inherits from base policy type, and always exists for the tenant. <br/> Also see [Microsoft docs for authorizationPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authorizationpolicy?view=graph-rest-beta). ||| MS Graph: Policies",
+	MarkdownDescription: "Represents a policy that can control Microsoft Entra authorization settings. It's a singleton that inherits from base policy type, and always exists for the tenant. <br/> Also see [Microsoft docs for authorizationPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authorizationpolicy?view=graph-rest-beta). ||| MS Graph: Policies ||| This resource manages settings that always exist in MS Graph (a singleton), so an import is not required: creating the resource applies the configuration to the existing settings, including the provider default values of all attributes that are not configured. Importing first can still be useful, as the plan then shows the changes compared to the current settings. Any id can be used for the import, since the actual id is read from MS Graph:\n\n```terraform\nimport {\n  to = microsoft365wp_authorization_policy.example\n  id = \"singleton\"\n}\n```",
 }

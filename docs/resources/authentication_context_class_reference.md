@@ -51,3 +51,14 @@ resource "microsoft365wp_authentication_context_class_reference" "test" {
 
 - `description` (String) A short explanation of the policies that are enforced by authenticationContextClassReference. This value should be used to provide secondary text to describe the authentication context class reference when building user facing admin experiences. For example, selection UX. <br/> The _provider_ default value is `""`.
 - `is_available` (Boolean) Indicates whether the authenticationContextClassReference has been published by the security admin and is ready for use by apps. When it's set to `false`, it shouldn't be shown in selection UX used to tag resources with authentication context class values. It will still be shown in the Conditional Access policy authoring experience. <br/> Supports `$filter` (`eq`). <br/> The _provider_ default value is `false`.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_authentication_context_class_reference.example
+  id = "<id>"
+}
+```

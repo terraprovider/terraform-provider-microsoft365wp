@@ -200,7 +200,7 @@ var managedDeviceMobileAppConfigurationResourceSchema = schema.Schema{
 			},
 		},
 	},
-	MarkdownDescription: "An abstract class for Mobile app configuration for enrolled devices. <br/> Also see [Microsoft docs for managedDeviceMobileAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-manageddevicemobileappconfiguration?view=graph-rest-beta). ||| MS Graph: App management",
+	MarkdownDescription: "An abstract class for Mobile app configuration for enrolled devices. <br/> Also see [Microsoft docs for managedDeviceMobileAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-manageddevicemobileappconfiguration?view=graph-rest-beta). ||| MS Graph: App management ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_managed_device_mobile_app_configuration.example\n  id = \"<id>\"\n}\n```",
 }
 
 var managedDeviceMobileAppConfigurationManagedDeviceMobileAppConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(

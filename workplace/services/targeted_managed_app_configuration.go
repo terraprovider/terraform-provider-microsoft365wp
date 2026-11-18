@@ -222,7 +222,7 @@ var targetedManagedAppConfigurationResourceSchema = schema.Schema{
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: "Configuration used to deliver a set of custom settings as-is to all users in the targeted security group <br/> Also see [Microsoft docs for targetedManagedAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-targetedmanagedappconfiguration?view=graph-rest-beta). ||| MS Graph: App management",
+	MarkdownDescription: "Configuration used to deliver a set of custom settings as-is to all users in the targeted security group <br/> Also see [Microsoft docs for targetedManagedAppConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-targetedmanagedappconfiguration?view=graph-rest-beta). ||| MS Graph: App management ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_targeted_managed_app_configuration.example\n  id = \"<id>\"\n}\n```",
 }
 
 var targetedManagedAppConfigurationMobileAppIdentifierValidator = wpvalidator.ExactlyOneOfSiblings(

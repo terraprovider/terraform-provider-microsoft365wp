@@ -258,7 +258,7 @@ var connectedOrganizationResourceSchema = schema.Schema{
 			MarkdownDescription: "Nullable. / Represents a Microsoft Entra object. The **directoryObject** type is the base type for the following directory entity types generally referred to as directory objects:. Also see [Microsoft docs for directoryObject](https://learn.microsoft.com/en-us/graph/api/resources/directoryobject?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 	},
-	MarkdownDescription: "In [Microsoft Entra entitlement management](entitlementmanagement-overview.md), a connected organization is a reference to a directory or domain of another organization whose users can request access. <br/> Also see [Microsoft docs for connectedOrganization](https://learn.microsoft.com/en-us/graph/api/resources/connectedorganization?view=graph-rest-beta). ||| MS Graph: Entitlement management",
+	MarkdownDescription: "In [Microsoft Entra entitlement management](entitlementmanagement-overview.md), a connected organization is a reference to a directory or domain of another organization whose users can request access. <br/> Also see [Microsoft docs for connectedOrganization](https://learn.microsoft.com/en-us/graph/api/resources/connectedorganization?view=graph-rest-beta). ||| MS Graph: Entitlement management ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_connected_organization.example\n  id = \"<id>\"\n}\n```",
 }
 
 var connectedOrganizationIdentitySourceValidator = wpvalidator.ExactlyOneOfSiblings(

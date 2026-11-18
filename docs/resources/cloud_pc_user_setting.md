@@ -159,3 +159,14 @@ Optional:
 Read-Only:
 
 - `frequency_in_hours` (Number)
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_cloud_pc_user_setting.example
+  id = "<id>"
+}
+```

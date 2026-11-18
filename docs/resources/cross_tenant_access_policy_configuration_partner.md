@@ -438,3 +438,14 @@ Read-Only:
 Read-Only:
 
 - `is_sync_allowed` (Boolean) Defines whether user objects should be synchronized from the partner tenant. `false` causes any current user synchronization from the source tenant to the target tenant to stop. This property has no impact on existing users who have already been synchronized.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `tenant_id`:
+
+```terraform
+import {
+  to = microsoft365wp_cross_tenant_access_policy_configuration_partner.example
+  id = "<tenant_id>"
+}
+```

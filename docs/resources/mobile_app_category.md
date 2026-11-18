@@ -49,3 +49,14 @@ resource "microsoft365wp_mobile_app_category" "test" {
 - `id` (String) The key of the entity. This property is read-only.
 - `last_modified_date_time` (String) The date and time the mobileAppCategory was last modified. This property is read-only.  
 _Provider_ Note: Warning: This attribute seems to always return the _current_ time for mobile app categories that have been created for the tenant (i.e. that have not been predefined by Microsoft). Therefore it can be expected to change with every query.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_mobile_app_category.example
+  id = "<id>"
+}
+```

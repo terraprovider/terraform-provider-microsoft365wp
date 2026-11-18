@@ -197,3 +197,14 @@ Required:
 
 - `type` (String) Indicates the content mime type.
 - `value_base64` (String) The byte array that contains the actual content.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_intune_branding_profile.example
+  id = "<id>"
+}
+```

@@ -84,3 +84,14 @@ resource "microsoft365wp_authentication_combination_configuration" "test" {
 Read-Only:
 
 - `id` (String) A unique system-generated identifier.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_authentication_strength_policy.example
+  id = "<id>"
+}
+```

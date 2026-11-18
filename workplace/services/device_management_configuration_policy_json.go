@@ -173,7 +173,7 @@ var deviceManagementConfigurationPolicyJsonResourceSchema = schema.Schema{
 			MarkdownDescription: "Policy settings / Setting instance within policy. Also see [Microsoft docs for deviceManagementConfigurationSetting](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationsetting?view=graph-rest-beta). <br> ",
 		},
 	},
-	MarkdownDescription: "Device Management Configuration Policy <br/> Also see [Microsoft docs for deviceManagementConfigurationPolicy](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationpolicy?view=graph-rest-beta). ||| MS Graph: Device configuration",
+	MarkdownDescription: "Device Management Configuration Policy <br/> Also see [Microsoft docs for deviceManagementConfigurationPolicy](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfigv2-devicemanagementconfigurationpolicy?view=graph-rest-beta). ||| MS Graph: Device configuration ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_device_management_configuration_policy_json.example\n  id = \"<id>\"\n}\n```",
 }
 
 // Filters all properties that do not seem to be required or returned from MS Graph.

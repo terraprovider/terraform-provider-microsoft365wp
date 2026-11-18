@@ -54,3 +54,14 @@ resource "microsoft365wp_attribute_set" "test" {
 
 - `description` (String) Description of the attribute set. Can be up to 128 characters long and include Unicode characters. Can be changed later.
 - `max_attributes_per_set` (Number) Maximum number of custom security attributes that can be defined in this attribute set. Default value is `null`. If not specified, the administrator can add up to the maximum of 500 active attributes per tenant. Can be changed later.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_attribute_set.example
+  id = "<id>"
+}
+```

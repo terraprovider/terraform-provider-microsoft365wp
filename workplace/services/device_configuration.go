@@ -7332,7 +7332,7 @@ var deviceConfigurationResourceSchema = schema.Schema{
 			},
 		},
 	},
-	MarkdownDescription: "Device Configuration. <br/> Also see [Microsoft docs for deviceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta). ||| MS Graph: Device configuration",
+	MarkdownDescription: "Device Configuration. <br/> Also see [Microsoft docs for deviceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-deviceconfiguration?view=graph-rest-beta). ||| MS Graph: Device configuration ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_device_configuration.example\n  id = \"<id>\"\n}\n```",
 }
 
 var deviceConfigurationDeviceConfigurationValidator = wpvalidator.ExactlyOneOfSiblings(

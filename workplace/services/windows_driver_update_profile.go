@@ -187,5 +187,5 @@ var windowsDriverUpdateProfileResourceSchema = schema.Schema{
 			MarkdownDescription: "Driver inventories for this profile. / A new entity to represent driver inventories. Also see [Microsoft docs for windowsDriverUpdateInventory](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateinventory?view=graph-rest-beta). <br> ",
 		},
 	},
-	MarkdownDescription: "Windows Driver Update Profile <br/> Also see [Microsoft docs for windowsDriverUpdateProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofile?view=graph-rest-beta). ||| MS Graph: Software updates",
+	MarkdownDescription: "Windows Driver Update Profile <br/> Also see [Microsoft docs for windowsDriverUpdateProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsdriverupdateprofile?view=graph-rest-beta). ||| MS Graph: Software updates ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_windows_driver_update_profile.example\n  id = \"<id>\"\n}\n```",
 }

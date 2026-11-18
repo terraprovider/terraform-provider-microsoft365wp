@@ -78,3 +78,14 @@ Read-Only:
 - `external_ip` (String) The external IP address as detected by the connector server. Read-only.
 - `id` (String) The unique identifier of the connector. Read-only.
 - `machine_name` (String) The name of the computer on which the connector is installed and runs on.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_connector_group.example
+  id = "<id>"
+}
+```

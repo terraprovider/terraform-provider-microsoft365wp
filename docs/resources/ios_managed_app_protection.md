@@ -242,3 +242,14 @@ Required:
 Optional:
 
 - `value` (String) Value for this key-value pair
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_ios_managed_app_protection.example
+  id = "<id>"
+}
+```

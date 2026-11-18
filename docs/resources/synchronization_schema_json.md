@@ -66,3 +66,14 @@ Synchronization rules are updated as part of the [synchronization schema](synchr
 ### Read-Only
 
 - `version` (String) The version of the schema, updated automatically with every schema change.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the values of `service_principal_id`, `id`, separated by slashes:
+
+```terraform
+import {
+  to = microsoft365wp_synchronization_schema_json.example
+  id = "<service_principal_id>/<id>"
+}
+```

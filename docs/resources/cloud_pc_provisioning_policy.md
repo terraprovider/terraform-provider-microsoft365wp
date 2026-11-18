@@ -293,3 +293,14 @@ Optional:
 Optional:
 
 - `locale` (String) The Windows language or region tag to use for language pack configuration and localization of the Cloud PC. The default value is `en-US`, which corresponds to English (United States).
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_cloud_pc_provisioning_policy.example
+  id = "<id>"
+}
+```

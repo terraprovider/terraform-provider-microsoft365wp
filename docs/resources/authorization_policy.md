@@ -72,3 +72,14 @@ _Provider_ Note: Indicates whether the default user role can create agent identi
 - `allowed_to_create_tenants` (Boolean) Indicates whether the default user role can create tenants. This setting corresponds to the _Restrict non-admin users from creating tenants_ setting in the [User settings menu in the Microsoft Entra admin center](https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions?context=graph%2Fcontext#restrict-member-users-default-permissions). <br/> When this setting is `false`, users assigned the [Tenant Creator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference?context=graph%2Fcontext#tenant-creator) role can still create tenants. <br/> The _provider_ default value is `true`.
 - `allowed_to_read_bitlocker_keys_for_owned_device` (Boolean) Indicates whether the registered owners of a device can read their own BitLocker recovery keys with default user role. <br/> The _provider_ default value is `true`.
 - `allowed_to_read_other_users` (Boolean) Indicates whether the default user role can read other users. **DO NOT SET THIS VALUE TO `false`**. <br/> The _provider_ default value is `true`.
+
+## Import
+
+This resource manages settings that always exist in MS Graph (a singleton), so an import is not required: creating the resource applies the configuration to the existing settings, including the provider default values of all attributes that are not configured. Importing first can still be useful, as the plan then shows the changes compared to the current settings. Any id can be used for the import, since the actual id is read from MS Graph:
+
+```terraform
+import {
+  to = microsoft365wp_authorization_policy.example
+  id = "singleton"
+}
+```

@@ -68,3 +68,14 @@ _Provider_ Note: In this special case, it is _not read-only_ but _required_ inst
 
 - `app_id` (String) The unique identifier for the application that is assigned by Microsoft Entra ID. Not nullable. Read-only. Alternate key. Supports `$filter` (`eq`).
 - `display_name` (String) The display name for the application. Maximum length is 256 characters. Supports `$filter` (`eq`, `ne`, `not`, `ge`, `le`, `in`, `startsWith`, and `eq` on `null` values), `$search`, and `$orderby`.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the values of `connector_group_id`, `id`, separated by slashes:
+
+```terraform
+import {
+  to = microsoft365wp_connector_group_application.example
+  id = "<connector_group_id>/<id>"
+}
+```

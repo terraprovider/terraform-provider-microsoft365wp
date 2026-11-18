@@ -54,3 +54,14 @@ resource "microsoft365wp_windows_management_app" "singleton" {
 - `available_version` (String) Windows management app available version.
 - `id` (String) Unique Identifier for the Windows management app
 - `managed_installer_configured_date_time` (String) Managed Installer Configured Date Time
+
+## Import
+
+This resource manages settings that always exist in MS Graph (a singleton), so an import is not required: creating the resource applies the configuration to the existing settings, including the provider default values of all attributes that are not configured. Importing first can still be useful, as the plan then shows the changes compared to the current settings. Any id can be used for the import, since the actual id is read from MS Graph:
+
+```terraform
+import {
+  to = microsoft365wp_windows_management_app.example
+  id = "singleton"
+}
+```

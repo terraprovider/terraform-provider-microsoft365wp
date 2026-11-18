@@ -178,3 +178,14 @@ Required:
 Required:
 
 - `group_id` (String) The group Id that is the target of the assignment.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_device_shell_script.example
+  id = "<id>"
+}
+```

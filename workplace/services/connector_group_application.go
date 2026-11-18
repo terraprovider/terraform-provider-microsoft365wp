@@ -107,5 +107,5 @@ var connectorGroupApplicationResourceSchema = schema.Schema{
 			MarkdownDescription: "The display name for the application. Maximum length is 256 characters. Supports `$filter` (`eq`, `ne`, `not`, `ge`, `le`, `in`, `startsWith`, and `eq` on `null` values), `$search`, and `$orderby`.",
 		},
 	},
-	MarkdownDescription: "Use this resource to add/assign an existing application to a connector group.\n\nNotes:  \n  - When deleting this resource, the application will be assigned back to the default connector group.  \n  - To import this resource, an ID consisting of `connector_group_id` and `id` being joined by a forward slash (`/`) must be used. ||| MS Graph: On-premises publishing",
+	MarkdownDescription: "Use this resource to add/assign an existing application to a connector group.\n\nNotes:  \n  - When deleting this resource, the application will be assigned back to the default connector group.  \n  - To import this resource, an ID consisting of `connector_group_id` and `id` being joined by a forward slash (`/`) must be used. ||| MS Graph: On-premises publishing ||| Import is supported using an `import` block (or the `terraform import` command) with the values of `connector_group_id`, `id`, separated by slashes:\n\n```terraform\nimport {\n  to = microsoft365wp_connector_group_application.example\n  id = \"<connector_group_id>/<id>\"\n}\n```",
 }

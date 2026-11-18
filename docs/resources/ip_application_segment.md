@@ -31,3 +31,14 @@ All supplements authored by the publishers of this provider have been explicitly
 ### Read-Only
 
 - `id` (String) Identifier for the application segment.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the values of `application_id`, `id`, separated by slashes:
+
+```terraform
+import {
+  to = microsoft365wp_ip_application_segment.example
+  id = "<application_id>/<id>"
+}
+```

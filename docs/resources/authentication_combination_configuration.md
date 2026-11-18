@@ -49,3 +49,14 @@ Optional:
 
 - `allowed_issuer_skis` (Set of String) A list of allowed subject key identifier values. <br/> The _provider_ default value is `[]`.
 - `allowed_policy_oids` (Set of String) A list of allowed policy OIDs. <br/> The _provider_ default value is `[]`.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the values of `authentication_strength_policy_id`, `id`, separated by slashes:
+
+```terraform
+import {
+  to = microsoft365wp_authentication_combination_configuration.example
+  id = "<authentication_strength_policy_id>/<id>"
+}
+```

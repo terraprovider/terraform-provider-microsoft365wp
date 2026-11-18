@@ -1,5 +1,21 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.21.1 (2026-11-18)
+
+### security
+
+- Update Go dependencies, including `golang.org/x/crypto` v0.59.0 (GO-2026-5932; not reachable from provider code according to `govulncheck`)
+
+### added
+
+- [directory_setting](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/directory_setting): Add `destroy_resets_managed_values_only`. If `true`, destroying the resource resets only the values listed in `values` to the defaults of the template and keeps the setting, instead of deleting the setting with all of its values (including those maintained outside of Terraform)
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): The docs of all resources have an Import section with the format of the import id (singletons don't need to be imported) (GH #41)
+
+### fixed
+
+- [authorization_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authorization_policy): Fix differences on every plan for `allow_user_consent_for_risky_apps` in tenants where MS Graph returns `null` for it (now read as `false`, the default) (GH #40)
+
+
 ## 0.21.0 (2026-11-17)
 
 ### added

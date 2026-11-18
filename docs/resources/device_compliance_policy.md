@@ -478,3 +478,14 @@ Optional:
 - `distribution` (String) Linux distribution like Debian, Fedora, Ubuntu etc.
 - `maximum_o_s_version` (String) Maximum supported operating system version of the linux version.
 - `minimum_o_s_version` (String) Minimum supported operating system version of the linux version.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_device_compliance_policy.example
+  id = "<id>"
+}
+```

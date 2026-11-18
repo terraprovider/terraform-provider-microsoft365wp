@@ -86,3 +86,14 @@ Required:
 Optional:
 
 - `is_default` (Boolean) Flag to indicate whether or not this is the default locale for language fallback. This flag can only be set. To unset, set this property to true on another Localized Notification Message.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_notification_message_template.example
+  id = "<id>"
+}
+```

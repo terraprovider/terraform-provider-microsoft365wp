@@ -82,3 +82,14 @@ Optional:
 Optional:
 
 - `is_sync_allowed` (Boolean) The _provider_ default value is `false`.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the values of `tenant_id`, `tenant_id`, separated by slashes:
+
+```terraform
+import {
+  to = microsoft365wp_cross_tenant_identity_sync_policy_partner.example
+  id = "<tenant_id>/<tenant_id>"
+}
+```

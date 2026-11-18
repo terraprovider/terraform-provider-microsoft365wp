@@ -149,3 +149,14 @@ Read-Only:
 
 - `driver_inventory_sync_state` (String) The state of the latest sync. / Windows DnF update inventory sync state. <br/> _Provider_ allowed values are: `pending` (Pending sync.), `success` (Successful sync.), `failure` (Failed sync.).
 - `last_successful_sync_date_time` (String) The last successful sync date and time in UTC.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_windows_driver_update_profile.example
+  id = "<id>"
+}
+```

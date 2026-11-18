@@ -123,5 +123,5 @@ var deviceCustomAttributeShellScriptResourceSchema = schema.Schema{
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: "Represents a custom attribute script for macOS. <br/> Also see [Microsoft docs for deviceCustomAttributeShellScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecustomattributeshellscript?view=graph-rest-beta). ||| MS Graph: Device management",
+	MarkdownDescription: "Represents a custom attribute script for macOS. <br/> Also see [Microsoft docs for deviceCustomAttributeShellScript](https://learn.microsoft.com/en-us/graph/api/resources/intune-devices-devicecustomattributeshellscript?view=graph-rest-beta). ||| MS Graph: Device management ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_device_custom_attribute_shell_script.example\n  id = \"<id>\"\n}\n```",
 }

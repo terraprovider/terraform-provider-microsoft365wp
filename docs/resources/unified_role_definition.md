@@ -93,3 +93,14 @@ Read-Only:
 
 - `deleted_date_time` (String) The date and time when the custom role definition was deleted. The value is `null` for active and restored role definitions. Read-only.
 - `id` (String) The unique identifier for the unifiedRoleDefinition. Key, not nullable, Read-only.  Supports `$filter` (`eq` operator only).
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_unified_role_definition.example
+  id = "<id>"
+}
+```

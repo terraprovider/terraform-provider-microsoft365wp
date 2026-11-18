@@ -3065,3 +3065,14 @@ Optional:
 
 - `day` (String) Scheduled Install Day in week. / Possible values for a weekly schedule. <br/> _Provider_ allowed values are: `userDefined` (User Defined, default value, no intent.), `everyday` (Everyday.), `sunday` (Sunday.), `monday` (Monday.), `tuesday` (Tuesday.), `wednesday` (Wednesday.), `thursday` (Thursday.), `friday` (Friday.), `saturday` (Saturday.), `noScheduledScan` (No Scheduled Scan). The _provider_ default value is `"everyday"`.
 - `time` (String) Scheduled Install Time during day <br/> The _provider_ default value is `"03:00:00.0000000"`.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_device_configuration.example
+  id = "<id>"
+}
+```

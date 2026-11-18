@@ -43,5 +43,5 @@ var mobileAppCategoryResourceSchema = schema.Schema{
 			MarkdownDescription: "The date and time the mobileAppCategory was last modified. This property is read-only.  \n_Provider_ Note: Warning: This attribute seems to always return the _current_ time for mobile app categories that have been created for the tenant (i.e. that have not been predefined by Microsoft). Therefore it can be expected to change with every query.",
 		},
 	},
-	MarkdownDescription: "Contains properties for a single Intune app category. <br/> Also see [Microsoft docs for mobileAppCategory](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappcategory?view=graph-rest-beta). ||| MS Graph: App management",
+	MarkdownDescription: "Contains properties for a single Intune app category. <br/> Also see [Microsoft docs for mobileAppCategory](https://learn.microsoft.com/en-us/graph/api/resources/intune-apps-mobileappcategory?view=graph-rest-beta). ||| MS Graph: App management ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_mobile_app_category.example\n  id = \"<id>\"\n}\n```",
 }

@@ -795,7 +795,7 @@ var androidManagedAppProtectionResourceSchema = schema.Schema{
 			MarkdownDescription: "List of apps to which the policy is deployed. / The identifier for the deployment an app. Also see [Microsoft docs for managedMobileApp](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-managedmobileapp?view=graph-rest-beta). <br> ",
 		},
 	},
-	MarkdownDescription: "Policy used to configure detailed management settings targeted to specific security groups and for a specified set of apps on an Android device <br/> Also see [Microsoft docs for androidManagedAppProtection](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-androidmanagedappprotection?view=graph-rest-beta). ||| MS Graph: App management",
+	MarkdownDescription: "Policy used to configure detailed management settings targeted to specific security groups and for a specified set of apps on an Android device <br/> Also see [Microsoft docs for androidManagedAppProtection](https://learn.microsoft.com/en-us/graph/api/resources/intune-mam-androidmanagedappprotection?view=graph-rest-beta). ||| MS Graph: App management ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_android_managed_app_protection.example\n  id = \"<id>\"\n}\n```",
 }
 
 var androidManagedAppProtectionMobileAppIdentifierValidator = wpvalidator.ExactlyOneOfSiblings(

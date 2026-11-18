@@ -700,7 +700,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 			MarkdownDescription: "A defined collection of provisioning policy assignments. Represents the set of Microsoft 365 groups and security groups in Microsoft Entra ID that have provisioning policy assigned. Returned only on `$expand`. For an example about how to get the assignments relationship, see [Get cloudPcProvisioningPolicy](https://learn.microsoft.com/en-us/graph/api/cloudpcprovisioningpolicy-get?view=graph-rest-beta). / Represents a defined collection of provisioning policy assignments. Also see [Microsoft docs for cloudPcProvisioningPolicyAssignment](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicyassignment?view=graph-rest-beta). <br/> The _provider_ default value is `[]`. <br> ",
 		},
 	},
-	MarkdownDescription: "Represents a Cloud PC provisioning policy. <br/> Also see [Microsoft docs for cloudPcProvisioningPolicy](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicy?view=graph-rest-beta). ||| MS Graph: Cloud PC",
+	MarkdownDescription: "Represents a Cloud PC provisioning policy. <br/> Also see [Microsoft docs for cloudPcProvisioningPolicy](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicy?view=graph-rest-beta). ||| MS Graph: Cloud PC ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_cloud_pc_provisioning_policy.example\n  id = \"<id>\"\n}\n```",
 }
 
 var cloudPcProvisioningPolicyCloudPcManagementAssignmentTargetValidator = wpvalidator.ExactlyOneOfSiblings(

@@ -135,5 +135,5 @@ var windowsFeatureUpdateProfileResourceSchema = schema.Schema{
 		},
 		"assignments": deviceAndAppManagementAssignment,
 	},
-	MarkdownDescription: "Windows Feature Update Profile <br/> Also see [Microsoft docs for windowsFeatureUpdateProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsfeatureupdateprofile?view=graph-rest-beta). ||| MS Graph: Software updates",
+	MarkdownDescription: "Windows Feature Update Profile <br/> Also see [Microsoft docs for windowsFeatureUpdateProfile](https://learn.microsoft.com/en-us/graph/api/resources/intune-softwareupdate-windowsfeatureupdateprofile?view=graph-rest-beta). ||| MS Graph: Software updates ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_windows_feature_update_profile.example\n  id = \"<id>\"\n}\n```",
 }

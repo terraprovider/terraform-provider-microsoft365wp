@@ -832,7 +832,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 			MarkdownDescription: "Specifies the state of the conditionalAccessPolicy object. Required. <br/> _Provider_ allowed values are: `enabled`, `disabled`, `enabledForReportingButNotEnforced`. The _provider_ default value is `\"enabledForReportingButNotEnforced\"`.",
 		},
 	},
-	MarkdownDescription: "Represents a Microsoft Entra Conditional Access policy. Conditional access policies are custom rules that define an access scenario. For more information, see the [Conditional access documentation](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/). <br/> Also see [Microsoft docs for conditionalAccessPolicy](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta). ||| MS Graph: Conditional access",
+	MarkdownDescription: "Represents a Microsoft Entra Conditional Access policy. Conditional access policies are custom rules that define an access scenario. For more information, see the [Conditional access documentation](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/). <br/> Also see [Microsoft docs for conditionalAccessPolicy](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta). ||| MS Graph: Conditional access ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_conditional_access_policy.example\n  id = \"<id>\"\n}\n```",
 }
 
 var conditionalAccessPolicyConditionalAccessExternalTenantsValidator = wpvalidator.ExactlyOneOfSiblings(

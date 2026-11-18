@@ -13,6 +13,7 @@ import (
 	"strings"
 	"terraform-provider-microsoft365wp/workplace/external/msgraph"
 	"terraform-provider-microsoft365wp/workplace/generic"
+	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"time"
 
@@ -22,6 +23,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -64,6 +66,9 @@ var (
 )
 
 func directorySettingTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
+	// Terraform-only attribute, only evaluated on destroy (from prior state)
+	delete(params.RawVal, "destroyResetsManagedValuesOnly")
+
 	// values: map(string) in Terraform, list of {name, value} in MS Graph
 	if valuesMap, ok := params.RawVal["values"].(map[string]any); ok {
 		names := slices.Sorted(maps.Keys(valuesMap))
@@ -176,6 +181,15 @@ func directorySettingDeleteReplaceFunc(ctx context.Context, diags *diag.Diagnost
 	}
 	uri := params.R.AccessParams.GetUriWithIdForUD(ctx, diags, params.BaseUri, id, params.IdAttributer)
 	if diags.HasError() {
+		return
+	}
+
+	resetOnly, templateId, managedNames := directorySettingStateInfo(ctx, diags, params.ReqState)
+	if diags.HasError() {
+		return
+	}
+	if resetOnly {
+		directorySettingResetManagedValues(ctx, diags, params.Client, uri, templateId, managedNames)
 		return
 	}
 
@@ -315,21 +329,23 @@ func directorySettingRetryOnTemplateConflictFor(d time.Duration) msgraph.Consist
 	}
 }
 
-// directorySettingReadExtraRequestCustom does not issue an extra request but only keeps the values whose names are
-// in prior state (MS Graph always returns all values of the template). Without prior state (e.g. on import), all
-// values are kept. Names are matched case-insensitively and get the spelling from prior state.
+// directorySettingReadExtraRequestCustom does not issue an extra request but post-processes the setting read: it sets
+// the Terraform-only attribute from prior state and only keeps the values whose names are in prior state (MS Graph
+// always returns all values of the template). Without prior state (e.g. on import), all values are kept. Names are
+// matched case-insensitively and get the spelling from prior state.
 func directorySettingReadExtraRequestCustom(ctx context.Context, diags *diag.Diagnostics, params generic.ReadExtraRequestCustomParams) {
 
-	if params.ReqState == nil || params.ReqState.Raw.IsNull() {
+	resetOnly, _, managedNames := directorySettingStateInfo(ctx, diags, params.ReqState)
+	if diags.HasError() {
 		return
 	}
-	var valuesTf types.Map
-	diags.Append(params.ReqState.GetAttribute(ctx, path.Root("values"), &valuesTf)...)
-	if diags.HasError() || valuesTf.IsNull() || valuesTf.IsUnknown() {
+	params.RawVal["destroyResetsManagedValuesOnly"] = resetOnly
+
+	if managedNames == nil {
 		return
 	}
 	managed := map[string]string{} // lowercased name -> name in state
-	for name := range valuesTf.Elements() {
+	for _, name := range managedNames {
 		managed[strings.ToLower(name)] = name
 	}
 
@@ -345,6 +361,102 @@ func directorySettingReadExtraRequestCustom(ctx context.Context, diags *diag.Dia
 		}
 	}
 	params.RawVal["values"] = filtered
+}
+
+// directorySettingStateInfo returns `destroy_resets_managed_values_only`, `template_id` and the (sorted) names in
+// `values` from prior state. managedNames is nil if there is no prior state (e.g. on import).
+func directorySettingStateInfo(ctx context.Context, diags *diag.Diagnostics, state *tfsdk.State) (resetOnly bool, templateId string, managedNames []string) {
+
+	if state == nil || state.Raw.IsNull() {
+		return false, "", nil
+	}
+
+	var resetOnlyTf types.Bool
+	diags.Append(state.GetAttribute(ctx, path.Root("destroy_resets_managed_values_only"), &resetOnlyTf)...)
+	var templateIdTf types.String
+	diags.Append(state.GetAttribute(ctx, path.Root("template_id"), &templateIdTf)...)
+	var valuesTf types.Map
+	diags.Append(state.GetAttribute(ctx, path.Root("values"), &valuesTf)...)
+	if diags.HasError() {
+		return false, "", nil
+	}
+
+	if !valuesTf.IsNull() && !valuesTf.IsUnknown() {
+		managedNames = slices.Sorted(maps.Keys(valuesTf.Elements()))
+		if managedNames == nil {
+			managedNames = []string{}
+		}
+	}
+	return resetOnlyTf.ValueBool(), templateIdTf.ValueString(), managedNames
+}
+
+// directorySettingResetManagedValues is used on destroy instead of deleting the setting if
+// `destroy_resets_managed_values_only` is set: it resets only the values managed by this resource (managedNames) to
+// the default values of the template and keeps the setting with all other values (e.g. those maintained in the Entra
+// admin center).
+func directorySettingResetManagedValues(ctx context.Context, diags *diag.Diagnostics, client *msgraph.Client, uri msgraph.Uri, templateId string, managedNames []string) {
+
+	if len(managedNames) == 0 {
+		return
+	}
+
+	template := generic.ReadRaw(ctx, diags, client, "/directorySettingTemplates/"+templateId, false)
+	if diags.HasError() {
+		return
+	}
+	type templateValue struct {
+		name         string
+		defaultValue any
+	}
+	templateValues := map[string]templateValue{} // lowercased name -> name and default value in template
+	templateValuesList, _ := template["values"].([]any)
+	for _, v := range templateValuesList {
+		if vMap, ok := v.(map[string]any); ok {
+			if name, ok := vMap["name"].(string); ok {
+				templateValues[strings.ToLower(name)] = templateValue{name, vMap["defaultValue"]}
+			}
+		}
+	}
+
+	values := []any{}
+	var unknownNames []string
+	for _, name := range managedNames {
+		tv, ok := templateValues[strings.ToLower(name)]
+		if !ok {
+			unknownNames = append(unknownNames, name)
+			continue
+		}
+		values = append(values, map[string]any{"name": tv.name, "value": tv.defaultValue})
+	}
+	if len(unknownNames) > 0 {
+		diags.AddWarning("Values not reset",
+			fmt.Sprintf("The template %q has no values named %q, so they could not be reset to their defaults.",
+				templateId, strings.Join(unknownNames, `", "`)))
+	}
+	if len(values) == 0 {
+		return
+	}
+
+	jsonVal := generic.ConvertOdataRawToJson(ctx, diags, map[string]any{"values": values}, "Destroy")
+	if diags.HasError() {
+		return
+	}
+	_, status, _, err := client.Patch(ctx, msgraph.PatchHttpRequestInput{
+		Uri:                    uri,
+		Body:                   jsonVal,
+		ValidStatusCodes:       []int{http.StatusOK, http.StatusNoContent},
+		ConsistencyFailureFunc: msgraph.RetryOn404ConsistencyFailureFuncFor(directorySettingRetryDuration),
+	})
+	if err != nil {
+		if status == http.StatusNotFound {
+			diags.AddWarning("Unable to reset values in MS Graph", fmt.Sprintf("Item %q does not exist (anymore).", uri.Entity))
+		} else {
+			diags.AddError("Unable to reset values in MS Graph", fmt.Sprintf("Original Error: %s", err.Error()))
+		}
+		return
+	}
+
+	directorySettingWaitForValues(ctx, diags, client, uri, values)
 }
 
 var directorySettingResourceSchema = schema.Schema{
@@ -375,6 +487,12 @@ var directorySettingResourceSchema = schema.Schema{
 				"Removing a name from this map therefore does not reset its value in MS Graph, it only stops managing it. " +
 				"Values are compared as sent (case-sensitive). / https://learn.microsoft.com/en-us/graph/api/resources/directorysetting?view=graph-rest-beta",
 		},
+		"destroy_resets_managed_values_only": schema.BoolAttribute{
+			Optional:            true,
+			PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+			Computed:            true,
+			MarkdownDescription: "The _provider_ default value is `false`.  \n_Provider_ Note: Controls what happens when this resource is destroyed (including replacements caused by changing `template_id`). If `false` (the default), the setting is deleted in MS Graph, which resets all of its values to Microsoft's defaults. If `true`, only the values listed in `values` are reset to the defaults of the template and the setting itself is kept, so values maintained outside of Terraform (e.g. in the Entra admin center) are left untouched; to manage the setting with Terraform again later, it must be imported. This attribute is not sent to MS Graph and is taken from state on destroy, so a change to it must be applied before the resource is destroyed.",
+		},
 	},
-	MarkdownDescription: "Directory settings define the configurations that can be used to customize the tenant-wide and object-specific restrictions and allowed behavior. For examples, you can block word lists for group display names or define whether guests are allowed to be group owners.\n\nBy default, all entities inherit the preset defaults. To change the default settings, you must create a new settings object using the [directorySettingTemplates](directorysettingtemplate.md). When the same setting is defined at both the tenant-wide and to a specific group, the entity-level setting overrides the tenant-wide setting. For example, the tenant-wide setting might allow existing members of groups to invite guests; but an individual group setting can override and not allow the operation.\n\nGroup-specific settings apply to only Microsoft 365 groups.\n\nAlso see [Microsoft docs for directorySetting](https://learn.microsoft.com/en-us/graph/api/resources/directorysetting?view=graph-rest-beta).\n\n_Provider_ Note: Manages a tenant-wide directory setting, i.e. the values of one directory setting template (e.g. `Group.Unified` for Microsoft 365 groups or `Password Rule Settings` for Entra password protection). Only one setting can exist per template in a tenant.<br><br> If a setting for the template already exists in the tenant (as is often the case for `Group.Unified`), it must be imported first. The template id can be used as the import id, so the same import block works for every tenant, e.g. `import { to = microsoft365wp_directory_setting.group_unified, id = \"62375ab9-6b52-47ed-826b-58e47e0e304b\" }`. To import only if the setting exists, use `for_each` on the import block with the template ids returned by the data source `microsoft365wp_directory_settings`. After an import, all values of the template are in state, so the first plan shows the values that are not configured being removed (from state only, MS Graph keeps them).<br><br> Destroying this resource deletes the setting in MS Graph, which resets all of its values to Microsoft's defaults. To stop managing a setting without deleting it, use a `removed` block with `lifecycle { destroy = false }`.<br><br> Template-specific validation (e.g. of naming policies or group ids) is performed by MS Graph on apply. Managing `Password Rule Settings` additionally requires the Entra role Authentication Policy Administrator. ||| MS Graph: Directory management",
+	MarkdownDescription: "Directory settings define the configurations that can be used to customize the tenant-wide and object-specific restrictions and allowed behavior. For examples, you can block word lists for group display names or define whether guests are allowed to be group owners.\n\nBy default, all entities inherit the preset defaults. To change the default settings, you must create a new settings object using the [directorySettingTemplates](directorysettingtemplate.md). When the same setting is defined at both the tenant-wide and to a specific group, the entity-level setting overrides the tenant-wide setting. For example, the tenant-wide setting might allow existing members of groups to invite guests; but an individual group setting can override and not allow the operation.\n\nGroup-specific settings apply to only Microsoft 365 groups.\n\nAlso see [Microsoft docs for directorySetting](https://learn.microsoft.com/en-us/graph/api/resources/directorysetting?view=graph-rest-beta).\n\n_Provider_ Note: Manages a tenant-wide directory setting, i.e. the values of one directory setting template (e.g. `Group.Unified` for Microsoft 365 groups or `Password Rule Settings` for Entra password protection). Only one setting can exist per template in a tenant.<br><br> If a setting for the template already exists in the tenant (as is often the case for `Group.Unified`), it must be imported first. The template id can be used as the import id, so the same import block works for every tenant, e.g. `import { to = microsoft365wp_directory_setting.group_unified, id = \"62375ab9-6b52-47ed-826b-58e47e0e304b\" }`. To import only if the setting exists, use `for_each` on the import block with the template ids returned by the data source `microsoft365wp_directory_settings`. After an import, all values of the template are in state, so the first plan shows the values that are not configured being removed (from state only, MS Graph keeps them).<br><br> Destroying this resource deletes the setting in MS Graph, which resets all of its values to Microsoft's defaults, including values that are not managed by this resource. Set `destroy_resets_managed_values_only` to reset only the managed values instead. To stop managing a setting without changing it at all, use a `removed` block with `lifecycle { destroy = false }`.<br><br> Template-specific validation (e.g. of naming policies or group ids) is performed by MS Graph on apply. Managing `Password Rule Settings` additionally requires the Entra role Authentication Policy Administrator. ||| MS Graph: Directory management ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_directory_setting.example\n  id = \"<id>\"\n}\n```\n\nInstead of the `id`, the `template_id` can be used as the import id (preferred, as it is the same in every tenant), e.g. `id = \"62375ab9-6b52-47ed-826b-58e47e0e304b\"` for `Group.Unified`.",
 }

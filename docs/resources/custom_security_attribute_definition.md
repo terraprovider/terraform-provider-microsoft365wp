@@ -85,3 +85,14 @@ Required:
 Optional:
 
 - `is_active` (Boolean) Indicates whether the predefined value is active or deactivated. If set to `false`, this predefined value can't be assigned to any more supported directory objects. <br/> The _provider_ default value is `true`.
+
+## Import
+
+Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:
+
+```terraform
+import {
+  to = microsoft365wp_custom_security_attribute_definition.example
+  id = "<id>"
+}
+```
