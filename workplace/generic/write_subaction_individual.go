@@ -3,6 +3,7 @@ package generic
 import (
 	"context"
 	"fmt"
+	"terraform-provider-microsoft365wp/workplace/external/msgraph"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -170,7 +171,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 		for _, v := range elementsToAdd {
 
 			var diags2 diag.Diagnostics
-			vRaw, _ := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, false, false)
+			vRaw, _ := a.getElementRawValAndId(ctx, &diags2, wsaReq.GenRes.AccessParams.graphClient, elementTranslator, v, parentId, false, false)
 			diags.Append(diags2...)
 			if diags2.HasError() {
 				return
@@ -187,7 +188,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 		for _, v := range elementsToUpdate {
 
 			var diags2 diag.Diagnostics
-			vRaw, id := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, true, false)
+			vRaw, id := a.getElementRawValAndId(ctx, &diags2, wsaReq.GenRes.AccessParams.graphClient, elementTranslator, v, parentId, true, false)
 			diags.Append(diags2...)
 			if diags2.HasError() {
 				return
@@ -202,7 +203,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 		for _, v := range elementsToDelete {
 
 			var diags2 diag.Diagnostics
-			_, id := a.getElementRawValAndId(ctx, &diags2, elementTranslator, v, parentId, false, true)
+			_, id := a.getElementRawValAndId(ctx, &diags2, wsaReq.GenRes.AccessParams.graphClient, elementTranslator, v, parentId, false, true)
 			diags.Append(diags2...)
 			if diags2.HasError() {
 				return
@@ -228,7 +229,7 @@ func (a *WriteSubActionIndividual) ExecutePost(ctx context.Context, diags *diag.
 	}
 }
 
-func (a *WriteSubActionIndividual) getElementRawValAndId(ctx context.Context, diags *diag.Diagnostics,
+func (a *WriteSubActionIndividual) getElementRawValAndId(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph.Client,
 	elementTranslator ToFromGraphTranslator, v tftypes.Value, parentId string, isUpdate bool, isDelete bool) (map[string]any, string) {
 
 	const ErrorSummary = "Error in WriteSubActionIndividual.getElementRawValAndId"
@@ -272,11 +273,17 @@ func (a *WriteSubActionIndividual) getElementRawValAndId(ctx context.Context, di
 			}
 			delete(vRaw, "id")
 
-			vRaw["@odata.id"] = uriPrefix + id
+			// relative prefixes (e.g. "directoryObjects/") are resolved against the configured endpoint (cloud environment)
+			uriPrefixAbs, err := graphClient.ResolveUrl(uriPrefix)
+			if err != nil {
+				diags.AddError(ErrorSummary, fmt.Sprintf("Unable to resolve OData URI prefix %s: %s", uriPrefix, err.Error()))
+				return nil, ""
+			}
+			vRaw["@odata.id"] = uriPrefixAbs + id
 		}
 
 		if a.TerraformToGraphMiddleware != nil {
-			params := TerraformToGraphMiddlewareParams{RawVal: vRaw, IsUpdate: isUpdate}
+			params := TerraformToGraphMiddlewareParams{RawVal: vRaw, IsUpdate: isUpdate, GraphClient: graphClient}
 			if err := a.TerraformToGraphMiddleware(ctx, diags, &params); err != nil {
 				diags.AddError(ErrorSummary, fmt.Sprintf("Error running middleware for element %s: %s", v, err.Error()))
 			}

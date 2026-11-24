@@ -44,7 +44,7 @@ var (
 						SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("internal_sponsors"),
 						IsOdataReference:       true,
 						OdataRefMapTypeToUriPrefix: map[string]string{
-							"": "https://graph.microsoft.com/beta/directoryObjects/", // this will work for users and groups
+							"": "directoryObjects/", // this will work for users and groups (resolved against the configured endpoint)
 						},
 					},
 					&generic.WriteSubActionIndividual{
@@ -57,7 +57,7 @@ var (
 						SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("external_sponsors"),
 						IsOdataReference:       true,
 						OdataRefMapTypeToUriPrefix: map[string]string{
-							"": "https://graph.microsoft.com/beta/directoryObjects/", // this will work for users and groups
+							"": "directoryObjects/", // this will work for users and groups (resolved against the configured endpoint)
 						},
 					},
 				},

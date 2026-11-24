@@ -172,4 +172,3 @@ func (pm listUseStateForUnknown) PlanModifyList(ctx context.Context, req planmod
 		res.PlanValue = req.StateValue
 	}
 }
-

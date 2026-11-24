@@ -57,7 +57,7 @@ var (
 						SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("categories"),
 						IsOdataReference:       true,
 						OdataRefMapTypeToUriPrefix: map[string]string{
-							"": "https://graph.microsoft.com/beta/deviceAppManagement/mobileAppCategories/",
+							"": "deviceAppManagement/mobileAppCategories/",
 						},
 					},
 				},

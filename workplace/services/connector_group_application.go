@@ -79,8 +79,13 @@ func connectorGroupApplicationAddDelete(ctx context.Context, diags *diag.Diagnos
 	}
 
 	uri := msgraph.Uri{Entity: "/applications/" + applicationId + "/connectorGroup/$ref"}
+	odataId, err := client.ResolveUrl("onPremisesPublishingProfiles/applicationproxy/connectorGroups/" + connectorGroupId)
+	if err != nil {
+		diags.AddError("Unable to build connector group URL", err.Error())
+		return
+	}
 	rawVal := map[string]any{
-		"@odata.id": "https://graph.microsoft.com/beta/onPremisesPublishingProfiles/applicationproxy/connectorGroups/" + connectorGroupId,
+		"@odata.id": odataId,
 	}
 	generic.CreateRaw(ctx, diags, client, uri, rawVal, nil, true, true)
 }

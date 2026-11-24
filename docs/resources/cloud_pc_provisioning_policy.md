@@ -184,20 +184,20 @@ Optional:
 
 Read-Only:
 
-- `auto_cleanup_detail` (Attributes) (see [below for nested schema](#nestedatt--assignments--user_settings_persistence_detail--auto_cleanup_detail))
+- `auto_cleanup_detail` (Attributes) The specific settings which enables auto cleanup inactive detached profiles for user settings persistence. The default value is `null` <br/> Describes the cloud profile auto cleanup configuration for user settings persistence. <br/> Used by the **autoCleanupDetail** property of a [cloudPCUserSettingsPersistenceDetail](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistencedetail?view=graph-rest-beta). Also see [Microsoft docs for cloudPCUserSettingsPersistenceAutoCleanupDetail](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistenceautocleanupdetail?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--user_settings_persistence_detail--auto_cleanup_detail))
 - `grace_period_end_date_time` (String) Indicates the grace period end time when user settings persistence exceeds the available quota. If usage exceeds the available quota when the grace period expires, the system automatically deletes the profile with the oldest last attached timestamp. The timestamp type represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 is `2014-01-01T00:00:00Z`. Read-only.
 - `id` (String) Indicates the unique identifier for the Cloud PC user settings persistence configuration for a single policy collection. Required. Read-only.
-- `snapshot_configuration` (Attributes) (see [below for nested schema](#nestedatt--assignments--user_settings_persistence_detail--snapshot_configuration))
-- `storage_configuration` (Attributes) (see [below for nested schema](#nestedatt--assignments--user_settings_persistence_detail--storage_configuration))
-- `user_profile_snapshots` (Attributes Set) (see [below for nested schema](#nestedatt--assignments--user_settings_persistence_detail--user_profile_snapshots))
+- `snapshot_configuration` (Attributes) The specific settings for automatic snapshots of user settings persistence profiles. The default value is `null`. <br/> Represents the frequency settings for automatic snapshots of user settings persistence profiles. Automatic snapshots are enabled by default whenever user settings persistence is enabled. The `snapshotConfiguration` default remains `null` for backward compatibility and does not disable automatic snapshots. This type doesn't expose an independent enable or disable setting. <br/> Used by the **snapshotConfiguration** property of a [cloudPCUserSettingsPersistenceDetail](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistencedetail?view=graph-rest-beta). Also see [Microsoft docs for cloudPcUserSettingsPersistenceSnapshotConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistencesnapshotconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--user_settings_persistence_detail--snapshot_configuration))
+- `storage_configuration` (Attributes) Configures the storage behavior for persisted user settings. When `storageSizingType` is `fixed`, `allocatedStorageSizeCategory` determines the hard storage cap. When `dynamic`, `allocatedStorageSizeCategory` represents the maximum the profile can grow to based on usage. Only applicable for `sharedByEntraGroup` provisioning policies. / Describes the storage configuration for Cloud PC user settings persistence, including the sizing type and the allocated storage size. Also see [Microsoft docs for cloudPcStorageConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcstorageconfiguration?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--user_settings_persistence_detail--storage_configuration))
+- `user_profile_snapshots` (Attributes Set) The collection of point-in-time snapshots of user settings persistence cloud profiles for this assignment. Snapshots are created either automatically by the background service based on `snapshotConfiguration`, or manually triggered by an IT admin via the `bulkCreateUserProfileSnapshot` action. <br/> Represents a point-in-time snapshot of a user settings persistence cloud profile. Snapshots are created either automatically by the background service based on the snapshot configuration, or triggered manually by an IT admin. Snapshots can be used for disaster recovery and restore scenarios. <br/> Used by the **userProfileSnapshots** relationship of a [cloudPCUserSettingsPersistenceDetail](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistencedetail?view=graph-rest-beta). Also see [Microsoft docs for cloudPcUserProfileSnapshot](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcuserprofilesnapshot?view=graph-rest-beta). <br> (see [below for nested schema](#nestedatt--assignments--user_settings_persistence_detail--user_profile_snapshots))
 
 <a id="nestedatt--assignments--user_settings_persistence_detail--auto_cleanup_detail"></a>
 ### Nested Schema for `assignments.user_settings_persistence_detail.auto_cleanup_detail`
 
 Read-Only:
 
-- `auto_cleanup_mode` (String) _Provider_ allowed values are: `none`, `scheduled`, `onQuotaExceeded`, `unknownFutureValue`.
-- `inactive_profile_retention_days` (Number)
+- `auto_cleanup_mode` (String) Specifies the cleanup mode for detached cloud profiles. This property is a flags enum that supports bitwise combination. The default value is `none`. <br/> _Provider_ allowed values are: `none`, `scheduled`, `onQuotaExceeded`, `unknownFutureValue`.
+- `inactive_profile_retention_days` (Number) Specifies the number of inactivity days before a detached cloud profile becomes eligible for cleanup. Only applies when **autoCleanupMode** includes `scheduled` or `onQuotaExceeded`. Valid values range from `5` to `365` days. Default value is `null`. For example, when set to `45`, detached profiles inactive for more than 45 days are eligible for cleanup based on the configured mode.
 
 
 <a id="nestedatt--assignments--user_settings_persistence_detail--snapshot_configuration"></a>
@@ -205,7 +205,7 @@ Read-Only:
 
 Read-Only:
 
-- `auto_snapshot_frequency_in_days` (Number)
+- `auto_snapshot_frequency_in_days` (Number) Indicates how often automatic snapshots are taken, in days. Allowed range is `7` to `30`. Default value is `30`. Nullable.
 
 
 <a id="nestedatt--assignments--user_settings_persistence_detail--storage_configuration"></a>
@@ -213,8 +213,8 @@ Read-Only:
 
 Read-Only:
 
-- `allocated_storage_size_category` (String) _Provider_ allowed values are: `fourGB`, `eightGB`, `sixteenGB`, `thirtyTwoGB`, `sixtyFourGB`, `unknownFutureValue`.
-- `storage_sizing_type` (String) _Provider_ allowed values are: `dynamic`, `fixed`, `unknownFutureValue`.
+- `allocated_storage_size_category` (String) Specifies the allocated storage size category for user settings persistence. The default value is `fourGB`. <br/> _Provider_ allowed values are: `fourGB`, `eightGB`, `sixteenGB`, `thirtyTwoGB`, `sixtyFourGB`, `unknownFutureValue`.
+- `storage_sizing_type` (String) Indicates the storage sizing type for user settings persistence. Specifies how per-profile storage is assigned. The default value is `fixed`. <br/> _Provider_ allowed values are: `dynamic`, `fixed`, `unknownFutureValue`.
 
 
 <a id="nestedatt--assignments--user_settings_persistence_detail--user_profile_snapshots"></a>
@@ -222,14 +222,14 @@ Read-Only:
 
 Read-Only:
 
-- `cloud_profile_id` (String)
-- `created_date_time` (String)
-- `expiration_date_time` (String)
-- `id` (String)
-- `last_restored_date_time` (String)
-- `snapshot_size_in_g_b` (Number)
-- `snapshot_type` (String) _Provider_ allowed values are: `automatic`, `manual`, `unknownFutureValue`.
-- `user_principal_name` (String)
+- `cloud_profile_id` (String) Indicates the unique identifier of the user settings persistence profile that this snapshot belongs to. Used to associate a snapshot with its parent profile. Read-only. Not nullable.
+- `created_date_time` (String) Indicates the date and time at which the snapshot was taken. The value can't be modified and is automatically populated when the snapshot is created. The timestamp type represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 looks like this: `2014-01-01T00:00:00Z`. Read-only. Not nullable.
+- `expiration_date_time` (String) Indicates the date and time when the snapshot expires and is no longer available for restore or export. The value is automatically calculated by the system. The timestamp type represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 looks like this: `2014-01-01T00:00:00Z`. Read-only. Nullable.
+- `id` (String) Indicates the unique identifier of the user settings persistence profile snapshot. This identifier is assigned when the snapshot is created. Read-only. Not nullable.
+- `last_restored_date_time` (String) Indicates the date and time when this snapshot was last used for a restore operation. The value is `null` if the snapshot was never restored. The timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 looks like this: `2014-01-01T00:00:00Z`. Read-only. Nullable.
+- `snapshot_size_in_g_b` (Number) Indicates the size of the snapshot in gigabytes (GB). Read-only. Nullable.
+- `snapshot_type` (String) Indicates the type of snapshot and how it was created. Default value is `automatic`. Read-only. Not nullable. <br/> _Provider_ allowed values are: `automatic`, `manual`, `unknownFutureValue`.
+- `user_principal_name` (String) Indicates the user principal name (UPN) of the user who owns the profile. Example: `json@contoso.com`. Read-only. Not nullable.
 
 
 
@@ -284,7 +284,7 @@ Optional:
 Optional:
 
 - `user_settings_persistence_enabled` (Boolean) Indicates whether user application settings are persisted between Cloud PC sessions. The default value is `false`. When `true`, user settings persistence is enabled, and Windows 365 automatically saves any user-specific application data in a central cloud storage location. Anytime the user connects to a Cloud PC within this provisioning policy, Windows 365 reconnects the user to that persisted storage. When `false`, this feature isn't used. The persistent storage can only be accessed by Cloud PC; IT admins can't access it. <br/> The _provider_ default value is `false`.
-- `user_settings_persistence_storage_size_category` (String) Indicates the storage size for persisting user application settings. The default value is `fourGB`. <br/> _Provider_ allowed values are: `fourGB`, `eightGB`, `sixteenGB`, `thirtyTwoGB`, `sixtyFourGB`, `unknownFutureValue`.
+- `user_settings_persistence_storage_size_category` (String) _Provider_ allowed values are: `fourGB`, `eightGB`, `sixteenGB`, `thirtyTwoGB`, `sixtyFourGB`, `unknownFutureValue`.
 
 
 <a id="nestedatt--windows_setting"></a>

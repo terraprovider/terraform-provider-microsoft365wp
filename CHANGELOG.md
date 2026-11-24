@@ -1,5 +1,22 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.21.2 (2026-11-24)
+
+### security
+
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): Logged MS Graph requests no longer contain the access token (the `Authorization` header is redacted). Request and response dumps are now logged at log level DEBUG instead of INFO
+
+### added
+
+- [device_and_app_management_role_assignment](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_and_app_management_role_assignment), [device_and_app_management_role_definition](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_and_app_management_role_definition), [role_scope_tag](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/role_scope_tag): New resources and data sources for Intune role-based access control (role definitions, role assignments and scope tags)
+- [conditional_access_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/conditional_access_policy): `sign_in_risk_levels`, `user_risk_levels` and `service_principal_risk_levels` accept the new value `notEvaluated`
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): Add `enable_claims_challenge` (or environment variable `ARM_ENABLE_CLAIMS_CHALLENGE`). If `true`, the provider answers MS Graph claims challenges, so objects protected by Entra protected actions (e.g. Conditional Access policies that require an authentication context) can be managed with app-only authentication. Supported with client secret, client certificate and OIDC authentication
+
+### fixed
+
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): OData references (`@odata.id` and `@odata.bind`) now use the configured MS Graph endpoint instead of `graph.microsoft.com`, which fixes them in national clouds (e.g. `environment = "usgovernment"`) (GH #21)
+
+
 ## 0.21.1 (2026-11-18)
 
 ### security

@@ -178,6 +178,20 @@ func (p *workplaceProvider) Schema(_ context.Context, _ provider.SchemaRequest, 
 				Optional:    true,
 				Description: "Allow tools/wpGetToken to be used for authentication",
 			},
+
+			"enable_claims_challenge": schema.BoolAttribute{
+				Optional: true,
+				Description: "Enable the handling of Microsoft Graph claims challenges (default: `false`), needed to manage " +
+					"objects protected by Entra protected actions with app-only authentication. When enabled, with client " +
+					"secret, client certificate or OIDC authentication, the provider declares the client capability `cp1` in " +
+					"its access tokens. When an Entra protected action (e.g. creating a Conditional Access policy) requires a " +
+					"Conditional Access authentication context, Microsoft Graph then answers with a claims challenge, and " +
+					"the provider retries the request once with a token carrying the requested claims (e.g. `acrs`). " +
+					"Tokens with `cp1` are Continuous Access Evaluation (CAE) tokens, which are valid longer (up to 24 hours) " +
+					"and can be revoked by Entra (a revocation arrives as a claims challenge too). " +
+					"Not supported with Azure CLI, managed identity or wpGetToken authentication. " +
+					"Can also be set with the environment variable `ARM_ENABLE_CLAIMS_CHALLENGE`.",
+			},
 		},
 		Description: "Terraform Provider for Microsoft 365",
 	}
@@ -290,6 +304,8 @@ func (p *workplaceProvider) Configure(ctx context.Context, req provider.Configur
 		EnableAuthenticationUsingOIDC:              enableOidc,
 	}
 
+	enableClaimsChallenge := dGet(&pch, "enable_claims_challenge", "ARM_ENABLE_CLAIMS_CHALLENGE", false).(bool)
+
 	var authorizer auth.Authorizer
 	if dGet(&pch, "use_wgt", "ARM_USE_WGT", false).(bool) {
 		authorizer, err = NewWgtAuthorizer(ctx)
@@ -304,6 +320,23 @@ func (p *workplaceProvider) Configure(ctx context.Context, req provider.Configur
 			resp.Diagnostics.AddError("Unable to build authorizer", err.Error())
 			return
 		}
+
+		// Handle claims challenges, e.g. for Entra protected actions (see claims_authorizer.go)
+		if enableClaimsChallenge && supportsClaimsChallenge(authorizer) {
+			newAuthorizer := func() (auth.Authorizer, error) {
+				return auth.NewAuthorizerFromCredentials(context.Background(), *authConfig, authConfig.Environment.MicrosoftGraph)
+			}
+			authorizer, err = newClaimsChallengeAuthorizer(authorizer, newAuthorizer)
+			if err != nil {
+				resp.Diagnostics.AddError("Unable to build claims challenge authorizer", err.Error())
+				return
+			}
+		}
+	}
+	if _, ok := authorizer.(*claimsChallengeAuthorizer); enableClaimsChallenge && !ok {
+		resp.Diagnostics.AddWarning("Claims challenges not supported",
+			"enable_claims_challenge is set, but claims challenges are only supported with client secret, client "+
+				"certificate or OIDC authentication. Requests to objects protected by Entra protected actions will fail.")
 	}
 
 	// --- Lifted/copied from internal/clients/client.go func (client *Client) build(...) ---
@@ -334,11 +367,11 @@ func (p *workplaceProvider) Configure(ctx context.Context, req provider.Configur
 
 	// --- End of lifted/copied code ---
 
-	// Log HTTP requests and responses
+	// Log HTTP requests (without access tokens) and responses
 	requestLogger := func(req *http.Request) (*http.Request, error) {
 		if req != nil {
-			if dump, err := httputil.DumpRequestOut(req, true); err == nil {
-				tflog.Info(ctx, fmt.Sprintf("%s\n", dump))
+			if dump, err := dumpRequestRedacted(req); err == nil {
+				tflog.Debug(ctx, fmt.Sprintf("%s\n", dump))
 			}
 		}
 		return req, nil
@@ -346,7 +379,7 @@ func (p *workplaceProvider) Configure(ctx context.Context, req provider.Configur
 	responseLogger := func(req *http.Request, resp *http.Response) (*http.Response, error) {
 		if resp != nil {
 			if dump, err := httputil.DumpResponse(resp, true); err == nil {
-				tflog.Info(ctx, fmt.Sprintf("%s\n", dump))
+				tflog.Debug(ctx, fmt.Sprintf("%s\n", dump))
 			}
 		}
 		return resp, nil
@@ -437,6 +470,10 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 			return &services.DeviceAndAppManagementAssignmentFilterSingularDataSource
 		},
 		func() datasource.DataSource { return &services.DeviceAndAppManagementAssignmentFilterPluralDataSource },
+		func() datasource.DataSource { return &services.DeviceAndAppManagementRoleAssignmentSingularDataSource },
+		func() datasource.DataSource { return &services.DeviceAndAppManagementRoleAssignmentPluralDataSource },
+		func() datasource.DataSource { return &services.DeviceAndAppManagementRoleDefinitionSingularDataSource },
+		func() datasource.DataSource { return &services.DeviceAndAppManagementRoleDefinitionPluralDataSource },
 		func() datasource.DataSource { return &services.DeviceCompliancePolicySingularDataSource },
 		func() datasource.DataSource { return &services.DeviceCompliancePolicyPluralDataSource },
 		func() datasource.DataSource { return &services.DeviceComplianceScriptSingularDataSource },
@@ -505,6 +542,8 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 		func() datasource.DataSource { return &services.NotificationMessageTemplatePluralDataSource },
 		func() datasource.DataSource { return &services.ProfileCardPropertySingularDataSource },
 		func() datasource.DataSource { return &services.ProfileCardPropertyPluralDataSource },
+		func() datasource.DataSource { return &services.RoleScopeTagSingularDataSource },
+		func() datasource.DataSource { return &services.RoleScopeTagPluralDataSource },
 		func() datasource.DataSource { return &services.ServicePrincipalSingularDataSource },
 		func() datasource.DataSource { return &services.ServicePrincipalPluralDataSource },
 		func() datasource.DataSource { return &services.SharepointSettingsSingularDataSource },
@@ -556,6 +595,8 @@ func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resou
 		func() resource.Resource { return &services.CrossTenantIdentitySyncPolicyPartnerResource },
 		func() resource.Resource { return &services.CustomSecurityAttributeDefinitionResource },
 		func() resource.Resource { return &services.DeviceAndAppManagementAssignmentFilterResource },
+		func() resource.Resource { return &services.DeviceAndAppManagementRoleAssignmentResource },
+		func() resource.Resource { return &services.DeviceAndAppManagementRoleDefinitionResource },
 		func() resource.Resource { return &services.DeviceCompliancePolicyResource },
 		func() resource.Resource { return &services.DeviceComplianceScriptResource },
 		func() resource.Resource { return &services.DeviceConfigurationResource },
@@ -587,6 +628,7 @@ func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resou
 		func() resource.Resource { return &services.NetworkaccessTenantStatusResource },
 		func() resource.Resource { return &services.NotificationMessageTemplateResource },
 		func() resource.Resource { return &services.ProfileCardPropertyResource },
+		func() resource.Resource { return &services.RoleScopeTagResource },
 		func() resource.Resource { return &services.SharepointSettingsResource },
 		func() resource.Resource { return &services.SynchronizationSchemaJsonResource },
 		func() resource.Resource { return &services.TargetedManagedAppConfigurationResource },

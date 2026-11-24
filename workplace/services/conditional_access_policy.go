@@ -388,37 +388,37 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 					Optional:    true,
 					Validators: []validator.Set{
 						setvalidator.ValueStringsAre(
-							stringvalidator.OneOf("low", "medium", "high", "hidden", "none", "unknownFutureValue"),
+							stringvalidator.OneOf("low", "medium", "high", "hidden", "none", "unknownFutureValue", "notEvaluated"),
 						),
 						wpvalidator.TranslateGraphMissingWithTfDefault(tftypes.Set{ElementType: tftypes.String}),
 					},
 					PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "Service principal risk levels included in the policy. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.",
+					MarkdownDescription: "Service principal risk levels included in the policy. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`, `notEvaluated`. The _provider_ default value is `[]`.",
 				},
 				"sign_in_risk_levels": schema.SetAttribute{
 					ElementType: types.StringType,
 					Optional:    true,
 					Validators: []validator.Set{
 						setvalidator.ValueStringsAre(
-							stringvalidator.OneOf("low", "medium", "high", "hidden", "none", "unknownFutureValue"),
+							stringvalidator.OneOf("low", "medium", "high", "hidden", "none", "unknownFutureValue", "notEvaluated"),
 						),
 					},
 					PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "Sign-in risk levels included in the policy. Required. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.",
+					MarkdownDescription: "Sign-in risk levels included in the policy. Required. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`, `notEvaluated`. The _provider_ default value is `[]`.",
 				},
 				"user_risk_levels": schema.SetAttribute{
 					ElementType: types.StringType,
 					Optional:    true,
 					Validators: []validator.Set{
 						setvalidator.ValueStringsAre(
-							stringvalidator.OneOf("low", "medium", "high", "hidden", "none", "unknownFutureValue"),
+							stringvalidator.OneOf("low", "medium", "high", "hidden", "none", "unknownFutureValue", "notEvaluated"),
 						),
 					},
 					PlanModifiers:       []planmodifier.Set{wpdefaultvaluemodifier.SetDefaultValueEmpty()},
 					Computed:            true,
-					MarkdownDescription: "User risk levels included in the policy. Required. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`. The _provider_ default value is `[]`.",
+					MarkdownDescription: "User risk levels included in the policy. Required. <br/> _Provider_ allowed values are: `low`, `medium`, `high`, `hidden`, `none`, `unknownFutureValue`, `notEvaluated`. The _provider_ default value is `[]`.",
 				},
 				"users": schema.SingleNestedAttribute{
 					Optional: true,

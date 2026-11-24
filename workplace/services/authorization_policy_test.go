@@ -52,7 +52,7 @@ func TestAuthorizationPolicyRiskyAppsNullReadsAsFalse(t *testing.T) {
 			}
 
 			// and back: the value from Terraform is sent as is (no translation to null)
-			back := generic.ConvertTerraformToOdataRaw(ctx, &diags, s, false, val, false, tfsdk.Config{}, nil, "Plan")
+			back := generic.ConvertTerraformToOdataRaw(ctx, &diags, s, false, val, false, tfsdk.Config{}, nil, nil, "Plan")
 			if diags.HasError() {
 				t.Fatalf("diags: %v", diags)
 			}

@@ -84,7 +84,7 @@ func TestDirectorySettingTerraformToGraph(t *testing.T) {
 	diags := diag.Diagnostics{}
 
 	plan := directorySettingTestValueResetOnly(t, s, nil, "tmpl", map[string]string{"B": "2", "A": "true"}, true)
-	raw := generic.ConvertTerraformToOdataRaw(ctx, &diags, s, false, plan, false, tfsdk.Config{}, directorySettingTerraformToGraphMiddleware, "Plan")
+	raw := generic.ConvertTerraformToOdataRaw(ctx, &diags, s, false, plan, false, tfsdk.Config{}, directorySettingTerraformToGraphMiddleware, nil, "Plan")
 	if diags.HasError() {
 		t.Fatalf("diags: %v", diags)
 	}

@@ -138,6 +138,8 @@ type TerraformToGraphMiddlewareParams struct {
 	Config   tfsdk.Config
 	RawVal   map[string]any
 	IsUpdate bool
+	// GraphClient is the configured client, e.g. to build absolute URLs via GraphClient.ResolveUrl (may be nil in tests)
+	GraphClient *msgraph.Client
 }
 type TerraformToGraphMiddlewareReturns error
 

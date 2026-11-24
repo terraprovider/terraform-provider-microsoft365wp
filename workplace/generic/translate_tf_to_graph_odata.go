@@ -5,16 +5,18 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"terraform-provider-microsoft365wp/workplace/external/msgraph"
+
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
 func ConvertTerraformToOdataJson(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper, includeNullObjects bool, val tftypes.Value,
-	isUpdate bool, config tfsdk.Config, middlewareFunc TerraformToGraphMiddlewareFunc,
+	isUpdate bool, config tfsdk.Config, middlewareFunc TerraformToGraphMiddlewareFunc, graphClient *msgraph.Client,
 	valSourceDesc string) []byte {
 
-	rawVal := ConvertTerraformToOdataRaw(ctx, diags, schema, includeNullObjects, val, isUpdate, config, middlewareFunc, valSourceDesc)
+	rawVal := ConvertTerraformToOdataRaw(ctx, diags, schema, includeNullObjects, val, isUpdate, config, middlewareFunc, graphClient, valSourceDesc)
 	if diags.HasError() {
 		return nil
 	}
@@ -28,7 +30,7 @@ func ConvertTerraformToOdataJson(ctx context.Context, diags *diag.Diagnostics, s
 }
 
 func ConvertTerraformToOdataRaw(ctx context.Context, diags *diag.Diagnostics, schema tftypes.AttributePathStepper, includeNullObjects bool, val tftypes.Value,
-	isUpdate bool, config tfsdk.Config, middlewareFunc TerraformToGraphMiddlewareFunc,
+	isUpdate bool, config tfsdk.Config, middlewareFunc TerraformToGraphMiddlewareFunc, graphClient *msgraph.Client,
 	valSourceDesc string) map[string]any {
 
 	translator := NewToFromGraphTranslator(schema, includeNullObjects, nil)
@@ -44,9 +46,10 @@ func ConvertTerraformToOdataRaw(ctx context.Context, diags *diag.Diagnostics, sc
 
 	if middlewareFunc != nil {
 		params := TerraformToGraphMiddlewareParams{
-			Config:   config,
-			RawVal:   rawVal,
-			IsUpdate: isUpdate,
+			Config:      config,
+			RawVal:      rawVal,
+			IsUpdate:    isUpdate,
+			GraphClient: graphClient,
 		}
 		if err := middlewareFunc(ctx, diags, &params); err != nil {
 			diags.AddError(

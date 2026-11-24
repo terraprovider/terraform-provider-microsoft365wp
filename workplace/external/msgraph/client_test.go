@@ -111,3 +111,26 @@ func TestRetryOn404ConsistencyFailureFuncForStopsAtDeadline(t *testing.T) {
 		t.Errorf("expected some retries before the deadline, got %d attempt(s)", got)
 	}
 }
+
+func TestResolveUrl(t *testing.T) {
+	cases := []struct {
+		endpoint, ref, want string
+	}{
+		{"https://graph.microsoft.com", "directoryObjects/", "https://graph.microsoft.com/beta/directoryObjects/"},
+		{"https://graph.microsoft.us/", "directoryObjects/", "https://graph.microsoft.us/beta/directoryObjects/"},
+		{"https://microsoftgraph.chinacloudapi.cn", "/odata/groups/", "https://microsoftgraph.chinacloudapi.cn/odata/groups/"},
+		{"https://dod-graph.microsoft.us", "deviceManagement/roleDefinitions('a-b')", "https://dod-graph.microsoft.us/beta/deviceManagement/roleDefinitions('a-b')"},
+		{"https://graph.microsoft.us", "https://example.com/x/", "https://example.com/x/"},
+	}
+	for _, c := range cases {
+		client := NewClient(VersionBeta)
+		client.Endpoint = c.endpoint
+		got, err := client.ResolveUrl(c.ref)
+		if err != nil {
+			t.Fatalf("ResolveUrl(%q) on %q: %v", c.ref, c.endpoint, err)
+		}
+		if got != c.want {
+			t.Errorf("ResolveUrl(%q) on %q = %q, want %q", c.ref, c.endpoint, got, c.want)
+		}
+	}
+}

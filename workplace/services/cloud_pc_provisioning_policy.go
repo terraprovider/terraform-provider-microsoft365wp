@@ -550,7 +550,7 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 					Validators: []validator.String{
 						stringvalidator.OneOf("fourGB", "eightGB", "sixteenGB", "thirtyTwoGB", "sixtyFourGB", "unknownFutureValue"),
 					},
-					MarkdownDescription: "Indicates the storage size for persisting user application settings. The default value is `fourGB`. <br/> _Provider_ allowed values are: `fourGB`, `eightGB`, `sixteenGB`, `thirtyTwoGB`, `sixtyFourGB`, `unknownFutureValue`.",
+					MarkdownDescription: "_Provider_ allowed values are: `fourGB`, `eightGB`, `sixteenGB`, `thirtyTwoGB`, `sixtyFourGB`, `unknownFutureValue`.",
 				},
 			},
 			MarkdownDescription: "Indicates specific settings that enable the persistence of user application settings between Cloud PC sessions. The default value is `null`. This feature is only available for Cloud PC provisioning policies of type `sharedByEntraGroup`. Supports `$select`. / Indicates the user settings persistence configuration when you create Cloud PCs for this [provisioning policy](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcprovisioningpolicy?view=graph-rest-beta). Also see [Microsoft docs for cloudPcUserSettingsPersistenceConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistenceconfiguration?view=graph-rest-beta). <br> ",
@@ -616,12 +616,14 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 										Validators: []validator.String{
 											wpvalidator.FlagEnumValues("none", "scheduled", "onQuotaExceeded", "unknownFutureValue"),
 										},
-										MarkdownDescription: "_Provider_ allowed values are: `none`, `scheduled`, `onQuotaExceeded`, `unknownFutureValue`.",
+										MarkdownDescription: "Specifies the cleanup mode for detached cloud profiles. This property is a flags enum that supports bitwise combination. The default value is `none`. <br/> _Provider_ allowed values are: `none`, `scheduled`, `onQuotaExceeded`, `unknownFutureValue`.",
 									},
 									"inactive_profile_retention_days": schema.Int64Attribute{
-										Computed: true,
+										Computed:            true,
+										MarkdownDescription: "Specifies the number of inactivity days before a detached cloud profile becomes eligible for cleanup. Only applies when **autoCleanupMode** includes `scheduled` or `onQuotaExceeded`. Valid values range from `5` to `365` days. Default value is `null`. For example, when set to `45`, detached profiles inactive for more than 45 days are eligible for cleanup based on the configured mode.",
 									},
 								},
+								MarkdownDescription: "The specific settings which enables auto cleanup inactive detached profiles for user settings persistence. The default value is `null` <br/> Describes the cloud profile auto cleanup configuration for user settings persistence. <br/> Used by the **autoCleanupDetail** property of a [cloudPCUserSettingsPersistenceDetail](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistencedetail?view=graph-rest-beta). Also see [Microsoft docs for cloudPCUserSettingsPersistenceAutoCleanupDetail](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistenceautocleanupdetail?view=graph-rest-beta). <br> ",
 							},
 							"grace_period_end_date_time": schema.StringAttribute{
 								Computed:            true,
@@ -631,9 +633,11 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 								Computed: true,
 								Attributes: map[string]schema.Attribute{ // cloudPcUserSettingsPersistenceSnapshotConfiguration
 									"auto_snapshot_frequency_in_days": schema.Int64Attribute{
-										Computed: true,
+										Computed:            true,
+										MarkdownDescription: "Indicates how often automatic snapshots are taken, in days. Allowed range is `7` to `30`. Default value is `30`. Nullable.",
 									},
 								},
+								MarkdownDescription: "The specific settings for automatic snapshots of user settings persistence profiles. The default value is `null`. <br/> Represents the frequency settings for automatic snapshots of user settings persistence profiles. Automatic snapshots are enabled by default whenever user settings persistence is enabled. The `snapshotConfiguration` default remains `null` for backward compatibility and does not disable automatic snapshots. This type doesn't expose an independent enable or disable setting. <br/> Used by the **snapshotConfiguration** property of a [cloudPCUserSettingsPersistenceDetail](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistencedetail?view=graph-rest-beta). Also see [Microsoft docs for cloudPcUserSettingsPersistenceSnapshotConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistencesnapshotconfiguration?view=graph-rest-beta). <br> ",
 							},
 							"storage_configuration": schema.SingleNestedAttribute{
 								Computed: true,
@@ -643,51 +647,60 @@ var cloudPcProvisioningPolicyResourceSchema = schema.Schema{
 										Validators: []validator.String{
 											stringvalidator.OneOf("fourGB", "eightGB", "sixteenGB", "thirtyTwoGB", "sixtyFourGB", "unknownFutureValue"),
 										},
-										MarkdownDescription: "_Provider_ allowed values are: `fourGB`, `eightGB`, `sixteenGB`, `thirtyTwoGB`, `sixtyFourGB`, `unknownFutureValue`.",
+										MarkdownDescription: "Specifies the allocated storage size category for user settings persistence. The default value is `fourGB`. <br/> _Provider_ allowed values are: `fourGB`, `eightGB`, `sixteenGB`, `thirtyTwoGB`, `sixtyFourGB`, `unknownFutureValue`.",
 									},
 									"storage_sizing_type": schema.StringAttribute{
 										Computed: true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("dynamic", "fixed", "unknownFutureValue"),
 										},
-										MarkdownDescription: "_Provider_ allowed values are: `dynamic`, `fixed`, `unknownFutureValue`.",
+										MarkdownDescription: "Indicates the storage sizing type for user settings persistence. Specifies how per-profile storage is assigned. The default value is `fixed`. <br/> _Provider_ allowed values are: `dynamic`, `fixed`, `unknownFutureValue`.",
 									},
 								},
+								MarkdownDescription: "Configures the storage behavior for persisted user settings. When `storageSizingType` is `fixed`, `allocatedStorageSizeCategory` determines the hard storage cap. When `dynamic`, `allocatedStorageSizeCategory` represents the maximum the profile can grow to based on usage. Only applicable for `sharedByEntraGroup` provisioning policies. / Describes the storage configuration for Cloud PC user settings persistence, including the sizing type and the allocated storage size. Also see [Microsoft docs for cloudPcStorageConfiguration](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcstorageconfiguration?view=graph-rest-beta). <br> ",
 							},
 							"user_profile_snapshots": schema.SetNestedAttribute{
 								Computed: true,
 								NestedObject: schema.NestedAttributeObject{
 									Attributes: map[string]schema.Attribute{ // cloudPcUserProfileSnapshot
 										"id": schema.StringAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "Indicates the unique identifier of the user settings persistence profile snapshot. This identifier is assigned when the snapshot is created. Read-only. Not nullable.",
 										},
 										"cloud_profile_id": schema.StringAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "Indicates the unique identifier of the user settings persistence profile that this snapshot belongs to. Used to associate a snapshot with its parent profile. Read-only. Not nullable.",
 										},
 										"created_date_time": schema.StringAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "Indicates the date and time at which the snapshot was taken. The value can't be modified and is automatically populated when the snapshot is created. The timestamp type represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 looks like this: `2014-01-01T00:00:00Z`. Read-only. Not nullable.",
 										},
 										"expiration_date_time": schema.StringAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "Indicates the date and time when the snapshot expires and is no longer available for restore or export. The value is automatically calculated by the system. The timestamp type represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on Jan 1, 2014 looks like this: `2014-01-01T00:00:00Z`. Read-only. Nullable.",
 										},
 										"last_restored_date_time": schema.StringAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "Indicates the date and time when this snapshot was last used for a restore operation. The value is `null` if the snapshot was never restored. The timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 looks like this: `2014-01-01T00:00:00Z`. Read-only. Nullable.",
 										},
 										"snapshot_size_in_g_b": schema.Int64Attribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "Indicates the size of the snapshot in gigabytes (GB). Read-only. Nullable.",
 										},
 										"snapshot_type": schema.StringAttribute{
 											Computed: true,
 											Validators: []validator.String{
 												stringvalidator.OneOf("automatic", "manual", "unknownFutureValue"),
 											},
-											MarkdownDescription: "_Provider_ allowed values are: `automatic`, `manual`, `unknownFutureValue`.",
+											MarkdownDescription: "Indicates the type of snapshot and how it was created. Default value is `automatic`. Read-only. Not nullable. <br/> _Provider_ allowed values are: `automatic`, `manual`, `unknownFutureValue`.",
 										},
 										"user_principal_name": schema.StringAttribute{
-											Computed: true,
+											Computed:            true,
+											MarkdownDescription: "Indicates the user principal name (UPN) of the user who owns the profile. Example: `json@contoso.com`. Read-only. Not nullable.",
 										},
 									},
 								},
+								MarkdownDescription: "The collection of point-in-time snapshots of user settings persistence cloud profiles for this assignment. Snapshots are created either automatically by the background service based on `snapshotConfiguration`, or manually triggered by an IT admin via the `bulkCreateUserProfileSnapshot` action. <br/> Represents a point-in-time snapshot of a user settings persistence cloud profile. Snapshots are created either automatically by the background service based on the snapshot configuration, or triggered manually by an IT admin. Snapshots can be used for disaster recovery and restore scenarios. <br/> Used by the **userProfileSnapshots** relationship of a [cloudPCUserSettingsPersistenceDetail](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcusersettingspersistencedetail?view=graph-rest-beta). Also see [Microsoft docs for cloudPcUserProfileSnapshot](https://learn.microsoft.com/en-us/graph/api/resources/cloudpcuserprofilesnapshot?view=graph-rest-beta). <br> ",
 							},
 						},
 						PlanModifiers:       []planmodifier.Object{wpplanmodifier.ObjectUseStateForUnknown()},

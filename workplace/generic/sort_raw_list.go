@@ -21,4 +21,3 @@ func SortRawListByStringKey(rawVal map[string]any, listAttr string, sortKey stri
 		return iVal < jVal
 	})
 }
-

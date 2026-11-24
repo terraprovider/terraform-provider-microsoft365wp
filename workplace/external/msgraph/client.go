@@ -15,6 +15,8 @@ import (
 	"github.com/hashicorp/go-azure-sdk/sdk/environments"
 	"github.com/hashicorp/go-azure-sdk/sdk/odata"
 	"github.com/hashicorp/go-retryablehttp"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"golang.org/x/oauth2"
 )
 
 type ApiVersion string
@@ -172,6 +174,23 @@ func (c Client) buildUri(uri Uri) (string, error) {
 	return newUrl.String(), nil
 }
 
+// ResolveUrl returns the absolute URL for ref on the configured endpoint (which depends on the cloud environment), as
+// needed for `@odata.id` / `@odata.bind` values. Like a link in a web page, ref is resolved against the versioned base
+// URL: "directoryObjects/" becomes "<endpoint>/<version>/directoryObjects/", "/odata/groups/" (leading slash) becomes
+// "<endpoint>/odata/groups/", and an absolute URL is returned unchanged.
+func (c Client) ResolveUrl(ref string) (string, error) {
+	baseUrl, err := url.Parse(c.Endpoint)
+	if err != nil {
+		return "", err
+	}
+	baseUrl.Path = "/" + string(c.ApiVersion) + "/"
+	refUrl, err := url.Parse(ref)
+	if err != nil {
+		return "", err
+	}
+	return baseUrl.ResolveReference(refUrl).String(), nil
+}
+
 // performRequest is used by the package to send an HTTP request to the API.
 func (c Client) performRequest(req *http.Request, input HttpRequestInput) (*http.Response, int, *odata.OData, error) {
 	var status int
@@ -179,14 +198,6 @@ func (c Client) performRequest(req *http.Request, input HttpRequestInput) (*http
 	query := input.GetOData()
 	req.Header = query.AppendHeaders(req.Header)
 	req.Header.Add("Content-Type", input.GetContentType())
-
-	if c.Authorizer != nil {
-		token, err := c.Authorizer.Token(req.Context(), req)
-		if err != nil {
-			return nil, status, nil, err
-		}
-		token.SetAuthHeader(req)
-	}
 
 	if c.UserAgent != "" {
 		req.Header.Add("User-Agent", c.UserAgent)
@@ -207,30 +218,22 @@ func (c Client) performRequest(req *http.Request, input HttpRequestInput) (*http
 	// pass the request specific retry settings to checkRetry (the RetryableClient is shared by all requests)
 	req = req.WithContext(context.WithValue(req.Context(), retryContextKey{}, retryContext{input: input, disableRetries: c.DisableRetries}))
 
-	req.Body = io.NopCloser(bytes.NewBuffer(reqBody))
-
-	if c.RequestMiddlewares != nil {
-		for _, m := range *c.RequestMiddlewares {
-			r, err := m(req)
-			if err != nil {
-				return nil, status, nil, err
-			}
-			req = r
-		}
-	}
-
-	resp, err = c.HttpClient.Do(req)
+	resp, err = c.sendRequest(req, reqBody, "")
 	if err != nil {
 		return nil, status, nil, err
 	}
 
-	if c.ResponseMiddlewares != nil {
-		for _, m := range *c.ResponseMiddlewares {
-			r, err := m(req, resp)
+	// Answer a claims challenge (e.g. for an Entra protected action) once, with a token carrying the requested claims
+	if _, ok := c.Authorizer.(ClaimsChallengeAuthorizer); ok {
+		if claims, ok := claimsFromChallenge(resp); ok {
+			tflog.Debug(req.Context(), "Microsoft Graph returned a claims challenge, retrying with a token carrying the requested claims",
+				map[string]any{"url": req.URL.String(), "claims": claims})
+			_, _ = io.Copy(io.Discard, resp.Body)
+			resp.Body.Close()
+			resp, err = c.sendRequest(req, reqBody, claims)
 			if err != nil {
 				return nil, status, nil, err
 			}
-			resp = r
 		}
 	}
 
@@ -268,6 +271,53 @@ func (c Client) performRequest(req *http.Request, input HttpRequestInput) (*http
 	}
 
 	return resp, status, o, nil
+}
+
+// sendRequest authorizes req (with a token carrying challengeClaims, if not empty), sets reqBody as its body, runs the
+// middlewares and sends it.
+func (c Client) sendRequest(req *http.Request, reqBody []byte, challengeClaims string) (*http.Response, error) {
+	if c.Authorizer != nil {
+		var token *oauth2.Token
+		var err error
+		if claimsAuthorizer, ok := c.Authorizer.(ClaimsChallengeAuthorizer); ok && challengeClaims != "" {
+			token, err = claimsAuthorizer.TokenWithClaims(req.Context(), req, challengeClaims)
+		} else {
+			token, err = c.Authorizer.Token(req.Context(), req)
+		}
+		if err != nil {
+			return nil, err
+		}
+		token.SetAuthHeader(req)
+	}
+
+	req.Body = io.NopCloser(bytes.NewBuffer(reqBody))
+
+	if c.RequestMiddlewares != nil {
+		for _, m := range *c.RequestMiddlewares {
+			r, err := m(req)
+			if err != nil {
+				return nil, err
+			}
+			req = r
+		}
+	}
+
+	resp, err := c.HttpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if c.ResponseMiddlewares != nil {
+		for _, m := range *c.ResponseMiddlewares {
+			r, err := m(req, resp)
+			if err != nil {
+				return nil, err
+			}
+			resp = r
+		}
+	}
+
+	return resp, nil
 }
 
 // containsStatusCode determines whether the returned status code is in the []int of expected status codes.

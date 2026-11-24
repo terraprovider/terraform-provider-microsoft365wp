@@ -60,8 +60,19 @@ func initAttribute(ctx context.Context, diags *diag.Diagnostics, schema *rsschem
 	// Now traverse nested attributes
 	if nestedAttribute, ok := attribute.(rsschema.NestedAttribute); ok {
 		nestedAttributeObject := nestedAttribute.GetNestedObject()
+		// step into the collection element first, TypeAtPath rejects AtName directly on a set/list/map
+		elemPath := path
+		switch attribute.(type) {
+		case rsschema.SetNestedAttribute:
+			// any element value works, TypeAtPath only needs the step kind
+			elemPath = path.AtSetValue(nestedAttributeObject.Type().ValueType(ctx))
+		case rsschema.ListNestedAttribute:
+			elemPath = path.AtListIndex(0)
+		case rsschema.MapNestedAttribute:
+			elemPath = path.AtMapKey("")
+		}
 		for name, attribute := range nestedAttributeObject.GetAttributes() {
-			initAttribute(ctx, diags, schema, path.AtName(name), attribute)
+			initAttribute(ctx, diags, schema, elemPath.AtName(name), attribute)
 		}
 	}
 }

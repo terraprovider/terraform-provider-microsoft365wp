@@ -348,7 +348,7 @@ func (r *GenericResource) createUpdate(ctx context.Context, operationType Operat
 
 	includeNullObjects := updateExisting && !r.AccessParams.WriteOptions.UsePutForUpdate
 	rawVal := ConvertTerraformToOdataRaw(ctx, diags, requestPlan.Schema, includeNullObjects,
-		requestPlan.Raw, updateExisting, *requestConfig, r.AccessParams.TerraformToGraphMiddleware, "Plan")
+		requestPlan.Raw, updateExisting, *requestConfig, r.AccessParams.TerraformToGraphMiddleware, r.AccessParams.graphClient, "Plan")
 	if diags.HasError() {
 		return
 	}

@@ -98,8 +98,13 @@ func connectorGroupMemberConnectorAddDelete(ctx context.Context, diags *diag.Dia
 		return
 	}
 
+	odataId, err := client.ResolveUrl("onPremisesPublishingProfiles/applicationProxy/connectors/" + id)
+	if err != nil {
+		diags.AddError("Unable to build connector URL", err.Error())
+		return
+	}
 	postRawVal := map[string]any{
-		"@odata.id": "https://graph.microsoft.com/beta/onPremisesPublishingProfiles/applicationProxy/connectors/" + id,
+		"@odata.id": odataId,
 	}
 	generic.CreateRaw(ctx, diags, client, uri, postRawVal, nil, true, false)
 }

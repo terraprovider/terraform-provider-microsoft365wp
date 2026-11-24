@@ -45,7 +45,7 @@ var (
 						SetNestedPath:          tftypes.NewAttributePath().WithAttributeName("included_groups"),
 						IsOdataReference:       true,
 						OdataRefMapTypeToUriPrefix: map[string]string{
-							"": "https://graph.microsoft.com/odata/groups/",
+							"": "/odata/groups/",
 						},
 						WriteSubActionBase: generic.WriteSubActionBase{
 							Attributes: []string{"includedGroups"},

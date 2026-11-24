@@ -150,4 +150,3 @@ func testExtractIDs(t *testing.T, list []any, count int) []string {
 
 	return ids
 }
-
