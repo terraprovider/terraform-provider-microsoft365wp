@@ -31,10 +31,13 @@ func (aps *AccessParams) UpdateRaw2(ctx context.Context, diags *diag.Diagnostics
 	var err error
 	// No need to read body when updating as id will stay the same
 	validStatusCodes := []int{http.StatusOK, http.StatusNoContent}
+	consistencyFailureFunc := aps.writeRetryFunc()
 	if !usePut {
-		_, _, _, err = aps.graphClient.Patch(ctx, msgraph.PatchHttpRequestInput{Uri: uri, Body: jsonVal, ValidStatusCodes: validStatusCodes})
+		_, _, _, err = aps.graphClient.Patch(ctx, msgraph.PatchHttpRequestInput{Uri: uri, Body: jsonVal, ValidStatusCodes: validStatusCodes,
+			ConsistencyFailureFunc: consistencyFailureFunc})
 	} else {
-		_, _, _, err = aps.graphClient.Put(ctx, msgraph.PutHttpRequestInput{Uri: uri, Body: jsonVal, ValidStatusCodes: validStatusCodes})
+		_, _, _, err = aps.graphClient.Put(ctx, msgraph.PutHttpRequestInput{Uri: uri, Body: jsonVal, ValidStatusCodes: validStatusCodes,
+			ConsistencyFailureFunc: consistencyFailureFunc})
 	}
 	if err != nil {
 		diags.AddError("Unable to update with MS Graph", err.Error())

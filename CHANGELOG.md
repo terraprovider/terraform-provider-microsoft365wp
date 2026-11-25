@@ -1,5 +1,20 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.21.3 (2026-11-25)
+
+### added
+
+- [named_location](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/named_location): New resource and data sources for Conditional Access named locations (`ip`, `country`, `compliant_network`, `service_tag` and `private_link`). Trusted named locations are untrusted before they get deleted (MS Graph refuses to delete them otherwise), and an existing compliant network named location is used instead of creating a new one. Named locations used by Conditional Access policies should have `lifecycle { create_before_destroy = true }`. The docs show how to migrate from `azuread_named_location` without recreating the named locations
+- [unified_rbac_resource_action](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/unified_rbac_resource_action): New resource and data sources for Entra protected actions, i.e. to require a Conditional Access authentication context for a resource action of the `microsoft.directory` namespace (e.g. creating Conditional Access policies or named locations)
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): The logged access token claims include `xms_cc`, `xms_ssm` and `acrs`, and claims challenges and the claims of the tokens requested for them are logged at log level INFO
+
+### fixed
+
+- [conditional_access_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/conditional_access_policy): Reading or deleting a policy right after creating it no longer leaves duplicate or orphaned policies behind (MS Graph returns 404 or 403 for new policies for a while and might not delete them). Reads are retried, and deletes are retried and verified, deleting the policy again if needed
+- [conditional_access_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/conditional_access_policy): Creating or updating a policy that uses a named location created a few seconds earlier no longer fails with error 400 (code 1040), the write is retried for up to 30 seconds
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): Retries for eventual consistency in MS Graph (e.g. of `directory_setting` and `cross_tenant_access_policy_configuration_default`) stopped after about 15 seconds, regardless of how long they were meant to run
+
+
 ## 0.21.2 (2026-11-24)
 
 ### security
@@ -9,7 +24,7 @@
 ### added
 
 - [device_and_app_management_role_assignment](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_and_app_management_role_assignment), [device_and_app_management_role_definition](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_and_app_management_role_definition), [role_scope_tag](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/role_scope_tag): New resources and data sources for Intune role-based access control (role definitions, role assignments and scope tags)
-- [conditional_access_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/conditional_access_policy): `sign_in_risk_levels`, `user_risk_levels` and `service_principal_risk_levels` accept the new value `notEvaluated`
+- [conditional_access_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/conditional_access_policy): `sign_in_risk_levels`, `user_risk_levels` and `service_principal_risk_levels` accept the new value `notEvaluated` (note that MS Graph currently still rejects it with error 400, code 1007, as the service lags behind its metadata)
 - [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): Add `enable_claims_challenge` (or environment variable `ARM_ENABLE_CLAIMS_CHALLENGE`). If `true`, the provider answers MS Graph claims challenges, so objects protected by Entra protected actions (e.g. Conditional Access policies that require an authentication context) can be managed with app-only authentication. Supported with client secret, client certificate and OIDC authentication
 
 ### fixed

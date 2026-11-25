@@ -26,7 +26,7 @@ func (aps *AccessParams) CreateRaw2(ctx context.Context, diags *diag.Diagnostics
 		return
 	}
 
-	rawResult = CreateRaw(ctx, diags, aps.graphClient, uri, rawVal, nil, allowEmptyResponse, usePut)
+	rawResult = createRaw(ctx, diags, aps.graphClient, uri, rawVal, nil, allowEmptyResponse, usePut, aps.writeRetryFunc())
 	if diags.HasError() || (allowEmptyResponse && len(rawResult) == 0) { // if response is completely empty, also just return
 		return
 	}
@@ -43,6 +43,12 @@ func (aps *AccessParams) CreateRaw2(ctx context.Context, diags *diag.Diagnostics
 
 func CreateRaw(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph.Client,
 	uri msgraph.Uri, rawVal map[string]any, validStatusCodesExtra []int, allowEmptyResponse bool, usePut bool) (rawResult map[string]any) {
+	return createRaw(ctx, diags, graphClient, uri, rawVal, validStatusCodesExtra, allowEmptyResponse, usePut, nil)
+}
+
+func createRaw(ctx context.Context, diags *diag.Diagnostics, graphClient *msgraph.Client,
+	uri msgraph.Uri, rawVal map[string]any, validStatusCodesExtra []int, allowEmptyResponse bool, usePut bool,
+	consistencyFailureFunc msgraph.ConsistencyFailureFunc) (rawResult map[string]any) {
 
 	jsonVal := ConvertOdataRawToJson(ctx, diags, rawVal, "Apply")
 	if diags.HasError() {
@@ -59,9 +65,11 @@ func CreateRaw(ctx context.Context, diags *diag.Diagnostics, graphClient *msgrap
 	var odata *odata.OData
 	var err error
 	if !usePut {
-		graphResp, _, odata, err = graphClient.Post(ctx, msgraph.PostHttpRequestInput{Uri: uri, Body: jsonVal, ValidStatusCodes: validStatusCodes})
+		graphResp, _, odata, err = graphClient.Post(ctx, msgraph.PostHttpRequestInput{Uri: uri, Body: jsonVal, ValidStatusCodes: validStatusCodes,
+			ConsistencyFailureFunc: consistencyFailureFunc})
 	} else {
-		graphResp, _, odata, err = graphClient.Put(ctx, msgraph.PutHttpRequestInput{Uri: uri, Body: jsonVal, ValidStatusCodes: validStatusCodes})
+		graphResp, _, odata, err = graphClient.Put(ctx, msgraph.PutHttpRequestInput{Uri: uri, Body: jsonVal, ValidStatusCodes: validStatusCodes,
+			ConsistencyFailureFunc: consistencyFailureFunc})
 	}
 	if err != nil {
 		diags.AddError("Unable to create with MS Graph", err.Error())

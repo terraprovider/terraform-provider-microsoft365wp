@@ -2,6 +2,7 @@ package generic
 
 import (
 	"context"
+	"net/http"
 	"slices"
 	"sync"
 	"terraform-provider-microsoft365wp/workplace/external/strcase"
@@ -9,6 +10,7 @@ import (
 
 	"terraform-provider-microsoft365wp/workplace/external/msgraph"
 
+	"github.com/hashicorp/go-azure-sdk/sdk/odata"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -123,6 +125,26 @@ type WriteOptions struct {
 	ReadAfterCreate        bool // fill unknown values after create from a fresh read instead of the POST response (e.g. if sub-actions change computed values)
 	SerializeWrites        bool
 	SerialWritesDelay      time.Duration
+	DeleteRetryNotFoundFor time.Duration // retry deletes that return 404 (or a 403 "CheckAccess returned 'NotAllowed'") for this long, for entities that MS Graph reports as missing for a while after they have been created (see deleteEntityRaw)
+	DeleteVerifyFor        time.Duration // after a delete, read the entity until MS Graph reports it as missing (and delete it again if it still exists) for up to this long (see deleteEntityRaw)
+	// Retry the POST, PATCH/PUT and DELETE requests of CreateRaw2, UpdateRaw2 and deleteEntityRaw for up to
+	// WriteRetryFor as long as WriteRetryFunc returns true for the response (e.g. for errors that MS Graph returns for a
+	// while because of eventual consistency, like references to entities that have just been created).
+	WriteRetryFor  time.Duration
+	WriteRetryFunc msgraph.ConsistencyFailureFunc
+}
+
+// writeRetryFunc returns the ConsistencyFailureFunc for WriteOptions.WriteRetryFor and WriteOptions.WriteRetryFunc (with
+// the deadline counted from now), or nil if they are not set.
+func (aps *AccessParams) writeRetryFunc() msgraph.ConsistencyFailureFunc {
+	f := aps.WriteOptions.WriteRetryFunc
+	if f == nil || aps.WriteOptions.WriteRetryFor <= 0 {
+		return nil
+	}
+	deadline := time.Now().Add(aps.WriteOptions.WriteRetryFor)
+	return func(resp *http.Response, o *odata.OData) bool {
+		return time.Now().Before(deadline) && f(resp, o)
+	}
 }
 
 type GraphToTerraformMiddlewareFunc func(context.Context, *diag.Diagnostics, *GraphToTerraformMiddlewareParams) GraphToTerraformMiddlewareReturns

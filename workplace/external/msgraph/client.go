@@ -50,22 +50,44 @@ func RetryOn404ConsistencyFailureFuncFor(d time.Duration) ConsistencyFailureFunc
 	}
 }
 
+// Retry limits. Eventual consistency in MS Graph can take a minute or longer (e.g. for Conditional Access objects that
+// have just been created), so retries of responses that a ConsistencyFailureFunc accepts are not limited by
+// defaultRetryMax but by the ConsistencyFailureFunc itself (e.g. by the deadline of
+// RetryOn404ConsistencyFailureFuncFor). consistencyRetryMax is only a safety net for funcs without a deadline, and
+// consistencyRetryWaitMax caps the (exponential) wait between these retries. All other retries (e.g. for 429 or 5xx
+// responses) stay limited to defaultRetryMax (the default of retryablehttp).
+var (
+	defaultRetryMax         = 4
+	consistencyRetryMax     = 60
+	consistencyRetryWaitMax = 5 * time.Second
+)
+
 type retryContextKey struct{}
 
 type retryContext struct {
 	input          HttpRequestInput
 	disableRetries bool
+	state          *retryState
+}
+
+// retryState counts the retries of one request (checkRetry and retryBackoff are called one after the other for each
+// attempt of a request, so no locking is needed).
+type retryState struct {
+	defaultRetries     int
+	consistencyRetries int
+	lastWasConsistency bool
 }
 
 // checkRetry is the CheckRetry policy of the RetryableClient. It is set once (instead of per request) since the
 // RetryableClient is shared by all (concurrent) requests; request specific settings are taken from the request context.
 func checkRetry(ctx context.Context, resp *http.Response, err error) (bool, error) {
 	rc, _ := ctx.Value(retryContextKey{}).(retryContext)
-	if resp != nil && !rc.disableRetries {
-		if resp.StatusCode == http.StatusFailedDependency {
-			return true, nil
-		}
+	state := rc.state
+	if state == nil {
+		state = &retryState{}
+	}
 
+	if resp != nil && !rc.disableRetries && resp.StatusCode != http.StatusFailedDependency {
 		o, err := odata.FromResponse(resp)
 		if err != nil {
 			return false, err
@@ -74,11 +96,60 @@ func checkRetry(ctx context.Context, resp *http.Response, err error) (bool, erro
 		if rc.input != nil {
 			f := rc.input.GetConsistencyFailureFunc()
 			if f != nil && f(resp, o) {
+				state.lastWasConsistency = true
+				state.consistencyRetries++
+				if state.consistencyRetries > consistencyRetryMax {
+					return false, nil
+				}
+				// the retried responses do not show up in the request/response logs, so log the retry itself
+				if resp.Request != nil {
+					graphError := ""
+					if o != nil && o.Error != nil {
+						graphError = ": " + o.Error.String()
+					}
+					tflog.Debug(ctx, fmt.Sprintf("MS Graph returned %d for %s %s, retrying (eventual consistency)%s",
+						resp.StatusCode, resp.Request.Method, resp.Request.URL, graphError))
+				}
 				return true, nil
 			}
 		}
 	}
-	return retryablehttp.DefaultRetryPolicy(ctx, resp, err)
+
+	state.lastWasConsistency = false
+	var retry bool
+	if resp != nil && !rc.disableRetries && resp.StatusCode == http.StatusFailedDependency {
+		retry = true
+	} else {
+		retry, err = retryablehttp.DefaultRetryPolicy(ctx, resp, err)
+	}
+	if retry {
+		state.defaultRetries++
+		if state.defaultRetries > defaultRetryMax {
+			return false, err
+		}
+	}
+	return retry, err
+}
+
+// retryBackoff is the Backoff of the RetryableClient. It counts the attempts of consistency retries and other retries
+// separately (see checkRetry) and waits at most consistencyRetryWaitMax between consistency retries.
+func retryBackoff(min, max time.Duration, attemptNum int, resp *http.Response) time.Duration {
+	if resp != nil && resp.Request != nil {
+		if rc, ok := resp.Request.Context().Value(retryContextKey{}).(retryContext); ok && rc.state != nil {
+			if rc.state.lastWasConsistency {
+				return retryablehttp.DefaultBackoff(min, minDuration(max, consistencyRetryWaitMax), rc.state.consistencyRetries-1, resp)
+			}
+			attemptNum = rc.state.defaultRetries - 1
+		}
+	}
+	return retryablehttp.DefaultBackoff(min, max, attemptNum, resp)
+}
+
+func minDuration(a, b time.Duration) time.Duration {
+	if a < b {
+		return a
+	}
+	return b
 }
 
 // ValidStatusFunc is a function that tests whether an HTTP response is considered valid for the particular request.
@@ -144,6 +215,9 @@ func NewClient(apiVersion ApiVersion) Client {
 	r := retryablehttp.NewClient()
 	r.ErrorHandler = RetryableErrorHandler
 	r.CheckRetry = checkRetry
+	r.Backoff = retryBackoff
+	// checkRetry limits the retries (see defaultRetryMax and consistencyRetryMax), RetryMax is only the upper bound
+	r.RetryMax = defaultRetryMax + consistencyRetryMax
 	r.Logger = nil
 
 	var endpoint string
@@ -216,7 +290,7 @@ func (c Client) performRequest(req *http.Request, input HttpRequestInput) (*http
 	}
 
 	// pass the request specific retry settings to checkRetry (the RetryableClient is shared by all requests)
-	req = req.WithContext(context.WithValue(req.Context(), retryContextKey{}, retryContext{input: input, disableRetries: c.DisableRetries}))
+	req = req.WithContext(context.WithValue(req.Context(), retryContextKey{}, retryContext{input: input, disableRetries: c.DisableRetries, state: &retryState{}}))
 
 	resp, err = c.sendRequest(req, reqBody, "")
 	if err != nil {
@@ -226,7 +300,7 @@ func (c Client) performRequest(req *http.Request, input HttpRequestInput) (*http
 	// Answer a claims challenge (e.g. for an Entra protected action) once, with a token carrying the requested claims
 	if _, ok := c.Authorizer.(ClaimsChallengeAuthorizer); ok {
 		if claims, ok := claimsFromChallenge(resp); ok {
-			tflog.Debug(req.Context(), "Microsoft Graph returned a claims challenge, retrying with a token carrying the requested claims",
+			tflog.Info(req.Context(), "Microsoft Graph returned a claims challenge, retrying with a token carrying the requested claims",
 				map[string]any{"url": req.URL.String(), "claims": claims})
 			_, _ = io.Copy(io.Discard, resp.Body)
 			resp.Body.Close()

@@ -8,7 +8,6 @@ package provider
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -349,20 +348,16 @@ func (p *workplaceProvider) Configure(ctx context.Context, req provider.Configur
 		return
 	}
 
-	claims, err := claims.ParseClaims(token)
-	if err != nil {
+	if _, err := claims.ParseClaims(token); err != nil {
 		resp.Diagnostics.AddError("Unable to parse claims in access token", err.Error())
 		return
 	}
 
-	// Log the claims for debugging
-	claimsJson, err := json.Marshal(claims)
-	if err != nil {
-		tflog.Warn(ctx, "Unable to marshal access token claims for log output to JSON")
-	} else if claimsJson == nil {
-		tflog.Warn(ctx, "Marshaled access token claims JSON was nil")
+	// Log the claims for debugging (including xms_cc, xms_ssm and acrs, see token_claims.go)
+	if claimsJson, err := tokenClaimsJson(token); err != nil {
+		tflog.Warn(ctx, fmt.Sprintf("Unable to get access token claims for log output: %s", err))
 	} else {
-		tflog.Debug(ctx, fmt.Sprintf("Provider access token claims: %s", claimsJson))
+		tflog.Info(ctx, fmt.Sprintf("Provider access token claims: %s", claimsJson))
 	}
 
 	// --- End of lifted/copied code ---
@@ -537,6 +532,8 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 		},
 		func() datasource.DataSource { return &services.MobilityManagementPolicySingularDataSource },
 		func() datasource.DataSource { return &services.MobilityManagementPolicyPluralDataSource },
+		func() datasource.DataSource { return &services.NamedLocationSingularDataSource },
+		func() datasource.DataSource { return &services.NamedLocationPluralDataSource },
 		func() datasource.DataSource { return &services.NetworkaccessTenantStatusSingularDataSource },
 		func() datasource.DataSource { return &services.NotificationMessageTemplateSingularDataSource },
 		func() datasource.DataSource { return &services.NotificationMessageTemplatePluralDataSource },
@@ -552,6 +549,8 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 		func() datasource.DataSource { return &services.SynchronizationSchemaJsonSingularDataSource },
 		func() datasource.DataSource { return &services.TargetedManagedAppConfigurationSingularDataSource },
 		func() datasource.DataSource { return &services.TargetedManagedAppConfigurationPluralDataSource },
+		func() datasource.DataSource { return &services.UnifiedRbacResourceActionSingularDataSource },
+		func() datasource.DataSource { return &services.UnifiedRbacResourceActionPluralDataSource },
 		func() datasource.DataSource { return &services.UnifiedRoleDefinitionSingularDataSource },
 		func() datasource.DataSource { return &services.UnifiedRoleDefinitionPluralDataSource },
 		func() datasource.DataSource { return &services.UnifiedRoleManagementPolicySingularDataSource },
@@ -625,6 +624,7 @@ func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resou
 		func() resource.Resource { return &services.MobileAppCategoryResource },
 		func() resource.Resource { return &services.MobileThreatDefenseConnectorMicrosoftDefenderResource },
 		func() resource.Resource { return &services.MobilityManagementPolicyResource },
+		func() resource.Resource { return &services.NamedLocationResource },
 		func() resource.Resource { return &services.NetworkaccessTenantStatusResource },
 		func() resource.Resource { return &services.NotificationMessageTemplateResource },
 		func() resource.Resource { return &services.ProfileCardPropertyResource },
@@ -632,6 +632,7 @@ func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resou
 		func() resource.Resource { return &services.SharepointSettingsResource },
 		func() resource.Resource { return &services.SynchronizationSchemaJsonResource },
 		func() resource.Resource { return &services.TargetedManagedAppConfigurationResource },
+		func() resource.Resource { return &services.UnifiedRbacResourceActionResource },
 		func() resource.Resource { return &services.UnifiedRoleDefinitionResource },
 		func() resource.Resource { return &services.UnifiedRoleManagementPolicyResource },
 		func() resource.Resource { return &services.WindowsDriverUpdateProfileResource },

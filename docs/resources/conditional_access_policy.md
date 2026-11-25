@@ -7,6 +7,8 @@ subcategory: "MS Graph: Conditional access"
 
 Represents a Microsoft Entra Conditional Access policy. Conditional access policies are custom rules that define an access scenario. For more information, see the [Conditional access documentation](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/). <br/> Also see [Microsoft docs for conditionalAccessPolicy](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta).
 
+_Provider_ Note: Note: MS Graph is not consistent for a while after a policy has been created or deleted. Therefore the provider retries reads that return "not found" for 30 s before it considers a policy as deleted (a plan for a policy that has really been deleted outside of Terraform takes up to about 45 s longer), and after a delete it reads the policy until MS Graph consistently reports it as deleted, deleting it again if needed (a destroy takes about 15–25 s per policy). A plan run right after a policy has been deleted outside of Terraform might still see the policy.
+
 ## Documentation Disclaimer
 
 Please note that almost all information on this page has been sourced literally from the official Microsoft Graph API 

@@ -3,11 +3,15 @@
 package services
 
 import (
+	"net/http"
+	"strings"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpvalidator"
+	"time"
 
+	"github.com/hashicorp/go-azure-sdk/sdk/odata"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -25,6 +29,15 @@ var (
 		SpecificConfigValidators: conditionalAccessPolicyResourceSchemaValidators,
 		AccessParams: generic.AccessParams{
 			BaseUri: "/identity/conditionalAccess/policies",
+			ReadOptions: generic.ReadOptions{
+				RetryNotFoundFor: time.Second * 30,
+			},
+			WriteOptions: generic.WriteOptions{
+				DeleteRetryNotFoundFor: time.Second * 60,
+				DeleteVerifyFor:        time.Second * 90,
+				WriteRetryFor:          time.Second * 30,
+				WriteRetryFunc:         conditionalAccessPolicyWriteRetryFunc,
+			},
 		},
 	}
 
@@ -34,6 +47,13 @@ var (
 	ConditionalAccessPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&ConditionalAccessPolicyResource, "")
 )
+
+// conditionalAccessPolicyWriteRetryFunc retries writes of CA policies that reference a named location that MS Graph
+// does not know yet (as it has just been created).
+func conditionalAccessPolicyWriteRetryFunc(resp *http.Response, o *odata.OData) bool {
+	return resp != nil && resp.StatusCode == http.StatusBadRequest && o != nil && o.Error != nil &&
+		strings.Contains(o.Error.String(), "1040: NamedLocation with id")
+}
 
 var conditionalAccessPolicyResourceSchemaValidators = []resource.ConfigValidator{
 	wpvalidator.ResourceAtLeastOneOfRootAttributes(
@@ -832,7 +852,7 @@ var conditionalAccessPolicyResourceSchema = schema.Schema{
 			MarkdownDescription: "Specifies the state of the conditionalAccessPolicy object. Required. <br/> _Provider_ allowed values are: `enabled`, `disabled`, `enabledForReportingButNotEnforced`. The _provider_ default value is `\"enabledForReportingButNotEnforced\"`.",
 		},
 	},
-	MarkdownDescription: "Represents a Microsoft Entra Conditional Access policy. Conditional access policies are custom rules that define an access scenario. For more information, see the [Conditional access documentation](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/). <br/> Also see [Microsoft docs for conditionalAccessPolicy](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta). ||| MS Graph: Conditional access ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_conditional_access_policy.example\n  id = \"<id>\"\n}\n```",
+	MarkdownDescription: "Represents a Microsoft Entra Conditional Access policy. Conditional access policies are custom rules that define an access scenario. For more information, see the [Conditional access documentation](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/). <br/> Also see [Microsoft docs for conditionalAccessPolicy](https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta).\n\n_Provider_ Note: Note: MS Graph is not consistent for a while after a policy has been created or deleted. Therefore the provider retries reads that return \"not found\" for 30 s before it considers a policy as deleted (a plan for a policy that has really been deleted outside of Terraform takes up to about 45 s longer), and after a delete it reads the policy until MS Graph consistently reports it as deleted, deleting it again if needed (a destroy takes about 15–25 s per policy). A plan run right after a policy has been deleted outside of Terraform might still see the policy. ||| MS Graph: Conditional access ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_conditional_access_policy.example\n  id = \"<id>\"\n}\n```",
 }
 
 var conditionalAccessPolicyConditionalAccessExternalTenantsValidator = wpvalidator.ExactlyOneOfSiblings(

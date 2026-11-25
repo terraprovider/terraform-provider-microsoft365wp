@@ -14,6 +14,7 @@ import (
 	"terraform-provider-microsoft365wp/workplace/external/msgraph"
 
 	"github.com/hashicorp/go-azure-sdk/sdk/auth"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"golang.org/x/oauth2"
 )
 
@@ -85,12 +86,20 @@ func (a *claimsChallengeAuthorizer) Token(ctx context.Context, req *http.Request
 }
 
 // TokenWithClaims returns a token with the client capability `cp1` and the given (challenge) claims.
-func (a *claimsChallengeAuthorizer) TokenWithClaims(ctx context.Context, req *http.Request, claims string) (*oauth2.Token, error) {
-	claims, authorizer, err := a.authorizerFor(claims)
+func (a *claimsChallengeAuthorizer) TokenWithClaims(ctx context.Context, req *http.Request, challengeClaims string) (*oauth2.Token, error) {
+	claims, authorizer, err := a.authorizerFor(challengeClaims)
 	if err != nil {
 		return nil, err
 	}
-	return authorizer.Token(context.WithValue(ctx, tokenClaimsContextKey{}, claims), req)
+	token, err := authorizer.Token(context.WithValue(ctx, tokenClaimsContextKey{}, claims), req)
+	if err == nil && challengeClaims != "" {
+		// only for challenges (at most once per protected request), to make them traceable in support cases (INFO, as
+		// e.g. Terragrunt only passes single-line provider logs through from INFO on)
+		if claimsJson, err := tokenClaimsJson(token); err == nil {
+			tflog.Info(ctx, fmt.Sprintf("Access token claims for claims challenge %s: %s", challengeClaims, claimsJson))
+		}
+	}
+	return token, err
 }
 
 // AuxiliaryTokens returns the auxiliary tokens of the base authorizer (client capability `cp1` only).

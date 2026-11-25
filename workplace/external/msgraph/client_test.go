@@ -134,3 +134,100 @@ func TestResolveUrl(t *testing.T) {
 		}
 	}
 }
+
+// newShortWaitClient returns a client for srv with the default retry limits, but short retry waits.
+func newShortWaitClient(srv *httptest.Server) Client {
+	c := NewClient(VersionBeta)
+	c.Endpoint = srv.URL
+	c.RetryableClient.RetryWaitMin = time.Millisecond
+	c.RetryableClient.RetryWaitMax = 2 * time.Millisecond
+	return c
+}
+
+// Eventual consistency in MS Graph can take longer than the default retries (about 15 s), so consistency retries must
+// only be limited by their ConsistencyFailureFunc (i.e. its deadline).
+func TestConsistencyRetriesAreNotLimitedByDefaultRetryMax(t *testing.T) {
+	notFound := int32(defaultRetryMax * 3)
+	srv, count := notFoundServer(notFound)
+	defer srv.Close()
+	c := newShortWaitClient(srv)
+
+	_, status, _, err := c.Get(context.Background(), GetHttpRequestInput{
+		Uri:                    Uri{Entity: "/fresh"},
+		ValidStatusCodes:       []int{http.StatusOK},
+		ConsistencyFailureFunc: RetryOn404ConsistencyFailureFuncFor(10 * time.Second),
+	})
+	if err != nil || status != http.StatusOK {
+		t.Fatalf("expected 200, got status %d, err %v", status, err)
+	}
+	if got := count("/beta/fresh"); got != notFound+1 {
+		t.Errorf("expected %d attempts, got %d", notFound+1, got)
+	}
+}
+
+func TestOtherRetriesStayLimitedByDefaultRetryMax(t *testing.T) {
+	var attempts atomic.Int32
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		attempts.Add(1)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusServiceUnavailable)
+		_, _ = w.Write([]byte(`{"error":{"code":"ServiceUnavailable","message":"try again"}}`))
+	}))
+	defer srv.Close()
+	c := newShortWaitClient(srv)
+
+	_, status, _, _ := c.Get(context.Background(), GetHttpRequestInput{
+		Uri:                    Uri{Entity: "/busy"},
+		ValidStatusCodes:       []int{http.StatusOK},
+		ConsistencyFailureFunc: RetryOn404ConsistencyFailureFunc, // must not extend the retries of other responses
+	})
+	if status != http.StatusServiceUnavailable {
+		t.Fatalf("expected status 503, got %d", status)
+	}
+	if got := attempts.Load(); got != int32(defaultRetryMax+1) {
+		t.Errorf("expected %d attempts, got %d", defaultRetryMax+1, got)
+	}
+}
+
+func TestConsistencyRetriesWithoutDeadlineStopAtConsistencyRetryMax(t *testing.T) {
+	srv, count := notFoundServer(1000)
+	defer srv.Close()
+	c := newShortWaitClient(srv)
+
+	_, status, _, _ := c.Get(context.Background(), GetHttpRequestInput{
+		Uri:                    Uri{Entity: "/gone"},
+		ValidStatusCodes:       []int{http.StatusOK},
+		ConsistencyFailureFunc: RetryOn404ConsistencyFailureFunc,
+	})
+	if status != http.StatusNotFound {
+		t.Fatalf("expected status 404, got %d", status)
+	}
+	if got := count("/beta/gone"); got != int32(consistencyRetryMax+1) {
+		t.Errorf("expected %d attempts, got %d", consistencyRetryMax+1, got)
+	}
+}
+
+func TestRetryBackoff(t *testing.T) {
+	respWith := func(state *retryState) *http.Response {
+		req, _ := http.NewRequest(http.MethodGet, "https://example.invalid", nil)
+		req = req.WithContext(context.WithValue(req.Context(), retryContextKey{}, retryContext{state: state}))
+		return &http.Response{StatusCode: http.StatusNotFound, Request: req}
+	}
+	min, max := time.Second, 30*time.Second
+
+	for _, tc := range []struct {
+		name  string
+		state *retryState
+		want  time.Duration
+	}{
+		{"first consistency retry", &retryState{consistencyRetries: 1, lastWasConsistency: true}, time.Second},
+		{"later consistency retries are capped", &retryState{consistencyRetries: 10, lastWasConsistency: true}, consistencyRetryWaitMax},
+		{"other retries count their own attempts", &retryState{consistencyRetries: 10, defaultRetries: 2}, 2 * time.Second},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := retryBackoff(min, max, 11, respWith(tc.state)); got != tc.want {
+				t.Errorf("got %s, want %s", got, tc.want)
+			}
+		})
+	}
+}

@@ -160,7 +160,7 @@ func (r *GenericResource) Delete(ctx context.Context, req resource.DeleteRequest
 		diags.AddWarning("Skipping deletion of entity from MS Graph, just removing resource from state", "Cannot delete entities that are singletons and/or have been created by MS Graph itself.")
 	} else {
 		if r.AccessParams.DeleteReplaceFunc == nil {
-			r.AccessParams.DeleteRaw(ctx, diags, baseUri, id, thisIdAttributer)
+			r.AccessParams.deleteEntityRaw(ctx, diags, baseUri, id, thisIdAttributer)
 		} else {
 			params := DeleteReplaceFuncParams{
 				R:            r,
