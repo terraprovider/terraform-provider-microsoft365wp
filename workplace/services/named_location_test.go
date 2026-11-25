@@ -22,6 +22,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
@@ -229,6 +230,76 @@ func TestNamedLocationCompliantNetworkDisplayNameValidator(t *testing.T) {
 			namedLocationCompliantNetworkDisplayNameValidator{}.ValidateResource(ctx, req, resp)
 			if resp.Diagnostics.HasError() != tc.wantError {
 				t.Errorf("got error %v, want %v (diags %v)", resp.Diagnostics.HasError(), tc.wantError, resp.Diagnostics)
+			}
+		})
+	}
+}
+
+func TestNamedLocationMoveState(t *testing.T) {
+	const id = "0a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d"
+	tests := []struct {
+		name            string
+		providerAddress string
+		typeName        string
+		schemaVersion   int64
+		json            string
+		wantMoved       bool
+		wantError       string
+	}{
+		{name: "azuread v3 fork", providerAddress: "registry.opentofu.org/glueckkanja/azuread", typeName: "azuread_named_location", schemaVersion: 1,
+			json: `{"id":"/identity/conditionalAccess/namedLocations/` + id + `","display_name":"Teams SIP Gateways","ip":[{"ip_ranges":["192.0.2.0/24"],"trusted":false}],"country":[]}`, wantMoved: true},
+		{name: "azuread v2", providerAddress: "registry.terraform.io/hashicorp/azuread", typeName: "azuread_named_location", schemaVersion: 0,
+			json: `{"id":"` + id + `","display_name":"Trusted"}`, wantMoved: true},
+		{name: "azuread unexpected id", providerAddress: "registry.terraform.io/hashicorp/azuread", typeName: "azuread_named_location", schemaVersion: 1,
+			json: `{"id":"/policies/` + id + `"}`, wantError: "unexpected id"},
+		{name: "azuread other resource type", providerAddress: "registry.terraform.io/hashicorp/azuread", typeName: "azuread_conditional_access_policy",
+			json: `{"id":"` + id + `"}`},
+		{name: "msgraph named location", providerAddress: "registry.terraform.io/microsoft/msgraph", typeName: "msgraph_resource",
+			json: `{"id":"` + id + `","url":"identity/conditionalAccess/namedLocations","api_version":"beta","resource_url":"identity/conditionalAccess/namedLocations/` + id + `"}`, wantMoved: true},
+		{name: "msgraph named location with slashes", providerAddress: "registry.opentofu.org/microsoft/msgraph", typeName: "msgraph_resource",
+			json: `{"id":"` + id + `","url":"/identity/conditionalaccess/namedLocations/"}`, wantMoved: true},
+		{name: "msgraph other url", providerAddress: "registry.terraform.io/microsoft/msgraph", typeName: "msgraph_resource",
+			json: `{"id":"` + id + `","url":"identity/conditionalAccess/policies"}`, wantError: `not one with url "identity/conditionalAccess/policies"`},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctx := context.Background()
+			r := &generic.GenericResource{SpecificSchema: namedLocationResourceSchema, MoveStateSources: NamedLocationResource.MoveStateSources}
+			req := resource.MoveStateRequest{
+				SourceProviderAddress: tt.providerAddress,
+				SourceTypeName:        tt.typeName,
+				SourceSchemaVersion:   tt.schemaVersion,
+				SourceRawState:        &tfprotov6.RawState{JSON: []byte(tt.json)},
+			}
+			nullState := tftypes.NewValue(namedLocationResourceSchema.Type().TerraformType(ctx), nil)
+			var resp resource.MoveStateResponse
+			moved := false
+			for _, sm := range r.MoveState(ctx) {
+				resp = resource.MoveStateResponse{TargetState: tfsdk.State{Schema: namedLocationResourceSchema, Raw: nullState}}
+				sm.StateMover(ctx, req, &resp)
+				if moved = !resp.TargetState.Raw.Equal(nullState); moved || resp.Diagnostics.HasError() {
+					break
+				}
+			}
+
+			if tt.wantError != "" {
+				if !resp.Diagnostics.HasError() || !strings.Contains(resp.Diagnostics.Errors()[0].Detail(), tt.wantError) {
+					t.Fatalf("want error containing %q, got %v", tt.wantError, resp.Diagnostics)
+				}
+				return
+			}
+			if resp.Diagnostics.HasError() {
+				t.Fatalf("unexpected error: %v", resp.Diagnostics)
+			}
+			if moved != tt.wantMoved {
+				t.Fatalf("moved = %v, want %v", moved, tt.wantMoved)
+			}
+			if !moved {
+				return
+			}
+			want := namedLocationTestState(t, map[string]any{"id": id})
+			if !resp.TargetState.Raw.Equal(want.Raw) {
+				t.Errorf("target state = %v, want %v", resp.TargetState.Raw, want.Raw)
 			}
 		})
 	}

@@ -1,5 +1,12 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.21.4 (2026-11-25)
+
+### added
+
+- [named_location](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/named_location): Existing named locations can be moved to this resource with a `moved` block from `azuread_named_location` or from a `msgraph_resource` with the url `identity/conditionalAccess/namedLocations`. This keeps the named location (and its `id`) and needs no `import` block with the `id`. Requires Terraform 1.8 or OpenTofu 1.10 or later
+
+
 ## 0.21.3 (2026-11-25)
 
 ### added

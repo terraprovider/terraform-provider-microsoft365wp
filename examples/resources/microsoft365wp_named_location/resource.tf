@@ -47,9 +47,26 @@ resource "microsoft365wp_named_location" "compliant_network" {
 }
 
 
-# Migration from azuread_named_location without recreating the named location (OpenTofu / Terraform >= 1.7): import
-# the existing named location into the new resource and remove the old resource from state without destroying it.
-# After the next apply, both blocks can be deleted.
+# Migration from azuread_named_location without recreating the named location (Terraform >= 1.8, OpenTofu >= 1.10):
+# move the state of the old resource to the new one (the id is taken from the old state, everything else is read from
+# MS Graph). After the next apply, the moved block can be deleted.
+
+moved {
+  from = azuread_named_location.office_networks
+  to   = microsoft365wp_named_location.office_networks
+}
+
+resource "microsoft365wp_named_location" "office_networks" {
+  display_name = "Office Networks"
+  ip = { # was: ip { ip_ranges = ["198.51.100.0/24"], trusted = true }
+    is_trusted = true
+    ip_ranges  = [{ v4_cidr = { cidr_address = "198.51.100.0/24" } }]
+  }
+}
+
+
+# Alternative migration (Terraform / OpenTofu >= 1.7): import the existing named location into the new resource
+# and remove the old resource from state without destroying it. After the next apply, both blocks can be deleted.
 
 import {
   to = microsoft365wp_named_location.trusted_networks

@@ -29,10 +29,18 @@ provider only sets `is_trusted` to `false` and removes it from Terraform state.
 
 ### Migration from `azuread_named_location`
 An existing named location can be moved to this resource without recreating it (it keeps its `id`, so
-Conditional Access policies using it are not affected): import it into a `microsoft365wp_named_location` with
-an `import` block (using the `id` of the existing named location), and remove the `azuread_named_location`
-from state with a `removed` block that has `lifecycle { destroy = false }`. Both blocks can be deleted after
-the next apply. See the example below.
+Conditional Access policies using it are not affected): replace the `azuread_named_location` with a
+`microsoft365wp_named_location` and add a `moved` block from the old to the new resource address (requires
+Terraform 1.8 or later, or OpenTofu 1.10 or later). The provider takes the `id` from the old state and reads
+everything else from MS Graph, so the plan shows the move and at most an in-place update. A `msgraph_resource`
+(provider `microsoft/msgraph`) with the `url` `identity/conditionalAccess/namedLocations` can be moved the
+same way.
+
+Alternatively, import the named location into a `microsoft365wp_named_location` with an `import` block (using
+the `id` of the existing named location), and remove the `azuread_named_location` from state with a `removed`
+block that has `lifecycle { destroy = false }`.
+
+The `moved`, `import` and `removed` blocks can be deleted after the next apply. See the examples below.
 
 Named locations whose actions are protected with Entra protected actions (see
 `microsoft365wp_unified_rbac_resource_action`) can only be managed by app-only clients if the provider option

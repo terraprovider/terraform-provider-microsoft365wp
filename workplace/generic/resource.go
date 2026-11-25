@@ -36,6 +36,7 @@ type GenericResource struct {
 	AccessParams             AccessParams
 	SchemaVersion            int64
 	StateUpgraders           map[int64]resource.StateUpgrader
+	MoveStateSources         []MoveStateSource // see resource_move_state.go
 
 	initSchemaOnce sync.Once
 

@@ -34,6 +34,7 @@ var (
 		TypeNameSuffix:           "named_location",
 		SpecificSchema:           namedLocationResourceSchema,
 		SpecificConfigValidators: namedLocationResourceSchemaValidators,
+		MoveStateSources:         namedLocationResourceMoveStateSources,
 		AccessParams: generic.AccessParams{
 			BaseUri: "/identity/conditionalAccess/namedLocations",
 			ReadOptions: generic.ReadOptions{
@@ -148,8 +149,36 @@ func (namedLocationCompliantNetworkDisplayNameValidator) ValidateResource(ctx co
 			namedLocationCompliantNetworkDisplayName))
 }
 
+// namedLocationMoveStateIdFromAzureAd returns the id of the named location from the state of an
+// azuread_named_location (azuread v3 and its forks use "/identity/conditionalAccess/namedLocations/<id>" with schema
+// version 1, older versions the plain id with schema version 0).
+func namedLocationMoveStateIdFromAzureAd(rawState map[string]any) (string, error) {
+	id, _ := rawState["id"].(string)
+	id = strings.TrimPrefix(id, "/identity/conditionalAccess/namedLocations/")
+	if strings.Contains(id, "/") {
+		return "", fmt.Errorf("unexpected id %q in the source state", id)
+	}
+	return id, nil
+}
+
+// namedLocationMoveStateIdFromMsGraph returns the id of the named location from the state of a msgraph_resource
+// (microsoft/msgraph), which is only possible for msgraph_resources of named locations.
+func namedLocationMoveStateIdFromMsGraph(rawState map[string]any) (string, error) {
+	url, _ := rawState["url"].(string)
+	if !strings.EqualFold(strings.Trim(url, "/"), "identity/conditionalAccess/namedLocations") {
+		return "", fmt.Errorf(`only a msgraph_resource with url "identity/conditionalAccess/namedLocations" can be moved to a named location, not one with url %q`, url)
+	}
+	id, _ := rawState["id"].(string)
+	return id, nil
+}
+
 var namedLocationResourceSchemaValidators = []resource.ConfigValidator{
 	namedLocationCompliantNetworkDisplayNameValidator{},
+}
+
+var namedLocationResourceMoveStateSources = []generic.MoveStateSource{
+	{ProviderType: "azuread", TypeName: "azuread_named_location", IdFunc: namedLocationMoveStateIdFromAzureAd},
+	{ProviderType: "msgraph", TypeName: "msgraph_resource", IdFunc: namedLocationMoveStateIdFromMsGraph},
 }
 
 func namedLocationCreateModifyFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.CreateModifyFuncParams) {
@@ -391,7 +420,7 @@ var namedLocationResourceSchema = schema.Schema{
 			},
 		},
 	},
-	MarkdownDescription: "This is the base class that represents a Microsoft Entra ID named location. Named locations are custom rules that define network locations which can then be used in a Conditional Access (CA) policy. <br/> Also see [Microsoft docs for namedLocation](https://learn.microsoft.com/en-us/graph/api/resources/namedlocation?view=graph-rest-beta).\n\n_Provider_ Note: Named locations can be used in the `conditions.locations` of `microsoft365wp_conditional_access_policy`. Use\nexactly one of `ip`, `country`, `compliant_network`, `service_tag` and `private_link` to choose the type of the\nnamed location. Changing the type replaces the named location.\n\n### Deletion\nMS Graph does not allow to delete trusted named locations, so the provider sets `is_trusted` to `false` before\ndeleting them. Named locations that are still used by a Conditional Access policy cannot be deleted. If a\npolicy stops using a named location in the same apply that deletes it, the deletion is retried for up to a\nminute until MS Graph has noticed the change of the policy. Note that Terraform deletes a named location\n_before_ it updates the policies that use it, unless the named location has\n`lifecycle { create_before_destroy = true }`. So set this for named locations that are used by policies, as\nMS Graph will otherwise refuse to delete them (error 400, code 1178).\n\n### Compliant Network Named Location\nThere can only be one named location of type `compliant_network` (it is also created by MS Graph when Global\nSecure Access signaling for Conditional Access gets enabled). If it already exists, the provider will use (and\nupdate) it instead of trying to create a new one. Its `display_name` must be `All Compliant Network locations`\n(MS Graph does not allow to change it). MS Graph does not allow to delete it either, so on destroy the\nprovider only sets `is_trusted` to `false` and removes it from Terraform state.\n\n### Migration from `azuread_named_location`\nAn existing named location can be moved to this resource without recreating it (it keeps its `id`, so\nConditional Access policies using it are not affected): import it into a `microsoft365wp_named_location` with\nan `import` block (using the `id` of the existing named location), and remove the `azuread_named_location`\nfrom state with a `removed` block that has `lifecycle { destroy = false }`. Both blocks can be deleted after\nthe next apply. See the example below.\n\nNamed locations whose actions are protected with Entra protected actions (see\n`microsoft365wp_unified_rbac_resource_action`) can only be managed by app-only clients if the provider option\n`enable_claims_challenge` is set. ||| MS Graph: Conditional access ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_named_location.example\n  id = \"<id>\"\n}\n```",
+	MarkdownDescription: "This is the base class that represents a Microsoft Entra ID named location. Named locations are custom rules that define network locations which can then be used in a Conditional Access (CA) policy. <br/> Also see [Microsoft docs for namedLocation](https://learn.microsoft.com/en-us/graph/api/resources/namedlocation?view=graph-rest-beta).\n\n_Provider_ Note: Named locations can be used in the `conditions.locations` of `microsoft365wp_conditional_access_policy`. Use\nexactly one of `ip`, `country`, `compliant_network`, `service_tag` and `private_link` to choose the type of the\nnamed location. Changing the type replaces the named location.\n\n### Deletion\nMS Graph does not allow to delete trusted named locations, so the provider sets `is_trusted` to `false` before\ndeleting them. Named locations that are still used by a Conditional Access policy cannot be deleted. If a\npolicy stops using a named location in the same apply that deletes it, the deletion is retried for up to a\nminute until MS Graph has noticed the change of the policy. Note that Terraform deletes a named location\n_before_ it updates the policies that use it, unless the named location has\n`lifecycle { create_before_destroy = true }`. So set this for named locations that are used by policies, as\nMS Graph will otherwise refuse to delete them (error 400, code 1178).\n\n### Compliant Network Named Location\nThere can only be one named location of type `compliant_network` (it is also created by MS Graph when Global\nSecure Access signaling for Conditional Access gets enabled). If it already exists, the provider will use (and\nupdate) it instead of trying to create a new one. Its `display_name` must be `All Compliant Network locations`\n(MS Graph does not allow to change it). MS Graph does not allow to delete it either, so on destroy the\nprovider only sets `is_trusted` to `false` and removes it from Terraform state.\n\n### Migration from `azuread_named_location`\nAn existing named location can be moved to this resource without recreating it (it keeps its `id`, so\nConditional Access policies using it are not affected): replace the `azuread_named_location` with a\n`microsoft365wp_named_location` and add a `moved` block from the old to the new resource address (requires\nTerraform 1.8 or later, or OpenTofu 1.10 or later). The provider takes the `id` from the old state and reads\neverything else from MS Graph, so the plan shows the move and at most an in-place update. A `msgraph_resource`\n(provider `microsoft/msgraph`) with the `url` `identity/conditionalAccess/namedLocations` can be moved the\nsame way.\n\nAlternatively, import the named location into a `microsoft365wp_named_location` with an `import` block (using\nthe `id` of the existing named location), and remove the `azuread_named_location` from state with a `removed`\nblock that has `lifecycle { destroy = false }`.\n\nThe `moved`, `import` and `removed` blocks can be deleted after the next apply. See the examples below.\n\nNamed locations whose actions are protected with Entra protected actions (see\n`microsoft365wp_unified_rbac_resource_action`) can only be managed by app-only clients if the provider option\n`enable_claims_challenge` is set. ||| MS Graph: Conditional access ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_named_location.example\n  id = \"<id>\"\n}\n```",
 }
 
 var namedLocationNamedLocationValidator = wpvalidator.ExactlyOneOfSiblings(
