@@ -461,6 +461,8 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 		func() datasource.DataSource { return &services.CrossTenantIdentitySyncPolicyPartnerSingularDataSource },
 		func() datasource.DataSource { return &services.CustomSecurityAttributeDefinitionSingularDataSource },
 		func() datasource.DataSource { return &services.CustomSecurityAttributeDefinitionPluralDataSource },
+		func() datasource.DataSource { return &services.DepEnrollmentProfileSingularDataSource },
+		func() datasource.DataSource { return &services.DepEnrollmentProfilePluralDataSource },
 		func() datasource.DataSource {
 			return &services.DeviceAndAppManagementAssignmentFilterSingularDataSource
 		},
@@ -593,6 +595,8 @@ func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resou
 		func() resource.Resource { return &services.CrossTenantAccessPolicyConfigurationPartnerResource },
 		func() resource.Resource { return &services.CrossTenantIdentitySyncPolicyPartnerResource },
 		func() resource.Resource { return &services.CustomSecurityAttributeDefinitionResource },
+		func() resource.Resource { return &services.DepDefaultEnrollmentProfileResource },
+		func() resource.Resource { return &services.DepEnrollmentProfileResource },
 		func() resource.Resource { return &services.DeviceAndAppManagementAssignmentFilterResource },
 		func() resource.Resource { return &services.DeviceAndAppManagementRoleAssignmentResource },
 		func() resource.Resource { return &services.DeviceAndAppManagementRoleDefinitionResource },

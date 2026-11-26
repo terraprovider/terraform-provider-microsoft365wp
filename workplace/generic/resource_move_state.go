@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -25,6 +26,10 @@ type MoveStateSource struct {
 	// IdFunc returns the MS Graph id of the entity from the source state (decoded from JSON). It returns an error if
 	// the source state does not describe an entity of this resource (e.g. a generic resource with another URL).
 	IdFunc func(rawState map[string]any) (string, error)
+	// ParentIdsFunc returns the ids of the parent entities from the source state, in the order of
+	// AccessParams.ParentEntities (e.g. taken from the URL of a generic resource). It is required for resources with
+	// parent entities and must not be set for others.
+	ParentIdsFunc func(rawState map[string]any) ([]string, error)
 }
 
 func (s *MoveStateSource) matches(req *resource.MoveStateRequest) bool {
@@ -50,8 +55,8 @@ func (r *GenericResource) MoveState(_ context.Context) []resource.StateMover {
 	return stateMovers
 }
 
-// moveState sets just the id in the target state if the request matches source (and leaves the target state null
-// otherwise, so that the framework tries the next StateMover).
+// moveState sets just the id (and the ids of the parent entities) in the target state if the request matches source
+// (and leaves the target state null otherwise, so that the framework tries the next StateMover).
 func (r *GenericResource) moveState(ctx context.Context, source *MoveStateSource, req *resource.MoveStateRequest, resp *resource.MoveStateResponse) {
 
 	if !source.matches(req) {
@@ -66,8 +71,9 @@ func (r *GenericResource) moveState(ctx context.Context, source *MoveStateSource
 
 	// MoveState may be called before Configure
 	r.AccessParams.InitializeGuarded(nil)
-	if len(r.AccessParams.ParentEntities) > 0 {
-		resp.Diagnostics.AddError(errorSummary, errorDetail("moving the state of resources with parent entities is not supported"))
+	parentEntities := r.AccessParams.ParentEntities
+	if len(parentEntities) > 0 && source.ParentIdsFunc == nil {
+		resp.Diagnostics.AddError(errorSummary, errorDetail("moving the state of resources with parent entities is not supported for this source"))
 		return
 	}
 
@@ -90,5 +96,23 @@ func (r *GenericResource) moveState(ctx context.Context, source *MoveStateSource
 		return
 	}
 
+	var parentIds []string
+	if len(parentEntities) > 0 {
+		parentIds, err = source.ParentIdsFunc(rawState)
+		if err == nil && len(parentIds) != len(parentEntities) {
+			err = fmt.Errorf("got %d parent id(s) from the source state, but %d are required", len(parentIds), len(parentEntities))
+		}
+		if err == nil && slices.Contains(parentIds, "") {
+			err = fmt.Errorf("the source state has an empty parent id")
+		}
+		if err != nil {
+			resp.Diagnostics.AddError(errorSummary, errorDetail("%s", err))
+			return
+		}
+	}
+
 	resp.Diagnostics.Append(resp.TargetState.SetAttribute(ctx, path.Root(r.AccessParams.EntityId.AttrNameTf), id)...)
+	for i, pe := range parentEntities {
+		resp.Diagnostics.Append(resp.TargetState.SetAttribute(ctx, pe.ParentIdField, parentIds[i])...)
+	}
 }

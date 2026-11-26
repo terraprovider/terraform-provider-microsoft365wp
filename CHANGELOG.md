@@ -1,5 +1,13 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.21.5 (2026-11-26)
+
+### added
+
+- [dep_enrollment_profile](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/dep_enrollment_profile): New resource and data sources for classic Apple DEP enrollment profiles (iOS/iPadOS and macOS) of an enrollment program token. Updates always send the complete profile, as MS Graph resets the Setup Assistant settings of a profile (skip flags, `enabled_skip_keys` and `itunes_pairing_mode`) when an update does not contain them. Existing profiles can be moved to this resource with a `moved` block from a `msgraph_resource` with the url `deviceManagement/depOnboardingSettings/<id>/enrollmentProfiles`, or imported with their plain `id`
+- [dep_default_enrollment_profile](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/dep_default_enrollment_profile): New resource to make a classic DEP enrollment profile or an ADE enrollment policy the default profile of its enrollment program token, without changing the profile itself
+
+
 ## 0.21.4 (2026-11-25)
 
 ### added

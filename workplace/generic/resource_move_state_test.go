@@ -120,3 +120,74 @@ func TestMoveState(t *testing.T) {
 		})
 	}
 }
+
+var moveStateTestSchemaWithParent = schema.Schema{
+	Attributes: map[string]schema.Attribute{
+		"parent_id":    schema.StringAttribute{Required: true},
+		"id":           schema.StringAttribute{Computed: true},
+		"display_name": schema.StringAttribute{Optional: true},
+	},
+}
+
+func moveStateTestParentIdsFunc(rawState map[string]any) ([]string, error) {
+	url, _ := rawState["url"].(string)
+	parentId, ok := strings.CutPrefix(url, "parents/")
+	if !ok {
+		return nil, fmt.Errorf("unexpected url %q", url)
+	}
+	return strings.Split(parentId, ","), nil
+}
+
+func TestMoveStateParentEntities(t *testing.T) {
+	sources := []MoveStateSource{
+		{TypeName: "generic_resource", IdFunc: moveStateTestIdFunc, ParentIdsFunc: moveStateTestParentIdsFunc},
+	}
+	tests := []struct {
+		name         string
+		json         string
+		wantId       string
+		wantParentId string
+		wantError    string
+	}{
+		{name: "match", json: `{"id":"c1","url":"parents/p1"}`, wantId: "c1", wantParentId: "p1"},
+		{name: "ParentIdsFunc error", json: `{"id":"c1","url":"others/p1"}`, wantError: `unexpected url "others/p1"`},
+		{name: "too many parent ids", json: `{"id":"c1","url":"parents/p1,p2"}`, wantError: "got 2 parent id(s) from the source state, but 1 are required"},
+		{name: "empty parent id", json: `{"id":"c1","url":"parents/"}`, wantError: "empty parent id"},
+		{name: "IdFunc error comes first", json: `{"id":"c1","kind":"car","url":"others/p1"}`, wantError: "kind car is not a thing"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &GenericResource{
+				SpecificSchema:   moveStateTestSchemaWithParent,
+				AccessParams:     AccessParams{ParentEntities: ParentEntities{{ParentIdField: path.Root("parent_id")}}},
+				MoveStateSources: sources,
+			}
+			req := resource.MoveStateRequest{SourceProviderAddress: "registry.terraform.io/x/y", SourceTypeName: "generic_resource",
+				SourceRawState: &tfprotov6.RawState{JSON: []byte(tt.json)}}
+			resp, moved := runStateMovers(t, r, moveStateTestSchemaWithParent, req)
+
+			if tt.wantError != "" {
+				if !resp.Diagnostics.HasError() || !strings.Contains(resp.Diagnostics.Errors()[0].Detail(), tt.wantError) {
+					t.Fatalf("want error containing %q, got %v", tt.wantError, resp.Diagnostics)
+				}
+				return
+			}
+			if resp.Diagnostics.HasError() || !moved {
+				t.Fatalf("moved = %v, diagnostics: %v", moved, resp.Diagnostics)
+			}
+			var id, parentId, displayName types.String
+			resp.Diagnostics.Append(resp.TargetState.GetAttribute(context.Background(), path.Root("id"), &id)...)
+			resp.Diagnostics.Append(resp.TargetState.GetAttribute(context.Background(), path.Root("parent_id"), &parentId)...)
+			resp.Diagnostics.Append(resp.TargetState.GetAttribute(context.Background(), path.Root("display_name"), &displayName)...)
+			if resp.Diagnostics.HasError() {
+				t.Fatal(resp.Diagnostics)
+			}
+			if id.ValueString() != tt.wantId || parentId.ValueString() != tt.wantParentId {
+				t.Errorf("id, parent_id = %q, %q, want %q, %q", id.ValueString(), parentId.ValueString(), tt.wantId, tt.wantParentId)
+			}
+			if !displayName.IsNull() {
+				t.Errorf("display_name = %v, want null", displayName)
+			}
+		})
+	}
+}
