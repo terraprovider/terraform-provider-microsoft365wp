@@ -68,6 +68,9 @@ func TestMoveState(t *testing.T) {
 		{name: "provider type is case-insensitive", providerAddress: "registry.terraform.io/x/Other", typeName: "other_thing", json: `{"id":"a2"}`, wantId: "a2"},
 		{name: "empty ProviderType accepts any provider", providerAddress: "example.com/y/whatever", typeName: "generic_resource", json: `{"id":"b1","kind":"thing"}`, wantId: "b1"},
 		{name: "other provider type", providerAddress: "registry.terraform.io/x/another", typeName: "other_thing", json: `{"id":"a1"}`},
+		// OpenTofu passes this provider's own address for the further instances of a moved resource with several instances
+		{name: "own provider address", providerAddress: "registry.opentofu.org/terraprovider/microsoft365wp", typeName: "other_thing", json: `{"id":"a3"}`, wantId: "a3"},
+		{name: "own provider address, other resource type", providerAddress: "registry.opentofu.org/terraprovider/microsoft365wp", typeName: "other_stuff", json: `{"id":"a3"}`},
 		{name: "other resource type", providerAddress: "registry.terraform.io/x/other", typeName: "other_stuff", json: `{"id":"a1"}`},
 		{name: "IdFunc error", providerAddress: "registry.terraform.io/x/y", typeName: "generic_resource", json: `{"id":"b1","kind":"car"}`, wantError: "kind car is not a thing"},
 		{name: "no id", providerAddress: "registry.terraform.io/x/other", typeName: "other_thing", json: `{"display_name":"A"}`, wantError: "the source state has no id"},

@@ -13,13 +13,18 @@ import (
 
 var _ resource.ResourceWithMoveState = &GenericResource{}
 
+// ProviderTypeName is the type name of this provider (the last part of its address and the prefix of its resource
+// types).
+const ProviderTypeName = "microsoft365wp"
+
 // MoveStateSource is a resource type (usually of another provider) that manages the same MS Graph entities as this
 // resource, so that its state can be moved to this resource with a `moved` block (instead of an `import` block, which
 // needs the id in the configuration). Only the id gets taken from the source state, the read that follows the move
 // fills in everything else from MS Graph.
 type MoveStateSource struct {
 	// ProviderType is the type of the source provider (the last part of its address, e.g. "azuread"), so that any
-	// registry and namespace (e.g. forks of a provider) are accepted. Empty accepts any provider.
+	// registry and namespace (e.g. forks of a provider) are accepted. Empty accepts any provider. This provider itself
+	// (ProviderTypeName) is always accepted as well, see matches.
 	ProviderType string
 	// TypeName is the source resource type, e.g. "azuread_named_location".
 	TypeName string
@@ -40,7 +45,13 @@ func (s *MoveStateSource) matches(req *resource.MoveStateRequest) bool {
 		return true
 	}
 	addressParts := strings.Split(req.SourceProviderAddress, "/")
-	return strings.EqualFold(addressParts[len(addressParts)-1], s.ProviderType)
+	providerType := addressParts[len(addressParts)-1]
+	// OpenTofu (at least 1.13.9) takes the previous provider of a moved resource per resource (not per instance) from
+	// the previous run state, which it updates with the target provider after reading each instance. So for a resource
+	// with several instances (count or for_each), the instances read after the first one arrive with this provider's
+	// own address as source provider (but still with the source resource type). Accept that, as the source resource
+	// type (and IdFunc) still identify the source. See https://github.com/opentofu/opentofu/issues/4880.
+	return strings.EqualFold(providerType, s.ProviderType) || strings.EqualFold(providerType, ProviderTypeName)
 }
 
 func (r *GenericResource) MoveState(_ context.Context) []resource.StateMover {

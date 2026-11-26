@@ -260,6 +260,13 @@ func TestNamedLocationMoveState(t *testing.T) {
 			json: `{"id":"` + id + `","url":"/identity/conditionalaccess/namedLocations/"}`, wantMoved: true},
 		{name: "msgraph other url", providerAddress: "registry.terraform.io/microsoft/msgraph", typeName: "msgraph_resource",
 			json: `{"id":"` + id + `","url":"identity/conditionalAccess/policies"}`, wantError: `not one with url "identity/conditionalAccess/policies"`},
+		// OpenTofu passes this provider's own address for the further instances of a moved resource with several instances
+		{name: "azuread with own provider address", providerAddress: "registry.opentofu.org/terraprovider/microsoft365wp", typeName: "azuread_named_location", schemaVersion: 1,
+			json: `{"id":"/identity/conditionalAccess/namedLocations/` + id + `","display_name":"Trusted"}`, wantMoved: true},
+		{name: "msgraph with own provider address", providerAddress: "registry.opentofu.org/terraprovider/microsoft365wp", typeName: "msgraph_resource",
+			json: `{"id":"` + id + `","url":"identity/conditionalAccess/namedLocations"}`, wantMoved: true},
+		{name: "msgraph with own provider address, other url", providerAddress: "registry.opentofu.org/terraprovider/microsoft365wp", typeName: "msgraph_resource",
+			json: `{"id":"` + id + `","url":"identity/conditionalAccess/policies"}`, wantError: `not one with url "identity/conditionalAccess/policies"`},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

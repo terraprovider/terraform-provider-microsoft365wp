@@ -1,5 +1,20 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.21.6 (2026-11-26)
+
+### security
+
+- The release binaries on GitHub and in the public registries are built with Go 1.27.4 instead of 1.26.10, which fixes GO-2026-6859 (CVE-2026-97054) in `net/http` (an HTTP/1 server crash, the provider only uses `net/http` as a client)
+
+### fixed
+
+- [dep_enrollment_profile](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/dep_enrollment_profile), [named_location](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/named_location): A `moved` block from another provider (e.g. from `msgraph_resource` or `azuread_named_location`) failed with OpenTofu for all but the first instance of a resource with several instances (`count` or `for_each`), with "Unable to Move Resource State" and this provider as the source provider address (OpenTofu bug [#4880](https://github.com/opentofu/opentofu/issues/4880))
+
+### changed
+
+- Update MS Graph metadata & docs
+
+
 ## 0.21.5 (2026-11-26)
 
 ### added

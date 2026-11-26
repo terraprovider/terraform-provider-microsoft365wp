@@ -238,14 +238,21 @@ func TestDepDefaultEnrollmentProfileImportModifyFunc(t *testing.T) {
 func TestDepEnrollmentProfileMoveState(t *testing.T) {
 	ctx := context.Background()
 	s := depEnrollmentProfileResourceSchema
+	const msgraphProvider = "registry.terraform.io/microsoft/msgraph"
+	// OpenTofu passes this provider's own address for the further instances of a moved resource with several instances
+	// (e.g. for_each), see generic.MoveStateSource.matches
+	const ownProvider = "registry.opentofu.org/terraprovider/microsoft365wp"
 	for _, tc := range []struct {
-		name      string
-		json      string
-		wantError string
+		name            string
+		providerAddress string
+		json            string
+		wantError       string
 	}{
-		{"msgraph DEP profile", `{"id":"` + depTestProfileId + `","url":"deviceManagement/depOnboardingSettings/` + depTestTokenId + `/enrollmentProfiles","api_version":"beta"}`, ""},
-		{"msgraph DEP profile with slashes", `{"id":"` + depTestProfileId + `","url":"/devicemanagement/depOnboardingSettings/` + depTestTokenId + `/enrollmentProfiles/"}`, ""},
-		{"msgraph other url", `{"id":"x","url":"deviceManagement/androidDeviceOwnerEnrollmentProfiles"}`, `not one with url "deviceManagement/androidDeviceOwnerEnrollmentProfiles"`},
+		{"msgraph DEP profile", msgraphProvider, `{"id":"` + depTestProfileId + `","url":"deviceManagement/depOnboardingSettings/` + depTestTokenId + `/enrollmentProfiles","api_version":"beta"}`, ""},
+		{"msgraph DEP profile with slashes", msgraphProvider, `{"id":"` + depTestProfileId + `","url":"/devicemanagement/depOnboardingSettings/` + depTestTokenId + `/enrollmentProfiles/"}`, ""},
+		{"msgraph other url", msgraphProvider, `{"id":"x","url":"deviceManagement/androidDeviceOwnerEnrollmentProfiles"}`, `not one with url "deviceManagement/androidDeviceOwnerEnrollmentProfiles"`},
+		{"msgraph DEP profile with own provider address", ownProvider, `{"id":"` + depTestProfileId + `","url":"deviceManagement/depOnboardingSettings/` + depTestTokenId + `/enrollmentProfiles","api_version":"beta"}`, ""},
+		{"msgraph other url with own provider address", ownProvider, `{"id":"x","url":"deviceManagement/androidDeviceOwnerEnrollmentProfiles"}`, `not one with url "deviceManagement/androidDeviceOwnerEnrollmentProfiles"`},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			r := &generic.GenericResource{
@@ -254,7 +261,7 @@ func TestDepEnrollmentProfileMoveState(t *testing.T) {
 				MoveStateSources: DepEnrollmentProfileResource.MoveStateSources,
 			}
 			req := resource.MoveStateRequest{
-				SourceProviderAddress: "registry.terraform.io/microsoft/msgraph",
+				SourceProviderAddress: tc.providerAddress,
 				SourceTypeName:        "msgraph_resource",
 				SourceRawState:        &tfprotov6.RawState{JSON: []byte(tc.json)},
 			}

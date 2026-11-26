@@ -1,6 +1,6 @@
 module terraform-provider-microsoft365wp
 
-go 1.26.10
+go 1.27.4
 
 require (
 	github.com/hashicorp/go-azure-sdk/sdk v0.20261116.1144656

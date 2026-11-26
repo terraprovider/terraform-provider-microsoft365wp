@@ -15,6 +15,7 @@ import (
 	"os"
 
 	"terraform-provider-microsoft365wp/workplace/external/msgraph"
+	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/services"
 	mobileappfuncs "terraform-provider-microsoft365wp/workplace/services/mobile_app_funcs"
 	"terraform-provider-microsoft365wp/workplace/util/retryablehttputil"
@@ -45,7 +46,7 @@ type workplaceProvider struct{}
 
 // Returns the provider type name.
 func (p *workplaceProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "microsoft365wp"
+	resp.TypeName = generic.ProviderTypeName
 }
 
 // Defines the provider-level schema for configuration data.
