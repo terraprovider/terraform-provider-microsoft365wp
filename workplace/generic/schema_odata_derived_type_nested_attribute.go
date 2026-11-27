@@ -1,6 +1,7 @@
 package generic
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	dsschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	rsschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
@@ -41,4 +42,20 @@ type OdataDerivedTypeNestedAttributeDs struct {
 
 func (n OdataDerivedTypeNestedAttributeDs) GetDerivedType() string {
 	return n.DerivedType
+}
+
+// GetType caches the type of the embedded SingleNestedAttribute (see cachedNestedAttributeType).
+func (n OdataDerivedTypeNestedAttributeRs) GetType() attr.Type {
+	if n.CustomType != nil {
+		return n.SingleNestedAttribute.GetType()
+	}
+	return cachedNestedAttributeType(n.Attributes, n.SingleNestedAttribute.GetType)
+}
+
+// GetType caches the type of the embedded SingleNestedAttribute (see cachedNestedAttributeType).
+func (n OdataDerivedTypeNestedAttributeDs) GetType() attr.Type {
+	if n.CustomType != nil {
+		return n.SingleNestedAttribute.GetType()
+	}
+	return cachedNestedAttributeType(n.Attributes, n.SingleNestedAttribute.GetType)
 }

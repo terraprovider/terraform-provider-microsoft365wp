@@ -1,5 +1,12 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.21.8 (2026-11-27)
+
+### changed
+
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): Plans of resources with OData derived types need about 3 to 4 times less CPU time, especially [device_management_configuration_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_management_configuration_policy) with many settings (e.g. a plan of 157 settings catalog policies took 37 s instead of 110 s). The framework derived the type of nested attributes from their whole subtree for every value while planning, and the provider now caches these types
+
+
 ## 0.21.7 (2026-11-27)
 
 ### added
