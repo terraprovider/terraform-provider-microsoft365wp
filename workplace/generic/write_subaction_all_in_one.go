@@ -18,6 +18,10 @@ type WriteSubActionAllInOne struct {
 
 	GraphErrorsAsWarnings bool
 	UsePatch              bool
+	// Read the entity first and skip the request if MS Graph already has the values (compared by the source attribute
+	// names of AttributesMap, i.e. for actions like setPriority whose parameters are attributes of the entity). Avoids
+	// redundant actions that MS Graph rejects (e.g. setPriority with the current priority returns 400).
+	SkipIfUnchangedInGraph bool
 }
 
 func (a *WriteSubActionAllInOne) Initialize() {
@@ -66,6 +70,10 @@ func (a *WriteSubActionAllInOne) executeRequest(ctx context.Context, diags *diag
 		return
 	}
 
+	if a.SkipIfUnchangedInGraph && wsaReq.Operation != OperationDelete && a.unchangedInGraph(ctx, diags, wsaReq, parentUri) {
+		return
+	}
+
 	validStatusCodes := []int{http.StatusOK, http.StatusCreated, http.StatusNoContent}
 	uri := msgraph.Uri{Entity: parentUri.Entity}
 	if a.UriSuffix != "" {
@@ -86,4 +94,35 @@ func (a *WriteSubActionAllInOne) executeRequest(ctx context.Context, diags *diag
 		}
 		return
 	}
+}
+
+// unchangedInGraph reports whether the entity in MS Graph already has all values of the sub-action (see
+// SkipIfUnchangedInGraph). A read error is reported as a warning and counts as changed, so that the request still gets
+// sent. The entity is read without $select, as not all endpoints support it.
+func (a *WriteSubActionAllInOne) unchangedInGraph(ctx context.Context, diags *diag.Diagnostics, wsaReq *WriteSubActionRequest, entityUri msgraph.Uri) bool {
+	var readDiags diag.Diagnostics
+	current := wsaReq.GenRes.AccessParams.ReadRaw2(ctx, &readDiags, entityUri, "", "", nil, false)
+	if readDiags.HasError() {
+		for _, d := range readDiags {
+			diags.AddWarning("Unable to read current values in WriteSubActionAllInOne, sending the request anyway", d.Summary()+": "+d.Detail())
+		}
+		return false
+	}
+	for sourceKey := range a.AttributesMap {
+		planned, ok := wsaReq.SubActionsData[sourceKey]
+		if !ok {
+			continue
+		}
+		if !jsonEqual(planned, current[sourceKey]) {
+			return false
+		}
+	}
+	return true
+}
+
+// jsonEqual compares two raw values by their JSON representation (e.g. numbers from plan and MS Graph).
+func jsonEqual(a, b any) bool {
+	aj, errA := json.Marshal(a)
+	bj, errB := json.Marshal(b)
+	return errA == nil && errB == nil && string(aj) == string(bj)
 }

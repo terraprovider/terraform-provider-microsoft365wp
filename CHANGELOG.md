@@ -1,5 +1,26 @@
 # `microsoft365wp` Terraform Provider Changelog
 
+## 0.21.7 (2026-11-27)
+
+### added
+
+- [browser_site_list](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/browser_site_list): New resource and data sources for the Microsoft Edge Internet Explorer mode site lists (Enterprise Mode Site List), with their sites and shared cookies as nested sets. There is no draft stage, as every create and update writes the sites and shared cookies and then publishes the list, so the published list equals the configuration afterwards. Changes left pending elsewhere (e.g. saved but not published in the Microsoft 365 admin center) show up as drift and are overwritten. Writes are serialized, as MS Graph silently loses parallel writes to a list. Sites must be unique by `web_url` and shared cookies by `display_name`, `host_or_domain`, `path` and `host_only` (case-insensitive), and a domain cookie (`host_only = false`) needs a leading dot in `host_or_domain`; all of this is checked at plan time
+- [device_enrollment_configuration](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_enrollment_configuration): The Windows enrollment status page (`windows10_esp`) supports `install_quality_updates` and `allow_non_blocking_app_installation` (both default `false`), also with no selected apps (MS Graph rejects `allow_non_blocking_app_installation = true` together with an empty app list in one request, so the provider writes the list separately). Thanks to mmarcinkevic for GitHub PR #32 / issue #33
+
+### fixed
+
+- All resources: An unchanged configuration could plan configured values of set elements back to the provider default, e.g. a `mobile_app` assignment with `intent = "uninstall"` next to one without `intent` planned `"uninstall" -> "required"`, or a `cloud_pc_provisioning_policy` domain join configuration `"hybridAzureADJoin" -> "azureADJoin"`. The planned elements of every nested set are now ordered like the configuration before defaults are applied; no configuration change is needed. Assignment filters (`filter_type`) were not affected in practice
+- [authentication_strength_policy](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/authentication_strength_policy): A create could fail with "Authentication strength policy display names must be unique." although the policy was not in the state, and every following apply failed the same way. The error now names the existing policy with its `id` and shows the `import` block that takes it over; an import block in the same configuration imports it without a create
+- [device_enrollment_configuration](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_enrollment_configuration): A create or update no longer shows a warning when the priority does not change (`setPriority` with the current priority returns HTTP 400, it is now skipped)
+- GitHub releases: The release binaries no longer report the version `v<x>+dirty` and `vcs.modified=true` in their build info
+
+### changed
+
+- [device_enrollment_configuration](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/resources/device_enrollment_configuration): A Windows enrollment status page on which `install_quality_updates` or `allow_non_blocking_app_installation` has been enabled elsewhere (e.g. in the Intune portal) now plans it back to `false` unless the configuration sets it
+- [Provider](https://registry.terraform.io/providers/terraprovider/microsoft365wp/latest/docs/): Retries of MS Graph requests after a 5xx, 429 or connection error are logged at log level INFO for all resources, since the retried requests do not show up in the request and response logs
+- Update Go dependencies
+
+
 ## 0.21.6 (2026-11-26)
 
 ### security

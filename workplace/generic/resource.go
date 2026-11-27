@@ -51,6 +51,7 @@ func (r *GenericResource) Metadata(_ context.Context, req resource.MetadataReque
 // Defines the schema for the resource.
 func (r *GenericResource) Schema(ctx context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	r.initSchemaOnce.Do(func() {
+		r.SpecificSchema.Attributes = withSetAlignToConfigOrder(r.SpecificSchema.Attributes)
 		wpdefaultvalue.Init(ctx, &resp.Diagnostics, &r.SpecificSchema)
 	})
 	r.SpecificSchema.Version = r.SchemaVersion

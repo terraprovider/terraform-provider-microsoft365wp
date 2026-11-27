@@ -429,6 +429,8 @@ func (p *workplaceProvider) DataSources(_ context.Context) []func() datasource.D
 		func() datasource.DataSource {
 			return &services.AzureAdWindowsAutopilotDeploymentProfileAssignmentPluralDataSource
 		},
+		func() datasource.DataSource { return &services.BrowserSiteListSingularDataSource },
+		func() datasource.DataSource { return &services.BrowserSiteListPluralDataSource },
 		func() datasource.DataSource { return &services.CloudPcDeviceImageSingularDataSource },
 		func() datasource.DataSource { return &services.CloudPcDeviceImagePluralDataSource },
 		func() datasource.DataSource { return &services.CloudPcGalleryImageSingularDataSource },
@@ -584,6 +586,7 @@ func (p *workplaceProvider) Resources(_ context.Context) []func() resource.Resou
 		func() resource.Resource { return &services.AuthorizationPolicyResource },
 		func() resource.Resource { return &services.AzureAdWindowsAutopilotDeploymentProfileResource },
 		func() resource.Resource { return &services.AzureAdWindowsAutopilotDeploymentProfileAssignmentResource },
+		func() resource.Resource { return &services.BrowserSiteListResource },
 		func() resource.Resource { return &services.CloudPcProvisioningPolicyResource },
 		func() resource.Resource { return &services.CloudPcUserSettingResource },
 		func() resource.Resource { return &services.ConditionalAccessPolicyResource },

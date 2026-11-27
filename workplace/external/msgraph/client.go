@@ -127,8 +127,29 @@ func checkRetry(ctx context.Context, resp *http.Response, err error) (bool, erro
 		if state.defaultRetries > defaultRetryMax {
 			return false, err
 		}
+		// The retried requests do not show up in the request/response logs either. Log these retries at INFO level,
+		// as a retried POST may have been processed already (e.g. MS Graph created an entity and then returned a 5xx
+		// or dropped the connection), which can lead to duplicates or errors like "display names must be unique"
+		// (#247).
+		tflog.Info(ctx, describeDefaultRetry(resp, err))
 	}
 	return retry, err
+}
+
+// describeDefaultRetry returns the log message for a retry by the default retry policy (5xx, 429, connection errors).
+func describeDefaultRetry(resp *http.Response, err error) string {
+	request := "request"
+	if resp != nil && resp.Request != nil {
+		request = resp.Request.Method + " " + resp.Request.URL.String()
+	}
+	switch {
+	case resp != nil:
+		return fmt.Sprintf("MS Graph returned %d for %s, retrying", resp.StatusCode, request)
+	case err != nil:
+		return fmt.Sprintf("%s failed, retrying: %s", request, err.Error())
+	default:
+		return fmt.Sprintf("%s failed, retrying", request)
+	}
 }
 
 // retryBackoff is the Backoff of the RetryableClient. It counts the attempts of consistency retries and other retries

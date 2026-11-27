@@ -2,6 +2,7 @@ package msgraph
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -227,6 +228,29 @@ func TestRetryBackoff(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			if got := retryBackoff(min, max, 11, respWith(tc.state)); got != tc.want {
 				t.Errorf("got %s, want %s", got, tc.want)
+			}
+		})
+	}
+}
+
+// TestDescribeDefaultRetry checks the log message of retries by the default retry policy, which do not show up in the
+// request/response logs (#247).
+func TestDescribeDefaultRetry(t *testing.T) {
+	req, _ := http.NewRequest(http.MethodPost, "https://graph.microsoft.com/beta/policies/authenticationStrengthPolicies", nil)
+	for _, tc := range []struct {
+		name string
+		resp *http.Response
+		err  error
+		want string
+	}{
+		{"5xx", &http.Response{StatusCode: http.StatusBadGateway, Request: req}, nil,
+			"MS Graph returned 502 for POST https://graph.microsoft.com/beta/policies/authenticationStrengthPolicies, retrying"},
+		{"connection error", nil, errors.New(`Post "https://graph.microsoft.com/beta/x": EOF`),
+			`request failed, retrying: Post "https://graph.microsoft.com/beta/x": EOF`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := describeDefaultRetry(tc.resp, tc.err); got != tc.want {
+				t.Errorf("got %q, want %q", got, tc.want)
 			}
 		})
 	}

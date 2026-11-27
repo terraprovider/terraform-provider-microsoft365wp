@@ -3,6 +3,9 @@
 package services
 
 import (
+	"context"
+	"fmt"
+	"strings"
 	"terraform-provider-microsoft365wp/workplace/generic"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpdefaultvaluemodifier"
 	"terraform-provider-microsoft365wp/workplace/wpschema/wpplanmodifier"
@@ -10,6 +13,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -33,6 +37,7 @@ var (
 					},
 				},
 			},
+			CreateReplaceFunc: authenticationStrengthPolicyCreateReplaceFunc,
 		},
 	}
 
@@ -42,6 +47,31 @@ var (
 	AuthenticationStrengthPolicyPluralDataSource = generic.CreateGenericDataSourcePluralFromResource(
 		&AuthenticationStrengthPolicyResource, "")
 )
+
+func authenticationStrengthPolicyCreateReplaceFunc(ctx context.Context, diags *diag.Diagnostics, params *generic.CreateReplaceFuncParams) {
+	// #247 (Workplace Foundation #1253): a create can fail with 400 "Authentication strength policy display names must
+	// be unique." although the policy is not in the state. Most likely the first POST got a 5xx or a dropped
+	// connection although MS Graph created the policy, and the HTTP client sent the POST again (parallel creates of
+	// distinct names do not conflict, verified in c4a8toydaria 2026-11-27; the check is case-insensitive). Name the
+	// existing policy in the error, so that it can be deleted or imported (an import block avoids the create).
+	var createDiags diag.Diagnostics
+	params.Id, params.RawResult = params.R.AccessParams.CreateRaw(ctx, &createDiags, params.BaseUri, params.IdAttributer, params.RawVal)
+	if !createDiags.HasError() || !authenticationStrengthPolicyIsDuplicateNameError(createDiags) {
+		diags.Append(createDiags...)
+		return
+	}
+	displayName, _ := params.RawVal["displayName"].(string)
+	existingId := authenticationStrengthPolicyFindIdByDisplayName(ctx, params, displayName)
+	if existingId == "" {
+		diags.Append(createDiags...)
+		return
+	}
+	diags.AddError("Authentication strength policy with this display_name already exists",
+		fmt.Sprintf("MS Graph already has an authentication strength policy with the display name %q (id %q), which is "+
+			"not in the Terraform state. It may be left over from an earlier apply in which creating it failed. Delete "+
+			"it in MS Graph, or adopt it with an import block, e.g.:\n\nimport {\n  to = <address of this resource>\n  id = %q\n}\n\n"+
+			"Original error: %s", displayName, existingId, existingId, authenticationStrengthPolicyDiagsText(createDiags)))
+}
 
 var authenticationStrengthPolicyResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{ // authenticationStrengthPolicy
@@ -111,4 +141,45 @@ var authenticationStrengthPolicyResourceSchema = schema.Schema{
 		},
 	},
 	MarkdownDescription: "A collection of settings that define specific combinations of authentication methods and metadata. The authentication strength policy, when applied to a given scenario using Microsoft Entra Conditional Access, defines which authentication methods must be used to authenticate in that scenario. An authentication strength may be built-in or custom (defined by the tenant) and may or may not fulfill the requirements to grant an MFA claim. <br/> Also see [Microsoft docs for authenticationStrengthPolicy](https://learn.microsoft.com/en-us/graph/api/resources/authenticationstrengthpolicy?view=graph-rest-beta).\n\n_Provider_ Note: Use the separate resource `microsoft365wp_authentication_combination_configuration` to create combination configurations for an authentication strength policy. ||| MS Graph: Authentication ||| Import is supported using an `import` block (or the `terraform import` command) with the value of `id`:\n\n```terraform\nimport {\n  to = microsoft365wp_authentication_strength_policy.example\n  id = \"<id>\"\n}\n```",
+}
+
+const kAuthenticationStrengthPolicyDuplicateName = "display names must be unique"
+
+func authenticationStrengthPolicyDiagsText(d diag.Diagnostics) string {
+	var parts []string
+	for _, e := range d.Errors() {
+		parts = append(parts, e.Summary()+": "+e.Detail())
+	}
+	return strings.Join(parts, "; ")
+}
+
+func authenticationStrengthPolicyIsDuplicateNameError(d diag.Diagnostics) bool {
+	return strings.Contains(authenticationStrengthPolicyDiagsText(d), kAuthenticationStrengthPolicyDuplicateName)
+}
+
+// authenticationStrengthPolicyFindIdByDisplayName returns the id of the policy with the display name (compared
+// case-insensitively, like MS Graph's uniqueness check), or "" if there is none or it cannot be read.
+func authenticationStrengthPolicyFindIdByDisplayName(ctx context.Context, params *generic.CreateReplaceFuncParams, displayName string) string {
+	var readDiags diag.Diagnostics
+	uri := params.R.AccessParams.GetBaseUri(ctx, &readDiags, params.BaseUri, params.IdAttributer)
+	if readDiags.HasError() {
+		return ""
+	}
+	// the collection is small (built-in plus custom policies), so read it completely instead of relying on $filter
+	result := params.R.AccessParams.ReadRaw2(ctx, &readDiags, uri, "", "", nil, false)
+	if readDiags.HasError() {
+		return ""
+	}
+	items, _ := result["value"].([]any)
+	for _, item := range items {
+		policy, ok := item.(map[string]any)
+		if !ok {
+			continue
+		}
+		if name, _ := policy["displayName"].(string); strings.EqualFold(name, displayName) {
+			id, _ := policy["id"].(string)
+			return id
+		}
+	}
+	return ""
 }

@@ -22,6 +22,10 @@ jobs:
           persist-credentials: false
           # Allow goreleaser to access older tag information.
           fetch-depth: 0
+      # goreleaser writes into dist/ before building, and this repository has no .gitignore (it is a published subset of
+      # the GitLab repository), so Go would stamp the binaries as modified (vcs.modified=true, version v<x>+dirty)
+      - name: Exclude dist/ from git status
+        run: echo '/dist/' >> .git/info/exclude
       - uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32 # v5.0.2
         with:
           go-version-file: 'go.mod'

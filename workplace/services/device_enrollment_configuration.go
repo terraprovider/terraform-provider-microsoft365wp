@@ -46,12 +46,14 @@ var (
 						},
 					},
 					&generic.WriteSubActionAllInOne{
-						GraphErrorsAsWarnings: true,
+						GraphErrorsAsWarnings:  true,
+						SkipIfUnchangedInGraph: true,
 						WriteSubActionBase: generic.WriteSubActionBase{
 							Attributes: []string{"priority"},
 							UriSuffix:  "setPriority",
 						},
 					},
+					&deviceEnrollmentConfigurationEspEmptyAppsWsa{},
 				},
 				SerializeWrites:   true,
 				SerialWritesDelay: time.Second * 3,
@@ -81,6 +83,7 @@ var kDefConfigPriority float64 = 0
 var kDefConfigDisplayName = "###TfWorkplaceDefault###"
 var kDefConfigIdRegex, _ = regexp.Compile("(?i)_Default[a-z0-9]+$")
 var kSinglePlatformRestrictionOdataType = deviceEnrollmentConfigurationResourceSchema.Attributes["single_platform_restriction"].(generic.OdataDerivedTypeNestedAttributeRs).DerivedType
+var kEspOdataType = deviceEnrollmentConfigurationResourceSchema.Attributes["windows10_esp"].(generic.OdataDerivedTypeNestedAttributeRs).DerivedType
 
 func deviceEnrollmentConfigurationTerraformToGraphMiddleware(ctx context.Context, diags *diag.Diagnostics, params *generic.TerraformToGraphMiddlewareParams) generic.TerraformToGraphMiddlewareReturns {
 	priorityAny, priorityOk := params.RawVal["priority"]
@@ -471,6 +474,12 @@ var deviceEnrollmentConfigurationResourceSchema = schema.Schema{
 						Computed:            true,
 						MarkdownDescription: "When TRUE, allows log collection on installation failure. When false, log collection is not allowed. The default is false. <br/> The _provider_ default value is `true`.",
 					},
+					"allow_non_blocking_app_installation": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "When TRUE, ESP (Enrollment Status Page) installs all required apps targeted during technician phase and ignores any failures for non-blocking apps. When FALSE, ESP fails on any error during app install. The default is false. <br/> The _provider_ default value is `false`.  \n_Provider_ Note: MS Graph rejects an update that contains this attribute with `true` together with an empty `selected_mobile_app_ids` (HTTP 400 without details), so the provider writes an empty `selected_mobile_app_ids` in a separate request in that case.",
+					},
 					"block_device_setup_retry_by_user": schema.BoolAttribute{
 						Optional:            true,
 						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
@@ -496,6 +505,12 @@ var deviceEnrollmentConfigurationResourceSchema = schema.Schema{
 						PlanModifiers:       []planmodifier.Int64{wpdefaultvaluemodifier.Int64DefaultValue(60)},
 						Computed:            true,
 						MarkdownDescription: "The installation progress timeout in minutes. Default is 60 minutes. <br/> The _provider_ default value is `60`.",
+					},
+					"install_quality_updates": schema.BoolAttribute{
+						Optional:            true,
+						PlanModifiers:       []planmodifier.Bool{wpdefaultvaluemodifier.BoolDefaultValue(false)},
+						Computed:            true,
+						MarkdownDescription: "Allows quality updates installation during OOBE <br/> The _provider_ default value is `false`.",
 					},
 					"selected_mobile_app_ids": schema.SetAttribute{
 						ElementType:         types.StringType,
@@ -580,4 +595,46 @@ var deviceEnrollmentConfigurationDeviceEnrollmentPlatformRestrictionAttributes =
 		Computed:            true,
 		MarkdownDescription: "Block the platform from enrolling <br/> The _provider_ default value is `false`.",
 	},
+}
+
+// deviceEnrollmentConfigurationEspEmptyAppsWsa works around MS Graph rejecting a PATCH of an ESP that contains
+// allowNonBlockingAppInstallation = true together with selectedMobileAppIds = [] (HTTP 400 "An error has occurred",
+// verified in c4a8toydaria 2026-11-27; GitHub issue #33). MS Graph only validates the request body: the empty list
+// alone is accepted, also while allowNonBlockingAppInstallation is true. So the empty list gets removed from the
+// write of the entity and written in a separate PATCH afterwards. A POST accepts the combination, but creating the
+// default ESP is a PATCH as well, so this runs on create too (the extra PATCH is harmless after a POST).
+type deviceEnrollmentConfigurationEspEmptyAppsWsa struct {
+	generic.WriteSubActionBase
+}
+
+const kEspEmptyAppsSubActionsDataKey = "deviceEnrollmentConfigurationEspEmptyApps"
+
+var _ generic.WriteSubAction = &deviceEnrollmentConfigurationEspEmptyAppsWsa{}
+
+func (a *deviceEnrollmentConfigurationEspEmptyAppsWsa) Initialize() {
+	a.WriteSubActionBase.Initialize()
+}
+
+func (a *deviceEnrollmentConfigurationEspEmptyAppsWsa) CheckRunAction(wsaOperation generic.OperationType) bool {
+	return wsaOperation == generic.OperationCreate || wsaOperation == generic.OperationUpdate
+}
+
+func (a *deviceEnrollmentConfigurationEspEmptyAppsWsa) ExecutePre(ctx context.Context, diags *diag.Diagnostics, wsaReq *generic.WriteSubActionRequest) {
+	if wsaReq.RawVal["@odata.type"] != kEspOdataType || wsaReq.RawVal["allowNonBlockingAppInstallation"] != true {
+		return
+	}
+	if apps, ok := wsaReq.RawVal["selectedMobileAppIds"].([]any); ok && len(apps) == 0 {
+		delete(wsaReq.RawVal, "selectedMobileAppIds")
+		wsaReq.SubActionsData[kEspEmptyAppsSubActionsDataKey] = true
+	}
+}
+
+func (a *deviceEnrollmentConfigurationEspEmptyAppsWsa) ExecutePost(ctx context.Context, diags *diag.Diagnostics, wsaReq *generic.WriteSubActionRequest) {
+	if wsaReq.SubActionsData[kEspEmptyAppsSubActionsDataKey] != true {
+		return
+	}
+	wsaReq.GenRes.AccessParams.UpdateRaw(ctx, diags, "", wsaReq.Id, wsaReq.IdAttributer, map[string]any{
+		"@odata.type":          kEspOdataType,
+		"selectedMobileAppIds": []any{},
+	})
 }
